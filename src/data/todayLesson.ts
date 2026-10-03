@@ -50,5 +50,5 @@ export const todayLesson: Lesson = {
       text: 'L’image sert de modèle. Le conteneur est une instance créée à partir de ce modèle. Plusieurs conteneurs peuvent utiliser la même image.',
     },
   ],
-  cardIds: [],
+  cardIds: ['docker-image-vs-container', 'docker-restart-image', 'docker-code-update'],
 }

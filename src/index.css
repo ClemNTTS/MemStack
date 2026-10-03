@@ -126,7 +126,141 @@ a {
   color: #475569;
 }
 
-.lesson-complete {
+.card-summary {
+  padding-left: 1.25rem;
+  margin: 2rem 0;
+}
+
+.card-summary li {
+  margin-bottom: 1rem;
+}
+
+.card-summary strong {
+  display: block;
+  margin-top: 0.25rem;
+}
+
+.memo {
+  display: block;
+  object-fit: contain;
+}
+
+.lesson-header > .memo {
+  margin-bottom: 1rem;
+}
+
+.memo-rating {
+  padding: 0.75rem;
+  border: 2px solid #b8a3dd;
+  border-radius: 1rem;
+  background: #faf7ff;
+  cursor: pointer;
+}
+
+.memo-rating:focus-visible {
+  outline: 3px solid #503580;
+  outline-offset: 4px;
+}
+.card-stage {
   margin-top: 2rem;
-  font-weight: 700;
+  text-align: center;
+}
+
+.card-question {
+  margin: 0 auto 1.5rem;
+  max-width: 34rem;
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+
+.card-deck {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+}
+
+.flash-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  min-height: 19rem;
+  padding: 1.5rem;
+  border: 2px solid #8ab4e8;
+  border-radius: 1.5rem;
+  background: white;
+  color: #1f2937;
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.flash-card[aria-pressed='true'] {
+  background: #faf7ff;
+  border-color: #b8a3dd;
+}
+
+.flash-card-side,
+.flash-card-action {
+  font-size: 0.875rem;
+  color: #475569;
+}
+
+.flash-card-content {
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+.flash-card:focus-visible {
+  outline: 3px solid #503580;
+  outline-offset: 4px;
+}
+
+.card-deck .memo-rating {
+  display: grid;
+  justify-items: center;
+  gap: 0.25rem;
+  font: inherit;
+  color: #503580;
+}
+
+.memo-rating:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.card-instructions,
+.card-legend {
+  margin: 1.5rem auto 0;
+  max-width: 34rem;
+  line-height: 1.5;
+}
+
+.card-legend {
+  margin-top: 0.75rem;
+  color: #475569;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 480px) {
+  .card-deck {
+    gap: 0.5rem;
+  }
+
+  .card-deck .memo-rating {
+    padding: 0.375rem;
+  }
+
+  .card-deck .memo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .flash-card {
+    padding: 1rem 0.75rem;
+  }
 }

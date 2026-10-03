@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react'
 import { indexLessonSteps } from '../lesson/lessonFlow'
 import type { Lesson } from '../types/lesson'
+import Memo from './Memo'
 
 type LessonViewProps = {
   lesson: Lesson
+  onComplete: () => void
 }
 
 type VisitedStep = {
@@ -11,10 +13,9 @@ type VisitedStep = {
   selectedChoiceId?: string
 }
 
-function LessonView({ lesson }: LessonViewProps) {
+function LessonView({ lesson, onComplete }: LessonViewProps) {
   const stepsById = useMemo(() => indexLessonSteps(lesson), [lesson])
   const [history, setHistory] = useState<VisitedStep[]>([{ id: lesson.firstStepId }])
-  const [isComplete, setIsComplete] = useState(false)
   const currentVisit = history[history.length - 1]
   const currentStep = stepsById.get(currentVisit.id)!
   const selectedChoice = currentStep.type === 'question'
@@ -34,18 +35,19 @@ function LessonView({ lesson }: LessonViewProps) {
   }
 
   function continueLesson() {
-    if (!canContinue || isComplete) return
+    if (!canContinue) return
 
     if (nextStepId) {
       setHistory((previous) => [...previous, { id: nextStepId }])
     } else {
-      setIsComplete(true)
+      onComplete()
     }
   }
 
   return (
     <article className="lesson">
       <header className="lesson-header">
+        <Memo />
         <p className="lesson-category">{lesson.category}</p>
         <h1>{lesson.title}</h1>
         <p className="lesson-duration">Durée estimée : {lesson.estimatedMinutes} min</p>
@@ -54,7 +56,7 @@ function LessonView({ lesson }: LessonViewProps) {
       <div className="lesson-content" aria-label="Contenu de la leçon">
         {history.map((visit, index) => {
           const step = stepsById.get(visit.id)!
-          const isCurrent = index === history.length - 1 && !isComplete
+          const isCurrent = index === history.length - 1
 
           if (step.type === 'message') {
             return <p className="lesson-bubble" key={`${step.id}-${index}`}>{step.text}</p>
@@ -94,12 +96,11 @@ function LessonView({ lesson }: LessonViewProps) {
         })}
       </div>
 
-      {!isComplete && canContinue && (
+      {canContinue && (
         <button className="lesson-next" type="button" onClick={continueLesson}>
           {nextStepId ? 'Continuer' : 'Terminer la leçon'}
         </button>
       )}
-      {isComplete && <p className="lesson-complete" role="status">Leçon terminée.</p>}
     </article>
   )
 }

@@ -1,4 +1,5 @@
-import LessonView from './components/LessonView'
+import TodaySession from './components/TodaySession'
+import { cards } from './data/cards'
 import { todayLesson } from './data/todayLesson'
 
 function App() {
@@ -7,7 +8,7 @@ function App() {
   if (path === '/today') {
     return (
       <main className="app-shell">
-        <LessonView lesson={todayLesson} />
+        <TodaySession lesson={todayLesson} cards={cards} />
       </main>
     )
   }

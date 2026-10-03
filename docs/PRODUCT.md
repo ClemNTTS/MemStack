@@ -9,8 +9,10 @@ MemStack aide une personne à apprendre régulièrement des notions de développ
 - Organiser le contenu en **thèmes → parcours → leçons**. Exemple : `DevOps → Docker → Images et conteneurs` ; Docker, CI/CD, Cloud, Terraform, Kubernetes, Observability et SRE sont des parcours possibles du thème DevOps.
 - Suivre une leçon interactive en étapes courtes et voir sa progression dans le parcours.
 - Découvrir 3 à 5 cartes liées à la leçon, puis réviser jusqu'à 5 cartes dues. S'il y en a moins de 5, ne pas compléter artificiellement la session.
-- Classer chaque carte : **Connais pas** (révision proche, compteur de réussites remis à zéro), **À revoir** (révision proche, compteur inchangé), **Je sais** (compteur augmenté, prochaine échéance repoussée).
-- Après trois « Je sais » depuis le dernier « Connais pas », espacer davantage les révisions. La carte reste révisable et un « Connais pas » relance le cycle. Les intervalles exacts restent à définir et à ajuster après usage.
+- Après révélation, répondre à « Avais-tu retrouvé la réponse avant de la révéler ? » avec deux choix : **Non** (`forgotten`) ou **Oui** (`recalled`). Une réponse partielle sans l’idée essentielle compte comme non ; une réponse correcte après réflexion compte comme oui.
+- La question reste au-dessus d’une carte retournable au clic ou au clavier. Après révélation, glisser à gauche signifie non, à droite oui ; les boutons Mémo restent disponibles de chaque côté. Chaque nouvelle carte commence face cachée.
+- Mémo, mascotte lilas, accompagne les leçons. Ses expressions à plat et contente illustrent les deux choix ; une légende visible et des labels accessibles explicitent leur sens. L’expression hésitante reste disponible pour une future illustration pédagogique.
+- Espacer progressivement les révisions selon le résultat et le temps écoulé, sans seuil de trois réussites. Règle initiale à ajuster après usage : première révision ou oubli → un jour ; réussite ultérieure → maximum de l’intervalle précédent et du double des jours écoulés, plafonné à 365 jours. Répéter immédiatement une carte n’augmente pas son intervalle.
 - Retrouver ses leçons terminées et l'état de ses cartes sur plusieurs appareils.
 
 ## Hors MVP
@@ -25,7 +27,7 @@ Les **questions dans la leçon** guident la compréhension : elles ne donnent pa
 
 ## Entités
 
-**Thème** regroupe des **parcours** ; un parcours contient des **leçons** ; une leçon contient des **étapes interactives** et possède des **cartes** associées. La **progression utilisateur** indique les leçons terminées. L'**état de révision** d'une carte conserve son compteur de réussites, son dernier classement et sa prochaine échéance.
+**Thème** regroupe des **parcours** ; un parcours contient des **leçons** ; une leçon contient des **étapes interactives** et possède des **cartes** associées. La **progression utilisateur** indique les leçons terminées. L'**état de révision** d'une carte conserve son intervalle, sa dernière date de révision et sa prochaine échéance. L’**historique de révision** conserve la carte, la date et le résultat de chaque réponse.
 
 ## Ordre de réalisation
 
