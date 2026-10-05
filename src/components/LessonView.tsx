@@ -1,3 +1,4 @@
+import { appAsset, appHref } from '../navigation/browser'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { indexLessonSteps } from '../lesson/lessonFlow'
 import type { Lesson, LessonStep } from '../types/lesson'
@@ -78,7 +79,7 @@ function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLa
     <article className="lesson">
       <header className="lesson-header">
         <div className="lesson-toolbar">
-          <a className="text-link" href="/">← Retour à l’atelier</a>
+          <a className="text-link" href={appHref('/')}>← Retour à l’atelier</a>
           {onShowSummary && <button className="sound-toggle" type="button" onClick={onShowSummary}>Voir l’essentiel</button>}
           <button className="sound-toggle" type="button" aria-pressed={sound.enabled} onClick={sound.toggle}>
             Son {sound.enabled ? 'activé' : 'désactivé'}
@@ -106,7 +107,7 @@ function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLa
             if (step.type === 'image') {
               return (
                 <figure className="lesson-image" key={`${step.id}-${index}`}>
-                  <img src={step.src} alt={step.alt} />
+                  <img src={appAsset(step.src)} alt={step.alt} />
                   {step.caption && <figcaption>{step.caption}</figcaption>}
                   <button className="sound-toggle lesson-enlarge" type="button" onClick={() => setExpandedImage(step)}>Agrandir le schéma</button>
                 </figure>
@@ -153,7 +154,7 @@ function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLa
         {expandedImage && <>
           <p>Sur petit écran, fais défiler le schéma horizontalement pour lire ses annotations.</p>
           <div className="lesson-image-zoom" role="region" tabIndex={0} aria-label="Schéma agrandi, défilement horizontal disponible">
-            <img src={expandedImage.src} alt={expandedImage.alt} />
+            <img src={appAsset(expandedImage.src)} alt={expandedImage.alt} />
           </div>
           {expandedImage.caption && <p>{expandedImage.caption}</p>}
         </>}

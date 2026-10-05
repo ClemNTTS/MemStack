@@ -1,3 +1,4 @@
+import { appHref } from '../navigation/browser'
 import { useRef, useState } from 'react'
 import type { Card, CardResult } from '../types/card'
 import type { Course } from '../types/course'
@@ -125,7 +126,7 @@ function LearningSession({ course, cards, mode = 'today', initialAction }: Today
               <h2>{currentPlan.nextLesson?.title ?? 'Parcours terminé'}</h2>
               {currentPlan.lesson
                 ? <><p>{currentPlan.lesson.estimatedMinutes} min pour la leçon conseillée. Tu peux en découvrir plusieurs si tu le souhaites.</p><button className="catalog-button" type="button" onClick={chooseLesson}>Découvrir la leçon</button></>
-                : <><p>Tu as parcouru toutes les leçons. Tes cartes restent disponibles pour réviser.</p><a href="/courses">Choisir un autre parcours</a></>}
+                : <><p>Tu as parcouru toutes les leçons. Tes cartes restent disponibles pour réviser.</p><a href={appHref('/courses')}>Choisir un autre parcours</a></>}
             </article>}
             {mode === 'today' && <article className="overview-panel">
               <p className="lesson-category">Consolider</p>
@@ -142,9 +143,9 @@ function LearningSession({ course, cards, mode = 'today', initialAction }: Today
             </article>
           </div>
           <nav className="learning-empty-actions" aria-label="Continuer à apprendre">
-            {mode === 'reviews' && <a className="primary-link" href="/today">Découvrir ou consolider</a>}
-            <a href="/courses">Explorer les parcours</a>
-            <a href="/library">Relire mes leçons</a>
+            {mode === 'reviews' && <a className="primary-link" href={appHref('/today')}>Découvrir ou consolider</a>}
+            <a href={appHref('/courses')}>Explorer les parcours</a>
+            <a href={appHref('/library')}>Relire mes leçons</a>
           </nav>
         </section>
       )}

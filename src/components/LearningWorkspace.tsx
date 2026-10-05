@@ -1,3 +1,4 @@
+import { appHref, currentRoute, usesHashRoutes } from '../navigation/browser'
 import { useEffect, useRef, useState } from 'react'
 import type { MouseEvent } from 'react'
 import TodaySession from './TodaySession'
@@ -19,7 +20,7 @@ function LearningWorkspace() {
 }
 
 function Pages() {
-  const [route, setRoute] = useState(() => `${window.location.pathname}${window.location.search}`)
+  const [route, setRoute] = useState(currentRoute)
   const path = route.split('?')[0].replace(/\/+$/, '') || '/'
   const start = new URLSearchParams(route.includes('?') ? route.slice(route.indexOf('?') + 1) : '').get('start')
   const initialAction = start === 'lesson' || start === 'cards' ? start : undefined
@@ -39,20 +40,26 @@ function Pages() {
     }
   }, [route, path, lesson, courseId])
   useEffect(() => {
-    const update = () => { setRoute(`${window.location.pathname}${window.location.search}`); window.scrollTo(0, 0) }
+    const update = () => { setRoute(currentRoute()); window.scrollTo(0, 0) }
     window.addEventListener('popstate', update)
-    return () => window.removeEventListener('popstate', update)
+    window.addEventListener('hashchange', update)
+    return () => {
+      window.removeEventListener('popstate', update)
+      window.removeEventListener('hashchange', update)
+    }
   }, [])
   function navigate(event: MouseEvent<HTMLDivElement>) {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
     const link = (event.target as Element).closest('a')
     if (!link || link.target || link.hasAttribute('download')) return
     const url = new URL(link.href)
-    if (url.origin !== window.location.origin || url.hash) return
+    if (url.origin !== window.location.origin) return
+    if (usesHashRoutes ? url.pathname !== window.location.pathname || !url.hash.startsWith('#/') : Boolean(url.hash)) return
+    const nextRoute = usesHashRoutes ? url.hash.slice(1) : `${url.pathname}${url.search}`
     event.preventDefault()
-    if (`${url.pathname}${url.search}` === route) return
-    window.history.pushState(null, '', `${url.pathname}${url.search}`)
-    setRoute(`${url.pathname}${url.search}`)
+    if (nextRoute === route) return
+    window.history.pushState(null, '', appHref(nextRoute))
+    setRoute(nextRoute)
     window.scrollTo(0, 0)
   }
   const links = [
@@ -68,12 +75,12 @@ function Pages() {
   else if (path === '/profile') page = <ProfilePage />
   else if (lesson) page = <LessonReplay key={lesson.id} lesson={lesson} />
   else if (path === '/today' || path === '/reviews') page = <main className="app-shell"><TodaySession key={`${course.id}-${route}`} course={course} lessons={catalogLessons} cards={catalogCards} mode={path === '/reviews' ? 'reviews' : 'today'} initialAction={initialAction} /></main>
-  else page = <main className="dashboard"><p className="lesson-category">Page introuvable</p><h1>Ce chemin reste à tracer.</h1><a className="dashboard-cta" href="/">Retour à l’atelier</a></main>
+  else page = <main className="dashboard"><p className="lesson-category">Page introuvable</p><h1>Ce chemin reste à tracer.</h1><a className="dashboard-cta" href={appHref('/')}>Retour à l’atelier</a></main>
   return <div className="learning-app" data-immersive={immersive} onClick={navigate}>
     <a className="skip-link" href="#main-content">Aller au contenu</a>
     <header className="site-header">
-      <a className="brand" href="/" aria-label="MemStack, accueil">memstack<span> / l’atelier</span></a>
-      <nav aria-label="Navigation principale">{links.map((link) => <a key={link.href} href={link.href} aria-current={link.current ? 'page' : undefined}>{link.label}</a>)}</nav>
+      <a className="brand" href={appHref('/')} aria-label="MemStack, accueil">memstack<span> / l’atelier</span></a>
+      <nav aria-label="Navigation principale">{links.map((link) => <a key={link.href} href={appHref(link.href)} aria-current={link.current ? 'page' : undefined}>{link.label}</a>)}</nav>
       <AccountBar />
     </header>
     <div id="main-content" className="page-content" tabIndex={-1} key={route}>{page}</div>

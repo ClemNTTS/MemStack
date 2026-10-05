@@ -74,7 +74,11 @@ Un service côté serveur deviendra utile pour une veille collectée automatique
 
 ## Déploiement
 
-GitHub Pages héberge le frontend statique ; GitHub Actions le construit et le publie. Lors de l'implémentation, configurer le chemin de base Vite et la navigation pour l'URL du dépôt. Les règles Firestore font partie des éléments à vérifier avant la mise en ligne.
+`.github/workflows/pages.yml` installe avec `npm ci`, lance les tests, construit avec `--base=/MemStack/` et publie uniquement `dist/`. Pages doit utiliser la source **GitHub Actions**, sans build Jekyll des sources.
+
+En local, la navigation conserve les chemins `/today`, `/courses`, etc. Sous le chemin Pages, `src/navigation/` génère des liens `/MemStack/#/today` : les fragments permettent le rechargement et l’ouverture directe sans réécriture serveur. Les illustrations et Mémo utilisent le même chemin de base. Aucun changement des IDs ou de la progression.
+
+Firebase Auth doit autoriser `clemntts.github.io` dans ses domaines autorisés pour la connexion Google en production. Les règles Firestore restent à vérifier séparément ; ce workflow ne les déploie pas.
 
 ## Présentation et son
 

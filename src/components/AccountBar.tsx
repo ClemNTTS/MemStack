@@ -1,3 +1,4 @@
+import { appHref } from '../navigation/browser'
 import { useRef, useState } from 'react'
 import { useProgress } from '../progress/ProgressProvider'
 import './lesson-enhancements.css'
@@ -17,7 +18,7 @@ function AccountBar() {
       <div className="account-menu-panel">
         <strong>{account.user?.displayName || 'Mon compte'}</strong>
         <p role="status">{account.status}</p>
-        <a className="account-profile-link" href="/profile" onClick={() => menuRef.current?.removeAttribute('open')}>Voir mon profil</a>
+        <a className="account-profile-link" href={appHref('/profile')} onClick={() => menuRef.current?.removeAttribute('open')}>Voir mon profil</a>
         {account.error && <div className="account-error"><p role="alert">{account.error}</p><button className="sound-toggle" type="button" disabled={!account.online} onClick={account.retry}>Réessayer</button></div>}
         {account.user && account.ready && <details className="account-import"><summary>Importer ma progression locale</summary><p>Fusionner les leçons et cartes apprises sans compte dans ce navigateur avec ce compte Google. La copie locale sera conservée.</p><button className="lesson-choice" type="button" onClick={account.importLocal}>Importer dans ce compte</button></details>}
         <button className="sound-toggle" type="button" disabled={busy} onClick={disconnect}>{busy ? 'Déconnexion…' : 'Se déconnecter'}</button>

@@ -1,5 +1,11 @@
 # MemStack
 
+## Déploiement
+
+GitHub Actions teste, construit puis publie `dist/` sur [MemStack](https://clemntts.github.io/MemStack/). Dans Settings → Pages, sélectionner **GitHub Actions**. Ajouter `clemntts.github.io` aux domaines autorisés de Firebase Auth pour la connexion Google.
+
+Le build Pages utilise `/MemStack/` et des routes à fragment (`#/today`) pour permettre le rechargement. En local, les chemins restent `/today`, `/courses`, etc.
+
 MemStack est une webapp personnelle pour consolider des connaissances de développement par de courtes leçons quotidiennes et la répétition espacée.
 
 ## Le parcours

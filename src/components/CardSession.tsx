@@ -1,3 +1,4 @@
+import { appHref } from '../navigation/browser'
 import { useRef, useState } from 'react'
 import type { CardProgress, CardRating, CardResult } from '../types/card'
 import type { ReviewKind } from '../types/progress'
@@ -61,10 +62,10 @@ function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel, 
           {onContinueLearningCards && <button className="catalog-button secondary" type="button" onClick={onContinueLearningCards}>Reprendre mes nouvelles cartes</button>}
           {onChooseLesson
             ? <button className="catalog-button secondary" type="button" onClick={onChooseLesson}>Choisir la prochaine leçon</button>
-            : <a href="/today">Choisir ma session</a>}
-          <a href="/courses">Explorer les parcours</a>
-          <a href="/library">Relire mes leçons</a>
-          <a href="/">Retour à l’accueil</a>
+            : <a href={appHref('/today')}>Choisir ma session</a>}
+          <a href={appHref('/courses')}>Explorer les parcours</a>
+          <a href={appHref('/library')}>Relire mes leçons</a>
+          <a href={appHref('/')}>Retour à l’accueil</a>
         </nav>
       </section>
     )

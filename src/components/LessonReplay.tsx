@@ -1,3 +1,4 @@
+import { appHref } from '../navigation/browser'
 import { useRef, useState } from 'react'
 import type { Lesson } from '../types/lesson'
 import { useProgress } from '../progress/ProgressProvider'
@@ -15,8 +16,8 @@ function LessonReplay({ lesson }: { lesson: Lesson }) {
   const takeaway = lesson.steps.find(step => step.type === 'message' && !step.nextStepId)
   return <main className="app-shell">
     <WorkshopBackground stage={finished ? 'rest' : 'lesson'} beat={beat} />
-    {access !== 'allowed' ? <section className="learning-empty"><Memo /><h1>Cette leçon t’attend</h1><p>Découvre cette leçon dans ta session du jour avant de la relire.</p><a className="dashboard-cta" href="/courses">Voir les parcours →</a></section>
-      : finished ? <section className="learning-empty"><Memo /><h1>Un rappel bienvenu.</h1><p>Tu as relu « {lesson.title} ».</p><a className="dashboard-cta" href="/library">Retour à la bibliothèque ↗</a></section>
+    {access !== 'allowed' ? <section className="learning-empty"><Memo /><h1>Cette leçon t’attend</h1><p>Découvre cette leçon dans ta session du jour avant de la relire.</p><a className="dashboard-cta" href={appHref('/courses')}>Voir les parcours →</a></section>
+      : finished ? <section className="learning-empty"><Memo /><h1>Un rappel bienvenu.</h1><p>Tu as relu « {lesson.title} ».</p><a className="dashboard-cta" href={appHref('/library')}>Retour à la bibliothèque ↗</a></section>
         : <LessonView lesson={lesson} progressLabel="Relecture · ta progression reste inchangée" onMessage={() => setBeat((value) => value + 1)} onComplete={() => setFinished(true)} completionLabel="Terminer la relecture" onShowSummary={() => summaryRef.current?.showModal()} />}
     {access === 'allowed' && <dialog className="lesson-image-dialog lesson-summary-dialog" ref={summaryRef} aria-labelledby="lesson-summary-title"><div className="lesson-image-dialog-header"><h2 id="lesson-summary-title">L’essentiel · {lesson.title}</h2><button className="sound-toggle" type="button" onClick={() => summaryRef.current?.close()}>Fermer</button></div>{takeaway?.type === 'message' && <p>{takeaway.text}</p>}<dl>{lesson.cardIds.map(id => {
       const card = catalogCards.find(card => card.id === id)!
