@@ -1,37 +1,15 @@
-import TodaySession from './components/TodaySession'
-import Dashboard from './components/Dashboard'
-import LessonReplay from './components/LessonReplay'
+import { lazy, Suspense } from 'react'
 import AccountBar from './components/AccountBar'
+import AccessGate from './components/AccessGate'
 import { useProgress } from './progress/ProgressProvider'
-import { cards } from './data/cards'
-import { dockerCourse, dockerLessons } from './data/dockerCourse'
+
+const LearningWorkspace = lazy(() => import('./components/LearningWorkspace'))
 
 function App() {
   const account = useProgress()
-  return <><AccountBar />{account.ready ? <Pages key={`${account.user?.uid ?? 'guest'}-${account.revision}`} /> : <main className="app-shell"><h1>Ton atelier</h1><p>{account.error ? 'La progression ne peut pas encore être affichée.' : 'Chargement de ta progression…'}</p></main>}</>
-}
-
-function Pages() {
-  const path = window.location.pathname.replace(/\/+$/, '') || '/'
-  if (path === '/') return <Dashboard />
-  const lesson = dockerLessons.find((item) => path === `/lessons/${item.id}`)
-  if (lesson) return <LessonReplay lesson={lesson} />
-
-  if (path === '/today') {
-    return (
-      <main className="app-shell">
-        <TodaySession course={dockerCourse} lessons={dockerLessons} cards={cards} />
-      </main>
-    )
-  }
-
-  return (
-    <main className="app-shell home">
-      <h1>MemStack</h1>
-      <p>Cette page n'existe pas.</p>
-      <a href="/">Retour à l'accueil</a>
-    </main>
-  )
+  return account.user && account.online && account.ready
+    ? <Suspense fallback={<main className="app-shell"><p role="status">Mémo prépare ton atelier…</p></main>}><LearningWorkspace /></Suspense>
+    : <><AccessGate />{account.user && <AccountBar />}</>
 }
 
 export default App

@@ -5,7 +5,7 @@ import type { User } from 'firebase/auth'
 import { getFirebaseServices } from '../firebase/client'
 import { readCloudProgress, writeCloudProgress } from '../firebase/progress'
 import type { LearningProgress } from '../types/progress'
-import { decodeProgress, emptyProgress, loadProgress, saveProgress } from './storage'
+import { decodeProgress, emptyProgress, loadProgress } from './storage'
 import { accountProgressKey, mergeProgress } from './merge'
 
 type ProgressContextValue = {
@@ -14,13 +14,14 @@ type ProgressContextValue = {
   status: string
   error: string
   ready: boolean
+  online: boolean
+  authResolved: boolean
   revision: number
   persist: (next: LearningProgress) => boolean
   login: () => Promise<void>
   logout: () => Promise<void>
   retry: () => void
   importLocal: () => void
-  resetGuest: () => void
 }
 const ProgressContext = createContext<ProgressContextValue | null>(null)
 
@@ -28,6 +29,8 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [progress, setProgress] = useState(emptyProgress)
   const [ready, setReady] = useState(false)
+  const [online, setOnline] = useState(() => navigator.onLine)
+  const [authResolved, setAuthResolved] = useState(false)
   const [revision, setRevision] = useState(0)
   const [status, setStatus] = useState('Chargement…')
   const [error, setError] = useState('')
@@ -37,7 +40,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 
   function synchronize() {
     const { uid, generation } = current.current
-    if (!uid) return
+    if (!uid || !navigator.onLine) return
     setStatus('Synchronisation…')
     work.current = work.current.catch(() => {}).then(async () => {
       if (current.current.generation !== generation || !current.current.ready) return
@@ -49,6 +52,8 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         setError('')
       } catch {
         if (current.current.generation !== generation) return
+        current.current.ready = false
+        setReady(false)
         setStatus('Sauvegardée sur cet appareil · synchronisation en attente')
         setError('La synchronisation a échoué. Tes réponses restent sauvegardées sur cet appareil. Vérifie ta connexion puis réessaie.')
       }
@@ -64,29 +69,35 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       current.current.uid = account?.uid ?? null
       setReady(false)
       setUser(account)
+      setAuthResolved(true)
       setError('')
       setStatus('Chargement…')
+      if (!account) {
+        current.current.progress = emptyProgress()
+        setProgress(emptyProgress())
+        setStatus('Connexion Google requise')
+        return
+      }
+      if (!navigator.onLine) {
+        setStatus('Connexion Internet requise')
+        return
+      }
       try {
-        let next: LearningProgress
-        if (account) {
-          const cache = window.localStorage.getItem(accountProgressKey(account.uid))
-          const local = decodeProgress(cache)
-          try { next = mergeProgress(await readCloudProgress(account.uid), local) }
-          catch {
-            if (cache === null) throw new Error('Cloud unavailable')
-            next = local
-          }
-          if (disposed || current.current.generation !== generation) return
-          window.localStorage.setItem(accountProgressKey(account.uid), JSON.stringify(next))
-        } else next = loadProgress()
+        // Let any interrupted write finish before reconciling with the server.
+        await work.current.catch(() => {})
         if (disposed || current.current.generation !== generation) return
+        const local = decodeProgress(window.localStorage.getItem(accountProgressKey(account.uid)))
+        const next = mergeProgress(await readCloudProgress(account.uid), local)
+        if (disposed || current.current.generation !== generation || !navigator.onLine) return
+        await writeCloudProgress(account.uid, next)
+        if (disposed || current.current.generation !== generation || !navigator.onLine) return
+        window.localStorage.setItem(accountProgressKey(account.uid), JSON.stringify(next))
         current.current.progress = next
         current.current.ready = true
         setProgress(next)
         setRevision((value) => value + 1)
         setReady(true)
-        setStatus(account ? 'Synchronisation…' : 'Progression locale · sans connexion')
-        if (account) synchronize()
+        setStatus('Progression synchronisée')
       } catch {
         if (disposed || current.current.generation !== generation) return
         setError('Impossible de charger la progression. Aucune donnée n’a été remplacée. Vérifie ta connexion ou ton stockage puis réessaie.')
@@ -97,20 +108,33 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   }, [retryCount])
 
   useEffect(() => {
-    const reconnect = () => { if (current.current.ready) synchronize() }
+    const disconnect = () => {
+      current.current.generation++
+      current.current.ready = false
+      setReady(false)
+      setOnline(false)
+      setStatus('Connexion Internet requise')
+    }
+    const reconnect = () => {
+      setOnline(true)
+      setRetryCount((value) => value + 1)
+    }
+    window.addEventListener('offline', disconnect)
     window.addEventListener('online', reconnect)
-    return () => window.removeEventListener('online', reconnect)
+    return () => {
+      window.removeEventListener('offline', disconnect)
+      window.removeEventListener('online', reconnect)
+    }
   }, [])
 
   function persist(next: LearningProgress): boolean {
-    if (!current.current.ready) return false
+    const uid = current.current.uid
+    if (!current.current.ready || !uid || !navigator.onLine) return false
     try {
-      const uid = current.current.uid
-      if (uid) window.localStorage.setItem(accountProgressKey(uid), JSON.stringify(next))
-      else saveProgress(next)
+      window.localStorage.setItem(accountProgressKey(uid), JSON.stringify(next))
       current.current.progress = next
       setProgress(next)
-      if (uid) synchronize()
+      synchronize()
       return true
     } catch {
       setError('La sauvegarde sur cet appareil a échoué. Ta réponse n’a pas été validée.')
@@ -119,6 +143,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   }
 
   async function login() {
+    if (!navigator.onLine) return
     let timeout: ReturnType<typeof setTimeout> | undefined
     try {
       setError('')
@@ -141,13 +166,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     } catch { setError('Impossible de lire la progression sans compte. Aucune donnée n’a été importée.') }
   }
 
-  function resetGuest() {
-    if (current.current.uid || !window.confirm('Réinitialiser la progression sans compte de ce navigateur ? Cette action efface uniquement cette progression locale.')) return
-    try { saveProgress(emptyProgress()); setRetryCount((value) => value + 1) }
-    catch { setError('La réinitialisation locale a échoué.') }
-  }
-
-  return <ProgressContext.Provider value={{ user, progress, ready, revision, status, error, persist, login, logout, importLocal, resetGuest, retry: () => ready && user ? synchronize() : setRetryCount((value) => value + 1) }}>{children}</ProgressContext.Provider>
+  return <ProgressContext.Provider value={{ user, progress, ready, online, authResolved, revision, status, error, persist, login, logout, importLocal, retry: () => { if (navigator.onLine) setRetryCount((value) => value + 1) } }}>{children}</ProgressContext.Provider>
 }
 
 export function useProgress() {

@@ -18,7 +18,7 @@ export function planCourse(course: Course, lessons: Lesson[], progress: Learning
   return {
     completedCount: completed.length,
     nextLesson,
-    lesson: !learnedToday && pendingCardIds.length === 0 ? nextLesson : undefined,
+    lesson: nextLesson,
     pendingCardIds,
     learnedToday,
   }

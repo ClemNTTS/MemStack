@@ -12,7 +12,11 @@ Le premier objectif est un parcours complet et utilisable chaque jour. Les chall
 
 - [Produit](docs/PRODUCT.md) : périmètre, règles de révision et ordre de réalisation.
 - [Architecture](docs/ARCHITECTURE.md) : choix techniques et raisons de ces choix.
+- [Catalogue pédagogique](docs/CURRICULUM.md) : 12 thèmes, 30 parcours, 150 objectifs de leçons.
+- [Production et inspection](docs/content/WORKFLOW.md) : rôles, corrections et validation des contenus.
 
 ## Développement
 
-Après installation des dépendances avec `npm ci`, lancer `npm run dev` et ouvrir `http://localhost:3000/today` pour suivre le parcours Docker de trois leçons (une nouvelle leçon par jour) et réviser ses cartes. `npm run build` vérifie la compilation ; `npm test` vérifie les règles de révision avec Node 24+. La progression est sauvegardée dans ce navigateur (localStorage). Une leçon terminée ne recommence pas ; les cartes non traitées reprennent après rechargement, suivies de cinq révisions dues au maximum par jour. La connexion Google permet de synchroniser via Firestore. Après connexion, ouvrir « Importer ma progression locale » pour fusionner les apprentissages sans compte dans ce navigateur. Le mode local reste disponible sans connexion.
+Après `npm ci`, lancer `npm run dev` et ouvrir `http://localhost:3000/`. Choisir un parcours dans `/courses`, découvrir ou consolider sur `/today`, réviser uniquement des cartes sur `/reviews` et relire sur `/library`. Les 30 parcours réunissent 150 leçons et 450 cartes. Le rendez-vous quotidien est un repère : les leçons sont libres et les lots de cinq révisions peuvent être renouvelés. Le profil permet de régler l’objectif personnel sans blocage. `npm run build` compile ; `npm test` vérifie les règles avec Node 24+.
+
+Google et Internet sont obligatoires. Firestore synchronise la progression ; un cache par compte conserve les sauvegardes interrompues. Le choix du parcours et l’objectif restent locaux à cet appareil. L’import de l’ancienne progression sans compte se trouve dans le menu Compte. Les règles Firestore doivent être publiées avant utilisation.

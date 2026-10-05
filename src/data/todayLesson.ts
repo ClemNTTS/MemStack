@@ -16,7 +16,7 @@ export const todayLesson: Lesson = {
     {
       id: 'situation',
       type: 'message',
-      text: 'Tu as modifié ton application, puis redémarré le conteneur existant. Pourtant, rien n’a changé à l’écran.',
+      text: 'Ton code est copié dans l’image au moment du build, sans montage du dossier source. Tu modifies les fichiers sur ton ordinateur, puis redémarres le conteneur existant. Rien n’a changé à l’écran.',
       nextStepId: 'diagnostic',
     },
     {
@@ -48,6 +48,12 @@ export const todayLesson: Lesson = {
       id: 'conclusion',
       type: 'message',
       text: 'L’image sert de modèle. Le conteneur est une instance créée à partir de ce modèle. Plusieurs conteneurs peuvent utiliser la même image.',
+      nextStepId: 'update',
+    },
+    {
+      id: 'update',
+      type: 'message',
+      text: 'Dans cet exemple, reconstruis l’image avec ton code modifié, puis crée un nouveau conteneur à partir de cette image. Redémarrer l’ancien ne change pas l’image dont il provient. Avec un dossier source monté depuis ton ordinateur, la mise à jour suit une autre logique.',
     },
   ],
   cardIds: ['docker-image-vs-container', 'docker-restart-image', 'docker-code-update'],

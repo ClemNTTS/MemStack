@@ -31,18 +31,18 @@ test('three real lessons have valid routes, stable identifiers and three distinc
   }
 })
 
-test('ordered progression allows one completed lesson per local day, including after reload', () => {
+test('ordered progression allows several completed lessons on the same day, including after reload', () => {
   let progress = emptyProgress()
   assert.equal(planCourse(dockerCourse, dockerLessons, progress, dayOne).lesson?.id, dockerLessons[0].id)
   finishLesson(progress, 0, dayOne)
   progress = decodeProgress(JSON.stringify(progress))
   const sameDay = planCourse(dockerCourse, dockerLessons, progress, dayOne)
-  assert.equal(sameDay.lesson, undefined)
+  assert.equal(sameDay.lesson?.id, dockerLessons[1].id)
   assert.equal(sameDay.completedCount, 1)
   assert.equal(sameDay.nextLesson?.id, dockerLessons[1].id)
   assert.equal(planCourse(dockerCourse, dockerLessons, progress, dayTwo).lesson?.id, dockerLessons[1].id)
-  finishLesson(progress, 1, dayTwo)
-  assert.equal(planCourse(dockerCourse, dockerLessons, progress, dayTwo).lesson, undefined)
+  finishLesson(progress, 1, dayOne)
+  assert.equal(planCourse(dockerCourse, dockerLessons, progress, dayOne).lesson?.id, dockerLessons[2].id)
   assert.equal(planCourse(dockerCourse, dockerLessons, progress, dayThree).lesson?.id, dockerLessons[2].id)
   finishLesson(progress, 2, dayThree)
   assert.equal(planCourse(dockerCourse, dockerLessons, progress, dayThree).completedCount, 3)
@@ -50,11 +50,11 @@ test('ordered progression allows one completed lesson per local day, including a
   assert.ok(createDailyQueue(cards, [], progress, new Date(2026, 9, 8, 12)).length > 0)
 })
 
-test('unfinished cards resume before the next lesson, even on the next day', () => {
+test('unfinished cards stay available without blocking the next lesson', () => {
   const progress = emptyProgress()
   progress.completedLessons[dockerLessons[0].id] = dayOne.toISOString()
   const plan = planCourse(dockerCourse, dockerLessons, progress, dayTwo)
-  assert.equal(plan.lesson, undefined)
+  assert.equal(plan.lesson?.id, dockerLessons[1].id)
   assert.deepEqual(plan.pendingCardIds, dockerLessons[0].cardIds)
   const queue = createDailyQueue(cards, plan.pendingCardIds, progress, dayTwo)
   assert.equal(queue.length, 3)
@@ -69,9 +69,11 @@ test('legacy image lesson progress remains valid without resetting stored data',
   assert.equal(planCourse(dockerCourse, dockerLessons, decodeProgress(JSON.stringify(progress)), dayTwo).completedCount, 1)
 })
 
-test('daily limit uses the local date rather than elapsed 24 hours', () => {
+test('learnedToday is an informational metric using the local date', () => {
   const progress = emptyProgress()
   finishLesson(progress, 0, new Date(2026, 9, 5, 23, 59))
+  assert.equal(planCourse(dockerCourse, dockerLessons, progress, new Date(2026, 9, 5, 23, 59)).learnedToday, true)
+  assert.equal(planCourse(dockerCourse, dockerLessons, progress, new Date(2026, 9, 6, 0, 1)).learnedToday, false)
   assert.equal(planCourse(dockerCourse, dockerLessons, progress, new Date(2026, 9, 6, 0, 1)).lesson?.id, dockerLessons[1].id)
 })
 

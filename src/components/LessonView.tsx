@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { indexLessonSteps } from '../lesson/lessonFlow'
-import type { Lesson } from '../types/lesson'
+import type { Lesson, LessonStep } from '../types/lesson'
 import ChatBubble from './ChatBubble'
 import { useMessageSound } from '../lesson/useMessageSound'
+import './lesson-enhancements.css'
 
 type LessonViewProps = {
   lesson: Lesson
@@ -10,6 +11,7 @@ type LessonViewProps = {
   onMessage: () => void
   progressLabel: string
   completionLabel?: string
+  onShowSummary?: () => void
 }
 
 type VisitedStep = {
@@ -17,9 +19,11 @@ type VisitedStep = {
   selectedChoiceId?: string
 }
 
-function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLabel = 'Terminer la leçon' }: LessonViewProps) {
+function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLabel = 'Terminer la leçon', onShowSummary }: LessonViewProps) {
   const sound = useMessageSound()
   const endRef = useRef<HTMLDivElement>(null)
+  const imageDialogRef = useRef<HTMLDialogElement>(null)
+  const [expandedImage, setExpandedImage] = useState<Extract<LessonStep, { type: 'image' }> | null>(null)
   const stepsById = useMemo(() => indexLessonSteps(lesson), [lesson])
   const [history, setHistory] = useState<VisitedStep[]>([{ id: lesson.firstStepId }])
   const currentVisit = history[history.length - 1]
@@ -31,6 +35,10 @@ function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLa
     ? selectedChoice?.nextStepId
     : currentStep.nextStepId
   const canContinue = currentStep.type !== 'question' || Boolean(selectedChoice)
+
+  useEffect(() => {
+    if (expandedImage && !imageDialogRef.current?.open) imageDialogRef.current?.showModal()
+  }, [expandedImage])
 
   useEffect(() => {
     if (history.length === 1 && !currentVisit.selectedChoiceId) return
@@ -70,7 +78,8 @@ function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLa
     <article className="lesson">
       <header className="lesson-header">
         <div className="lesson-toolbar">
-          <a className="brand" href="/">memstack<span> / l’atelier</span></a>
+          <a className="text-link" href="/">← Retour à l’atelier</a>
+          {onShowSummary && <button className="sound-toggle" type="button" onClick={onShowSummary}>Voir l’essentiel</button>}
           <button className="sound-toggle" type="button" aria-pressed={sound.enabled} onClick={sound.toggle}>
             Son {sound.enabled ? 'activé' : 'désactivé'}
           </button>
@@ -79,6 +88,7 @@ function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLa
         <p className="course-progress">{progressLabel}</p>
         <h1>{lesson.title}</h1>
         <p className="lesson-duration">Durée estimée : {lesson.estimatedMinutes} min</p>
+        <p className="lesson-step-count" role="status">Étape {history.length}</p>
         {sound.unavailable && <p role="status">Le son n’est pas disponible dans ce navigateur.</p>}
       </header>
 
@@ -98,6 +108,7 @@ function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLa
                 <figure className="lesson-image" key={`${step.id}-${index}`}>
                   <img src={step.src} alt={step.alt} />
                   {step.caption && <figcaption>{step.caption}</figcaption>}
+                  <button className="sound-toggle lesson-enlarge" type="button" onClick={() => setExpandedImage(step)}>Agrandir le schéma</button>
                 </figure>
               )
             }
@@ -134,6 +145,19 @@ function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLa
           {nextStepId ? 'Continuer' : completionLabel}
         </button>
       )}</div>
+      <dialog className="lesson-image-dialog" ref={imageDialogRef} aria-labelledby="lesson-image-title" onClose={() => setExpandedImage(null)}>
+        <div className="lesson-image-dialog-header">
+          <h2 id="lesson-image-title">Schéma de la leçon</h2>
+          <button className="sound-toggle" type="button" onClick={() => imageDialogRef.current?.close()}>Fermer</button>
+        </div>
+        {expandedImage && <>
+          <p>Sur petit écran, fais défiler le schéma horizontalement pour lire ses annotations.</p>
+          <div className="lesson-image-zoom" role="region" tabIndex={0} aria-label="Schéma agrandi, défilement horizontal disponible">
+            <img src={expandedImage.src} alt={expandedImage.alt} />
+          </div>
+          {expandedImage.caption && <p>{expandedImage.caption}</p>}
+        </>}
+      </dialog>
     </article>
   )
 }

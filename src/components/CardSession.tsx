@@ -11,6 +11,9 @@ type CardSessionProps = {
   onRate: (result: CardResult, kind: ReviewKind) => boolean
   progressLabel: string
   nextLessonLabel: string
+  onContinueReviews?: () => void
+  onContinueLearningCards?: () => void
+  onChooseLesson?: () => void
 }
 
 const ratingLabels: Record<CardRating, string> = {
@@ -18,7 +21,7 @@ const ratingLabels: Record<CardRating, string> = {
   recalled: 'Oui, je l’avais retrouvée',
 }
 
-function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel }: CardSessionProps) {
+function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel, onContinueReviews, onContinueLearningCards, onChooseLesson }: CardSessionProps) {
   const [results, setResults] = useState<CardResult[]>([])
   const ratedIds = useRef(new Set<string>())
   const [isRevealed, setIsRevealed] = useState(false)
@@ -40,8 +43,8 @@ function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel }
       <section className="card-session">
         <Memo />
         <p className="course-progress">{progressLabel}</p>
-        <h1>Session terminée</h1>
-        <p role="status">Tu as révisé {results.length} cartes.</p>
+        <h1>Lot terminé</h1>
+        <p role="status">Tu as travaillé {results.length} cartes. Tu peux t’arrêter ici ou continuer à ton rythme.</p>
         <ul className="card-summary">
           {results.map((result, index) => (
             <li key={result.cardId}>
@@ -51,10 +54,18 @@ function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel }
             </li>
           ))}
         </ul>
-        <p>Ta progression est sauvegardée dans ce navigateur.</p>
+        <p>Ta progression est sauvegardée et sa synchronisation est suivie dans le menu Compte.</p>
         <p>{nextLessonLabel}</p>
-        <a className="primary-link" href="/today">Voir ma session du jour</a>
-        <a href="/">Retour à l’accueil</a>
+        <nav className="learning-empty-actions" aria-label="Après le lot">
+          {onContinueReviews && <button className="catalog-button" type="button" onClick={onContinueReviews}>Réviser encore</button>}
+          {onContinueLearningCards && <button className="catalog-button secondary" type="button" onClick={onContinueLearningCards}>Reprendre mes nouvelles cartes</button>}
+          {onChooseLesson
+            ? <button className="catalog-button secondary" type="button" onClick={onChooseLesson}>Choisir la prochaine leçon</button>
+            : <a href="/today">Choisir ma session</a>}
+          <a href="/courses">Explorer les parcours</a>
+          <a href="/library">Relire mes leçons</a>
+          <a href="/">Retour à l’accueil</a>
+        </nav>
       </section>
     )
   }

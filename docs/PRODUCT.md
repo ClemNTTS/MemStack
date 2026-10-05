@@ -8,7 +8,7 @@ MemStack aide une personne à apprendre régulièrement des notions de développ
 
 - Organiser le contenu en **thèmes → parcours → leçons**. Exemple : `DevOps → Docker → Images et conteneurs` ; Docker, CI/CD, Cloud, Terraform, Kubernetes, Observability et SRE sont des parcours possibles du thème DevOps.
 - Suivre une leçon interactive en étapes courtes et voir sa progression dans le parcours.
-- Découvrir 3 à 5 cartes liées à la leçon, puis réviser jusqu'à 5 cartes dues. S'il y en a moins de 5, ne pas compléter artificiellement la session.
+- Découvrir les cartes liées à une leçon, puis réviser jusqu’à cinq cartes dues. Proposer « Réviser encore » pour lancer un autre lot sans refaire une leçon. Aucun plafond quotidien ; ne pas compléter artificiellement un lot ni avancer les échéances.
 - Après révélation, répondre à « Avais-tu retrouvé la réponse avant de la révéler ? » avec deux choix : **Non** (`forgotten`) ou **Oui** (`recalled`). Une réponse partielle sans l’idée essentielle compte comme non ; une réponse correcte après réflexion compte comme oui.
 - La question reste au-dessus d’une carte retournable au clic ou au clavier. Après révélation, glisser à gauche signifie non, à droite oui ; les boutons Mémo restent disponibles de chaque côté. Chaque nouvelle carte commence face cachée.
 - Mémo, mascotte lilas, accompagne les leçons. Ses expressions à plat et contente illustrent les deux choix ; les symboles × / ✓ et des labels accessibles explicitent leur sens, sans consignes visibles sous la carte. L’expression hésitante reste disponible pour une future illustration pédagogique.
@@ -21,9 +21,13 @@ Challenges avec exécution de code, veille automatisée, éditeur de leçons, no
 
 ## Atelier personnel
 
-L’accueil présente la session disponible, le parcours ordonné et les leçons terminées avec leur date. Une leçon terminée peut être relue en discussion interactive, sans changer la progression ni les échéances des cartes. Les leçons à venir restent accessibles par la découverte quotidienne.
+L’accueil conseille la prochaine leçon non terminée du parcours actif et donne un accès indépendant aux cartes dues ou jamais introduites. La navigation sépare Aujourd’hui, Parcours, Révisions et Bibliothèque. Le catalogue propose 12 thèmes, 30 parcours et 150 leçons, avec recherche et prérequis informatifs. Le choix du parcours et l’objectif personnel sont mémorisés par compte sur cet appareil. Une leçon terminée peut être relue en discussion ou via son résumé, sans changer progression ni échéances.
 
-Trois badges simples sont calculés depuis la progression existante : première leçon terminée, première carte de révision répondue, parcours Docker terminé. Ils reconnaissent la participation, pas la maîtrise des connaissances. Aucun point ni classement.
+Le rendez-vous quotidien est un conseil, sans verrou. L’objectif réglable dans le profil compte les nouvelles leçons terminées aujourd’hui ; il peut être dépassé ou remplacé par une session de cartes. `/today` propose découvrir, consolider ou réviser. Aucun choix ne lance une autre leçon automatiquement.
+
+Mémo peut suggérer une relecture après au moins deux oublis d’une même carte en révision, sur des jours distincts, depuis sa dernière réussite en révision. Les oublis lors de l’introduction ne comptent pas. La suggestion reste facultative et disparaît après une réussite. Ce seuil est une heuristique produit à ajuster, pas un diagnostic scientifique de maîtrise. Une carte jamais traitée appelle une consolidation, pas une répétition obligatoire de la leçon.
+
+Le profil affiche les leçons terminées, cartes découvertes et cartes dues : ces compteurs ne prouvent pas la maîtrise. Quatre badges reconnaissent la première leçon, la première révision, les trois leçons Docker historiques et un parcours entier. Aucun point ni classement.
 
 ## Rythme d'une leçon
 
@@ -43,16 +47,16 @@ Les **questions dans la leçon** guident la compréhension : elles ne donnent pa
 4. Sauvegarder la progression avec authentification et vérifier les règles d'accès.
 5. Déployer, utiliser pendant quelques semaines, puis décider de la prochaine fonctionnalité à partir de cet usage.
 
-## Version locale actuelle
+## Version actuelle
 
-Le parcours Docker contient Images et conteneurs, Volumes et persistance, puis Ports et réseaux : trois leçons et neuf cartes. Sa complétion, les réponses et les échéances sont sauvegardées dans le navigateur. Les cartes inédites restantes reprennent après interruption ; jusqu’à cinq révisions dues suivent, sans doublons ni remplissage artificiel. Le quota se renouvelle chaque jour local. Sans carte à traiter, afficher « Tu es à jour ». La connexion Google et Firestore synchronisent la progression entre appareils à la connexion ou au rechargement. L'import de la progression sans compte est explicite ; les erreurs de réseau gardent les réponses dans le cache du compte et proposent de réessayer.
+Tous les parcours sont disponibles, dont les cinq leçons Docker conservant les IDs historiques. Google et Internet sont obligatoires. Firestore synchronise les apprentissages à la connexion ou au rechargement ; le cache protège les sauvegardes interrompues. La consolidation reprend les cartes inédites de tous les parcours sans bloquer la découverte. Après une leçon, ses cartes et jusqu’à cinq cartes dues sont proposées ; des lots supplémentaires de révision restent accessibles. `/reviews` ne lance jamais une leçon ni de carte inédite. L’import sans compte est explicite ; une erreur de réseau bloque la session jusqu’à synchronisation réussie.
 
 ## Direction visuelle
 
 L’atelier de Mémo : fond ivoire, traits encre, plaques lilas aux bords de l’écran et pile de connaissances. Le décor se compose à l’ouverture puis réagit aux étapes, sans animation permanente. Les bulles légèrement dépolies arrivent par un fondu court ; les avatars ponctuent les groupes de messages et les questions. Son de message facultatif, désactivé par défaut. Le rythme reste piloté par « Continuer » et la préférence de réduction des mouvements est respectée.
 
-## Progression dans Docker
+## Progression dans les parcours
 
-`/today` choisit la première leçon non terminée dans l’ordre du parcours. Une leçon terminée au cours du jour local bloque la découverte suivante jusqu’au lendemain ; les révisions restent disponibles. Les cartes inédites non traitées d’une leçon terminée sont rattrapées avant une nouvelle leçon. Le compteur « 1 leçon sur 3 terminée » se met à jour à la fin de la leçon. Une fois le parcours terminé, la répétition espacée continue.
+`/today` conseille la première leçon non terminée du parcours actif, dans l’ordre. Plusieurs leçons peuvent être découvertes le même jour ; les cartes restent disponibles séparément. Le compteur du parcours se met à jour à la fin de la leçon. Les prérequis ne verrouillent pas la sélection.
 
 Sources du contenu : [persistance](https://docs.docker.com/get-started/docker-concepts/running-containers/persisting-container-data/), [volumes](https://docs.docker.com/engine/storage/volumes/), [publication des ports](https://docs.docker.com/engine/network/port-publishing/) et [réseaux bridge](https://docs.docker.com/engine/network/drivers/bridge/).

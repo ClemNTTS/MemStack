@@ -14,6 +14,8 @@ MemStack is a React, TypeScript, and Vite app. `src/main.tsx` mounts the app, `s
 
 There is no lint script yet. Run `npm run build` for every code change and `npm test` when changing review behavior.
 
+The active lesson library lives in `src/data/catalog/`, with its plan in `docs/CURRICULUM.md` and `docs/content/curriculum.json`. Read `docs/content/WORKFLOW.md` before editing lessons; retain stable IDs, primary sources and the inspection record. Run `npm test` for content changes. `LearningWorkspace` routes authenticated pages, including explicit `?start=lesson` or `?start=cards` actions. `catalogPlan` proposes lessons, global pending cards and optional relearning suggestions. `learningPreference` stores course and daily goal locally per account; neither is cloud synced.
+
 ## Coding Style & Naming Conventions
 
 Use two-space indentation in TypeScript, TSX, CSS, and JSON. Follow the existing TypeScript style: single quotes, no semicolons, and small functional React components. Name components and their files in PascalCase (`LessonCard.tsx`); use camelCase for functions and variables. Keep imports and UI focused; avoid creating abstraction layers for features that do not exist. No formatter or linter is configured, so preserve the surrounding style.
@@ -28,5 +30,5 @@ Existing commit subjects are short and imperative. Use short imperative subjects
 
 ## Architecture & Configuration
 
-Keep this stage frontend-only. The ordered three-lesson Docker course at `/today` is interactive and sourced from static data; Google Auth, Firestore synchronization and explicit local imports are implemented; GitHub Pages deployment remains planned. Binary recall, daily review queues, one completed lesson per local day, and browser-local progress are implemented. Never commit secrets or local `.env` files. Before adding a backend or new service, explain the requirement it solves and update `docs/ARCHITECTURE.md`.
+Keep this stage frontend-only. Thirty ordered courses use static content; Google Auth, Firestore progress synchronization and explicit local imports are implemented; deployment remains planned. Discovery has no daily cap. Reviews use renewable batches of five due cards; never bring future cards forward or automatically start another lesson. Daily goals are optional guidance. Preserve historical Docker lesson/card IDs. Google authentication and Internet access are required on every route; never allow guest or offline learning. Never commit secrets or local `.env` files. Before adding a service, explain its requirement and update `docs/ARCHITECTURE.md`.
 

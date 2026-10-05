@@ -1,0 +1,1261 @@
+{
+  "version": 1,
+  "language": "fr",
+  "themes": [
+    {
+      "id": "fundamentals",
+      "title": "Fondamentaux"
+    },
+    {
+      "id": "web",
+      "title": "Web"
+    },
+    {
+      "id": "languages",
+      "title": "JavaScript et TypeScript"
+    },
+    {
+      "id": "react",
+      "title": "React"
+    },
+    {
+      "id": "backend",
+      "title": "Backend et API"
+    },
+    {
+      "id": "data",
+      "title": "Données"
+    },
+    {
+      "id": "devops",
+      "title": "DevOps"
+    },
+    {
+      "id": "security",
+      "title": "Sécurité"
+    },
+    {
+      "id": "testing",
+      "title": "Tests"
+    },
+    {
+      "id": "architecture",
+      "title": "Architecture"
+    },
+    {
+      "id": "performance",
+      "title": "Performance"
+    },
+    {
+      "id": "engineering",
+      "title": "Pratiques de développement"
+    }
+  ],
+  "courses": [
+    {
+      "id": "data-reasoning",
+      "title": "Données et raisonnement",
+      "themeId": "fundamentals",
+      "theme": "Fondamentaux",
+      "priority": "S",
+      "prerequisites": "savoir lire quelques lignes de code.",
+      "lessons": [
+        {
+          "id": "fund-values-references",
+          "title": "Valeurs et références",
+          "objective": "prévoir si une modification affecte une copie ou l'objet partagé.",
+          "status": "reviewed"
+        },
+        {
+          "id": "fund-mutation",
+          "title": "Mutation et immutabilité",
+          "objective": "remplacer une modification cachée par une transformation explicite.",
+          "status": "reviewed"
+        },
+        {
+          "id": "fund-collections",
+          "title": "Choisir une collection",
+          "objective": "choisir tableau, ensemble ou dictionnaire selon accès et unicité.",
+          "status": "reviewed"
+        },
+        {
+          "id": "fund-complexity",
+          "title": "Coût d'une boucle",
+          "objective": "comparer un parcours linéaire et deux boucles imbriquées lorsque l'entrée grandit.",
+          "status": "reviewed"
+        },
+        {
+          "id": "fund-invariants",
+          "title": "Garder un invariant",
+          "objective": "formuler une règle qui doit rester vraie avant et après une opération.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "systems-basics",
+      "title": "Processus, fichiers et outils",
+      "themeId": "fundamentals",
+      "theme": "Fondamentaux",
+      "priority": "S",
+      "prerequisites": "`data-reasoning`.",
+      "lessons": [
+        {
+          "id": "systems-process",
+          "title": "Processus et ressources",
+          "objective": "distinguer programme sur disque et processus avec mémoire et descripteurs.",
+          "status": "reviewed"
+        },
+        {
+          "id": "systems-paths",
+          "title": "Chemins et répertoire courant",
+          "objective": "expliquer pourquoi un chemin relatif fonctionne dans un terminal et échoue dans un autre.",
+          "status": "reviewed"
+        },
+        {
+          "id": "systems-permissions",
+          "title": "Permissions des fichiers",
+          "objective": "diagnostiquer un refus d'accès sans donner toutes les permissions.",
+          "status": "reviewed"
+        },
+        {
+          "id": "systems-environment",
+          "title": "Variables d'environnement",
+          "objective": "distinguer configuration d'un processus et valeur enregistrée dans le code.",
+          "status": "reviewed"
+        },
+        {
+          "id": "systems-exit-codes",
+          "title": "Sortie standard et code de retour",
+          "objective": "décider si une commande a réussi sans se fier à un message affiché.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "http-basics",
+      "title": "HTTP et navigation",
+      "themeId": "web",
+      "theme": "Web",
+      "priority": "S",
+      "prerequisites": "`systems-basics`.",
+      "lessons": [
+        {
+          "id": "http-request-response",
+          "title": "Requête et réponse",
+          "objective": "identifier méthode, URL, en-têtes et corps dans un échange HTTP.",
+          "status": "reviewed"
+        },
+        {
+          "id": "http-methods-status",
+          "title": "Méthodes et statuts",
+          "objective": "choisir une méthode et interpréter succès, erreur client et erreur serveur.",
+          "status": "reviewed"
+        },
+        {
+          "id": "http-dns-tls",
+          "title": "Du nom au serveur",
+          "objective": "ordonner résolution DNS, connexion TLS et échange HTTP sans confondre leurs rôles.",
+          "status": "reviewed"
+        },
+        {
+          "id": "http-cookies",
+          "title": "Cookies et session",
+          "objective": "expliquer comment un cookie accompagne une requête selon son domaine et ses attributs.",
+          "status": "reviewed"
+        },
+        {
+          "id": "http-cache",
+          "title": "Cache HTTP",
+          "objective": "distinguer réutilisation d'une réponse fraîche et revalidation conditionnelle.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "accessible-ui",
+      "title": "HTML, CSS et accessibilité",
+      "themeId": "web",
+      "theme": "Web",
+      "priority": "S",
+      "prerequisites": "`http-basics`.",
+      "lessons": [
+        {
+          "id": "ui-semantic-html",
+          "title": "Une action, un vrai bouton",
+          "objective": "choisir l'élément HTML qui porte le comportement attendu.",
+          "status": "reviewed"
+        },
+        {
+          "id": "ui-box-model",
+          "title": "La taille réelle d'une boîte",
+          "objective": "calculer l'effet du padding et de la bordure selon `box-sizing`.",
+          "status": "reviewed"
+        },
+        {
+          "id": "ui-flex-grid",
+          "title": "Flex ou Grid",
+          "objective": "choisir une disposition selon l'axe et les relations entre éléments.",
+          "status": "reviewed"
+        },
+        {
+          "id": "ui-responsive",
+          "title": "Une interface qui rétrécit",
+          "objective": "concevoir une mise en page utilisable sans largeur fixe excessive.",
+          "status": "reviewed"
+        },
+        {
+          "id": "ui-keyboard-focus",
+          "title": "Clavier et focus visible",
+          "objective": "vérifier ordre de navigation, libellés et accès aux actions sans souris.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "browser-runtime",
+      "title": "Navigateur et asynchronisme",
+      "themeId": "web",
+      "theme": "Web",
+      "priority": "A",
+      "prerequisites": "`javascript-core`, `javascript-async`, `http-basics`.",
+      "lessons": [
+        {
+          "id": "browser-dom-events",
+          "title": "Événements et propagation",
+          "objective": "prévoir quel gestionnaire reçoit un clic avec la propagation dans le DOM.",
+          "status": "reviewed"
+        },
+        {
+          "id": "browser-event-loop",
+          "title": "Tâches et microtâches",
+          "objective": "prévoir un ordre simple entre code synchrone, promesse et timer.",
+          "status": "reviewed"
+        },
+        {
+          "id": "browser-fetch-errors",
+          "title": "Les erreurs de fetch",
+          "objective": "distinguer rejet réseau et réponse HTTP en erreur.",
+          "status": "reviewed"
+        },
+        {
+          "id": "browser-abort",
+          "title": "Annuler une requête",
+          "objective": "utiliser un signal d'annulation sans présenter l'annulation comme un échec serveur.",
+          "status": "reviewed"
+        },
+        {
+          "id": "browser-storage",
+          "title": "Stockage dans le navigateur",
+          "objective": "choisir cookie, stockage local ou IndexedDB selon durée, capacité et accès.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "javascript-core",
+      "title": "JavaScript essentiel",
+      "themeId": "languages",
+      "theme": "JavaScript et TypeScript",
+      "priority": "S",
+      "prerequisites": "`data-reasoning`.",
+      "lessons": [
+        {
+          "id": "js-scope",
+          "title": "Portée et fermeture",
+          "objective": "expliquer quelle variable une fonction capture et quand sa valeur est lue.",
+          "status": "reviewed"
+        },
+        {
+          "id": "js-equality",
+          "title": "Comparer sans surprise",
+          "objective": "distinguer égalité stricte, conversion implicite et identité d'objet.",
+          "status": "reviewed"
+        },
+        {
+          "id": "js-nullish",
+          "title": "Valeur absente ou valeur fausse",
+          "objective": "choisir `??` ou `||` sans perdre zéro ou chaîne vide.",
+          "status": "reviewed"
+        },
+        {
+          "id": "js-array-transforms",
+          "title": "Transformer une liste",
+          "objective": "choisir `map`, `filter` ou `find` selon le résultat attendu.",
+          "status": "reviewed"
+        },
+        {
+          "id": "js-errors",
+          "title": "Lever et transmettre une erreur",
+          "objective": "conserver une erreur utile sans la transformer silencieusement en succès.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "javascript-async",
+      "title": "Promesses et modules",
+      "themeId": "languages",
+      "theme": "JavaScript et TypeScript",
+      "priority": "S",
+      "prerequisites": "`javascript-core`.",
+      "lessons": [
+        {
+          "id": "js-promise",
+          "title": "Une promesse représente un résultat",
+          "objective": "suivre résolution et rejet sans confondre promesse et valeur finale.",
+          "status": "reviewed"
+        },
+        {
+          "id": "js-await",
+          "title": "Attendre au bon endroit",
+          "objective": "expliquer ce que suspend `await` et ce qui continue autour.",
+          "status": "reviewed"
+        },
+        {
+          "id": "js-concurrency",
+          "title": "Séquentiel ou concurrent",
+          "objective": "lancer ensemble des opérations indépendantes et attendre leurs résultats.",
+          "status": "reviewed"
+        },
+        {
+          "id": "js-async-errors",
+          "title": "Intercepter un rejet",
+          "objective": "placer le traitement d'erreur autour de l'opération réellement attendue.",
+          "status": "reviewed"
+        },
+        {
+          "id": "js-modules",
+          "title": "Contrats entre modules",
+          "objective": "distinguer export nommé et export par défaut et limiter les dépendances circulaires.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "typescript-core",
+      "title": "TypeScript fiable",
+      "themeId": "languages",
+      "theme": "JavaScript et TypeScript",
+      "priority": "S",
+      "prerequisites": "`javascript-core`, notions de JSON.",
+      "lessons": [
+        {
+          "id": "ts-unions",
+          "title": "Décrire plusieurs états",
+          "objective": "modéliser des états exclusifs par une union discriminée.",
+          "status": "reviewed"
+        },
+        {
+          "id": "ts-narrowing",
+          "title": "Réduire un type",
+          "objective": "utiliser une vérification réelle pour accéder à une propriété sûre.",
+          "status": "reviewed"
+        },
+        {
+          "id": "ts-unknown",
+          "title": "Une entrée inconnue",
+          "objective": "préférer `unknown` à `any` et valider les données externes.",
+          "status": "reviewed"
+        },
+        {
+          "id": "ts-generics",
+          "title": "Relier entrée et sortie",
+          "objective": "utiliser un paramètre générique qui conserve une relation utile de types.",
+          "status": "reviewed"
+        },
+        {
+          "id": "ts-runtime",
+          "title": "Les types disparaissent",
+          "objective": "expliquer pourquoi une assertion ne valide pas un JSON à l'exécution.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "react-state",
+      "title": "Composants et état",
+      "themeId": "react",
+      "theme": "React",
+      "priority": "S",
+      "prerequisites": "`typescript-core`, `accessible-ui`.",
+      "lessons": [
+        {
+          "id": "react-render",
+          "title": "Rendre à partir des données",
+          "objective": "décrire un composant comme calcul d'interface sans mutation pendant le rendu.",
+          "status": "reviewed"
+        },
+        {
+          "id": "react-props-state",
+          "title": "Props ou état local",
+          "objective": "placer une donnée à l'endroit qui maîtrise son changement.",
+          "status": "reviewed"
+        },
+        {
+          "id": "react-state-update",
+          "title": "La mise à jour attend son rendu",
+          "objective": "utiliser la forme fonctionnelle lorsque le prochain état dépend du précédent.",
+          "status": "reviewed"
+        },
+        {
+          "id": "react-derived-state",
+          "title": "Calculer plutôt que recopier",
+          "objective": "supprimer un état dérivé qui peut diverger de sa source.",
+          "status": "reviewed"
+        },
+        {
+          "id": "react-list-keys",
+          "title": "L'identité d'une ligne",
+          "objective": "choisir une clé stable et expliquer une confusion liée à l'index.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "react-effects",
+      "title": "Effets et architecture d'interface",
+      "themeId": "react",
+      "theme": "React",
+      "priority": "A",
+      "prerequisites": "`react-state`, `javascript-async`.",
+      "lessons": [
+        {
+          "id": "react-effects-sync",
+          "title": "Un effet synchronise l'extérieur",
+          "objective": "distinguer réaction à un événement et synchronisation par effet.",
+          "status": "reviewed"
+        },
+        {
+          "id": "react-effect-cleanup",
+          "title": "Nettoyer une souscription",
+          "objective": "associer abonnement et nettoyage pour éviter les doublons.",
+          "status": "reviewed"
+        },
+        {
+          "id": "react-dependencies",
+          "title": "Dépendances et valeurs capturées",
+          "objective": "expliquer une valeur périmée sans supprimer arbitrairement une dépendance.",
+          "status": "reviewed"
+        },
+        {
+          "id": "react-context",
+          "title": "Partager une donnée avec Context",
+          "objective": "utiliser un contexte pour un besoin partagé sans y mettre toute l'application.",
+          "status": "reviewed"
+        },
+        {
+          "id": "react-loading-states",
+          "title": "Chargement, erreur et résultat",
+          "objective": "modéliser une requête sans afficher un ancien résultat comme nouveau.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "node-server",
+      "title": "Node.js côté serveur",
+      "themeId": "backend",
+      "theme": "Backend et API",
+      "priority": "S",
+      "prerequisites": "`javascript-async`, `systems-basics`, `http-basics`.",
+      "lessons": [
+        {
+          "id": "node-runtime",
+          "title": "Le serveur et sa boucle d'événements",
+          "objective": "identifier une opération CPU qui bloque les autres requêtes.",
+          "status": "reviewed"
+        },
+        {
+          "id": "node-validation",
+          "title": "Valider à l'entrée",
+          "objective": "rejeter un corps de requête invalide avant la logique métier.",
+          "status": "reviewed"
+        },
+        {
+          "id": "node-config",
+          "title": "Configuration et secrets",
+          "objective": "charger une configuration serveur sans exposer un secret au bundle frontend.",
+          "status": "reviewed"
+        },
+        {
+          "id": "node-errors",
+          "title": "Erreur interne, réponse externe",
+          "objective": "fournir une erreur API utile sans divulguer pile et informations sensibles.",
+          "status": "reviewed"
+        },
+        {
+          "id": "node-shutdown",
+          "title": "Arrêter proprement",
+          "objective": "expliquer comment terminer les requêtes et fermer les ressources lors d'un arrêt.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "rest-design",
+      "title": "Concevoir une API REST",
+      "themeId": "backend",
+      "theme": "Backend et API",
+      "priority": "S",
+      "prerequisites": "`http-basics`, `node-server`.",
+      "lessons": [
+        {
+          "id": "rest-resources",
+          "title": "Nommer une ressource",
+          "objective": "construire une URL qui représente un objet plutôt qu'une série d'actions.",
+          "status": "reviewed"
+        },
+        {
+          "id": "rest-idempotency",
+          "title": "Réessayer sans doubler",
+          "objective": "distinguer opération idempotente et requête susceptible de créer deux résultats.",
+          "status": "reviewed"
+        },
+        {
+          "id": "rest-pagination",
+          "title": "Parcourir une collection",
+          "objective": "expliquer offset et curseur dans une liste qui change.",
+          "status": "reviewed"
+        },
+        {
+          "id": "rest-error-contract",
+          "title": "Un contrat d'erreur stable",
+          "objective": "fournir code et détail exploitables sans dépendre du texte d'affichage.",
+          "status": "reviewed"
+        },
+        {
+          "id": "rest-evolution",
+          "title": "Faire évoluer un contrat",
+          "objective": "distinguer ajout compatible et changement qui casse un consommateur.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "backend-resilience",
+      "title": "Travail différé et résilience",
+      "themeId": "backend",
+      "theme": "Backend et API",
+      "priority": "A",
+      "prerequisites": "`rest-design`, `sql-basics`.",
+      "lessons": [
+        {
+          "id": "backend-timeouts",
+          "title": "Ne pas attendre indéfiniment",
+          "objective": "placer un délai et distinguer expiration locale et résultat distant inconnu.",
+          "status": "reviewed"
+        },
+        {
+          "id": "backend-retries",
+          "title": "Réessayer avec mesure",
+          "objective": "choisir les échecs réessayables et une attente progressive bornée.",
+          "status": "reviewed"
+        },
+        {
+          "id": "backend-queue",
+          "title": "Une tâche dans une file",
+          "objective": "expliquer producteur, consommateur et accusé de réception.",
+          "status": "reviewed"
+        },
+        {
+          "id": "backend-duplicate-jobs",
+          "title": "Une tâche peut revenir",
+          "objective": "concevoir un traitement tolérant une livraison répétée.",
+          "status": "reviewed"
+        },
+        {
+          "id": "backend-outbox",
+          "title": "Écrire puis annoncer",
+          "objective": "expliquer pourquoi une écriture DB et un envoi de message peuvent diverger.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "sql-basics",
+      "title": "SQL et cohérence",
+      "themeId": "data",
+      "theme": "Données",
+      "priority": "S",
+      "prerequisites": "`data-reasoning`.",
+      "lessons": [
+        {
+          "id": "sql-keys",
+          "title": "Clés et contraintes",
+          "objective": "exprimer identité, unicité et référence dans le schéma.",
+          "status": "reviewed"
+        },
+        {
+          "id": "sql-joins",
+          "title": "Relier deux tables",
+          "objective": "prévoir l'effet d'un `INNER JOIN` et d'un `LEFT JOIN` sur les lignes absentes.",
+          "status": "reviewed"
+        },
+        {
+          "id": "sql-null",
+          "title": "NULL n'est pas une valeur ordinaire",
+          "objective": "utiliser `IS NULL` et prévoir un filtre avec valeur inconnue.",
+          "status": "reviewed"
+        },
+        {
+          "id": "sql-transactions",
+          "title": "Tout ou rien",
+          "objective": "regrouper deux modifications liées dans une transaction.",
+          "status": "reviewed"
+        },
+        {
+          "id": "sql-indexes",
+          "title": "Un index a un coût",
+          "objective": "identifier une recherche aidée par un index et le coût des écritures associées.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "document-data",
+      "title": "Documents et Firestore",
+      "themeId": "data",
+      "theme": "Données",
+      "priority": "A",
+      "prerequisites": "`sql-basics`, `identity-access`.",
+      "lessons": [
+        {
+          "id": "documents-model",
+          "title": "Regrouper ou référencer",
+          "objective": "choisir la frontière d'un document selon les lectures et modifications.",
+          "status": "reviewed"
+        },
+        {
+          "id": "documents-denormalization",
+          "title": "Dupliquer une donnée volontairement",
+          "objective": "identifier la lecture gagnée et le risque de copies divergentes.",
+          "status": "reviewed"
+        },
+        {
+          "id": "firestore-paths",
+          "title": "Collections et documents",
+          "objective": "expliquer un chemin Firestore sans le confondre avec une arborescence de fichiers.",
+          "status": "reviewed"
+        },
+        {
+          "id": "firestore-transactions",
+          "title": "Concurrence et nouvelle tentative",
+          "objective": "éviter un effet externe dans une fonction transactionnelle réexécutée.",
+          "status": "reviewed"
+        },
+        {
+          "id": "firestore-rules",
+          "title": "Règles par propriétaire",
+          "objective": "distinguer authentification, autorisation et validation d'un document utilisateur.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "docker-basics",
+      "title": "Les bases de Docker",
+      "themeId": "devops",
+      "theme": "DevOps",
+      "priority": "S",
+      "prerequisites": "`systems-basics`, connaissances HTTP élémentaires pour les ports.",
+      "lessons": [
+        {
+          "id": "docker-images-containers",
+          "title": "Images et conteneurs",
+          "objective": "expliquer pourquoi redémarrer une instance ne remplace pas son image.",
+          "status": "reviewed"
+        },
+        {
+          "id": "docker-volumes-persistence",
+          "title": "Volumes et persistance",
+          "objective": "préserver des données lors du remplacement d'un conteneur.",
+          "status": "reviewed"
+        },
+        {
+          "id": "docker-ports-networks",
+          "title": "Ports et réseaux",
+          "objective": "choisir adresse et port selon un accès hôte ou entre conteneurs.",
+          "status": "reviewed"
+        },
+        {
+          "id": "docker-build-cache",
+          "title": "Dockerfile et cache de build",
+          "objective": "ordonner copie des dépendances et du code pour réutiliser une couche utile.",
+          "status": "reviewed"
+        },
+        {
+          "id": "docker-compose",
+          "title": "Décrire plusieurs services",
+          "objective": "lire une configuration Compose et distinguer service, réseau et volume.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "cicd-basics",
+      "title": "Intégration et livraison",
+      "themeId": "devops",
+      "theme": "DevOps",
+      "priority": "S",
+      "prerequisites": "`git-collaboration`, `test-strategy`.",
+      "lessons": [
+        {
+          "id": "cicd-pipeline",
+          "title": "La chaîne de vérification",
+          "objective": "ordonner installation, tests et build avec des conditions d'échec explicites.",
+          "status": "reviewed"
+        },
+        {
+          "id": "cicd-lockfile",
+          "title": "Installer ce qui a été vérifié",
+          "objective": "expliquer pourquoi la CI utilise un fichier de verrouillage.",
+          "status": "reviewed"
+        },
+        {
+          "id": "cicd-artifact",
+          "title": "Construire une fois, déployer le résultat",
+          "objective": "distinguer artefact de build et reconstruction dans chaque environnement.",
+          "status": "reviewed"
+        },
+        {
+          "id": "cicd-secrets",
+          "title": "Permissions du workflow",
+          "objective": "limiter jetons et secrets selon l'événement qui déclenche le workflow.",
+          "status": "reviewed"
+        },
+        {
+          "id": "cicd-rollback",
+          "title": "Revenir à une version connue",
+          "objective": "définir un retour arrière qui tient compte des migrations et de la configuration.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "cloud-basics",
+      "title": "Cloud essentiel",
+      "themeId": "devops",
+      "theme": "DevOps",
+      "priority": "A",
+      "prerequisites": "`http-basics`, `docker-basics`, `identity-access`.",
+      "lessons": [
+        {
+          "id": "cloud-responsibility",
+          "title": "Qui gère quoi ?",
+          "objective": "distinguer responsabilités de l'utilisateur et du fournisseur selon le service.",
+          "status": "reviewed"
+        },
+        {
+          "id": "cloud-compute",
+          "title": "Choisir le mode d'exécution",
+          "objective": "comparer VM, conteneur géré et fonction pour un besoin donné.",
+          "status": "reviewed"
+        },
+        {
+          "id": "cloud-regions",
+          "title": "Région et disponibilité",
+          "objective": "distinguer proximité géographique et isolation des défaillances.",
+          "status": "reviewed"
+        },
+        {
+          "id": "cloud-iam",
+          "title": "Une identité pour un service",
+          "objective": "préférer une identité avec permissions limitées à une clé partagée.",
+          "status": "reviewed"
+        },
+        {
+          "id": "cloud-cost",
+          "title": "Comprendre une facture variable",
+          "objective": "identifier calcul, stockage et transfert dans un scénario de consommation.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "terraform-basics",
+      "title": "Infrastructure avec Terraform",
+      "themeId": "devops",
+      "theme": "DevOps",
+      "priority": "P",
+      "prerequisites": "`cloud-basics`, `git-collaboration`.",
+      "lessons": [
+        {
+          "id": "terraform-state",
+          "title": "Code et état de l'infrastructure",
+          "objective": "expliquer le rôle de l'état dans le lien entre configuration et ressources.",
+          "status": "reviewed"
+        },
+        {
+          "id": "terraform-plan",
+          "title": "Lire avant d'appliquer",
+          "objective": "repérer création, modification et remplacement dans un plan.",
+          "status": "reviewed"
+        },
+        {
+          "id": "terraform-variables",
+          "title": "Paramétrer un environnement",
+          "objective": "distinguer variable d'entrée et valeur calculée de sortie.",
+          "status": "reviewed"
+        },
+        {
+          "id": "terraform-locking",
+          "title": "Partager l'état sans collision",
+          "objective": "expliquer stockage distant et verrouillage des opérations concurrentes.",
+          "status": "reviewed"
+        },
+        {
+          "id": "terraform-drift",
+          "title": "Une modification hors Terraform",
+          "objective": "identifier une dérive et décider comment réconcilier code et réalité.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "kubernetes-basics",
+      "title": "Kubernetes essentiel",
+      "themeId": "devops",
+      "theme": "DevOps",
+      "priority": "P",
+      "prerequisites": "`docker-basics`, `cloud-basics`.",
+      "lessons": [
+        {
+          "id": "k8s-pod",
+          "title": "Le Pod comme unité",
+          "objective": "distinguer Pod et conteneur et expliquer le partage du réseau.",
+          "status": "reviewed"
+        },
+        {
+          "id": "k8s-deployment",
+          "title": "Déclarer le nombre souhaité",
+          "objective": "expliquer comment un Deployment maintient des réplicas.",
+          "status": "reviewed"
+        },
+        {
+          "id": "k8s-service",
+          "title": "Une adresse stable",
+          "objective": "expliquer comment un Service cible des Pods par sélection.",
+          "status": "reviewed"
+        },
+        {
+          "id": "k8s-probes",
+          "title": "Prêt ou vivant ?",
+          "objective": "choisir readiness ou liveness sans redémarrer un service simplement occupé.",
+          "status": "reviewed"
+        },
+        {
+          "id": "k8s-resources",
+          "title": "Demandes et limites",
+          "objective": "distinguer réservation pour le placement et contraintes d'exécution.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "observability-basics",
+      "title": "Observabilité",
+      "themeId": "devops",
+      "theme": "DevOps",
+      "priority": "A",
+      "prerequisites": "`node-server`, `rest-design`.",
+      "lessons": [
+        {
+          "id": "obs-signals",
+          "title": "Logs, métriques et traces",
+          "objective": "choisir le signal adapté à une question d'exploitation.",
+          "status": "reviewed"
+        },
+        {
+          "id": "obs-structured-logs",
+          "title": "Retrouver une requête",
+          "objective": "relier des événements avec un identifiant de corrélation sans journaliser un secret.",
+          "status": "reviewed"
+        },
+        {
+          "id": "obs-latency",
+          "title": "La moyenne cache une queue lente",
+          "objective": "interpréter un percentile de latence avec sa population et sa fenêtre.",
+          "status": "reviewed"
+        },
+        {
+          "id": "obs-cardinality",
+          "title": "Une métrique qui explose",
+          "objective": "repérer un label à forte cardinalité et choisir une alternative.",
+          "status": "reviewed"
+        },
+        {
+          "id": "obs-alerts",
+          "title": "Une alerte actionnable",
+          "objective": "définir symptôme, seuil, durée et action attendue.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "sre-basics",
+      "title": "Fiabilité et incidents",
+      "themeId": "devops",
+      "theme": "DevOps",
+      "priority": "P",
+      "prerequisites": "`observability-basics`, `backend-resilience`.",
+      "lessons": [
+        {
+          "id": "sre-sli-slo",
+          "title": "Mesure et objectif de service",
+          "objective": "distinguer SLI, SLO et engagement contractuel.",
+          "status": "reviewed"
+        },
+        {
+          "id": "sre-error-budget",
+          "title": "Le budget d'erreur",
+          "objective": "relier un objectif de fiabilité et une décision de livraison.",
+          "status": "reviewed"
+        },
+        {
+          "id": "sre-incident",
+          "title": "Trier pendant un incident",
+          "objective": "privilégier atténuation et communication avant recherche exhaustive de la cause.",
+          "status": "reviewed"
+        },
+        {
+          "id": "sre-postmortem",
+          "title": "Apprendre d'une panne",
+          "objective": "décrire faits, facteurs et actions vérifiables sans chercher un coupable.",
+          "status": "reviewed"
+        },
+        {
+          "id": "sre-restore",
+          "title": "Une sauvegarde restaurable",
+          "objective": "distinguer existence d'une copie et preuve de restauration avec délai acceptable.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "identity-access",
+      "title": "Identité et contrôle d'accès",
+      "themeId": "security",
+      "theme": "Sécurité",
+      "priority": "S",
+      "prerequisites": "`http-basics`.",
+      "lessons": [
+        {
+          "id": "security-authn-authz",
+          "title": "Identité et permission",
+          "objective": "expliquer pourquoi être connecté ne donne pas accès aux données d'autrui.",
+          "status": "reviewed"
+        },
+        {
+          "id": "security-object-access",
+          "title": "Vérifier chaque objet",
+          "objective": "contrôler le propriétaire côté autorité de données plutôt que cacher un bouton.",
+          "status": "reviewed"
+        },
+        {
+          "id": "security-session-tokens",
+          "title": "Session et jeton",
+          "objective": "distinguer validation d'un jeton, expiration et révocation.",
+          "status": "reviewed"
+        },
+        {
+          "id": "security-oauth-oidc",
+          "title": "Autoriser ou identifier",
+          "objective": "distinguer rôle d'OAuth et rôle d'OpenID Connect dans une connexion.",
+          "status": "reviewed"
+        },
+        {
+          "id": "security-least-privilege",
+          "title": "La permission minimale",
+          "objective": "limiter portée et durée d'une identité humaine ou technique.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "web-security",
+      "title": "Sécurité des entrées et du navigateur",
+      "themeId": "security",
+      "theme": "Sécurité",
+      "priority": "S",
+      "prerequisites": "`identity-access`, `accessible-ui`, `sql-basics`.",
+      "lessons": [
+        {
+          "id": "security-injection",
+          "title": "Données ou instruction SQL",
+          "objective": "choisir une requête paramétrée plutôt qu'une concaténation.",
+          "status": "reviewed"
+        },
+        {
+          "id": "security-xss",
+          "title": "Du texte devient du script",
+          "objective": "identifier un contexte de sortie dangereux et traiter du HTML non fiable.",
+          "status": "reviewed"
+        },
+        {
+          "id": "security-csrf",
+          "title": "Une requête avec les cookies d'autrui",
+          "objective": "expliquer une attaque CSRF et une protection adaptée.",
+          "status": "reviewed"
+        },
+        {
+          "id": "security-cors",
+          "title": "Ce que CORS contrôle",
+          "objective": "distinguer lecture autorisée par le navigateur et permission d'accès côté serveur.",
+          "status": "reviewed"
+        },
+        {
+          "id": "security-dependencies",
+          "title": "Une dépendance vulnérable",
+          "objective": "évaluer usage réel, version corrigée et impact sans ignorer une alerte.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "test-strategy",
+      "title": "Stratégie et tests utiles",
+      "themeId": "testing",
+      "theme": "Tests",
+      "priority": "S",
+      "prerequisites": "`javascript-core`, fonctions simples.",
+      "lessons": [
+        {
+          "id": "tests-unit-integration",
+          "title": "Choisir la frontière du test",
+          "objective": "distinguer fonction isolée, intégration réelle et parcours utilisateur.",
+          "status": "reviewed"
+        },
+        {
+          "id": "tests-boundaries",
+          "title": "Tester les limites",
+          "objective": "choisir des cas à la frontière et des entrées invalides plutôt que répéter le cas nominal.",
+          "status": "reviewed"
+        },
+        {
+          "id": "tests-determinism",
+          "title": "Le temps sans attendre",
+          "objective": "injecter horloge et hasard pour rendre un test reproductible.",
+          "status": "reviewed"
+        },
+        {
+          "id": "tests-doubles",
+          "title": "Un double qui peut mentir",
+          "objective": "utiliser un faux ciblé sans considérer son succès comme preuve du service réel.",
+          "status": "reviewed"
+        },
+        {
+          "id": "tests-regression",
+          "title": "Transformer un bug en preuve",
+          "objective": "écrire un test qui échoue sur la version fautive et protège un comportement utile.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "architecture-boundaries",
+      "title": "Responsabilités et contrats",
+      "themeId": "architecture",
+      "theme": "Architecture",
+      "priority": "S",
+      "prerequisites": "`typescript-core`, `rest-design`.",
+      "lessons": [
+        {
+          "id": "arch-domain-ui",
+          "title": "Règle métier ou affichage",
+          "objective": "isoler une règle testable de l'interface qui la présente.",
+          "status": "reviewed"
+        },
+        {
+          "id": "arch-dependencies",
+          "title": "Une dépendance orientée",
+          "objective": "choisir une frontière qui évite qu'un détail de stockage dicte la règle métier.",
+          "status": "reviewed"
+        },
+        {
+          "id": "arch-contracts",
+          "title": "Le contrat d'un module",
+          "objective": "exposer une capacité précise plutôt que son état interne complet.",
+          "status": "reviewed"
+        },
+        {
+          "id": "arch-state-machine",
+          "title": "Des états autorisés",
+          "objective": "représenter états et transitions pour empêcher une combinaison incohérente.",
+          "status": "reviewed"
+        },
+        {
+          "id": "arch-adr",
+          "title": "Garder la raison d'un choix",
+          "objective": "consigner contexte, décision et conséquences dans une note concise.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "distributed-basics",
+      "title": "Architecture distribuée",
+      "themeId": "architecture",
+      "theme": "Architecture",
+      "priority": "A",
+      "prerequisites": "`architecture-boundaries`, `backend-resilience`, `sql-basics`.",
+      "lessons": [
+        {
+          "id": "dist-monolith",
+          "title": "Le coût d'une séparation",
+          "objective": "choisir un monolithe modulaire lorsque les frontières et besoins ne justifient pas des services.",
+          "status": "reviewed"
+        },
+        {
+          "id": "dist-consistency",
+          "title": "Une donnée temporairement différente",
+          "objective": "expliquer une cohérence éventuelle dans un scénario concret de réplication.",
+          "status": "reviewed"
+        },
+        {
+          "id": "dist-concurrent-writes",
+          "title": "Deux écritures concurrentes",
+          "objective": "comparer écrasement, version attendue et fusion selon le sens métier.",
+          "status": "reviewed"
+        },
+        {
+          "id": "dist-cache-invalidation",
+          "title": "Une copie devenue ancienne",
+          "objective": "définir quand expirer ou invalider une donnée mise en cache.",
+          "status": "reviewed"
+        },
+        {
+          "id": "dist-time-order",
+          "title": "L'heure ne prouve pas l'ordre",
+          "objective": "identifier une ambiguïté causée par horloges client et délais réseau.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "performance-basics",
+      "title": "Mesurer et accélérer",
+      "themeId": "performance",
+      "theme": "Performance",
+      "priority": "A",
+      "prerequisites": "`browser-runtime`, `react-state`, `sql-basics`.",
+      "lessons": [
+        {
+          "id": "perf-measure",
+          "title": "Trouver le vrai goulot",
+          "objective": "mesurer un parcours avant de choisir une optimisation.",
+          "status": "reviewed"
+        },
+        {
+          "id": "perf-web-vitals",
+          "title": "Chargement et réactivité perçus",
+          "objective": "distinguer LCP, INP et CLS avec un exemple utilisateur.",
+          "status": "reviewed"
+        },
+        {
+          "id": "perf-bundle",
+          "title": "Charger ce qui est nécessaire",
+          "objective": "identifier un gros module et un découpage de chargement pertinent.",
+          "status": "reviewed"
+        },
+        {
+          "id": "perf-images",
+          "title": "Une image adaptée à l'écran",
+          "objective": "choisir dimensions, format et chargement sans retarder inutilement l'élément principal.",
+          "status": "reviewed"
+        },
+        {
+          "id": "perf-n-plus-one",
+          "title": "Une requête par ligne",
+          "objective": "repérer le motif N+1 et regrouper une lecture sans charger toute la base.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "git-collaboration",
+      "title": "Git et collaboration",
+      "themeId": "engineering",
+      "theme": "Pratiques de développement",
+      "priority": "S",
+      "prerequisites": "`systems-basics`.",
+      "lessons": [
+        {
+          "id": "git-working-tree",
+          "title": "Travail, index et commit",
+          "objective": "distinguer modification locale, contenu préparé et historique enregistré.",
+          "status": "reviewed"
+        },
+        {
+          "id": "git-small-commits",
+          "title": "Un changement relisible",
+          "objective": "former un commit cohérent avec un sujet qui explique l'action.",
+          "status": "reviewed"
+        },
+        {
+          "id": "git-merge-rebase",
+          "title": "Relier deux historiques",
+          "objective": "expliquer différence entre fusion et réécriture sans réécrire une branche partagée.",
+          "status": "reviewed"
+        },
+        {
+          "id": "git-conflicts",
+          "title": "Résoudre le sens d'un conflit",
+          "objective": "vérifier le comportement combiné au-delà de la suppression des marqueurs.",
+          "status": "reviewed"
+        },
+        {
+          "id": "git-review",
+          "title": "Relire pour décider",
+          "objective": "vérifier intention, comportement et preuves dans une pull request.",
+          "status": "reviewed"
+        }
+      ]
+    },
+    {
+      "id": "maintenance-basics",
+      "title": "Diagnostic et maintenance",
+      "themeId": "engineering",
+      "theme": "Pratiques de développement",
+      "priority": "S",
+      "prerequisites": "`javascript-core`, `git-collaboration`, `test-strategy`.",
+      "lessons": [
+        {
+          "id": "debug-reproduce",
+          "title": "Un bug reproductible",
+          "objective": "réduire environnement, données et étapes à un scénario précis.",
+          "status": "reviewed"
+        },
+        {
+          "id": "debug-hypothesis",
+          "title": "Une hypothèse à la fois",
+          "objective": "choisir une observation qui distingue deux causes possibles.",
+          "status": "reviewed"
+        },
+        {
+          "id": "debug-stack-trace",
+          "title": "Lire une pile d'erreur",
+          "objective": "retrouver origine et propagation sans confondre le dernier appel et la cause.",
+          "status": "reviewed"
+        },
+        {
+          "id": "maintenance-refactor",
+          "title": "Changer la structure avec un filet",
+          "objective": "séparer correction métier et refactoring pour garder une preuve compréhensible.",
+          "status": "reviewed"
+        },
+        {
+          "id": "maintenance-upgrade",
+          "title": "Mettre à jour une dépendance",
+          "objective": "lire changements incompatibles, migrer et vérifier le comportement utilisé.",
+          "status": "reviewed"
+        }
+      ]
+    }
+  ],
+  "counts": {
+    "themes": 12,
+    "courses": 30,
+    "lessons": 150.0
+  }
+}

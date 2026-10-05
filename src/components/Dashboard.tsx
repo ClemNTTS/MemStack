@@ -1,57 +1,44 @@
 import { useProgress } from '../progress/ProgressProvider'
-import { planCourse } from '../review/coursePlan'
-import { createDailyQueue } from '../review/dailyQueue'
-import { cards } from '../data/cards'
-import { dockerCourse, dockerLessons } from '../data/dockerCourse'
+import { useLearningPreference } from '../progress/learningPreference'
+import { planLearning, getRelearningSuggestions } from '../review/catalogPlan'
+import { localDay } from '../review/dailyQueue'
+import { catalogCourses, catalogLessons } from '../data/catalog'
+import { CourseProgress, learningStats } from './CatalogShared'
 import WorkshopBackground from './WorkshopBackground'
 
 function Dashboard() {
-  const { progress, user } = useProgress()
-  const plan = planCourse(dockerCourse, dockerLessons, progress)
-  const queue = createDailyQueue(cards, plan.pendingCardIds, progress)
-  const reviews = queue.filter((item) => item.kind === 'review').length
-  const sessionTitle = plan.lesson ? plan.lesson.title : plan.pendingCardIds.length
-    ? 'Retrouvons les cartes en cours' : reviews ? 'Un petit rappel avec Mémo' : 'Tout est à jour'
-  const badges = [
-    { symbol: '✦', title: 'Premier déclic', description: 'Terminer une première leçon.', unlocked: plan.completedCount > 0 },
-    { symbol: '↺', title: 'Mémoire en mouvement', description: 'Répondre à une première carte de révision.', unlocked: progress.history.some((event) => event.kind === 'review') },
-    { symbol: '◇', title: 'Cap sur Docker', description: 'Terminer les trois leçons Docker.', unlocked: plan.completedCount === dockerCourse.lessonIds.length },
-  ]
-  return (
-    <main className="dashboard">
-      <WorkshopBackground stage="rest" beat={0} />
-      <header className="dashboard-header">
-        <a className="brand" href="/">memstack<span> / l’atelier</span></a>
-        <nav aria-label="Navigation principale"><a href="#today">Aujourd’hui</a><a href="#courses">Parcours</a><a href="#badges">Badges</a></nav>
-      </header>
-      <div className="dashboard-heading"><div><p className="lesson-category">Ton espace de connaissances</p><h1>Une idée de plus.<br /><span>Un peu mieux retenue.</span></h1><p>Avec Mémo, construis tes connaissances une session à la fois.</p></div><img className="memo-learning" src={`${import.meta.env.BASE_URL}memo/learning.png`} alt="Mémo assis, en train d’apprendre avec un livre ouvert" width="300" height="250" /></div>
-      <section className="dashboard-session" id="today" aria-labelledby="today-title">
-        <div><p className="lesson-category">01 / Aujourd’hui</p><h2 id="today-title">{sessionTitle}</h2>
-          <p>{plan.lesson ? `${plan.lesson.estimatedMinutes} min de découverte · ${plan.lesson.cardIds.length} nouvelles cartes` : plan.pendingCardIds.length ? `${plan.pendingCardIds.length} cartes à découvrir` : reviews ? 'Un court retour sur tes connaissances.' : 'Reviens demain pour continuer à apprendre et réviser.'}{reviews > 0 && ` · ${reviews} révision${reviews > 1 ? 's' : ''} disponible${reviews > 1 ? 's' : ''}`}</p>
-          {!plan.lesson && plan.nextLesson && <p className="dashboard-note">{plan.learnedToday ? 'Demain' : 'À suivre'} : {plan.nextLesson.title}</p>}
-        </div><a className="dashboard-cta" href="/today">{plan.lesson || queue.length ? 'Ouvrir ma session' : 'Voir ma session'} <span aria-hidden="true">↗</span></a>
-      </section>
-      <section id="courses" aria-labelledby="course-title">
-        <div className="section-heading"><div><p className="lesson-category">02 / Tes parcours</p><h2 id="course-title">Les bases de Docker</h2></div><span className="dashboard-chip">DevOps</span></div>
-        <div className="course-overview"><span>{plan.completedCount} leçon{plan.completedCount > 1 ? 's' : ''} sur 3 terminée{plan.completedCount > 1 ? 's' : ''}</span><progress aria-label="Progression du parcours Docker" max={3} value={plan.completedCount} /></div>
-        <ol className="course-lessons">{dockerCourse.lessonIds.map((id, index) => {
-          const lesson = dockerLessons.find((item) => item.id === id)!
-          const completed = Object.hasOwn(progress.completedLessons, id)
-          const available = plan.lesson?.id === id
-          return <li className="course-row" data-completed={completed} key={id}>
-            <span className="lesson-number" aria-hidden="true">{completed ? '✓' : `0${index + 1}`}</span>
-            <div><h3>{lesson.title}</h3><p>{lesson.estimatedMinutes} min · {completed ? `Terminée le ${new Date(progress.completedLessons[id]).toLocaleDateString('fr-FR')}` : available ? 'À découvrir aujourd’hui' : plan.nextLesson?.id === id && plan.learnedToday ? 'Disponible demain' : 'À venir'}</p></div>
-            {completed ? <a href={`/lessons/${id}`}>Relire <span aria-hidden="true">↗</span></a> : available ? <a href="/today">Découvrir <span aria-hidden="true">↗</span></a> : <span className="dashboard-note">À venir</span>}
-          </li>
-        })}</ol>
-      </section>
-      <section id="badges" aria-labelledby="badges-title">
-        <div className="section-heading"><div><p className="lesson-category">03 / Petites victoires</p><h2 id="badges-title">Tes badges</h2></div><span className="dashboard-note">{badges.filter((badge) => badge.unlocked).length} / {badges.length} obtenus</span></div>
-        <div className="badge-grid">{badges.map((badge) => <article className="badge-card" data-unlocked={badge.unlocked} key={badge.title}><span className="badge-symbol" aria-hidden="true">{badge.symbol}</span><h3>{badge.title}</h3><p>{badge.description}</p><span className="badge-status">{badge.unlocked ? 'Obtenu' : 'À débloquer'}</span></article>)}</div>
-      </section>
-      <footer className="dashboard-footer">Une idée à la fois.<span>{user ? 'Progression liée à ton compte Google.' : 'Progression sauvegardée dans ce navigateur.'}</span></footer>
-    </main>
-  )
+  const { progress } = useProgress()
+  const { activeCourseId, dailyLessonGoal } = useLearningPreference()
+  const course = catalogCourses.find(course => course.id === activeCourseId)!
+  const plan = planLearning(course, progress)
+  const stats = learningStats(progress)
+  const today = localDay(new Date())
+  const discoveredToday = Object.values(progress.completedLessons).filter(at => localDay(new Date(at)) === today).length
+  const suggestions = getRelearningSuggestions(progress)
+  const lastLesson = catalogLessons.filter(lesson => Object.hasOwn(progress.completedLessons, lesson.id))
+    .sort((a, b) => progress.completedLessons[b.id].localeCompare(progress.completedLessons[a.id]))[0]
+  return <main className="dashboard">
+    <WorkshopBackground stage="rest" beat={0} />
+    <div className="dashboard-heading learning-hero">
+      <div><p className="lesson-category">Ton rendez-vous avec Mémo</p><h1>Une idée de plus.<br /><span>Un peu mieux retenue.</span></h1><p>Un petit pas chaque jour. Tu choisis quand t’arrêter.</p><div className="hero-meta"><a href="/profile">Repère du jour : {discoveredToday} / {dailyLessonGoal} leçon{dailyLessonGoal > 1 ? 's' : ''}</a><span>{discoveredToday >= dailyLessonGoal ? 'Objectif atteint · tu peux continuer' : 'À ton rythme, sans limite'}</span></div></div>
+      <img className="memo-learning" src={`${import.meta.env.BASE_URL}memo/learning.png`} alt="Mémo apprend avec son livre ouvert" width="300" height="250" />
+    </div>
+    <section className="dashboard-session" aria-labelledby="today-title">
+      <div><p className="lesson-category">Prochaine leçon conseillée · {course.theme}</p><h2 id="today-title">{plan.lesson?.title ?? 'Un chemin parcouru.'}</h2><p>{plan.lesson ? `${plan.lesson.estimatedMinutes} min · ${plan.lesson.cardIds.length} nouvelles cartes · ${course.title}` : 'Ton parcours est terminé. Tes cartes continuent de revenir aux bonnes échéances.'}</p>
+        {(stats.due > 0 || plan.pendingCardIds.length > 0) && <p className="dashboard-note">Mémo te conseille de consolider tes cartes d’abord. La découverte reste accessible.</p>}
+      </div><a className="dashboard-cta" href={plan.lesson ? '/today?start=lesson' : '/courses'}>{plan.lesson ? 'Découvrir cette leçon' : 'Explorer les parcours'} <span aria-hidden="true">↗</span></a>
+    </section>
+    <section className="stats-strip" aria-label="Ton apprentissage">
+      <div><strong>{stats.completed}</strong><span>{stats.completed === 1 ? 'leçon terminée' : 'leçons terminées'}</span></div><div><strong>{stats.learned}</strong><span>{stats.learned === 1 ? 'carte découverte' : 'cartes découvertes'}</span></div><div><strong>{stats.due}</strong><span>{stats.due === 1 ? 'carte due' : 'cartes dues'}</span></div>
+    </section>
+    <div className="dashboard-columns">
+      <section className="overview-panel" aria-labelledby="consolidate-title"><p className="lesson-category">À consolider · tous les parcours</p><h2 id="consolidate-title">Un peu de temps pour tes cartes ?</h2><p className="muted">{stats.due ? `${stats.due} carte${stats.due > 1 ? 's' : ''} due${stats.due > 1 ? 's' : ''}. Révise par lots de cinq, puis continue si tu le souhaites.` : 'Aucune révision due pour le moment. Les prochaines cartes reviendront à leur échéance.'}</p>{plan.pendingCardIds.length > 0 && <p className="muted">{plan.pendingCardIds.length} carte{plan.pendingCardIds.length > 1 ? 's' : ''} de leçons terminées à découvrir.</p>}<div className="panel-actions">{plan.pendingCardIds.length > 0 && <a className="text-link" href="/today?start=cards">Reprendre mes cartes →</a>}<a className="text-link" href="/reviews">{stats.due ? 'Réviser mes cartes' : 'Voir mes prochaines révisions'} →</a></div></section>
+      <section className="overview-panel" aria-labelledby="active-course"><p className="lesson-category">Ton parcours actif</p><h2 id="active-course">{course.title}</h2><p className="muted">{course.theme} · {course.lessonIds.length} petites leçons</p><CourseProgress course={course} progress={progress} /><a className="text-link" href={`/courses/${course.id}`}>Voir mon chemin <span aria-hidden="true">→</span></a></section>
+    </div>
+    {suggestions.length > 0 && <section className="relearning-section" aria-labelledby="relearning-title"><div className="section-heading"><div><p className="lesson-category">Revoir une explication</p><h2 id="relearning-title">Ces idées méritent un petit détour.</h2></div></div><div className="relearning-grid">{suggestions.map(({ lesson, forgottenCardCount }) => <article className="overview-panel" key={lesson.id}><h3>{lesson.title}</h3><p className="muted">{forgottenCardCount} carte{forgottenCardCount > 1 ? 's' : ''} oubliée{forgottenCardCount > 1 ? 's' : ''} lors de révisions sur plusieurs jours. Mémo te propose de retrouver l’explication.</p><a className="text-link" href={`/lessons/${lesson.id}`}>Revoir avec Mémo →</a></article>)}</div></section>}
+    {lastLesson && <p className="recent-replay muted">Dernière découverte : {lastLesson.title}. <a className="text-link" href={`/lessons/${lastLesson.id}`}>Relire →</a></p>}
+    <footer className="dashboard-footer">Une idée à la fois.<a href="/profile">Ma progression et mes badges →</a></footer>
+  </main>
 }
 
 export default Dashboard
