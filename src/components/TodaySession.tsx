@@ -1,30 +1,37 @@
 import { useRef, useState } from 'react'
 import type { Card, CardResult } from '../types/card'
+import type { Course } from '../types/course'
 import type { Lesson } from '../types/lesson'
 import type { LearningProgress, ReviewKind } from '../types/progress'
-import { emptyProgress, loadProgress, saveProgress } from '../progress/storage'
+import { useProgress } from '../progress/ProgressProvider'
 import { createDailyQueue } from '../review/dailyQueue'
 import type { SessionCard } from '../review/dailyQueue'
+import { planCourse } from '../review/coursePlan'
 import { scheduleReview } from '../review/schedule'
 import CardSession from './CardSession'
 import LessonView from './LessonView'
 import Memo from './Memo'
+import WorkshopBackground from './WorkshopBackground'
 
-type TodaySessionProps = { lesson: Lesson, cards: Card[] }
+type TodaySessionProps = { course: Course, lessons: Lesson[], cards: Card[] }
 
-function TodaySession({ lesson, cards }: TodaySessionProps) {
-  const [initial] = useState(() => {
-    try { return { progress: loadProgress(), error: '' } }
-    catch { return { progress: emptyProgress(), error: 'Impossible de lire la progression locale. Réessaie ou réinitialise-la pour continuer.' } }
-  })
+function TodaySession({ course, lessons, cards }: TodaySessionProps) {
+  const [visualBeat, setVisualBeat] = useState(0)
+  const account = useProgress()
+  const [initial] = useState(() => ({ progress: account.progress }))
   const [progress, setProgress] = useState(initial.progress)
   const currentProgress = useRef(initial.progress)
-  const [error, setError] = useState(initial.error)
+  const [error, setError] = useState('')
+  const [plan] = useState(() => planCourse(course, lessons, initial.progress))
+  const lesson = plan.lesson
   const [queue, setQueue] = useState<SessionCard[] | null>(() =>
-    Object.hasOwn(initial.progress.completedLessons, lesson.id)
-      ? createDailyQueue(cards, lesson.cardIds, initial.progress)
-      : null,
+    lesson ? null : createDailyQueue(cards, plan.pendingCardIds, initial.progress),
   )
+  const currentPlan = planCourse(course, lessons, progress)
+  const progressLabel = `${currentPlan.completedCount} leçon${currentPlan.completedCount > 1 ? 's' : ''} sur ${course.lessonIds.length} terminée${currentPlan.completedCount > 1 ? 's' : ''}`
+  const nextLessonLabel = currentPlan.nextLesson
+    ? `${currentPlan.learnedToday ? 'Demain' : 'Prochaine leçon'} : ${currentPlan.nextLesson.title}`
+    : 'Parcours Docker terminé. Les révisions continuent.'
   const now = Date.now()
   const knownCards = cards.map((card) => progress.cards[card.id]).filter((state) => Boolean(state))
   const dueRemaining = knownCards.filter((state) => Date.parse(state.dueAt) <= now).length
@@ -32,7 +39,7 @@ function TodaySession({ lesson, cards }: TodaySessionProps) {
 
   function persist(next: LearningProgress): boolean {
     try {
-      saveProgress(next)
+      if (!account.persist(next)) throw new Error('Save failed')
       currentProgress.current = next
       setProgress(next)
       setError('')
@@ -44,11 +51,12 @@ function TodaySession({ lesson, cards }: TodaySessionProps) {
   }
 
   function completeLesson() {
+    if (!lesson) return
     const next = {
       ...currentProgress.current,
       completedLessons: { ...currentProgress.current.completedLessons, [lesson.id]: new Date().toISOString() },
     }
-    if (persist(next)) setQueue(createDailyQueue(cards, lesson.cardIds, next))
+    if (persist(next)) setQueue(createDailyQueue(cards, planCourse(course, lessons, next).pendingCardIds, next))
   }
 
   function rateCard(result: CardResult, kind: ReviewKind): boolean {
@@ -60,37 +68,28 @@ function TodaySession({ lesson, cards }: TodaySessionProps) {
     })
   }
 
-  if (initial.error && error) {
-    return (
-      <section>
-        <h1>Progression indisponible</h1>
-        <p role="alert">{error}</p>
-        <button className="lesson-choice" onClick={() => window.location.reload()}>Réessayer</button>
-        <button className="lesson-choice" onClick={() => {
-          if (persist(emptyProgress())) setQueue(null)
-        }}>Réinitialiser la progression locale</button>
-      </section>
-    )
-  }
-
   return (
     <>
+      <WorkshopBackground stage={queue === null ? 'lesson' : queue.length ? 'cards' : 'rest'} beat={visualBeat} />
       {error && <p role="alert">{error}</p>}
-      {queue === null ? <LessonView lesson={lesson} onComplete={completeLesson} /> : queue.length > 0 ? (
-        <CardSession cards={queue} progress={progress.cards} onRate={rateCard} />
+      {queue === null && lesson ? (
+        <LessonView progressLabel={progressLabel} lesson={lesson} onComplete={completeLesson} onMessage={() => setVisualBeat((beat) => beat + 1)} />
+      ) : queue && queue.length > 0 ? (
+        <CardSession progressLabel={progressLabel} nextLessonLabel={nextLessonLabel} cards={queue} progress={progress.cards} onRate={rateCard} />
       ) : (
         <section>
+          <p className="course-progress">{course.theme} · {course.title} — {progressLabel}</p>
           <Memo />
           <h1>{dueRemaining ? 'Session du jour terminée' : 'Tu es à jour'}</h1>
           {dueRemaining ? (
             <p>Tu as atteint tes cinq révisions du jour. Il reste {dueRemaining} cartes dues ; reviens demain pour continuer.</p>
           ) : (
             <>
-              <p>La leçon est terminée et aucune carte n’est due pour le moment.</p>
+              <p>Aucune carte n’est due pour le moment.</p>
               {nextDue && <p>Prochaine révision : {new Date(nextDue).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' })}.</p>}
             </>
           )}
-          <p>De nouvelles leçons seront ajoutées au parcours.</p>
+          <p>{nextLessonLabel}</p>
           <a href="/">Retour à l’accueil</a>
         </section>
       )}

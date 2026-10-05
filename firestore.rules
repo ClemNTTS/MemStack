@@ -1,0 +1,35 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function owner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+    function isoDate(value) {
+      return value is string && value.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}[.][0-9]{3}Z$');
+    }
+    match /users/{uid}/lessons/{lessonId} {
+      allow read: if owner(uid);
+      allow create, update: if owner(uid)
+        && request.resource.data.keys().hasOnly(['completedAt'])
+        && isoDate(request.resource.data.completedAt);
+    }
+    match /users/{uid}/cards/{cardId} {
+      allow read: if owner(uid);
+      allow create, update: if owner(uid)
+        && request.resource.data.keys().hasOnly(['cardId', 'intervalDays', 'lastReviewedAt', 'dueAt'])
+        && request.resource.data.cardId == cardId
+        && request.resource.data.intervalDays is int
+        && request.resource.data.intervalDays >= 1 && request.resource.data.intervalDays <= 365
+        && isoDate(request.resource.data.lastReviewedAt) && isoDate(request.resource.data.dueAt);
+    }
+    match /users/{uid}/reviews/{eventId} {
+      allow read: if owner(uid);
+      allow create: if owner(uid)
+        && request.resource.data.keys().hasOnly(['cardId', 'rating', 'reviewedAt', 'kind'])
+        && request.resource.data.cardId is string && request.resource.data.cardId.size() <= 128
+        && request.resource.data.rating in ['recalled', 'forgotten']
+        && request.resource.data.kind in ['new', 'review']
+        && isoDate(request.resource.data.reviewedAt);
+    }
+  }
+}

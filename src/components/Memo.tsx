@@ -1,7 +1,7 @@
 import type { CardRating } from '../types/card'
 
 type MemoProps = {
-  expression?: CardRating
+  expression?: CardRating | 'unsure'
 }
 
 function Memo({ expression = 'recalled' }: MemoProps) {

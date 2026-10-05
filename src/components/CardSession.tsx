@@ -9,6 +9,8 @@ type CardSessionProps = {
   cards: SessionCard[]
   progress: Record<string, CardProgress>
   onRate: (result: CardResult, kind: ReviewKind) => boolean
+  progressLabel: string
+  nextLessonLabel: string
 }
 
 const ratingLabels: Record<CardRating, string> = {
@@ -16,7 +18,7 @@ const ratingLabels: Record<CardRating, string> = {
   recalled: 'Oui, je l’avais retrouvée',
 }
 
-function CardSession({ cards, progress, onRate }: CardSessionProps) {
+function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel }: CardSessionProps) {
   const [results, setResults] = useState<CardResult[]>([])
   const ratedIds = useRef(new Set<string>())
   const [isRevealed, setIsRevealed] = useState(false)
@@ -37,6 +39,7 @@ function CardSession({ cards, progress, onRate }: CardSessionProps) {
     return (
       <section className="card-session">
         <Memo />
+        <p className="course-progress">{progressLabel}</p>
         <h1>Session terminée</h1>
         <p role="status">Tu as révisé {results.length} cartes.</p>
         <ul className="card-summary">
@@ -49,6 +52,8 @@ function CardSession({ cards, progress, onRate }: CardSessionProps) {
           ))}
         </ul>
         <p>Ta progression est sauvegardée dans ce navigateur.</p>
+        <p>{nextLessonLabel}</p>
+        <a className="primary-link" href="/today">Voir ma session du jour</a>
         <a href="/">Retour à l’accueil</a>
       </section>
     )
@@ -57,6 +62,7 @@ function CardSession({ cards, progress, onRate }: CardSessionProps) {
   return (
     <section className="card-session" aria-label="Cartes de mémorisation">
       <h1>{currentItem.kind === 'new' ? 'Nouvelles cartes' : 'Révisions du jour'}</h1>
+      <p className="course-progress">{progressLabel}</p>
       <p>Carte {results.length + 1} sur {cards.length}</p>
       <article className="card-stage" key={currentCard.id}>
         <h2 className="card-question">{currentCard.question}</h2>

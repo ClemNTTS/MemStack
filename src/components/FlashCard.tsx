@@ -72,11 +72,19 @@ function FlashCard({ card, isRevealed, onFlip, onRate }: FlashCardProps) {
         }
       }}
     >
-      <span className="flash-card-side">{isRevealed ? 'Réponse' : 'À toi de trouver'}</span>
-      <span className="flash-card-content" aria-live="polite">
-        {isRevealed ? card.answer : 'Retrouve la réponse, puis retourne la carte.'}
+      <span className="flash-card-inner">
+        <span className="flash-card-face flash-card-front" aria-hidden={isRevealed}>
+          <span className="flash-card-side">À toi de trouver</span>
+          <span className="flash-card-content">Retrouve la réponse, puis retourne la carte.</span>
+          <span className="flash-card-action">Retourner la carte</span>
+        </span>
+        <span className="flash-card-face flash-card-back" aria-hidden={!isRevealed}>
+          <span className="flash-card-side">Réponse</span>
+          <span className="flash-card-content">{card.answer}</span>
+          <span className="flash-card-action" aria-hidden="true">{'\u00a0'}</span>
+        </span>
       </span>
-      <span className="flash-card-action" aria-hidden="true">{isRevealed ? '\u00a0' : 'Retourner la carte'}</span>
+      <span className="sr-only" aria-live="polite">{isRevealed ? card.answer : ''}</span>
     </button>
   )
 }

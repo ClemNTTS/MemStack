@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-MemStack is a React, TypeScript, and Vite app. `src/main.tsx` mounts the app, `src/App.tsx` selects the current page, and `src/index.css` holds global styles. Put reusable UI in `src/components/`, static lesson content in `src/data/`, lesson flow logic in `src/lesson/`, and shared types in `src/types/`. `public/` is for assets copied unchanged into the build. `docs/PRODUCT.md` defines the MVP, while `docs/ARCHITECTURE.md` explains the planned architecture. Review scheduling and daily queues live in `src/review/`; versioned localStorage persistence lives in `src/progress/`, both with colocated tests. There are no Firebase files yet.
+MemStack is a React, TypeScript, and Vite app. `src/main.tsx` mounts the app, `src/App.tsx` selects the current page, and `src/index.css` holds global styles. Put reusable UI in `src/components/`, static lesson content in `src/data/`, lesson flow logic in `src/lesson/`, and shared types in `src/types/`. `public/` is for assets copied unchanged into the build. `docs/PRODUCT.md` defines the MVP, while `docs/ARCHITECTURE.md` explains the planned architecture. Review scheduling and daily queues live in `src/review/`; versioned localStorage persistence lives in `src/progress/`, both with colocated tests. Firebase adapters live in src/firebase/; src/progress/ProgressProvider.tsx coordinates Google sign-in, account caches, imports and synchronization. firestore.rules restricts access by user and validates document fields.
 
 ## Build, Test, and Development Commands
 
@@ -28,5 +28,5 @@ Existing commit subjects are short and imperative. Use short imperative subjects
 
 ## Architecture & Configuration
 
-Keep this stage frontend-only. The lesson at `/today` is interactive and sourced from static data; Firebase Auth, Firestore, and GitHub Pages deployment are planned but not implemented. Binary recall, daily review queues and browser-local progress are implemented. Never commit secrets or local `.env` files. Before adding a backend or new service, explain the requirement it solves and update `docs/ARCHITECTURE.md`.
+Keep this stage frontend-only. The ordered three-lesson Docker course at `/today` is interactive and sourced from static data; Google Auth, Firestore synchronization and explicit local imports are implemented; GitHub Pages deployment remains planned. Binary recall, daily review queues, one completed lesson per local day, and browser-local progress are implemented. Never commit secrets or local `.env` files. Before adding a backend or new service, explain the requirement it solves and update `docs/ARCHITECTURE.md`.
 

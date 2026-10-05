@@ -17,7 +17,13 @@ MemStack aide une personne à apprendre régulièrement des notions de développ
 
 ## Hors MVP
 
-Challenges avec exécution de code, veille automatisée, éditeur de leçons, notifications, points, classements, badges, parcours à déblocage complexe et statistiques détaillées.
+Challenges avec exécution de code, veille automatisée, éditeur de leçons, notifications, points, classements, parcours à déblocage complexe et statistiques détaillées.
+
+## Atelier personnel
+
+L’accueil présente la session disponible, le parcours ordonné et les leçons terminées avec leur date. Une leçon terminée peut être relue en discussion interactive, sans changer la progression ni les échéances des cartes. Les leçons à venir restent accessibles par la découverte quotidienne.
+
+Trois badges simples sont calculés depuis la progression existante : première leçon terminée, première carte de révision répondue, parcours Docker terminé. Ils reconnaissent la participation, pas la maîtrise des connaissances. Aucun point ni classement.
 
 ## Rythme d'une leçon
 
@@ -39,4 +45,14 @@ Les **questions dans la leçon** guident la compréhension : elles ne donnent pa
 
 ## Version locale actuelle
 
-Une seule leçon est disponible. Sa complétion, les réponses et les échéances sont sauvegardées dans le navigateur. Les cartes inédites restantes reprennent après interruption ; jusqu’à cinq révisions dues suivent, sans doublons ni remplissage artificiel. Le quota se renouvelle chaque jour local. Sans carte à traiter, afficher « Tu es à jour ». La synchronisation entre appareils reste prévue avec Firebase.
+Le parcours Docker contient Images et conteneurs, Volumes et persistance, puis Ports et réseaux : trois leçons et neuf cartes. Sa complétion, les réponses et les échéances sont sauvegardées dans le navigateur. Les cartes inédites restantes reprennent après interruption ; jusqu’à cinq révisions dues suivent, sans doublons ni remplissage artificiel. Le quota se renouvelle chaque jour local. Sans carte à traiter, afficher « Tu es à jour ». La connexion Google et Firestore synchronisent la progression entre appareils à la connexion ou au rechargement. L'import de la progression sans compte est explicite ; les erreurs de réseau gardent les réponses dans le cache du compte et proposent de réessayer.
+
+## Direction visuelle
+
+L’atelier de Mémo : fond ivoire, traits encre, plaques lilas aux bords de l’écran et pile de connaissances. Le décor se compose à l’ouverture puis réagit aux étapes, sans animation permanente. Les bulles légèrement dépolies arrivent par un fondu court ; les avatars ponctuent les groupes de messages et les questions. Son de message facultatif, désactivé par défaut. Le rythme reste piloté par « Continuer » et la préférence de réduction des mouvements est respectée.
+
+## Progression dans Docker
+
+`/today` choisit la première leçon non terminée dans l’ordre du parcours. Une leçon terminée au cours du jour local bloque la découverte suivante jusqu’au lendemain ; les révisions restent disponibles. Les cartes inédites non traitées d’une leçon terminée sont rattrapées avant une nouvelle leçon. Le compteur « 1 leçon sur 3 terminée » se met à jour à la fin de la leçon. Une fois le parcours terminé, la répétition espacée continue.
+
+Sources du contenu : [persistance](https://docs.docker.com/get-started/docker-concepts/running-containers/persisting-container-data/), [volumes](https://docs.docker.com/engine/storage/volumes/), [publication des ports](https://docs.docker.com/engine/network/port-publishing/) et [réseaux bridge](https://docs.docker.com/engine/network/drivers/bridge/).
