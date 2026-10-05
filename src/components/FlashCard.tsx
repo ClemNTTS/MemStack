@@ -76,7 +76,7 @@ function FlashCard({ card, isRevealed, onFlip, onRate }: FlashCardProps) {
       <span className="flash-card-content" aria-live="polite">
         {isRevealed ? card.answer : 'Retrouve la réponse, puis retourne la carte.'}
       </span>
-      <span className="flash-card-action">{isRevealed ? 'Retourner côté question' : 'Retourner la carte'}</span>
+      <span className="flash-card-action" aria-hidden="true">{isRevealed ? '\u00a0' : 'Retourner la carte'}</span>
     </button>
   )
 }

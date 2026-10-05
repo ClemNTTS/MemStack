@@ -11,7 +11,7 @@ MemStack aide une personne à apprendre régulièrement des notions de développ
 - Découvrir 3 à 5 cartes liées à la leçon, puis réviser jusqu'à 5 cartes dues. S'il y en a moins de 5, ne pas compléter artificiellement la session.
 - Après révélation, répondre à « Avais-tu retrouvé la réponse avant de la révéler ? » avec deux choix : **Non** (`forgotten`) ou **Oui** (`recalled`). Une réponse partielle sans l’idée essentielle compte comme non ; une réponse correcte après réflexion compte comme oui.
 - La question reste au-dessus d’une carte retournable au clic ou au clavier. Après révélation, glisser à gauche signifie non, à droite oui ; les boutons Mémo restent disponibles de chaque côté. Chaque nouvelle carte commence face cachée.
-- Mémo, mascotte lilas, accompagne les leçons. Ses expressions à plat et contente illustrent les deux choix ; une légende visible et des labels accessibles explicitent leur sens. L’expression hésitante reste disponible pour une future illustration pédagogique.
+- Mémo, mascotte lilas, accompagne les leçons. Ses expressions à plat et contente illustrent les deux choix ; les symboles × / ✓ et des labels accessibles explicitent leur sens, sans consignes visibles sous la carte. L’expression hésitante reste disponible pour une future illustration pédagogique.
 - Espacer progressivement les révisions selon le résultat et le temps écoulé, sans seuil de trois réussites. Règle initiale à ajuster après usage : première révision ou oubli → un jour ; réussite ultérieure → maximum de l’intervalle précédent et du double des jours écoulés, plafonné à 365 jours. Répéter immédiatement une carte n’augmente pas son intervalle.
 - Retrouver ses leçons terminées et l'état de ses cartes sur plusieurs appareils.
 
@@ -36,3 +36,7 @@ Les **questions dans la leçon** guident la compréhension : elles ne donnent pa
 3. Ajouter la sélection des cartes dues et la règle de révision.
 4. Sauvegarder la progression avec authentification et vérifier les règles d'accès.
 5. Déployer, utiliser pendant quelques semaines, puis décider de la prochaine fonctionnalité à partir de cet usage.
+
+## Version locale actuelle
+
+Une seule leçon est disponible. Sa complétion, les réponses et les échéances sont sauvegardées dans le navigateur. Les cartes inédites restantes reprennent après interruption ; jusqu’à cinq révisions dues suivent, sans doublons ni remplissage artificiel. Le quota se renouvelle chaque jour local. Sans carte à traiter, afficher « Tu es à jour ». La synchronisation entre appareils reste prévue avec Firebase.

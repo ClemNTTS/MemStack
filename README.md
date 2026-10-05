@@ -15,4 +15,4 @@ Le premier objectif est un parcours complet et utilisable chaque jour. Les chall
 
 ## Développement
 
-Après installation des dépendances avec `npm ci`, lancer `npm run dev` et ouvrir `/today` pour suivre la leçon interactive puis classer ses trois cartes. `npm run build` vérifie la compilation ; `npm test` vérifie les règles de révision avec Node 24+. Les choix restent en mémoire et sont perdus au rechargement ; les échéances sont calculées, mais la sélection des cartes dues, leur sauvegarde et Firebase restent à implémenter.
+Après installation des dépendances avec `npm ci`, lancer `npm run dev` et ouvrir `/today` pour suivre la leçon interactive puis classer ses trois cartes. `npm run build` vérifie la compilation ; `npm test` vérifie les règles de révision avec Node 24+. La progression est sauvegardée dans ce navigateur (localStorage). Une leçon terminée ne recommence pas ; les cartes non traitées reprennent après rechargement, suivies de cinq révisions dues au maximum par jour. Firebase et la synchronisation entre appareils restent à implémenter.

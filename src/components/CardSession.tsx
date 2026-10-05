@@ -1,11 +1,14 @@
-import { useState } from 'react'
-import type { Card, CardProgress, CardRating, CardResult } from '../types/card'
-import { scheduleReview } from '../review/schedule'
+import { useRef, useState } from 'react'
+import type { CardProgress, CardRating, CardResult } from '../types/card'
+import type { ReviewKind } from '../types/progress'
+import type { SessionCard } from '../review/dailyQueue'
 import Memo from './Memo'
 import FlashCard from './FlashCard'
 
 type CardSessionProps = {
-  cards: Card[]
+  cards: SessionCard[]
+  progress: Record<string, CardProgress>
+  onRate: (result: CardResult, kind: ReviewKind) => boolean
 }
 
 const ratingLabels: Record<CardRating, string> = {
@@ -13,25 +16,20 @@ const ratingLabels: Record<CardRating, string> = {
   recalled: 'Oui, je l’avais retrouvée',
 }
 
-function CardSession({ cards }: CardSessionProps) {
-  const [{ results, progress }, setSession] = useState<{
-    results: CardResult[]
-    progress: Record<string, CardProgress>
-  }>({ results: [], progress: {} })
+function CardSession({ cards, progress, onRate }: CardSessionProps) {
+  const [results, setResults] = useState<CardResult[]>([])
+  const ratedIds = useRef(new Set<string>())
   const [isRevealed, setIsRevealed] = useState(false)
-  const currentCard = cards[results.length]
+  const currentItem = cards[results.length]
+  const currentCard = currentItem?.card
 
   function rateCard(rating: CardRating) {
-    if (!currentCard || !isRevealed) return
+    if (!currentCard || !isRevealed || ratedIds.current.has(currentCard.id)) return
 
     const result = { cardId: currentCard.id, rating, reviewedAt: new Date().toISOString() }
-    setSession((previous) => previous.results.length === results.length ? {
-      results: [...previous.results, result],
-      progress: {
-        ...previous.progress,
-        [currentCard.id]: scheduleReview(result, previous.progress[currentCard.id]),
-      },
-    } : previous)
+    if (!onRate(result, currentItem.kind)) return
+    ratedIds.current.add(currentCard.id)
+    setResults((previous) => [...previous, result])
     setIsRevealed(false)
   }
 
@@ -44,13 +42,13 @@ function CardSession({ cards }: CardSessionProps) {
         <ul className="card-summary">
           {results.map((result, index) => (
             <li key={result.cardId}>
-              <span>{cards[index].question}</span>
+              <span>{cards[index].card.question}</span>
               <strong>{ratingLabels[result.rating]}</strong>
               <span>Prochaine révision : {new Date(progress[result.cardId].dueAt).toLocaleDateString('fr-FR')}</span>
             </li>
           ))}
         </ul>
-        <p>Ta progression reste en mémoire et sera perdue si tu recharges la page.</p>
+        <p>Ta progression est sauvegardée dans ce navigateur.</p>
         <a href="/">Retour à l’accueil</a>
       </section>
     )
@@ -58,7 +56,7 @@ function CardSession({ cards }: CardSessionProps) {
 
   return (
     <section className="card-session" aria-label="Cartes de mémorisation">
-      <h1>Nouvelles cartes</h1>
+      <h1>{currentItem.kind === 'new' ? 'Nouvelles cartes' : 'Révisions du jour'}</h1>
       <p>Carte {results.length + 1} sur {cards.length}</p>
       <article className="card-stage" key={currentCard.id}>
         <h2 className="card-question">{currentCard.question}</h2>
@@ -73,10 +71,9 @@ function CardSession({ cards }: CardSessionProps) {
             <span aria-hidden="true">✓ →</span>
           </button>
         </div>
-        <p id="card-instructions" className="card-instructions">
+        <p id="card-instructions" className="sr-only">
           {isRevealed ? 'Avais-tu retrouvé la réponse ? À gauche : non. À droite : oui. Glisse la carte ou choisis Mémo.' : 'Clique sur la carte pour révéler la réponse.'}
         </p>
-        <p className="card-legend">Une réponse sans l’idée essentielle compte comme non ; une réponse retrouvée après réflexion compte comme oui.</p>
       </article>
     </section>
   )

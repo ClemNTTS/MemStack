@@ -18,8 +18,8 @@ function App() {
       <h1>MemStack</h1>
       {path === '/' ? (
         <>
-          <p>Une courte leçon pour avancer aujourd'hui.</p>
-          <a className="primary-link" href="/today">Voir la leçon du jour</a>
+          <p>Une courte session pour apprendre et retrouver tes connaissances.</p>
+          <a className="primary-link" href="/today">Ouvrir ma session du jour</a>
         </>
       ) : (
         <>

@@ -2,14 +2,14 @@
 
 ## Project Structure & Module Organization
 
-MemStack is a React, TypeScript, and Vite app. `src/main.tsx` mounts the app, `src/App.tsx` selects the current page, and `src/index.css` holds global styles. Put reusable UI in `src/components/`, static lesson content in `src/data/`, lesson flow logic in `src/lesson/`, and shared types in `src/types/`. `public/` is for assets copied unchanged into the build. `docs/PRODUCT.md` defines the MVP, while `docs/ARCHITECTURE.md` explains the planned architecture. Review scheduling lives in `src/review/` with colocated tests. There are no Firebase files yet.
+MemStack is a React, TypeScript, and Vite app. `src/main.tsx` mounts the app, `src/App.tsx` selects the current page, and `src/index.css` holds global styles. Put reusable UI in `src/components/`, static lesson content in `src/data/`, lesson flow logic in `src/lesson/`, and shared types in `src/types/`. `public/` is for assets copied unchanged into the build. `docs/PRODUCT.md` defines the MVP, while `docs/ARCHITECTURE.md` explains the planned architecture. Review scheduling and daily queues live in `src/review/`; versioned localStorage persistence lives in `src/progress/`, both with colocated tests. There are no Firebase files yet.
 
 ## Build, Test, and Development Commands
 
 - `npm ci`: install the locked dependencies from `package-lock.json`.
 - `npm run dev`: start Vite for local development.
 - `npm run build`: type-check with TypeScript and create the production bundle in `dist/`.
-- `npm test`: run review scheduling and card gesture tests using the built-in Node.js runner (Node 24+).
+- `npm test`: run review scheduling, daily queue, storage, and card gesture tests using the built-in Node.js runner (Node 24+).
 - `npm run preview`: serve the built bundle locally after a successful build.
 
 There is no lint script yet. Run `npm run build` for every code change and `npm test` when changing review behavior.
@@ -28,4 +28,5 @@ Existing commit subjects are short and imperative. Use short imperative subjects
 
 ## Architecture & Configuration
 
-Keep this stage frontend-only. The lesson at `/today` is interactive and sourced from static data; Firebase Auth, Firestore, GitHub Pages deployment, and persistent daily review queues are planned but not implemented. Binary recall and in-memory scheduling are implemented. Never commit secrets or local `.env` files. Before adding a backend or new service, explain the requirement it solves and update `docs/ARCHITECTURE.md`.
+Keep this stage frontend-only. The lesson at `/today` is interactive and sourced from static data; Firebase Auth, Firestore, and GitHub Pages deployment are planned but not implemented. Binary recall, daily review queues and browser-local progress are implemented. Never commit secrets or local `.env` files. Before adding a backend or new service, explain the requirement it solves and update `docs/ARCHITECTURE.md`.
+
