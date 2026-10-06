@@ -21,7 +21,7 @@ Challenges avec exécution de code, veille automatisée, éditeur de leçons, no
 
 ## Atelier personnel
 
-L’accueil conseille la prochaine leçon non terminée du parcours actif et donne un accès indépendant aux cartes dues ou jamais introduites. La navigation sépare Aujourd’hui, Parcours, Révisions et Bibliothèque. Le catalogue propose 12 thèmes, 30 parcours et 150 leçons, avec recherche et prérequis informatifs. Le choix du parcours et l’objectif personnel sont mémorisés par compte sur cet appareil. Une leçon terminée peut être relue en discussion ou via son résumé, sans changer progression ni échéances.
+L’accueil conseille la prochaine leçon non terminée du parcours actif et donne un accès indépendant aux cartes dues ou jamais introduites. La navigation sépare Aujourd’hui, Parcours, Révisions et Bibliothèque. Le catalogue propose 12 thèmes, 30 parcours et 150 leçons, avec recherche et prérequis informatifs. Le parcours actif et l’objectif personnel sont synchronisés par compte dans Firestore, puis retrouvés à la connexion, au rechargement ou à la reconnexion sur un autre appareil. Les anciens réglages locaux ne sont importés que si le compte n’a pas de préférence cloud. Une leçon terminée peut être relue sans changer progression ni échéances.
 
 Le rendez-vous quotidien est un conseil, sans verrou. L’objectif réglable dans le profil compte les nouvelles leçons terminées aujourd’hui ; il peut être dépassé ou remplacé par une session de cartes. `/today` propose découvrir, consolider ou réviser. Aucun choix ne lance une autre leçon automatiquement.
 

@@ -9,13 +9,14 @@ import WorkshopBackground from './WorkshopBackground'
 
 function CoursesPage({ courseId }: { courseId?: string }) {
   const { progress } = useProgress()
-  const { activeCourseId, setActiveCourseId } = useLearningPreference()
+  const { activeCourseId, setActiveCourseId, saving, error: saveError } = useLearningPreference()
   const [theme, setTheme] = useState('all')
   const [search, setSearch] = useState('')
   const [error, setError] = useState('')
   const selected = catalogCourses.find(course => course.id === courseId)
-  function activate(id: string) {
-    setError(setActiveCourseId(id) ? '' : 'Impossible de mémoriser ce choix. Vérifie le stockage de ton navigateur puis réessaie.')
+  async function activate(id: string) {
+    setError('')
+    if (!await setActiveCourseId(id)) setError('Impossible de sauvegarder ce parcours. Vérifie ta connexion puis réessaie.')
   }
   if (courseId && !selected) return <main className="dashboard"><PageHeading eyebrow="Parcours introuvable" title="Un autre chemin ?" description="Ce parcours n’existe pas dans le catalogue." /><a className="dashboard-cta" href={appHref('/courses')}>Explorer les parcours</a></main>
   if (selected) {
@@ -26,8 +27,8 @@ function CoursesPage({ courseId }: { courseId?: string }) {
       <WorkshopBackground stage="rest" beat={0} />
       <a className="text-link breadcrumb" href={appHref('/courses')}>← Tous les parcours</a>
       <PageHeading eyebrow={selected.theme} title={selected.title} description="Un chemin court, une notion à la fois. Les révisions t’accompagnent ensuite." />
-      <section className="course-intro"><div><span className="dashboard-chip">{selected.lessonIds.length} leçons</span><p className="muted">Prérequis : {prerequisitesLabel(selected.id)}</p><CourseProgress course={selected} progress={progress} /></div><div className="course-activation">{active ? <span className="active-indicator">● Ton parcours actif</span> : <button className="catalog-button" type="button" onClick={() => activate(selected.id)}>Choisir ce parcours</button>}<p className="dashboard-note">Le choix est mémorisé sur cet appareil.<br />Découverte libre, dans l’ordre du parcours.</p></div></section>
-      {error && <p className="inline-error" role="alert">{error}</p>}
+      <section className="course-intro"><div><span className="dashboard-chip">{selected.lessonIds.length} leçons</span><p className="muted">Prérequis : {prerequisitesLabel(selected.id)}</p><CourseProgress course={selected} progress={progress} /></div><div className="course-activation">{active ? <span className="active-indicator">● Ton parcours actif</span> : <button className="catalog-button" type="button" disabled={saving} onClick={() => { void activate(selected.id) }}>{saving ? 'Sauvegarde…' : 'Choisir ce parcours'}</button>}<p className="dashboard-note">Parcours synchronisé avec ton compte, retrouvé à l’ouverture ou à la reconnexion.<br />Découverte libre, dans l’ordre du parcours.</p></div></section>
+      {(saveError || error) && <p className="inline-error" role="alert">{saveError || error}</p>}
       <ol className="learning-path" aria-label={`Leçons de ${selected.title}`}>
         {selected.lessonIds.map((id, index) => {
           const lesson = catalogLessons.find(lesson => lesson.id === id)!

@@ -14,7 +14,7 @@ MemStack is a React, TypeScript, and Vite app. `src/main.tsx` mounts the app, `s
 
 There is no lint script yet. Run `npm run build` for every code change and `npm test` when changing review behavior.
 
-The active lesson library lives in `src/data/catalog/`, with its plan in `docs/CURRICULUM.md` and `docs/content/curriculum.json`. Read `docs/content/WORKFLOW.md` before editing lessons; retain stable IDs, primary sources and the inspection record. Run `npm test` for content changes. `LearningWorkspace` routes authenticated pages, including explicit `?start=lesson` or `?start=cards` actions. `catalogPlan` proposes lessons, global pending cards and optional relearning suggestions. `learningPreference` stores course and daily goal locally per account; neither is cloud synced.
+The active lesson library lives in `src/data/catalog/`, with its plan in `docs/CURRICULUM.md` and `docs/content/curriculum.json`. Read `docs/content/WORKFLOW.md` before editing lessons; retain stable IDs, primary sources and the inspection record. Run `npm test` for content changes. `LearningWorkspace` routes authenticated pages, including explicit `?start=lesson` or `?start=cards` actions. `catalogPlan` proposes lessons, global pending cards and optional relearning suggestions. `learningPreference` loads and saves account preferences through Firestore transactions at users/{uid}/settings/learning. Cloud settings take precedence; legacy local settings migrate only when the remote document is absent. Confirm saves only after server acknowledgement.
 
 ## Coding Style & Naming Conventions
 
@@ -30,5 +30,5 @@ Existing commit subjects are short and imperative. Use short imperative subjects
 
 ## Architecture & Configuration
 
-Keep this stage frontend-only. Thirty ordered courses use static content; Google Auth, Firestore progress synchronization and explicit local imports are implemented; deployment remains planned. Discovery has no daily cap. Reviews use renewable batches of five due cards; never bring future cards forward or automatically start another lesson. Daily goals are optional guidance. Preserve historical Docker lesson/card IDs. Google authentication and Internet access are required on every route; never allow guest or offline learning. Never commit secrets or local `.env` files. Before adding a service, explain its requirement and update `docs/ARCHITECTURE.md`.
+Keep this stage frontend-only. Thirty ordered courses use static content; Google Auth, Firestore progress synchronization and explicit local imports are implemented; the frontend is deployed on GitHub Pages. Discovery has no daily cap. Reviews use renewable batches of five due cards; never bring future cards forward or automatically start another lesson. Daily goals are optional guidance. Preserve historical Docker lesson/card IDs. Google authentication and Internet access are required on every route; never allow guest or offline learning. Never commit secrets or local `.env` files. Before adding a service, explain its requirement and update `docs/ARCHITECTURE.md`.
 

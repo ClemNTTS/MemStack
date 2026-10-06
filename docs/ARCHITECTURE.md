@@ -4,7 +4,11 @@
 
 `App` conserve le garde Google/réseau et charge `LearningWorkspace` à la demande après synchronisation. Ce module pilote les routes avec History API, le retour navigateur, le titre et le focus du contenu. Le menu permanent ouvre `/` (accueil), `/courses`, `/reviews`, `/library` ; `/profile` réunit progression et badges. Les liens restent ouvrables dans un nouvel onglet. Aucun routeur supplémentaire.
 
-`Dashboard` conseille la prochaine leçon et donne accès indépendamment aux cartes. `/courses` filtre les 30 parcours ; `/courses/:id` montre objectifs, prérequis et chemin ordonné. `LearningPreferenceProvider` mémorise le parcours sous `memstack.learning-preference.v1.{uid}` et l’objectif indicatif (1 à 10 leçons) sous `memstack.learning-goal.v1.{uid}`. Ces préférences restent propres à cet appareil, isolées par compte. Dépasser l’objectif n’impose aucun blocage. Une erreur de stockage refuse le changement et l’affiche.
+`Dashboard` conseille la prochaine leçon et donne accès indépendamment aux cartes. `/courses` filtre les 30 parcours ; `/courses/:id` montre objectifs, prérequis et chemin ordonné. `LearningPreferenceProvider` charge `users/{uid}/settings/learning` avant d’ouvrir l’atelier. Le document porte `version: 1`, `activeCourseId` et `dailyLessonGoal` (entier de 1 à 10), validés par `preferenceModel` et les règles du propriétaire.
+
+`bootstrapCloudPreferences` reprend les clés historiques `memstack.learning-preference.v1.{uid}` et `memstack.learning-goal.v1.{uid}` uniquement si le document cloud est absent, dans une transaction. Une préférence cloud existante prime ; un document invalide provoque une erreur sans remplacement. Chaque modification relit la paire courante et applique seulement le champ changé, préservant une modification concurrente de l’autre champ. Les transactions validées en dernier font référence pour un même champ. Les contrôles attendent l’accusé serveur avant d’annoncer un succès ; une erreur conserve le choix précédent. Le cache local reste facultatif et ne permet pas d’usage hors ligne.
+
+Les préférences sont rechargées à la connexion, au rechargement et à la reconnexion ; aucun abonnement temps réel. Les réponses obsolètes après démontage ou changement de compte sont ignorées. Dépasser l’objectif n’impose aucun blocage ni changement des échéances.
 
 `LearningWorkspace` inclut la query dans l’état de route et la clé de page : `?start=lesson` et `?start=cards` sont des intentions explicites, compatibles avec le retour navigateur. `/today` sans query ouvre le choix. Après un lot, la prochaine leçon est proposée mais n’est jamais lancée automatiquement.
 
@@ -38,7 +42,7 @@ GitHub Actions → vérification, build et déploiement sur GitHub Pages
 
 Les thèmes, parcours, bulles et cartes sont du contenu statique : les modifier passe par le dépôt. Firestore conserve les données propres à l'utilisateur, notamment les leçons terminées et l'état de révision de ses cartes. Le contenu livré avec le frontend est public ; une interface d'administration ou du contenu privé demanderait un autre choix.
 
-**État actuel :** découverte libre dans l’ordre du parcours. `catalogPlan` propose la prochaine leçon et les cartes inédites globales, sans verrou. Les révisions globales sont des lots renouvelables de cinq cartes dues ; `/reviews` les ouvre seules. La progression est sauvegardée par compte puis synchronisée avec Firestore. Le déploiement reste à réaliser.
+**État actuel :** découverte libre dans l’ordre du parcours. `catalogPlan` propose la prochaine leçon et les cartes inédites globales, sans verrou. Les révisions globales sont des lots renouvelables de cinq cartes dues ; `/reviews` les ouvre seules. La progression est sauvegardée par compte puis synchronisée avec Firestore. Le frontend est publié sur GitHub Pages.
 
 ## Modèle des leçons
 
@@ -62,7 +66,7 @@ Séparer les données de la leçon du composant qui les affiche et pilote l'éta
 
 `getRelearningSuggestions` propose jusqu’à trois leçons terminées : une carte doit avoir au moins deux oublis en révision sur des jours locaux distincts depuis sa dernière réussite en révision. Ignorer les réponses d’introduction, dates futures et cartes absentes. Si `lastReviewedAt` est plus récent que l’historique visible, attendre sa cohérence plutôt que proposer une ancienne fragilité pendant une synchronisation partielle. Cette heuristique ne modifie ni les intervalles ni la progression.
 
-Effacer le cache conserve la progression synchronisée, mais perd les sauvegardes en attente et les préférences locales. La session ne coordonne pas les écritures simultanées dans plusieurs onglets. `Course.lessonIds` définit l’ordre ; `coursePlan` conseille la première leçon non terminée. `learnedToday` reste une métrique informative. Les anciennes complétions sont conservées sans migration et les révisions continuent après la fin d’un parcours.
+Effacer le cache conserve la progression et les préférences synchronisées, mais perd les sauvegardes de progression en attente. La session ne coordonne pas les écritures simultanées dans plusieurs onglets. `Course.lessonIds` définit l’ordre ; `coursePlan` conseille la première leçon non terminée. `learnedToday` reste une métrique informative. Les anciennes complétions sont conservées sans migration et les révisions continuent après la fin d’un parcours.
 
 ## Frontière entre client et serveur
 
