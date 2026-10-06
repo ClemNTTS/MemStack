@@ -20,6 +20,7 @@ Le premier objectif est un parcours complet et utilisable chaque jour. Les chall
 - [Architecture](docs/ARCHITECTURE.md) : choix techniques et raisons de ces choix.
 - [Catalogue pédagogique](docs/CURRICULUM.md) : 12 thèmes, 30 parcours, 150 objectifs de leçons.
 - [Production et inspection](docs/content/WORKFLOW.md) : rôles, corrections et validation des contenus.
+- [Signalements assistés](docs/content/REPORTS.md) : formulaire, worker Mistral et configuration des secrets GitHub.
 
 ## Développement
 

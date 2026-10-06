@@ -9,6 +9,8 @@
 
 ## Boucle de correction
 
+Les signalements depuis l’app peuvent alimenter le worker Mistral dans GitHub Actions. Celui-ci prépare des corrections textuelles et un compte rendu après inspection indépendante ; la PR exige toujours une relecture humaine. Voir [REPORTS.md](REPORTS.md) pour l’activation et les limites. Le registre `src/data/catalog/corrections.json` conserve les identifiants et complète les données originales.
+
 L’inspecteur formule des demandes précises avec l’identifiant de la leçon, le problème et le résultat attendu. Il les transmet au rédacteur ou à l’illustrateur, puis relit la version corrigée. Une erreur factuelle, un exemple trompeur, une carte ambiguë ou une question sans explication empêche la validation. Un contrôle technique réussi ne vaut pas validation pédagogique.
 
 ## Présentation du code

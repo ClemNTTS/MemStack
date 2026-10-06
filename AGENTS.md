@@ -30,5 +30,7 @@ Existing commit subjects are short and imperative. Use short imperative subjects
 
 ## Architecture & Configuration
 
+Content reports live in `src/reports/` and `src/firebase/contentReports.ts`; users can create/read their own immutable reports. The Node worker in `scripts/content-reports/` uses Mistral and Firestore server credentials only in GitHub Actions or local Node. Never expose them via `VITE_` or log provider responses. `.github/workflows/content-reports.yml` is opt-in; see `docs/content/REPORTS.md`. Agent proposals may change only existing text via `src/data/catalog/corrections.json`, preserving IDs and transitions. Tests and build must pass before a draft PR; a person reviews and merges. `npm run reports:check` makes no network call. `npm run reports:process` processes real reports and requires configured secrets.
+
 Keep this stage frontend-only. Thirty ordered courses use static content; Google Auth, Firestore progress synchronization and explicit local imports are implemented; the frontend is deployed on GitHub Pages. Discovery has no daily cap. Reviews use renewable batches of five due cards; never bring future cards forward or automatically start another lesson. Daily goals are optional guidance. Preserve historical Docker lesson/card IDs. Google authentication and Internet access are required on every route; never allow guest or offline learning. Never commit secrets or local `.env` files. Before adding a service, explain its requirement and update `docs/ARCHITECTURE.md`.
 

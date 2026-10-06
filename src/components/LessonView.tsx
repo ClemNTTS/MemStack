@@ -7,6 +7,9 @@ import type { Lesson, LessonStep } from '../types/lesson'
 import ChatBubble from './ChatBubble'
 import LessonText, { InlineLessonText } from './LessonText'
 import { useMessageSound } from '../lesson/useMessageSound'
+import { catalogCards } from '../data/catalog'
+import { lessonReportContext } from '../reports/contentReport'
+import ContentReportButton from './ContentReportButton'
 import './lesson-enhancements.css'
 
 type LessonViewProps = {
@@ -25,6 +28,7 @@ function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLa
   const imageDialogRef = useRef<HTMLDialogElement>(null)
   const [expandedImage, setExpandedImage] = useState<Extract<LessonStep, { type: 'image' }> | null>(null)
   const stepsById = useMemo(() => indexLessonSteps(lesson), [lesson])
+  const reportContext = useMemo(() => lessonReportContext(lesson, catalogCards), [lesson])
   const [history, setHistory] = useState<VisitedStep[]>(() => {
     try {
       return restoreLessonHistory(lesson, draftKey ? window.sessionStorage.getItem(draftKey) : null)
@@ -98,6 +102,7 @@ function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLa
           <button className="sound-toggle" type="button" aria-pressed={sound.enabled} onClick={sound.toggle}>
             Son {sound.enabled ? 'activé' : 'désactivé'}
           </button>
+          <ContentReportButton context={reportContext} />
         </div>
         <p className="lesson-category">{lesson.category}</p>
         <p className="course-progress">{progressLabel}</p>

@@ -17,6 +17,8 @@ import { architecture } from './architecture.ts'
 import { performance } from './performance.ts'
 import { engineering } from './engineering.ts'
 import { catalogVisuals } from './visuals.ts'
+import corrections from './corrections.json' with { type: 'json' }
+import { applyContentCorrections } from './corrections.ts'
 
 const drafts = [...fundamentals, ...web, ...languages, ...react, ...backend, ...data,
   ...devops, ...security, ...testing, ...architecture, ...performance, ...engineering]
@@ -60,5 +62,6 @@ export const catalogCourses: Course[] = plan.courses.map(course => ({
   id: course.id, title: course.title, theme: course.theme,
   lessonIds: course.lessons.map(lesson => lesson.id),
 }))
-export const catalogLessons = assembled.map(entry => entry.lesson)
-export const catalogCards = assembled.flatMap(entry => entry.cards)
+const corrected = applyContentCorrections(assembled, corrections)
+export const catalogLessons = corrected.map(entry => entry.lesson)
+export const catalogCards = corrected.flatMap(entry => entry.cards)

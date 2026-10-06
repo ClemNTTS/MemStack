@@ -1,0 +1,42 @@
+.content-report-trigger {
+  border: 0;
+  padding: .5rem .25rem;
+  background: transparent;
+  color: #71538e;
+  font: inherit;
+  font-size: .82rem;
+  text-decoration: underline;
+  text-underline-offset: .2rem;
+  cursor: pointer;
+}
+
+.content-report-dialog {
+  width: min(34rem, calc(100vw - 3rem));
+  max-height: calc(100dvh - 3rem);
+  box-sizing: border-box;
+  padding: 1.5rem;
+  border: 1px solid #d6c5e8;
+  border-radius: 1.25rem;
+  background: #fffdf9;
+  color: #292239;
+  overflow: auto;
+}
+
+.content-report-dialog::backdrop { background: #25203380; }
+.content-report-heading { display: flex; align-items: start; gap: 1rem; justify-content: space-between; }
+.content-report-heading h2 { margin: 0 0 1rem; font-size: 1.35rem; }
+.content-report-dialog form, .content-report-dialog label { display: grid; gap: .65rem; }
+.content-report-dialog form { gap: 1rem; }
+.content-report-dialog select, .content-report-dialog textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #cfc0df;
+  border-radius: .65rem;
+  padding: .7rem;
+  font: inherit;
+  color: inherit;
+  background: white;
+}
+.content-report-dialog textarea { resize: vertical; }
+.content-report-note { margin: 0; font-size: .8rem; line-height: 1.6; color: #6a5b7d; }
+.content-report-trigger:focus-visible { outline: 2px solid #8b68ba; outline-offset: 3px; }

@@ -70,6 +70,14 @@ Effacer le cache conserve la progression et les préférences synchronisées, ma
 
 ## Frontière entre client et serveur
 
+### Signalements assistés
+
+`ContentReportButton` enregistre un signalement immuable sous `users/{uid}/contentReports/{id}` : cible, commentaire, snapshot JSON, empreinte SHA-256 et date serveur. Les règles réservent la création/lecture au propriétaire et les changements de statut au worker privilégié. L’index de groupe `contentReports.status` permet de rechercher les demandes en attente ; les longs textes ne sont pas indexés.
+
+`.github/workflows/content-reports.yml` exécute un worker Node à intervalle de six heures, sur activation explicite. Les appels Mistral nécessitent une clé secrète : GitHub Actions fournit cette exécution serveur sans ajouter une API permanente ou Cloud Run. Le `.env` sert seulement à Node localement ; ni clé Mistral ni compte de service Firestore ne sont importés dans Vite.
+
+Le worker consulte les sources primaires du registre, compare la version du contenu, puis sépare rédaction et inspection en appels distincts. Ses sorties sont des modifications textuelles contrôlées, jamais des commandes ou du code source exécutable. Les corrections versionnées dans `src/data/catalog/corrections.json` sont appliquées à l’assemblage, en conservant les IDs et le graphe. Tests et build précèdent une PR brouillon, sans fusion automatique. Le compte de service utilise IAM, distinct des règles client. Configuration, plafonds et reprises : [REPORTS.md](content/REPORTS.md).
+
 Le frontend calcule les cartes dues et leur prochaine échéance. Un module métier dédié porte ces règles ; les composants d'interface n'accèdent pas directement à la structure des documents Firestore. Cette séparation permet de faire évoluer le stockage ou de déplacer une opération côté serveur sans réécrire le parcours.
 
 Firebase Auth identifie l'utilisateur. Les règles de sécurité Firestore doivent limiter la lecture et l'écriture de sa progression à ce seul utilisateur et valider les données acceptées. Le calcul côté client n'est pas conçu pour rendre des scores infalsifiables : c'est acceptable pour une application personnelle.

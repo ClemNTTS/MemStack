@@ -7,6 +7,29 @@ service cloud.firestore {
     function isoDate(value) {
       return value is string && value.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}[.][0-9]{3}Z$');
     }
+    match /users/{uid}/contentReports/{reportId} {
+      allow read: if owner(uid);
+      allow create: if owner(uid)
+        && reportId.matches('^[a-zA-Z0-9-]{1,128}$')
+        && request.resource.data.keys().hasAll(['version', 'lessonId', 'cardId', 'kind', 'comment', 'contentSnapshot', 'contentVersion', 'createdAt', 'status'])
+        && request.resource.data.keys().hasOnly(['version', 'lessonId', 'cardId', 'kind', 'comment', 'contentSnapshot', 'contentVersion', 'createdAt', 'status'])
+        && request.resource.data.version is int && request.resource.data.version == 1
+        && request.resource.data.lessonId is string
+        && request.resource.data.lessonId.matches('^[a-z0-9]+(-[a-z0-9]+)*$')
+        && request.resource.data.lessonId.size() <= 128
+        && request.resource.data.cardId is string && request.resource.data.cardId.size() <= 128
+        && (request.resource.data.cardId == '' || request.resource.data.cardId.matches('^[a-z0-9]+(-[a-z0-9]+)*$'))
+        && request.resource.data.kind in ['factual', 'unclear', 'code', 'other']
+        && request.resource.data.comment is string
+        && request.resource.data.comment.size() >= 1 && request.resource.data.comment.size() <= 2000
+        && request.resource.data.contentSnapshot is string
+        && request.resource.data.contentSnapshot.size() >= 1 && request.resource.data.contentSnapshot.size() <= 12000
+        && request.resource.data.contentVersion is string
+        && request.resource.data.contentVersion.matches('^[a-f0-9]{64}$')
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.status == 'pending';
+      // Updates belong to the trusted worker; client reports are immutable.
+    }
     match /users/{uid}/settings/learning {
       allow read: if owner(uid);
       allow create, update: if owner(uid)

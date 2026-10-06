@@ -5,6 +5,9 @@ import type { ReviewKind } from '../types/progress'
 import type { SessionCard } from '../review/dailyQueue'
 import Memo from './Memo'
 import FlashCard from './FlashCard'
+import { catalogLessons } from '../data/catalog'
+import { cardReportContext } from '../reports/contentReport'
+import ContentReportButton from './ContentReportButton'
 
 type CardSessionProps = {
   cards: SessionCard[]
@@ -89,6 +92,7 @@ function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel, 
             <span aria-hidden="true">✓ →</span>
           </button>
         </div>
+        <ContentReportButton context={cardReportContext(currentCard, catalogLessons)} />
         <p id="card-instructions" className="sr-only">
           {isRevealed ? 'Avais-tu retrouvé la réponse ? À gauche : non. À droite : oui. Glisse la carte ou choisis Mémo.' : 'Clique sur la carte pour révéler la réponse.'}
         </p>

@@ -10,7 +10,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "test": "tsc -p tsconfig.test.json && node --test src/review/*.test.ts src/components/*.test.ts src/progress/*.test.ts"
+    "test": "tsc -p tsconfig.test.json && node --test src/review/*.test.ts src/components/*.test.ts src/progress/*.test.ts src/reports/*.test.ts src/data/catalog/*.test.ts scripts/content-reports/*.test.mjs",
+    "reports:process": "node --env-file-if-exists=.env scripts/content-reports/run.mjs",
+    "reports:check": "node scripts/content-reports/run.mjs --check"
   },
   "dependencies": {
     "firebase": "^12.19.0",
