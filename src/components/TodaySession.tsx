@@ -1,5 +1,6 @@
-import { appHref } from '../navigation/browser'
-import { useRef, useState } from 'react'
+import { appHref, currentRoute } from '../navigation/browser'
+import { useEffect, useRef, useState } from 'react'
+import { lessonDraftKey } from '../lesson/lessonDraft'
 import type { Card, CardResult } from '../types/card'
 import type { Course } from '../types/course'
 import type { Lesson } from '../types/lesson'
@@ -14,16 +15,23 @@ import LessonView from './LessonView'
 import Memo from './Memo'
 import WorkshopBackground from './WorkshopBackground'
 
-type TodaySessionProps = { course: Course, lessons: Lesson[], cards: Card[], mode?: LearningMode, initialAction?: 'lesson' | 'cards' }
+type TodaySessionProps = { course: Course, lessons: Lesson[], cards: Card[], mode?: LearningMode, initialAction?: 'lesson' | 'cards', onSessionRoute?: (route: string) => void }
 
-function LearningSession({ course, cards, mode = 'today', initialAction }: TodaySessionProps) {
+function LearningSession({ course, lessons, cards, mode = 'today', initialAction, onSessionRoute }: TodaySessionProps) {
   const [visualBeat, setVisualBeat] = useState(0)
   const account = useProgress()
   const [initial] = useState(() => ({ progress: account.progress }))
   const [progress, setProgress] = useState(initial.progress)
   const currentProgress = useRef(initial.progress)
   const [error, setError] = useState('')
-  const [lesson, setLesson] = useState<Lesson | undefined>(() => mode === 'today' && initialAction === 'lesson' ? planLearning(course, initial.progress).lesson : undefined)
+  const [lesson, setLesson] = useState<Lesson | undefined>(() => {
+    if (mode !== 'today') return undefined
+    const route = currentRoute()
+    const params = new URLSearchParams(route.split('?')[1] ?? '')
+    const lessonId = params.get('lesson')
+    if (lessonId) return lessons.find(item => item.id === lessonId && course.lessonIds.includes(item.id) && !initial.progress.completedLessons[item.id])
+    return params.get('start') === 'lesson' ? planLearning(course, initial.progress).lesson : undefined
+  })
   const [queue, setQueue] = useState<SessionCard[] | null>(() => initialAction === 'cards' ? createLearningQueue(initial.progress, mode) : null)
   const [batch, setBatch] = useState(0)
   const [justCompletedLessonTitle, setJustCompletedLessonTitle] = useState('')
@@ -37,7 +45,17 @@ function LearningSession({ course, cards, mode = 'today', initialAction }: Today
   const dueRemaining = knownCards.filter((state) => Date.parse(state.dueAt) <= now).length
   const nextDue = knownCards.filter(state => Date.parse(state.dueAt) > now).map(state => state.dueAt).sort()[0]
 
+  function setSessionRoute(path: string) {
+    window.history.replaceState(null, '', appHref(path))
+    onSessionRoute?.(path)
+  }
+
+  useEffect(() => {
+    if (lesson) setSessionRoute(`/today?start=lesson&lesson=${encodeURIComponent(lesson.id)}`)
+  }, [lesson])
+
   function returnToChoice() {
+    setSessionRoute(mode === 'reviews' ? '/reviews' : '/today')
     setLesson(undefined)
     setQueue(null)
   }
@@ -53,6 +71,7 @@ function LearningSession({ course, cards, mode = 'today', initialAction }: Today
 
   function openCards(kind: LearningMode, next = currentProgress.current) {
     const nextQueue = createLearningQueue(next, kind)
+    setSessionRoute(mode === 'reviews' ? '/reviews' : '/today?start=cards')
     setLesson(undefined)
     setQueue(nextQueue.length ? nextQueue : null)
     setBatch(value => value + 1)
@@ -78,6 +97,11 @@ function LearningSession({ course, cards, mode = 'today', initialAction }: Today
       completedLessons: { ...currentProgress.current.completedLessons, [lesson.id]: currentProgress.current.completedLessons[lesson.id] ?? new Date().toISOString() },
     }
     if (persist(next)) {
+      try {
+        if (account.user) window.sessionStorage.removeItem(lessonDraftKey(account.user.uid, lesson.id))
+      } catch {
+        // Completed lessons are never resumed from the tab cache.
+      }
       setJustCompletedLessonTitle(lesson.title)
       returnToChoice()
     }
@@ -97,7 +121,7 @@ function LearningSession({ course, cards, mode = 'today', initialAction }: Today
       <WorkshopBackground stage={lesson ? 'lesson' : queue?.length ? 'cards' : 'rest'} beat={visualBeat} />
       {error && <p role="alert">{error}</p>}
       {queue === null && lesson ? (
-        <LessonView progressLabel={progressLabel} lesson={lesson} onComplete={completeLesson} onMessage={() => setVisualBeat((beat) => beat + 1)} />
+        <LessonView key={lesson.id} draftKey={account.user ? lessonDraftKey(account.user.uid, lesson.id) : undefined} progressLabel={progressLabel} lesson={lesson} onComplete={completeLesson} onMessage={() => setVisualBeat((beat) => beat + 1)} />
       ) : queue && queue.length > 0 ? (
         <CardSession
           key={batch}
@@ -155,7 +179,7 @@ function LearningSession({ course, cards, mode = 'today', initialAction }: Today
 
 function TodaySession(props: TodaySessionProps) {
   const account = useProgress()
-  return <LearningSession key={`${account.user?.uid}:${account.revision}:${props.course.id}:${props.mode ?? 'today'}:${props.initialAction ?? 'choice'}`} {...props} />
+  return <LearningSession key={`${account.user?.uid}:${account.revision}:${props.course.id}:${props.mode ?? 'today'}`} {...props} />
 }
 
 export default TodaySession

@@ -21,6 +21,7 @@ function LearningWorkspace() {
 
 function Pages() {
   const [route, setRoute] = useState(currentRoute)
+  const [navigation, setNavigation] = useState(0)
   const path = route.split('?')[0].replace(/\/+$/, '') || '/'
   const start = new URLSearchParams(route.includes('?') ? route.slice(route.indexOf('?') + 1) : '').get('start')
   const initialAction = start === 'lesson' || start === 'cards' ? start : undefined
@@ -40,7 +41,7 @@ function Pages() {
     }
   }, [route, path, lesson, courseId])
   useEffect(() => {
-    const update = () => { setRoute(currentRoute()); window.scrollTo(0, 0) }
+    const update = () => { setRoute(currentRoute()); setNavigation(value => value + 1); window.scrollTo(0, 0) }
     window.addEventListener('popstate', update)
     window.addEventListener('hashchange', update)
     return () => {
@@ -60,6 +61,7 @@ function Pages() {
     if (nextRoute === route) return
     window.history.pushState(null, '', appHref(nextRoute))
     setRoute(nextRoute)
+    setNavigation(value => value + 1)
     window.scrollTo(0, 0)
   }
   const links = [
@@ -74,7 +76,7 @@ function Pages() {
   else if (path === '/library') page = <LibraryPage />
   else if (path === '/profile') page = <ProfilePage />
   else if (lesson) page = <LessonReplay key={lesson.id} lesson={lesson} />
-  else if (path === '/today' || path === '/reviews') page = <main className="app-shell"><TodaySession key={`${course.id}-${route}`} course={course} lessons={catalogLessons} cards={catalogCards} mode={path === '/reviews' ? 'reviews' : 'today'} initialAction={initialAction} /></main>
+  else if (path === '/today' || path === '/reviews') page = <main className="app-shell"><TodaySession key={`${course.id}-${path}-${navigation}`} course={course} lessons={catalogLessons} cards={catalogCards} mode={path === '/reviews' ? 'reviews' : 'today'} initialAction={initialAction} onSessionRoute={setRoute} /></main>
   else page = <main className="dashboard"><p className="lesson-category">Page introuvable</p><h1>Ce chemin reste à tracer.</h1><a className="dashboard-cta" href={appHref('/')}>Retour à l’atelier</a></main>
   return <div className="learning-app" data-immersive={immersive} onClick={navigate}>
     <a className="skip-link" href="#main-content">Aller au contenu</a>
@@ -83,7 +85,7 @@ function Pages() {
       <nav aria-label="Navigation principale">{links.map((link) => <a key={link.href} href={appHref(link.href)} aria-current={link.current ? 'page' : undefined}>{link.label}</a>)}</nav>
       <AccountBar />
     </header>
-    <div id="main-content" className="page-content" tabIndex={-1} key={route}>{page}</div>
+    <div id="main-content" className="page-content" tabIndex={-1} key={`${path}-${navigation}`}>{page}</div>
   </div>
 }
 

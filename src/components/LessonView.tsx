@@ -1,6 +1,8 @@
 import { appAsset, appHref } from '../navigation/browser'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { indexLessonSteps } from '../lesson/lessonFlow'
+import { restoreLessonHistory } from '../lesson/lessonDraft'
+import type { VisitedStep } from '../lesson/lessonDraft'
 import type { Lesson, LessonStep } from '../types/lesson'
 import ChatBubble from './ChatBubble'
 import { useMessageSound } from '../lesson/useMessageSound'
@@ -13,20 +15,22 @@ type LessonViewProps = {
   progressLabel: string
   completionLabel?: string
   onShowSummary?: () => void
+  draftKey?: string
 }
 
-type VisitedStep = {
-  id: string
-  selectedChoiceId?: string
-}
-
-function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLabel = 'Terminer la leçon', onShowSummary }: LessonViewProps) {
+function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLabel = 'Terminer la leçon', onShowSummary, draftKey }: LessonViewProps) {
   const sound = useMessageSound()
   const endRef = useRef<HTMLDivElement>(null)
   const imageDialogRef = useRef<HTMLDialogElement>(null)
   const [expandedImage, setExpandedImage] = useState<Extract<LessonStep, { type: 'image' }> | null>(null)
   const stepsById = useMemo(() => indexLessonSteps(lesson), [lesson])
-  const [history, setHistory] = useState<VisitedStep[]>([{ id: lesson.firstStepId }])
+  const [history, setHistory] = useState<VisitedStep[]>(() => {
+    try {
+      return restoreLessonHistory(lesson, draftKey ? window.sessionStorage.getItem(draftKey) : null)
+    } catch {
+      return [{ id: lesson.firstStepId }]
+    }
+  })
   const currentVisit = history[history.length - 1]
   const currentStep = stepsById.get(currentVisit.id)!
   const selectedChoice = currentStep.type === 'question'
@@ -36,6 +40,15 @@ function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLa
     ? selectedChoice?.nextStepId
     : currentStep.nextStepId
   const canContinue = currentStep.type !== 'question' || Boolean(selectedChoice)
+
+  useEffect(() => {
+    if (!draftKey) return
+    try {
+      window.sessionStorage.setItem(draftKey, JSON.stringify({ version: 1, history }))
+    } catch {
+      // A blocked tab cache must not prevent reading the lesson.
+    }
+  }, [draftKey, history])
 
   useEffect(() => {
     if (expandedImage && !imageDialogRef.current?.open) imageDialogRef.current?.showModal()

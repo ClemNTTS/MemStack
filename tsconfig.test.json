@@ -3,6 +3,6 @@
   "compilerOptions": {
     "types": ["node"]
   },
-  "include": ["src/review/**/*.ts", "src/components/cardGesture*.ts", "src/components/navigation.test.ts", "src/navigation/urls.ts", "src/progress/**/*.ts"],
+  "include": ["src/review/**/*.ts", "src/components/cardGesture*.ts", "src/components/navigation.test.ts", "src/components/lessonDraft.test.ts", "src/navigation/urls.ts", "src/progress/**/*.ts"],
   "exclude": []
 }

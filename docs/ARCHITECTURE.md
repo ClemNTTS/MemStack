@@ -8,6 +8,8 @@
 
 `LearningWorkspace` inclut la query dans l’état de route et la clé de page : `?start=lesson` et `?start=cards` sont des intentions explicites, compatibles avec le retour navigateur. `/today` sans query ouvre le choix. Après un lot, la prochaine leçon est proposée mais n’est jamais lancée automatiquement.
 
+La découverte inscrit aussi `lesson=<id>` dans l’URL avec `replaceState`. Une mise à jour interne de session conserve le composant ; une navigation explicite le réinitialise. Au rechargement, cet ID restaure uniquement une leçon non terminée du parcours actif. `sessionStorage` garde le fil et les choix sous `memstack.lesson-draft.v1.{uid}.{lessonId}` pour cet onglet ; le brouillon est validé contre les transitions du contenu et supprimé à la complétion. Il ne représente pas un apprentissage validé, n’est pas synchronisé et ne permet aucun accès hors ligne ou sans compte.
+
 `/library` recherche les leçons terminées, de tous les parcours. `/lessons/:id` ouvre `LessonReplay`, réutilise `LessonView` et donne accès à l’essentiel en dialogue natif ; aucune progression ni échéance ne change. Les leçons inconnues affichent une page introuvable ; les leçons non terminées restent réservées à la découverte quotidienne. Les schémas peuvent être agrandis, avec fermeture par Échap et défilement horizontal sur mobile.
 
 ## Cible envisagée
