@@ -14,6 +14,8 @@ Une proposition acceptée enrichit `src/data/catalog/corrections.json`, accompag
 
 ## Configuration GitHub
 
+**Activation vérifiée le 6 octobre 2026** sur `ClemNTTS/MemStack` : règles et index publiés, compte `memstack-content-reports` limité au rôle `roles/datastore.user`, secrets Mistral/Firestore installés et variable d’activation réglée sur `true`. Le [test du workflow](https://github.com/ClemNTTS/MemStack/actions/runs/37486546629) a réussi et confirmé l’accès serveur à la file vide. Aucun contenu n’a été modifié ; la première correction réelle jusqu’à sa PR reste à vérifier. Un premier refus d’accès après création du compte a disparu à la relance, après propagation des droits.
+
 1. Publier les règles et l’index de groupe sur `contentReports.status` : `npx.cmd --yes --cache .npm-cache firebase-tools deploy --only firestore --project memstack-9f581`. Attendre la fin de construction de l’index avant d’activer le worker.
 2. Dans **Settings → Secrets and variables → Actions**, créer le secret `MISTRAL_API_KEY`. Le `.env` local n’est pas envoyé à GitHub. Ne jamais préfixer cette clé par `VITE_`.
 3. Créer un compte de service dédié au worker dans Google Cloud, avec le rôle Firestore **Cloud Datastore User** sur `memstack-9f581`. Ajouter son JSON au secret `FIREBASE_SERVICE_ACCOUNT`. Les accès serveur suivent IAM et contournent les règles client : ce compte a accès aux données Firestore du projet. Ne pas employer un compte Owner/Editor ; envisager une identité fédérée sans clé persistante si cette automatisation grandit.
