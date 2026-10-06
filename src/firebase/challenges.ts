@@ -1,0 +1,82 @@
+import { collection, doc, getDocFromServer, getDocsFromServer, runTransaction, serverTimestamp, Timestamp } from 'firebase/firestore'
+import { acknowledgeChallengeAttempt, decodeChallengeAttempt, isChallengeOutcome, matchesAttemptSubmission, validateChallengeAnswer } from '../challenges/attemptModel'
+import type { ChallengeAttempt, ChallengeOutcome } from '../types/challenge'
+import { getFirebaseServices } from './client'
+import { challenges } from '../data/challenges'
+
+function requireAccount(uid: string) {
+  const services = getFirebaseServices()
+  if (!navigator.onLine || services.auth.currentUser?.uid !== uid) throw new Error('Connexion requise')
+  return services
+}
+
+function decodeServerAttempt(id: string, data: Record<string, unknown>): ChallengeAttempt {
+  const submittedAt = data.submittedAt
+  if (!(submittedAt instanceof Timestamp)) throw new Error('Date de tentative invalide')
+  const attempt = decodeChallengeAttempt(id, { ...data, submittedAt: submittedAt.toDate().toISOString() })
+  if (!attempt) throw new Error('Tentative invalide')
+  return attempt
+}
+
+async function readAttempt(uid: string, id: string): Promise<ChallengeAttempt | null> {
+  const { db } = requireAccount(uid)
+  const snapshot = await getDocFromServer(doc(db, 'users', uid, 'challengeAttempts', id))
+  requireAccount(uid)
+  return snapshot.exists() ? decodeServerAttempt(snapshot.id, snapshot.data()) : null
+}
+
+export async function readChallengeAttempts(uid: string): Promise<ChallengeAttempt[]> {
+  const { db } = requireAccount(uid)
+  const snapshot = await getDocsFromServer(collection(db, 'users', uid, 'challengeAttempts'))
+  requireAccount(uid)
+  return snapshot.docs.map(entry => decodeServerAttempt(entry.id, entry.data()))
+    .sort((left, right) => right.submittedAt.localeCompare(left.submittedAt))
+}
+
+export async function submitChallengeAttempt(uid: string, id: string, challengeId: string, rawAnswer: string): Promise<ChallengeAttempt> {
+  if (!/^[a-zA-Z0-9-]{1,128}$/.test(id)) throw new Error('Identifiant de tentative invalide')
+  const answer = validateChallengeAnswer(challengeId, rawAnswer)
+  const challengeVersion = challenges.find(challenge => challenge.id === challengeId)!.version
+  const { db } = requireAccount(uid)
+  const ref = doc(db, 'users', uid, 'challengeAttempts', id)
+  return acknowledgeChallengeAttempt(async () => {
+    await runTransaction(db, async transaction => {
+      requireAccount(uid)
+      const existing = await transaction.get(ref)
+      requireAccount(uid)
+      if (existing.exists()) {
+        const attempt = decodeServerAttempt(existing.id, existing.data())
+        if (!matchesAttemptSubmission(attempt, challengeId, challengeVersion, answer)) throw new Error('Tentative déjà utilisée')
+      } else {
+        transaction.set(ref, { version: 1, challengeId, challengeVersion, answer, submittedAt: serverTimestamp(), outcome: '' })
+      }
+    })
+  }, () => readAttempt(uid, id), challengeId, challengeVersion, answer)
+}
+
+export async function rateChallengeAttempt(uid: string, id: string, outcome: Exclude<ChallengeOutcome, ''>): Promise<ChallengeAttempt> {
+  if (!/^[a-zA-Z0-9-]{1,128}$/.test(id) || !isChallengeOutcome(outcome) || !['retry', 'understood'].includes(outcome)) throw new Error('Évaluation invalide')
+  const { db } = requireAccount(uid)
+  const ref = doc(db, 'users', uid, 'challengeAttempts', id)
+  try {
+    await runTransaction(db, async transaction => {
+      requireAccount(uid)
+      const snapshot = await transaction.get(ref)
+      requireAccount(uid)
+      if (!snapshot.exists()) throw new Error('Tentative absente')
+      const existing = decodeServerAttempt(snapshot.id, snapshot.data())
+      if (existing.outcome !== '') {
+        if (existing.outcome !== outcome) throw new Error('Autoévaluation déjà enregistrée')
+        return
+      }
+      transaction.update(ref, { outcome })
+    })
+  } catch (error) {
+    const existing = await readAttempt(uid, id)
+    if (!existing || existing.outcome !== outcome) throw error
+    return existing
+  }
+  const attempt = await readAttempt(uid, id)
+  if (!attempt || attempt.outcome !== outcome) throw new Error('Évaluation non confirmée')
+  return attempt
+}

@@ -42,6 +42,7 @@ function CoursesPage({ courseId }: { courseId?: string }) {
           </li>
         })}
       </ol>
+      {selected.id === 'docker-basics' && <section className="overview-panel retention-note"><p className="lesson-category">Passer à la pratique</p><h2>Du concept au diagnostic.</h2><p>Retrouve les images, les volumes et les réseaux dans trois situations à résoudre. Tu peux les essayer librement et conserver tes tentatives séparément de tes cartes.</p><a className="text-link" href={appHref('/challenges')}>Ouvrir les défis Docker →</a></section>}
     </main>
   }
   const filtered = catalogCourses.filter(course => (theme === 'all' || course.theme === theme) && `${course.title} ${course.theme}`.toLocaleLowerCase('fr-FR').includes(search.toLocaleLowerCase('fr-FR')))

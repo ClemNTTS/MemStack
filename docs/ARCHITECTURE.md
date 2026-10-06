@@ -70,6 +70,16 @@ Effacer le cache conserve la progression et les préférences synchronisées, ma
 
 ## Frontière entre client et serveur
 
+### Défis de diagnostic
+
+`src/data/challenges.ts` définit trois situations Docker versionnées avec configuration, correction, points essentiels, contre-exemples et sources primaires. `ChallengesPage` et `ChallengeView` utilisent `/challenges` et `/challenges/:id`, les liens à fragments Pages et `LessonText` pour afficher le code comme texte. Les accès Google/réseau existants restent obligatoires. Le menu, l’accueil et le parcours Docker donnent accès aux défis sans verrou de prérequis.
+
+`src/challenges/ChallengeProvider.tsx` et `src/firebase/challenges.ts` gèrent uniquement les tentatives, sous `users/{uid}/challengeAttempts/{id}` : `version`, `challengeVersion`, `challengeId`, `answer`, `submittedAt` (timestamp serveur), `outcome` (`''`, `retry`, `understood`). Une lecture serveur précède l’usage. L’interface attend l’accusé serveur avant de montrer la correction ou de confirmer l’autoévaluation ; les réponses obsolètes après changement de compte sont ignorées. Le provider est monté sur les pages de défis : une erreur de cette collection ne bloque pas le reste de l’atelier.
+
+Les règles limitent lecture/création au propriétaire et valident les trois IDs, les versions, le texte (1 à 4 000 caractères) et la date serveur. Réponse et date sont immuables ; seul le premier choix d’autoévaluation peut être ajouté. Les reprises utilisent des IDs stables et des lectures/transactions serveur pour éviter les doublons après un accusé perdu. Aucun cache hors ligne, aucun import d’ancienne progression et aucune modification du plan de révision Anki. Une correction consultée pour une ancienne version est annoncée comme la correction actuelle ; la réponse historique n’est jamais remplacée.
+
+La correction est livrée avec le frontend, donc visible dans les sources du bundle ; le passage par une tentative sert au rythme pédagogique et ne constitue pas une protection anti-triche. Aucun service d’exécution ni appel Mistral supplémentaire n’est ajouté. Le contenu et son inspection sont consignés dans [CHALLENGES.md](content/CHALLENGES.md).
+
 ### Signalements assistés
 
 `ContentReportButton` enregistre un signalement immuable sous `users/{uid}/contentReports/{id}` : cible, commentaire, snapshot JSON, empreinte SHA-256 et date serveur. Les règles réservent la création/lecture au propriétaire et les changements de statut au worker privilégié. L’index de groupe `contentReports.status` permet de rechercher les demandes en attente ; les longs textes ne sont pas indexés.

@@ -12,7 +12,7 @@ MemStack est une webapp personnelle pour consolider des connaissances de dévelo
 
 On progresse dans un **thème → parcours → leçons** (par exemple `DevOps → Docker → Images et conteneurs`). Une leçon se lit sous forme de bulles de messages. La session se termine par 3 à 5 nouvelles cartes de mémorisation, puis jusqu'à 5 cartes de révision arrivées à échéance. Après révélation, deux expressions de Mémo permettent d’indiquer si la réponse avait été retrouvée : non ou oui.
 
-Le premier objectif est un parcours complet et utilisable chaque jour. Les challenges, la veille automatisée et la gamification avancée viendront seulement si l'usage le justifie.
+Le socle d’apprentissage est complété par trois défis Docker sur `/challenges` : poser un diagnostic, enregistrer sa tentative, puis comparer à une correction expliquée. Les tentatives sont synchronisées séparément des cartes, sans exécution de code ni notation automatique. La veille automatisée et la gamification avancée restent envisagées.
 
 ## Documents
 

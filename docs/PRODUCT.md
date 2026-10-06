@@ -19,6 +19,14 @@ MemStack aide une personne à apprendre régulièrement des notions de développ
 
 Challenges avec exécution de code, veille automatisée, éditeur de leçons, notifications, points, classements, parcours à déblocage complexe et statistiques détaillées.
 
+## Première extension : défis de diagnostic
+
+Trois défis Docker mettent les notions en situation : images et conteneurs, volumes et persistance, ports et réseaux. Depuis `/challenges`, observer un scénario et sa configuration, rédiger un diagnostic ou une proposition, puis comparer avec une correction expliquée, des points essentiels et des contre-exemples. Les leçons liées sont conseillées ; aucun prérequis ni quota ne bloque l’accès.
+
+Une tentative non vide est enregistrée sur le compte avant d’afficher la correction. L’historique conserve la réponse, la date serveur et la version du défi ; il est distinct des cartes et des complétions de leçons. L’autoévaluation facultative « À retravailler » / « Compris » est un repère personnel enregistré une seule fois par tentative, sans note automatique ni promesse de maîtrise. Une nouvelle tentative conserve les précédentes. La relecture d’une correction n’écrit rien et le rechargement retrouve l’historique ; un brouillon non envoyé n’est pas sauvegardé.
+
+Aucun code n’est exécuté et aucune IA ne juge les réponses. L’exécution isolée de code et la veille restent des extensions ultérieures.
+
 ## Atelier personnel
 
 L’accueil conseille la prochaine leçon non terminée du parcours actif et donne un accès indépendant aux cartes dues ou jamais introduites. La navigation sépare Aujourd’hui, Parcours, Révisions et Bibliothèque. Le catalogue propose 12 thèmes, 30 parcours et 150 leçons, avec recherche et prérequis informatifs. Le parcours actif et l’objectif personnel sont synchronisés par compte dans Firestore, puis retrouvés à la connexion, au rechargement ou à la reconnexion sur un autre appareil. Les anciens réglages locaux ne sont importés que si le compte n’a pas de préférence cloud. Une leçon terminée peut être relue sans changer progression ni échéances.

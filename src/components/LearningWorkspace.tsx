@@ -7,6 +7,10 @@ import CoursesPage from './CoursesPage'
 import LibraryPage from './LibraryPage'
 import ProfilePage from './ProfilePage'
 import LessonReplay from './LessonReplay'
+import ChallengesPage from './ChallengesPage'
+import ChallengeView from './ChallengeView'
+import { ChallengeProvider } from '../challenges/ChallengeProvider'
+import { challenges } from '../data/challenges'
 import AccountBar from './AccountBar'
 import { useProgress } from '../progress/ProgressProvider'
 import { LearningPreferenceProvider, useLearningPreference } from '../progress/learningPreference'
@@ -29,17 +33,18 @@ function Pages() {
   const course = catalogCourses.find((item) => item.id === activeCourseId) ?? catalogCourses[0]
   const lesson = catalogLessons.find((item) => path === `/lessons/${item.id}`)
   const courseId = path.startsWith('/courses/') ? path.slice('/courses/'.length) : undefined
+  const challengeId = path.startsWith('/challenges/') ? path.slice('/challenges/'.length) : undefined
   const immersive = Boolean(lesson) || path === '/today' || path === '/reviews'
   const previousRoute = useRef(route)
   useEffect(() => {
-    const title = lesson?.title ?? (path === '/courses' ? 'Parcours' : courseId ? catalogCourses.find(course => course.id === courseId)?.title : path === '/library' ? 'Bibliothèque' : path === '/profile' ? 'Ma progression' : path === '/reviews' ? 'Révisions' : path === '/' || path === '/today' ? 'Aujourd’hui' : 'Page introuvable')
+    const title = lesson?.title ?? (path === '/challenges' ? 'Défis' : challengeId ? challenges.find(challenge => challenge.id === challengeId)?.title : path === '/courses' ? 'Parcours' : courseId ? catalogCourses.find(course => course.id === courseId)?.title : path === '/library' ? 'Bibliothèque' : path === '/profile' ? 'Ma progression' : path === '/reviews' ? 'Révisions' : path === '/' || path === '/today' ? 'Aujourd’hui' : 'Page introuvable')
     document.title = `${title ?? 'Page introuvable'} · MemStack`
     if (previousRoute.current !== route) {
       document.querySelector('.account-menu')?.removeAttribute('open')
       document.getElementById('main-content')?.focus({ preventScroll: true })
       previousRoute.current = route
     }
-  }, [route, path, lesson, courseId])
+  }, [route, path, lesson, courseId, challengeId])
   useEffect(() => {
     const update = () => { setRoute(currentRoute()); setNavigation(value => value + 1); window.scrollTo(0, 0) }
     window.addEventListener('popstate', update)
@@ -68,6 +73,7 @@ function Pages() {
     { href: '/', label: 'Aujourd’hui', current: path === '/' || path === '/today' },
     { href: '/courses', label: 'Parcours', current: path.startsWith('/courses') },
     { href: '/reviews', label: 'Révisions', current: path === '/reviews' },
+    { href: '/challenges', label: 'Défis', current: path.startsWith('/challenges') },
     { href: '/library', label: 'Bibliothèque', current: path === '/library' || Boolean(lesson) },
   ]
   let page
@@ -75,6 +81,7 @@ function Pages() {
   else if (path === '/courses' || courseId !== undefined) page = <CoursesPage key={courseId ?? 'all'} courseId={courseId} />
   else if (path === '/library') page = <LibraryPage />
   else if (path === '/profile') page = <ProfilePage />
+  else if (path === '/challenges' || challengeId !== undefined) page = <ChallengeProvider>{challengeId !== undefined ? <ChallengeView key={challengeId} challengeId={challengeId} /> : <ChallengesPage />}</ChallengeProvider>
   else if (lesson) page = <LessonReplay key={lesson.id} lesson={lesson} />
   else if (path === '/today' || path === '/reviews') page = <main className="app-shell"><TodaySession key={`${course.id}-${path}-${navigation}`} course={course} lessons={catalogLessons} cards={catalogCards} mode={path === '/reviews' ? 'reviews' : 'today'} initialAction={initialAction} onSessionRoute={setRoute} /></main>
   else page = <main className="dashboard"><p className="lesson-category">Page introuvable</p><h1>Ce chemin reste à tracer.</h1><a className="dashboard-cta" href={appHref('/')}>Retour à l’atelier</a></main>

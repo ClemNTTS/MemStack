@@ -7,6 +7,31 @@ service cloud.firestore {
     function isoDate(value) {
       return value is string && value.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}[.][0-9]{3}Z$');
     }
+    match /users/{uid}/challengeAttempts/{attemptId} {
+      function validAttempt(data) {
+        return data.keys().hasAll(['version', 'challengeVersion', 'challengeId', 'answer', 'submittedAt', 'outcome'])
+          && data.keys().hasOnly(['version', 'challengeVersion', 'challengeId', 'answer', 'submittedAt', 'outcome'])
+          && data.version is int && data.version == 1
+          && data.challengeVersion is int && data.challengeVersion == 1
+          && data.challengeId in ['docker-images-diagnostic', 'docker-volumes-diagnostic', 'docker-ports-diagnostic']
+          && data.answer is string && data.answer.size() >= 1 && data.answer.size() <= 4000
+          && data.answer.matches('[\\s\\S]*\\S[\\s\\S]*')
+          && data.submittedAt is timestamp
+          && data.outcome in ['', 'retry', 'understood'];
+      }
+      allow read: if owner(uid);
+      allow create: if owner(uid)
+        && attemptId.matches('^[a-zA-Z0-9-]{1,128}$')
+        && validAttempt(request.resource.data)
+        && request.resource.data.submittedAt == request.time
+        && request.resource.data.outcome == '';
+      allow update: if owner(uid)
+        && validAttempt(request.resource.data)
+        && resource.data.outcome == ''
+        && request.resource.data.outcome in ['retry', 'understood']
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['outcome']);
+      // Answers and server timestamps are immutable; no client deletion.
+    }
     match /users/{uid}/contentReports/{reportId} {
       allow read: if owner(uid);
       allow create: if owner(uid)
