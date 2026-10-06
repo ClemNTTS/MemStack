@@ -5,6 +5,7 @@ import { restoreLessonHistory } from '../lesson/lessonDraft'
 import type { VisitedStep } from '../lesson/lessonDraft'
 import type { Lesson, LessonStep } from '../types/lesson'
 import ChatBubble from './ChatBubble'
+import LessonText, { InlineLessonText } from './LessonText'
 import { useMessageSound } from '../lesson/useMessageSound'
 import './lesson-enhancements.css'
 
@@ -114,7 +115,7 @@ function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLa
 
             if (step.type === 'message') {
               const previous = index > 0 ? stepsById.get(history[index - 1].id) : undefined
-              return <ChatBubble avatar={previous?.type !== 'message'} key={`${step.id}-${index}`}><p>{step.text}</p></ChatBubble>
+              return <ChatBubble avatar={previous?.type !== 'message'} key={`${step.id}-${index}`}><LessonText text={step.text} /></ChatBubble>
             }
 
             if (step.type === 'image') {
@@ -131,7 +132,7 @@ function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLa
 
             return (
               <section className="lesson-question" key={`${step.id}-${index}`}>
-                <ChatBubble question><p>{step.prompt}</p></ChatBubble>
+                <ChatBubble question><LessonText text={step.prompt} /></ChatBubble>
                 <div className="lesson-choices" aria-label="Choix de réponse">
                   {step.choices.map((choice) => (
                     <button
@@ -142,11 +143,11 @@ function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLa
                       aria-pressed={chosen?.id === choice.id}
                       onClick={() => selectChoice(choice.id)}
                     >
-                      {choice.label}
+                      <InlineLessonText text={choice.label} />
                     </button>
                   ))}
                 </div>
-                {chosen && <ChatBubble feedback><p aria-live="polite">{chosen.feedback}</p></ChatBubble>}
+                {chosen && <ChatBubble feedback><div aria-live="polite"><LessonText text={chosen.feedback} /></div></ChatBubble>}
               </section>
             )
           })}

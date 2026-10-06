@@ -15,7 +15,7 @@ export const volumesLesson: Lesson = {
       { id: 'image', label: 'Reconstruire l’image après chaque écriture', feedback: 'L’image ne récupère pas automatiquement les fichiers écrits par un conteneur en cours d’exécution.', nextStepId: 'precision' },
     ] },
     { id: 'precision', type: 'message', text: 'L’image prépare l’application. Un volume conserve les données produites pendant son utilisation.', nextStepId: 'example' },
-    { id: 'example', type: 'message', text: 'Exemple : docker run --mount type=volume,src=memstack-data,dst=/app/data mon-app. Un nouveau conteneur retrouve les fichiers s’il monte le même volume au chemin où l’application écrit.', nextStepId: 'conclusion' },
+    { id: 'example', type: 'message', text: 'Exemple :\n\n```bash\ndocker run \\\n  --mount type=volume,src=memstack-data,dst=/app/data \\\n  mon-app\n```\n\nUn nouveau conteneur retrouve les fichiers s’il monte le même volume au chemin où l’application écrit.', nextStepId: 'conclusion' },
     { id: 'conclusion', type: 'message', text: 'Un volume nommé reste après suppression du conteneur, tant que tu ne supprimes pas le volume. Persistance ne veut pas dire sauvegarde : garde aussi une copie des données importantes.' },
   ],
 }

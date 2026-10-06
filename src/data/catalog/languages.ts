@@ -4,7 +4,7 @@ export const languages: LessonDraft[] = [
   {
     id: 'js-scope', intro: 'Une fonction garde accès à une variable même après la fin de la fonction qui l’a créée. Une fermeture, pas une photo souvenir.',
     concept: 'Une fermeture relie une fonction à son environnement lexical. La portée dépend de l’endroit où la fonction est définie. Une variable capturée est lue quand le code l’utilise ; sa valeur peut avoir changé entre-temps.',
-    example: 'let score = 1; const lire = () => score; score = 2; lire() renvoie 2. La fonction lit la variable partagée, pas une copie automatique de sa première valeur.',
+    example: '```javascript\nlet score = 1\nconst lire = () => score\nscore = 2\nlire()\n```\n\n`lire()` renvoie `2`. La fonction lit la variable partagée, pas une copie automatique de sa première valeur.',
     prompt: 'Pour conserver le score au moment de la création, quelle stratégie convient ?',
     correct: 'Créer une nouvelle liaison avec la valeur voulue', incorrect: 'Supposer que toute fermeture fige la valeur initiale',
     success: 'Une liaison dédiée qui ne change plus représente ce souvenir explicitement.', correction: 'La fermeture donne accès à la liaison ; elle n’interdit pas ses changements.',
@@ -26,7 +26,7 @@ export const languages: LessonDraft[] = [
   {
     id: 'js-nullish', intro: 'Tu veux afficher zéro révision. Ton code remplace ce zéro par cinq. Le défaut a pris un peu trop d’initiative.',
     concept: '|| choisit sa valeur de droite lorsque celle de gauche est falsy, notamment 0, false ou chaîne vide. ?? choisit la droite uniquement pour null ou undefined. Il distingue absence et valeur présente mais fausse.',
-    example: 'const restant = 0; restant || 5 donne 5 ; restant ?? 5 donne 0. Si restant est undefined, les deux choisissent 5 dans cet exemple.',
+    example: '```javascript\nconst restant = 0\nrestant || 5 // 5\nrestant ?? 5 // 0\n```\n\nSi `restant` est `undefined`, les deux choisissent `5` dans cet exemple.',
     prompt: 'Une préférence sonore false doit rester désactivée. Quel défaut respecte cette valeur ?',
     correct: 'preference ?? true', incorrect: 'preference || true',
     success: 'false est une valeur présente ; ?? ne la remplace pas.', correction: '|| traite false comme une raison de choisir true, même si la préférence est volontaire.',
@@ -37,7 +37,7 @@ export const languages: LessonDraft[] = [
   {
     id: 'js-array-transforms', intro: 'Il te faut les titres, les leçons terminées et une leçon précise. Trois résultats, trois opérations de liste.',
     concept: 'map transforme chaque élément et produit un tableau de même longueur. filter garde les éléments qui satisfont un prédicat. find renvoie le premier élément correspondant, ou undefined s’il n’y en a pas.',
-    example: 'lessons.map(l => l.title) extrait les titres ; lessons.filter(l => l.done) garde les leçons terminées ; lessons.find(l => l.id === id) cherche une seule leçon.',
+    example: '```javascript\nlessons.map(l => l.title) // extraire les titres\nlessons.filter(l => l.done) // garder les leçons terminées\nlessons.find(l => l.id === id) // chercher une seule leçon\n```',
     prompt: 'Pour obtenir toutes les leçons DevOps, quelle méthode exprime directement le résultat ?',
     correct: 'filter avec un prédicat sur la catégorie', incorrect: 'find avec le même prédicat',
     success: 'filter conserve toutes les correspondances dans un nouveau tableau.', correction: 'find s’arrête à la première correspondance et ne renvoie pas une liste complète.',
@@ -48,7 +48,7 @@ export const languages: LessonDraft[] = [
   {
     id: 'js-errors', intro: 'La sauvegarde échoue. Le catch renvoie true pour calmer l’écran. Le problème vient de devenir invisible.',
     concept: 'throw interrompt le flot normal en levant une erreur. try/catch permet de la traiter. Un traitement peut récupérer réellement, enrichir puis relancer, ou signaler l’échec ; il ne doit pas inventer un succès.',
-    example: 'try { enregistrer() } catch (error) { journaliser(error); throw error } conserve l’issue en échec tout en ajoutant une observation. Un retour false peut aussi être un contrat explicite, si l’appelant le vérifie.',
+    example: '```javascript\ntry {\n  enregistrer()\n} catch (error) {\n  journaliser(error)\n  throw error\n}\n```\n\nCe code conserve l’issue en échec tout en ajoutant une observation. Un retour `false` peut aussi être un contrat explicite, si l’appelant le vérifie.',
     prompt: 'Aucune récupération n’est possible. Que devrait voir l’appelant ?',
     correct: 'Une erreur transmise ou un résultat d’échec explicite', incorrect: 'Une valeur de succès pour éviter les interruptions',
     success: 'L’appelant peut empêcher une confirmation trompeuse et proposer une reprise.', correction: 'Le succès fictif autorise la suite avec une opération qui n’a pas eu lieu.',
@@ -59,7 +59,7 @@ export const languages: LessonDraft[] = [
   {
     id: 'js-promise', intro: 'La leçon n’est pas encore chargée, mais une valeur existe déjà : une promesse du résultat futur.',
     concept: 'Une Promise représente l’issue d’une opération asynchrone. Elle peut être en attente, accomplie avec une valeur ou rejetée avec une raison. Ce n’est pas le contenu final ; then ou await permet de travailler avec ce résultat.',
-    example: 'const pending = chargerLecon(); pending.title ne lit pas le titre de la leçon. const lesson = await pending permet d’utiliser lesson.title lorsque la promesse est accomplie.',
+    example: '```javascript\nconst pending = chargerLecon()\n```\n\n`pending.title` ne lit pas le titre de la leçon.\n\n```javascript\nconst lesson = await pending\n```\n\nOn peut utiliser `lesson.title` lorsque la promesse est accomplie.',
     prompt: 'Si chargerLecon rejette, await renvoie-t-il une leçon vide automatiquement ?',
     correct: 'Non, await lève le rejet dans la fonction qui attend', incorrect: 'Oui, la promesse devient un objet vide',
     success: 'Le traitement d’erreur doit choisir explicitement la suite.', correction: 'Une promesse rejetée ne fournit pas une valeur de succès de remplacement.',
@@ -70,7 +70,7 @@ export const languages: LessonDraft[] = [
   {
     id: 'js-await', intro: 'Mémo attend une réponse réseau. Le reste de la page continue pourtant à recevoir des clics.',
     concept: 'await suspend la suite de la fonction async courante jusqu’à l’issue attendue. Il ne bloque pas automatiquement le thread comme une boucle synchrone. Une fonction async renvoie elle-même une promesse à son appelant.',
-    example: 'async function lire() { const data = await charger(); afficher(data) } ; lire(); afficher("chargement"). La dernière instruction peut s’exécuter avant afficher(data).',
+    example: '```javascript\nasync function lire() {\n  const data = await charger()\n  afficher(data)\n}\nlire()\nafficher("chargement")\n```\n\nLa dernière instruction peut s’exécuter avant `afficher(data)`.',
     prompt: 'Un appelant veut utiliser le résultat de lire() après sa fin. Que doit-il faire ?',
     correct: 'Attendre sa promesse avec await ou then', incorrect: 'Lire directement son résultat comme une valeur synchrone',
     success: 'L’appelant synchronise sa propre suite avec l’issue de lire.', correction: 'Le await interne ne transforme pas l’appel de lire en retour synchrone.',
@@ -81,7 +81,7 @@ export const languages: LessonDraft[] = [
   {
     id: 'js-concurrency', intro: 'La leçon et le profil sont indépendants. Pourquoi attendre la fin de l’un pour commencer l’autre ?',
     concept: 'Deux opérations indépendantes peuvent être lancées avant d’attendre leurs résultats. Promise.all attend leur réussite collective et rejette dès un rejet. Promise.allSettled décrit l’issue de chacune, même si certaines échouent.',
-    example: 'const lessonPromise = chargerLecon(); const profilePromise = chargerProfil(); const [lesson, profile] = await Promise.all([lessonPromise, profilePromise]). Les deux demandes ont commencé avant l’attente collective.',
+    example: '```javascript\nconst lessonPromise = chargerLecon()\nconst profilePromise = chargerProfil()\nconst [lesson, profile] = await Promise.all([\n  lessonPromise,\n  profilePromise,\n])\n```\n\nLes deux demandes ont commencé avant l’attente collective.',
     prompt: 'Si Promise.all rejette, l’autre requête est-elle automatiquement annulée ?',
     correct: 'Non, il faut une annulation explicite si elle est souhaitée', incorrect: 'Oui, toutes les opérations sont arrêtées par all',
     success: 'Le regroupement des résultats ne contrôle pas automatiquement la vie des opérations.', correction: 'Une autre opération peut continuer et réussir après le rejet collectif.',
@@ -92,7 +92,7 @@ export const languages: LessonDraft[] = [
   {
     id: 'js-async-errors', intro: 'Le try contient un appel async, mais le rejet arrive après sa sortie. Le filet était au mauvais endroit.',
     concept: 'Pour intercepter un rejet dans un try/catch async, il faut attendre la promesse dans le try. Retourner une promesse sans l’attendre ne fait pas passer son rejet futur dans le catch local.',
-    example: 'async function sauvegarder() { try { return await envoyer() } catch (error) { afficherEchec(); throw error } }. Ici le await relie le rejet d’envoyer au catch.',
+    example: '```javascript\nasync function sauvegarder() {\n  try {\n    return await envoyer()\n  } catch (error) {\n    afficherEchec()\n    throw error\n  }\n}\n```\n\nIci le `await` relie le rejet d’`envoyer` au `catch`.',
     prompt: 'Dans try { envoyer() } catch {...}, un rejet futur sera-t-il forcément capturé ?',
     correct: 'Non, il faut attendre ou attacher un gestionnaire de rejet', incorrect: 'Oui, la présence de l’appel dans try suffit',
     success: 'Le rejet appartient à la promesse, pas à la seule instruction d’appel synchrone.', correction: 'Le try peut être terminé lorsque la promesse rejette.',
@@ -103,7 +103,7 @@ export const languages: LessonDraft[] = [
   {
     id: 'js-modules', intro: 'Deux fichiers ont la même fonction utilitaire copiée. Un module peut définir un contrat unique, à condition que les imports le respectent.',
     concept: 'Un export nommé est importé avec son nom, éventuellement renommé. Un export par défaut est importé sans accolades et le consommateur choisit son nom local. Les imports ES relient des liaisons, pas un collage de texte.',
-    example: 'export function calculer() {} se consomme avec import { calculer } from "./calcul.js". export default calculer se consomme avec import calculer from "./calcul.js".',
+    example: 'Export nommé :\n\n```javascript\nexport function calculer() {}\n// Dans le module consommateur :\nimport { calculer } from "./calcul.js"\n```\n\nExport par défaut :\n\n```javascript\nexport default calculer\n// Dans le module consommateur :\nimport calculer from "./calcul.js"\n```',
     prompt: 'Un module expose export const limite = 5. Quel import respecte ce contrat ?',
     correct: 'import { limite } from "./config.js"', incorrect: 'import limite from "./config.js" sans export default',
     success: 'Les accolades demandent l’export nommé limite.', correction: 'Cet import demanderait un export par défaut que le module n’a pas annoncé.',
@@ -114,7 +114,7 @@ export const languages: LessonDraft[] = [
   {
     id: 'ts-unions', intro: 'isLoading vaut true, error existe et data aussi. Quel écran faut-il afficher ? Le modèle autorise trop de réponses.',
     concept: 'Une union discriminée décrit des variantes exclusives avec un champ commun littéral. Chaque variante porte les données valides pour cet état. Le compilateur peut ensuite réduire le type selon le discriminant.',
-    example: 'type Load = { status:"loading" } | { status:"error", message:string } | { status:"success", data:Lesson }. Une variante loading ne contient pas une erreur courante en plus.',
+    example: '```typescript\ntype Load =\n  | { status: "loading" }\n  | { status: "error", message: string }\n  | { status: "success", data: Lesson }\n```\n\nUne variante `loading` ne contient pas une erreur courante en plus.',
     prompt: 'Dans if (load.status === "success"), quelle propriété devient disponible sans assertion ?',
     correct: 'load.data', incorrect: 'load.message, commune à tous les états',
     success: 'Le discriminant sélectionne la variante qui porte data.', correction: 'message appartient à la variante error, pas à chaque état.',
@@ -125,7 +125,7 @@ export const languages: LessonDraft[] = [
   {
     id: 'ts-narrowing', intro: 'Une valeur est string ou number. Appeler toUpperCase sur les deux serait un pari peu rentable.',
     concept: 'Le narrowing réduit les possibilités d’un type à partir d’une vérification et du flot de contrôle. typeof, un discriminant ou un contrôle de présence peuvent prouver quelles opérations sont permises dans une branche.',
-    example: 'function afficher(value: string | number) { if (typeof value === "string") return value.toUpperCase(); return value.toFixed(0) }. Chaque branche utilise une capacité réellement disponible.',
+    example: '```typescript\nfunction afficher(value: string | number) {\n  if (typeof value === "string") return value.toUpperCase()\n  return value.toFixed(0)\n}\n```\n\nChaque branche utilise une capacité réellement disponible.',
     prompt: 'Une assertion value as string remplace-t-elle ce contrôle à l’exécution ?',
     correct: 'Non, elle affirme un type sans vérifier la valeur', incorrect: 'Oui, elle convertit toujours le nombre en chaîne',
     success: 'Le contrôle observe la valeur ; l’assertion demande au compilateur de te croire.', correction: 'Une assertion n’est ni une conversion ni une validation.',
@@ -136,7 +136,7 @@ export const languages: LessonDraft[] = [
   {
     id: 'ts-unknown', intro: 'L’API annonce une leçon, mais renvoie title:42. Un type écrit dans ton code n’a pas surveillé le réseau.',
     concept: 'unknown représente une valeur dont la structure n’est pas encore prouvée. Contrairement à any, il impose une vérification avant les accès spécifiques. C’est une frontière utile pour une entrée non fiable.',
-    example: 'function lireTitre(value: unknown) { if (typeof value === "object" && value !== null && "title" in value && typeof value.title === "string") return value.title; throw new Error("Titre invalide") }.',
+    example: '```typescript\nfunction lireTitre(value: unknown) {\n  if (\n    typeof value === "object" && value !== null &&\n    "title" in value && typeof value.title === "string"\n  ) return value.title\n  throw new Error("Titre invalide")\n}\n```',
     prompt: 'Pourquoi vérifier value !== null avant de traiter un objet ?',
     correct: 'Parce que typeof null vaut "object"', incorrect: 'Parce que null possède toujours une propriété title',
     success: 'Le contrôle supplémentaire évite d’accéder à une valeur absente.', correction: 'null n’est pas un objet utilisable, malgré cette particularité de typeof.',
@@ -147,7 +147,7 @@ export const languages: LessonDraft[] = [
   {
     id: 'ts-generics', intro: 'Une fonction renvoie le premier élément, mais son type de sortie oublie si la liste contenait des nombres ou des leçons.',
     concept: 'Un paramètre générique exprime une relation entre types. Pour un premier élément, T relie le type des éléments de la liste à celui du résultat. Il conserve l’information du consommateur sans choisir un type unique pour tous.',
-    example: 'function first<T>(items: T[]): T | undefined { return items[0] }. first([10, 20]) renvoie un number ou undefined ; first(["Docker"]) renvoie une string ou undefined.',
+    example: '```typescript\nfunction first<T>(items: T[]): T | undefined {\n  return items[0]\n}\n```\n\n`first([10, 20])` renvoie un `number` ou `undefined` ; `first(["Docker"])` renvoie une `string` ou `undefined`.',
     prompt: 'Pourquoi le résultat comprend-il undefined ?',
     correct: 'Parce qu’une liste peut être vide', incorrect: 'Parce qu’un générique transforme les éléments en inconnus',
     success: 'La signature doit aussi décrire l’absence réelle de premier élément.', correction: 'T préserve le type des éléments ; undefined représente ici une possibilité de l’opération.',
@@ -158,7 +158,7 @@ export const languages: LessonDraft[] = [
   {
     id: 'ts-runtime', intro: 'La compilation passe. En production, lesson.title.toUpperCase plante. Le réseau n’a jamais signé ton contrat TypeScript.',
     concept: 'Les annotations et assertions TypeScript sont retirées lors de la transformation en JavaScript. Elles vérifient le code statiquement, mais ne contrôlent pas automatiquement les données reçues à l’exécution.',
-    example: 'const lesson = JSON.parse(text) as Lesson peut contenir { title:42 }. L’assertion ne rejette rien. Une validation doit vérifier la structure et les contraintes avant d’utiliser la valeur comme Lesson.',
+    example: '```typescript\nconst lesson = JSON.parse(text) as Lesson\n```\n\nLa valeur peut contenir `{ title: 42 }`. L’assertion ne rejette rien. Une validation doit vérifier la structure et les contraintes avant d’utiliser la valeur comme `Lesson`.',
     prompt: 'Où placer cette validation pour une réponse API ?',
     correct: 'À la frontière de lecture, avant de fournir une Lesson au reste du code', incorrect: 'Uniquement dans un commentaire près de l’assertion',
     success: 'Les consommateurs reçoivent alors un contrat établi plutôt qu’une supposition.', correction: 'Un commentaire n’a aucun effet sur une donnée invalide.',

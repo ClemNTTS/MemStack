@@ -11,6 +11,10 @@
 
 L’inspecteur formule des demandes précises avec l’identifiant de la leçon, le problème et le résultat attendu. Il les transmet au rédacteur ou à l’illustrateur, puis relit la version corrigée. Une erreur factuelle, un exemple trompeur, une carte ambiguë ou une question sans explication empêche la validation. Un contrôle technique réussi ne vaut pas validation pédagogique.
 
+## Présentation du code
+
+Dans les textes des leçons, isoler les exemples exécutables dans des blocs délimités par trois accents graves, avec la langue (`bash`, `javascript`, `typescript`, `jsx`, `css`, `sql`). Garder les explications en dehors du bloc, indenter sur plusieurs lignes et préciser lorsqu’un extrait est incomplet. Utiliser un accent grave de chaque côté pour un identifiant ou une courte expression dans une phrase. `LessonText` affiche ce sous-ensemble sans interpréter de HTML ni exécuter le code.
+
 ## Livraison
 
 Le catalogue est une bibliothèque de contenus typés, accessible via la sélection de parcours. La découverte quotidienne et les révisions globales utilisent ce catalogue. Conserver les IDs historiques et les quotas entre parcours. Une leçon rédigée ou terminée n’est pas une preuve de maîtrise.

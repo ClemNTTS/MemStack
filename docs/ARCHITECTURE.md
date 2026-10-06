@@ -42,6 +42,8 @@ Les thèmes, parcours, bulles et cartes sont du contenu statique : les modifier 
 
 ## Modèle des leçons
 
+`LessonText` rend les textes avec un format limité : blocs de code clôturés et langue explicite, ou code en ligne entre accents graves. `formatText` sépare ces fragments ; React les affiche comme texte, sans HTML brut ni exécution. Les blocs utilisent une police monospace et un défilement horizontal accessible au clavier. Les données et IDs des étapes restent inchangés ; aucune dépendance Markdown supplémentaire.
+
 `Lesson` contient des métadonnées (identifiant stable, titre, catégorie, durée estimée) et une collection d'**étapes identifiées et typées**. Une étape peut être un message, une image avec texte alternatif ou une question avec choix et retours. Chaque type porte uniquement les données dont il a besoin ; de nouveaux types d'étapes doivent pouvoir être ajoutés sans modifier le contenu existant.
 
 Par défaut, les étapes suivent un ordre simple. Une question peut indiquer une courte étape corrective selon la réponse, puis revenir au fil commun. Ne pas imposer un scénario à embranchements complet, ni un nombre fixe d'étapes de chaque type. Vérifier que les identifiants et les transitions référencent des étapes existantes.

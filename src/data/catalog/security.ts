@@ -95,7 +95,7 @@ export const security: LessonDraft[] = [
     id: 'security-injection',
     intro: 'Le champ email arrive directement dans une chaîne SQL. Mémo croit recevoir du texte ; le moteur pourrait y lire des instructions.',
     concept: 'Une injection SQL apparaît quand une entrée non fiable peut modifier la syntaxe d’une requête. Une requête paramétrée sépare l’instruction SQL des valeurs : le pilote lie les paramètres comme des données. Ce contrat évite de construire le SQL par concaténation des valeurs utilisateur.',
-    example: 'Avec un pilote PostgreSQL, query("SELECT id FROM users WHERE email = $1", [email]) fournit le SQL et email séparément. Une apostrophe dans une adresse reste une partie de la valeur. Le pilote gère la liaison ; on ne remplace pas $1 soi-même dans la chaîne.',
+    example: 'Avec un pilote PostgreSQL :\n\n```javascript\nquery("SELECT id FROM users WHERE email = $1", [email])\n```\n\nLe SQL et `email` sont fournis séparément. Une apostrophe dans une adresse reste une partie de la valeur. Le pilote gère la liaison ; on ne remplace pas `$1` soi-même dans la chaîne.',
     prompt: 'Quelle construction conserve l’email dans son rôle de donnée ?',
     correct: 'Une requête paramétrée avec email dans la liste des valeurs',
     incorrect: 'Une chaîne SQL assemblée en collant directement email',

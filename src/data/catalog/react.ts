@@ -4,7 +4,7 @@ export const react: LessonDraft[] = [
   {
     id: 'react-render', intro: 'Le composant est appelé une nouvelle fois. Faut-il envoyer un message serveur à chaque passage ? Surtout pas par accident.',
     concept: 'Le rendu calcule une description d’interface à partir des props et de l’état. Il doit rester pur : mêmes entrées, même description, sans modifier des données externes pendant ce calcul.',
-    example: 'function Badge({ count }) { return <span>{count}</span> } décrit le badge. Faire history.push(...) ou envoyer une requête directement dans ce corps mélange affichage et effet externe.',
+    example: '```jsx\nfunction Badge({ count }) {\n  return <span>{count}</span>\n}\n```\n\nCe composant décrit le badge. Faire `history.push(...)` ou envoyer une requête directement dans ce corps mélange affichage et effet externe.',
     prompt: 'Pourquoi un envoi dans le corps du composant est-il risqué ?', correct: 'Un rendu peut être répété sans correspondre à une nouvelle action utilisateur', incorrect: 'React garantit un seul rendu par action en production',
     success: 'React peut recalculer l’interface ; ce calcul ne doit pas répéter l’action métier.', correction: 'Un rendu peut être relancé ou abandonné aussi en production ; ne lie pas l’unicité d’une action à son nombre d’appels.',
     explanation: 'Un clic déclenche une action dans son gestionnaire. Une synchronisation avec un système extérieur peut appartenir à un effet. React distingue rendu et commit ; ne suppose pas que chaque appel de composant devient une modification visible.',
@@ -24,7 +24,7 @@ export const react: LessonDraft[] = [
   {
     id: 'react-state-update', intro: 'Deux incréments, un seul point ajouté. Le compteur a suivi deux fois la même photo du rendu.',
     concept: 'Un gestionnaire voit l’état du rendu qui l’a créé. Appeler le setter programme une mise à jour ; cela ne remplace pas immédiatement cette valeur capturée. La forme fonctionnelle calcule depuis la valeur précédente de la file.',
-    example: 'Avec count = 0, setCount(count + 1) deux fois demande deux fois 1. setCount(c => c + 1) deux fois compose deux incréments et aboutit à 2.',
+    example: 'Avec `count = 0` :\n\n```javascript\nsetCount(count + 1)\nsetCount(count + 1)\n```\n\nCela demande deux fois `1`.\n\n```javascript\nsetCount(c => c + 1)\nsetCount(c => c + 1)\n```\n\nCela compose deux incréments et aboutit à `2`.',
     prompt: 'Le prochain état dépend du précédent. Quelle forme conserve cette relation dans la file ?', correct: 'setCount(previous => previous + 1)', incorrect: 'Supposer que count a déjà changé après le setter',
     success: 'L’updater reçoit la valeur précédente appropriée pour composer la mise à jour.', correction: 'La variable du gestionnaire reste celle du rendu actuel.',
     explanation: 'L’updater doit être pur : pas de requête ni de mutation externe. React peut regrouper les mises à jour et, en développement, réappeler certaines fonctions pour vérifier leur pureté. Fais l’action externe dans le gestionnaire prévu.',
@@ -34,7 +34,7 @@ export const react: LessonDraft[] = [
   {
     id: 'react-derived-state', intro: 'completed contient deux leçons, mais completedCount affiche une. Deux états racontent le même fait avec des mises à jour différentes.',
     concept: 'Une donnée qui se calcule depuis les props ou l’état existant peut souvent être dérivée pendant le rendu. La conserver en état supplémentaire demande de maintenir toutes les copies en accord.',
-    example: 'const completedCount = Object.keys(progress.completedLessons).length exprime le compteur depuis la progression. Il n’exige pas un second setter appelé après chaque complétion et chaque import.',
+    example: '```javascript\nconst completedCount = Object.keys(progress.completedLessons).length\n```\n\nLe compteur est exprimé depuis la progression. Il n’exige pas un second setter appelé après chaque complétion et chaque import.',
     prompt: 'Pour filtrer une petite liste selon search, faut-il conserver aussi la liste filtrée en état ?', correct: 'Non, on peut la calculer depuis la liste et search', incorrect: 'Oui, toute valeur affichée doit être un état distinct',
     success: 'Les entrées suffisent à produire le résultat cohérent.', correction: 'Le résultat recopié pourrait diverger quand une entrée change.',
     explanation: 'Un calcul coûteux peut justifier une mémorisation après mesure, sans transformer le résultat en seconde vérité métier. Un brouillon éditable est un autre cas : s’il doit diverger volontairement de la donnée enregistrée, il représente un vrai état distinct.',
@@ -44,7 +44,7 @@ export const react: LessonDraft[] = [
   {
     id: 'react-list-keys', intro: 'Tu retires la première carte. Le champ de la deuxième récupère soudain le brouillon de sa voisine.',
     concept: 'Une key aide React à identifier un élément parmi ses frères au fil des rendus. Une clé stable issue des données permet de conserver l’état avec la bonne entité. L’index décrit une position, qui peut changer.',
-    example: 'cards.map(card => <Card key={card.id} card={card} />) garde l’identité métier. Avec key={index}, supprimer le premier élément fait reprendre l’ancienne position zéro par un autre objet.',
+    example: '```jsx\ncards.map(card => <Card key={card.id} card={card} />)\n```\n\nCe code garde l’identité métier. Avec `key={index}`, supprimer le premier élément fait reprendre l’ancienne position zéro par un autre objet.',
     prompt: 'Pourquoi Math.random() n’est-il pas une bonne clé à chaque rendu ?', correct: 'Chaque rendu change l’identité et peut réinitialiser le composant', incorrect: 'Parce que React exige que la clé soit égale à la position',
     success: 'React ne reconnaît plus la même entrée avec une clé différente.', correction: 'La clé doit être stable et unique parmi les frères, pas correspondre à leur index.',
     explanation: 'Les clés n’ont pas besoin d’être uniques dans toute l’application, seulement dans la liste de frères concernée. Elles ne sont pas passées automatiquement comme prop key au composant : transmet aussi id si le composant en a besoin.',
@@ -64,7 +64,7 @@ export const react: LessonDraft[] = [
   {
     id: 'react-effect-cleanup', intro: 'Après trois passages sur la page, chaque message apparaît trois fois. Les abonnements précédents sont restés.',
     concept: 'Un effet qui acquiert une ressource doit retourner un nettoyage correspondant. React l’exécute avant de réinstaller cet effet avec de nouvelles dépendances et lors du démontage.',
-    example: 'useEffect(() => { const stop = subscribe(roomId, onMessage); return () => stop() }, [roomId, onMessage]). Ici subscribe est un import stable ; roomId et onMessage sont des props. Leur changement retire l’ancienne écoute avant d’utiliser la nouvelle.',
+    example: '```jsx\nuseEffect(() => {\n  const stop = subscribe(roomId, onMessage)\n  return () => stop()\n}, [roomId, onMessage])\n```\n\nIci `subscribe` est un import stable ; `roomId` et `onMessage` sont des props. Leur changement retire l’ancienne écoute avant d’utiliser la nouvelle.',
     prompt: 'Pour retirer un listener DOM, faut-il réutiliser la même fonction de gestionnaire ?', correct: 'Oui, avec le même type et la même capture', incorrect: 'Non, une nouvelle fonction identique dans son texte suffit',
     success: 'L’identité du listener installé permet de retirer le bon abonnement.', correction: 'Deux fonctions écrites de la même manière restent des objets fonction distincts.',
     explanation: 'Nettoie aussi les timers, connexions ou requêtes pertinentes. Un nettoyage ne garantit pas qu’une action distante déjà reçue soit annulée. Le couple installation/nettoyage doit rester correct même après un cycle supplémentaire en développement.',

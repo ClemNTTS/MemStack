@@ -5,7 +5,7 @@ export const fundamentals: LessonDraft[] = [
     id: 'fund-values-references',
     intro: 'Mémo copie une liste de courses. Surprise : rayer un article sur la copie le raye aussi sur l’original.',
     concept: 'En JavaScript, affecter un objet à une autre variable copie la référence vers cet objet. Les deux variables désignent alors le même objet. Affecter un nombre copie sa valeur primitive.',
-    example: 'const a = { score: 1 }; const b = a; b.score = 2. Maintenant a.score vaut 2. Avec let x = 1; let y = x; y = 2, x reste 1.',
+    example: '```javascript\nconst a = { score: 1 }\nconst b = a\nb.score = 2\n```\n\nMaintenant `a.score` vaut `2`.\n\n```javascript\nlet x = 1\nlet y = x\ny = 2\n```\n\nIci, `x` reste `1`.',
     prompt: 'Au moment de créer b à partir de l’objet a, comment permettre de modifier b.score sans toucher au premier niveau de a ?',
     correct: 'Créer b avec { ...a } avant de modifier score',
     incorrect: 'Déclarer b avec const suffit',

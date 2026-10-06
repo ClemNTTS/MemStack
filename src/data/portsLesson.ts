@@ -9,7 +9,7 @@ export const portsLesson: Lesson = {
   cardIds: ['docker-port-mapping', 'docker-expose-publish', 'docker-container-localhost'],
   steps: [
     { id: 'intro', type: 'message', text: 'Ton application tourne dans Docker, mais ton navigateur ne la trouve pas. Elle a ouvert une porte… dans une autre maison.', nextStepId: 'ports' },
-    { id: 'ports', type: 'message', text: 'L’application écoute sur le port 3000 du conteneur. Pour la joindre depuis ta machine, publie un port : docker run -p 127.0.0.1:8080:3000 mon-app. Ici, 8080 est le port de ta machine, 3000 celui du conteneur.', nextStepId: 'question' },
+    { id: 'ports', type: 'message', text: 'L’application écoute sur le port 3000 du conteneur. Pour la joindre depuis ta machine, publie un port :\n\n```bash\ndocker run -p 127.0.0.1:8080:3000 mon-app\n```\n\nIci, `8080` est le port de ta machine, `3000` celui du conteneur.', nextStepId: 'question' },
     { id: 'question', type: 'question', prompt: 'Quelle adresse ouvrir dans ton navigateur avec cette commande ?', choices: [
       { id: 'host', label: 'http://localhost:8080', feedback: 'Oui : le navigateur passe par le port publié sur ta machine.', nextStepId: 'listen' },
       { id: 'container', label: 'http://localhost:3000', feedback: '3000 désigne ici le port interne. Le port publié sur ta machine est 8080.', nextStepId: 'listen' },

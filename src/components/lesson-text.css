@@ -1,0 +1,42 @@
+.lesson-rich-text { min-width: 0; max-width: 100%; }
+.lesson-rich-text > p { white-space: pre-line; }
+.lesson-rich-text > :first-child { margin-top: 0; }
+.lesson-rich-text > :last-child { margin-bottom: 0; }
+.lesson-code-block {
+  min-width: 0;
+  margin: 1rem 0;
+  overflow: hidden;
+  border: 1px solid #d0c0e2;
+  border-radius: .85rem;
+  background: #292337;
+  color: #f4edf9;
+}
+.lesson-code-language {
+  display: block;
+  padding: .5rem 1rem;
+  border-bottom: 1px solid #ffffff20;
+  color: #d5bcea;
+  font-size: .72rem;
+  letter-spacing: .06em;
+}
+.lesson-code-block pre {
+  margin: 0;
+  padding: 1rem;
+  overflow-x: auto;
+  white-space: pre;
+  line-height: 1.65;
+  font-size: .86rem;
+  text-align: left;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+.lesson-code-block code,
+.lesson-inline-code { font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', monospace; }
+.lesson-inline-code {
+  padding: .1em .3em;
+  border-radius: .3rem;
+  background: #9773bc18;
+  font-size: .92em;
+  overflow-wrap: anywhere;
+}
+.lesson-code-block pre:focus-visible { outline: 3px solid #cba7ef; outline-offset: -3px; }

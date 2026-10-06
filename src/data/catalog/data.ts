@@ -14,7 +14,7 @@ export const data: LessonDraft[] = [
   {
     id: 'sql-joins', intro: 'Le tableau des leçons sans révision devient vide après une jointure. La jointure a peut-être supprimé les lignes que tu cherchais.',
     concept: 'INNER JOIN garde les combinaisons qui correspondent dans les deux tables. LEFT JOIN garde aussi chaque ligne de gauche sans correspondance, avec NULL pour les colonnes de droite.',
-    example: 'lessons LEFT JOIN reviews ON reviews.lesson_id = lessons.id conserve une leçon sans review. INNER JOIN la supprime du résultat. Plusieurs reviews peuvent produire plusieurs lignes pour une même leçon.',
+    example: 'Extrait de jointure :\n\n```sql\nlessons\nLEFT JOIN reviews ON reviews.lesson_id = lessons.id\n```\n\nCela conserve une leçon sans `review`. `INNER JOIN` la supprime du résultat. Plusieurs reviews peuvent produire plusieurs lignes pour une même leçon.',
     prompt: 'Un WHERE reviews.rating = \'recalled\' placé après le LEFT JOIN conserve-t-il les leçons sans review ?', correct: 'Non, ces lignes ont NULL et ne satisfont pas ce filtre', incorrect: 'Oui, LEFT JOIN rend tous les filtres de droite optionnels',
     success: 'Le filtre est évalué après la jointure et retire les lignes qui ne sont pas vraies pour lui.', correction: 'LEFT JOIN protège les lignes à l’étape de jointure, pas contre tout WHERE ultérieur.',
     explanation: 'Pour conserver toutes les leçons en ne joignant que les reviews rappelées, place la condition appropriée dans ON. Vérifie aussi la cardinalité : joindre plusieurs lignes à plusieurs lignes peut multiplier les résultats, ce qui affecte les comptes.',
@@ -24,7 +24,7 @@ export const data: LessonDraft[] = [
   {
     id: 'sql-null', intro: 'La requête cherche completed_at = NULL. Elle ne trouve aucune leçon, même celles dont la date est absente.',
     concept: 'NULL représente une valeur absente ou inconnue. Une comparaison ordinaire avec NULL donne une valeur logique inconnue, pas true. WHERE conserve les lignes dont la condition est true ; false et inconnue ne passent pas.',
-    example: 'WHERE completed_at IS NULL trouve les dates manquantes. WHERE score <> 10 ne garde pas automatiquement les lignes avec score NULL, car leur comparaison reste inconnue.',
+    example: 'Extraits de filtres :\n\n```sql\nWHERE completed_at IS NULL\n```\n\nCela trouve les dates manquantes.\n\n```sql\nWHERE score <> 10\n```\n\nCela ne garde pas automatiquement les lignes avec `score NULL`, car leur comparaison reste inconnue.',
     prompt: 'Pour garder un score différent de 10 ou absent, que faut-il exprimer ?', correct: 'score <> 10 OR score IS NULL', incorrect: 'score <> 10 suffit toujours',
     success: 'Le cas absent est ajouté explicitement au contrat du filtre.', correction: 'NULL ne se comporte pas comme une valeur ordinaire différente de tous les nombres.',
     explanation: 'COALESCE peut fournir une valeur de remplacement si cela a un sens métier, mais remplacer un score inconnu par zéro change sa signification. Définis absence, zéro et non-applicable avant de les fusionner.',

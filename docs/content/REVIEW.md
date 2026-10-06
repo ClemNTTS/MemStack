@@ -279,3 +279,7 @@ Sources de contrôle : [signaux OpenTelemetry](https://opentelemetry.io/docs/con
 `index.ts` a été relu : les 30 figures locales sont insérées sur le fil commun après l'exemple, avant la question. Les trois leçons Docker et leurs cartes sont reprises avec leurs IDs existants ; une copie du graphe reçoit la figure. Les deux réponses conduisent à l'explication puis à la synthèse, qui enseignent les notions des cartes, quelle que soit la réponse.
 
 Les 150 leçons constituent des introductions ciblées, pas une certification de maîtrise ni un inventaire de toutes les spécialités du développement. Le format cohérent aide à démarrer ; la diversité des interactions, la difficulté et les estimations de trois minutes restent à éprouver auprès d'apprenants. Les cours ne doivent pas être activés ensemble dans l'interface sans navigation et gestion des prérequis explicites.
+
+### Présentation des exemples — 6 octobre 2026
+
+Les exemples Docker, JavaScript, TypeScript, React, CSS et SQL concernés sont séparés de leurs explications dans des blocs de code indentés. Les filtres et jointures SQL restent explicitement des extraits. Les commandes Docker conservent leurs arguments ; les continuations de ligne sont affichées en Bash. Les IDs, transitions, cartes et sources sont conservés. Vérification technique : parser testé, graphes et références vérifiés par npm test ; aucun changement de règle pédagogique ou de révision.
