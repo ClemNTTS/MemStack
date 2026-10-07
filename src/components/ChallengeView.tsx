@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { appHref } from '../navigation/browser'
-import { challenges } from '../data/challenges'
+import { challenges, getChallengeVersion } from '../data/challenges'
+import ChallengeFeedback from '../challenges/ChallengeFeedback'
+import { challengeAiEnabled } from '../firebase/challengeAnalyses'
 import { catalogLessons } from '../data/catalog'
 import { useChallenges } from '../challenges/ChallengeProvider'
 import { useProgress } from '../progress/ProgressProvider'
@@ -14,16 +16,22 @@ function ChallengeView({ challengeId }: { challengeId: string }) {
   const { user, progress, online } = useProgress()
   const { attempts, loading, ready, error, saving, retry, submitAttempt, rateAttempt } = useChallenges()
   const challenge = challenges.find(entry => entry.id === challengeId)
-  const [response, setResponse] = useState('')
+  const [observations, setObservations] = useState('')
+  const [actions, setActions] = useState('')
+  const [autoAnalyzeId, setAutoAnalyzeId] = useState<string | null>(null)
   const [selectedAttemptId, setSelectedAttemptId] = useState<string | null>(null)
   const correctionRef = useRef<HTMLHeadingElement>(null)
   const history = attempts.filter(attempt => attempt.challengeId === challengeId)
   const selected = history.find(attempt => attempt.id === selectedAttemptId)
+  const reference = selected ? getChallengeVersion(challengeId, selected.challengeVersion) : challenge
+  const displayed = reference ?? challenge
   const currentUid = useRef(user?.uid)
   currentUid.current = user?.uid
 
   useEffect(() => {
-    setResponse('')
+    setObservations('')
+    setActions('')
+    setAutoAnalyzeId(null)
     setSelectedAttemptId(null)
   }, [challengeId, user?.uid])
 
@@ -33,12 +41,14 @@ function ChallengeView({ challengeId }: { challengeId: string }) {
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (!challenge || !response.trim() || saving || !ready || !online) return
+    if (!challenge || !observations.trim() || !actions.trim() || saving || !ready || !online) return
     const uid = user?.uid
-    const attempt = await submitAttempt(challenge.id, response)
+    const attempt = await submitAttempt(challenge.id, observations, actions)
     if (attempt && currentUid.current === uid) {
       setSelectedAttemptId(attempt.id)
-      setResponse('')
+      setAutoAnalyzeId(attempt.id)
+      setObservations('')
+      setActions('')
     }
   }
 
@@ -47,7 +57,7 @@ function ChallengeView({ challengeId }: { challengeId: string }) {
   return <main className="dashboard challenge-page">
     <WorkshopBackground stage="rest" beat={0} />
     <a className="text-link breadcrumb" href={appHref('/challenges')}>← Tous les défis</a>
-    <PageHeading eyebrow={`Docker · Diagnostic · ${challenge.estimatedMinutes} min`} title={challenge.title} description="Explique ton raisonnement avant de regarder la correction. Aucun code ne sera exécuté et aucune IA ne notera ta réponse." />
+    <PageHeading eyebrow={`Docker · Diagnostic · ${challenge.estimatedMinutes} min`} title={challenge.title} description="Lis le dossier, explique ton diagnostic et propose une action avec sa vérification. Compare ensuite ton raisonnement avec la correction." />
     <section className="challenge-prerequisites" aria-label="Notions utiles">
       <p>Pour te préparer ou retrouver une notion :</p>
       <ul>{challenge.lessonIds.map(id => {
@@ -61,29 +71,36 @@ function ChallengeView({ challengeId }: { challengeId: string }) {
     {error && <div className="inline-error" role="alert"><p>{error}</p><button className="catalog-button secondary" type="button" disabled={saving} onClick={retry}>Réessayer</button></div>}
     <section className="challenge-scenario" aria-labelledby="challenge-situation">
       <div className="challenge-section-heading"><Memo expression="unsure" /><h2 id="challenge-situation">La situation</h2></div>
-      <LessonText text={challenge.scenario} />
+      {selected && <p className="dashboard-note">Dossier de la tentative · version {selected.challengeVersion}</p>}
+      <LessonText text={displayed!.scenario} />
+      {displayed!.files.length > 0 && <><h3>Les fichiers du dossier</h3>
+      <div className="challenge-files">{displayed!.files.map(file => <details key={file.name} open><summary><strong>{file.name}</strong> · {file.description}</summary><pre><code>{file.content}</code></pre></details>)}</div></>}
       <h3>À toi de diagnostiquer</h3>
-      <LessonText text={challenge.prompt} />
+      <LessonText text={displayed!.prompt} />
     </section>
     {!selected ? <section className="challenge-response" aria-labelledby="challenge-response-title">
       <h2 id="challenge-response-title">Ton raisonnement</h2>
       <form onSubmit={submit}>
-        <label htmlFor="challenge-response">Que se passe-t-il et que proposerais-tu ?</label>
-        <textarea id="challenge-response" rows={8} maxLength={4000} required value={response} disabled={loading || saving} onChange={event => setResponse(event.target.value)} aria-describedby="challenge-response-note" placeholder="Décris ton diagnostic, ta solution et comment tu la vérifierais." />
-        <p id="challenge-response-note" className="dashboard-note">{response.length} / 4 000 caractères · Ta tentative doit être enregistrée avant d’afficher la correction. Elle reste dans ton historique.</p>
-        <button className="catalog-button" type="submit" disabled={!ready || saving || !online || !response.trim()}>{saving ? 'Enregistrement…' : 'Enregistrer et voir la correction'}</button>
+        <label htmlFor="challenge-observations">Ce que je constate</label>
+        <textarea id="challenge-observations" rows={5} maxLength={2000} required value={observations} disabled={loading || saving} onChange={event => setObservations(event.target.value)} aria-describedby="challenge-response-note" placeholder="Quels indices relèves-tu dans les fichiers ? Comment expliques-tu le problème ?" />
+        <label htmlFor="challenge-actions">Ce que je ferais</label>
+        <textarea id="challenge-actions" rows={5} maxLength={2000} required value={actions} disabled={loading || saving} onChange={event => setActions(event.target.value)} aria-describedby="challenge-response-note" placeholder="Quelle action proposes-tu, pourquoi et comment vérifierais-tu son résultat ?" />
+        <p id="challenge-response-note" className="dashboard-note">{observations.length + actions.length + 2} / 4 000 caractères au total · 2 000 par champ. Ta tentative est enregistrée avant tout retour.</p>
+        {challengeAiEnabled ? <p className="dashboard-note">Après enregistrement, ton raisonnement et le dossier seront transmis à Mistral pour produire un retour pédagogique.</p> : <p className="dashboard-note">L’analyse IA est désactivée sur cette version. La correction de référence reste disponible après enregistrement.</p>}
+        <button className="catalog-button" type="submit" disabled={!ready || saving || !online || !observations.trim() || !actions.trim() || observations.trim().length + actions.trim().length + 2 > 4000}>{saving ? 'Enregistrement…' : challengeAiEnabled ? 'Enregistrer et analyser' : 'Enregistrer et voir la correction'}</button>
       </form>
     </section> : <section className="challenge-correction" aria-labelledby="challenge-correction-title">
       <div className="challenge-section-heading"><Memo /><h2 id="challenge-correction-title" ref={correctionRef} tabIndex={-1}>Comparer, puis comprendre</h2></div>
       <p className="dashboard-note">Tentative du {new Date(selected.submittedAt).toLocaleString('fr-FR')} · Enregistrée sur ton compte</p>
-      {selected.challengeVersion !== challenge.version && <p className="challenge-version-note" role="status">Cette tentative concerne une ancienne version. La correction affichée est celle de la version actuelle.</p>}
-      <details className="challenge-own-response"><summary>Relire ta réponse</summary><LessonText text={selected.answer} /></details>
-      <h3>La correction expliquée</h3>
-      <LessonText text={challenge.correction} />
+      {selected.challengeVersion !== challenge.version && <p className="challenge-version-note" role="status">Cette tentative concerne la version {selected.challengeVersion}. Sa correction d’origine est conservée.</p>}
+      <details className="challenge-own-response"><summary>Relire ta réponse</summary>{selected.version === 2 ? <><h3>Ce que je constate</h3><LessonText text={selected.observations!} /><h3>Ce que je ferais</h3><LessonText text={selected.actions!} /></> : <LessonText text={selected.answer} />}</details>
+      {user && <ChallengeFeedback key={`${user.uid}-${selected.id}`} uid={user.uid} attempt={selected} autoStart={autoAnalyzeId === selected.id} online={online} />}
+      <h3 id="challenge-reference-correction">La correction expliquée</h3>
+      <LessonText text={reference?.correction ?? 'Cette version du dossier n’est pas disponible.'} />
       <h3>Les points à retrouver dans ton raisonnement</h3>
-      <ul className="challenge-checkpoints">{challenge.checkpoints.map(point => <li key={point}><LessonText text={point} /></li>)}</ul>
+      <ul className="challenge-checkpoints">{reference?.checkpoints.map(point => <li key={point}><LessonText text={point} /></li>)}</ul>
       <h3>Les nuances à garder en tête</h3>
-      <ul className="challenge-checkpoints">{challenge.counterexamples.map(point => <li key={point}><LessonText text={point} /></li>)}</ul>
+      <ul className="challenge-checkpoints">{reference?.counterexamples.map(point => <li key={point}><LessonText text={point} /></li>)}</ul>
       <div className="challenge-self-assessment">
         <h3>Où en es-tu après la comparaison ?</h3>
         <p>Ce choix décrit ton ressenti ; il ne certifie pas la justesse de ta réponse.</p>
@@ -93,7 +110,7 @@ function ChallengeView({ challengeId }: { challengeId: string }) {
         </div>
         {selected.outcome !== '' && <p role="status">Repère enregistré : {selected.outcome === 'retry' ? 'à retravailler' : 'compris'}.</p>}
       </div>
-      <details className="challenge-sources"><summary>Sources pour aller plus loin</summary><ul>{challenge.sources.map(source => <li key={source.url}><a href={source.url} target="_blank" rel="noreferrer">{source.title}</a></li>)}</ul></details>
+      <details className="challenge-sources"><summary>Sources pour aller plus loin</summary><ul>{reference?.sources.map(source => <li key={source.url}><a href={source.url} target="_blank" rel="noreferrer">{source.title}</a></li>)}</ul></details>
       <button className="catalog-button secondary" type="button" disabled={!ready || saving} onClick={() => setSelectedAttemptId(null)}>Faire une nouvelle tentative</button>
     </section>}
     {history.length > 0 && <section className="challenge-history" aria-labelledby="challenge-history-title">

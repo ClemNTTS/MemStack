@@ -38,6 +38,12 @@
 .challenge-history li > div { display: grid; gap: .35rem; }
 .challenge-history li span { color: #705889; font-size: .85rem; }
 .challenge-response textarea:focus-visible { outline: 2px solid #8b68ba; outline-offset: 3px; }
+.challenge-files { display: grid; gap: .8rem; }
+.challenge-files details { min-width: 0; padding: 1rem; background: #fff; border: 1px solid #e4d9ed; border-radius: .8rem; }
+.challenge-files summary { cursor: pointer; overflow-wrap: anywhere; }
+.challenge-files pre { overflow-x: auto; max-width: 100%; padding: .8rem; background: #f6f2f9; font-size: .85rem; line-height: 1.6; }
+.challenge-feedback { border: 1px solid #dacce6; border-radius: 1rem; padding: 1rem; margin: 1.25rem 0; background: #f5effa; overflow-wrap: anywhere; }
+#challenge-reference-correction { scroll-margin-top: 2rem; }
 
 @media (max-width: 800px) {
   .challenge-grid { grid-template-columns: 1fr; }

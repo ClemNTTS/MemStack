@@ -12,18 +12,22 @@ MemStack est une webapp personnelle pour consolider des connaissances de dévelo
 
 On progresse dans un **thème → parcours → leçons** (par exemple `DevOps → Docker → Images et conteneurs`). Une leçon se lit sous forme de bulles de messages. La session se termine par 3 à 5 nouvelles cartes de mémorisation, puis jusqu'à 5 cartes de révision arrivées à échéance. Après révélation, deux expressions de Mémo permettent d’indiquer si la réponse avait été retrouvée : non ou oui.
 
-Le socle d’apprentissage est complété par trois défis Docker sur `/challenges` : poser un diagnostic, enregistrer sa tentative, puis comparer à une correction expliquée. Les tentatives sont synchronisées séparément des cartes, sans exécution de code ni notation automatique. La veille automatisée et la gamification avancée restent envisagées.
+Le socle d’apprentissage est complété par trois défis Docker sur `/challenges` : poser un diagnostic, enregistrer sa tentative, puis comparer à une correction expliquée. Les dossiers présentent des fichiers à lire et deux champs de raisonnement. Les tentatives sont synchronisées séparément des cartes, sans exécution de code ni score automatique. Une analyse personnalisée Mistral est implémentée en option pour une bêta invitée ; le service serveur reste à déployer et activer après vérification. La veille automatisée et la gamification avancée restent envisagées.
 
 ## Documents
 
+- [Vision finale proposée](docs/VISION.md) : cible produit, formats de défis sans exécution de code et étapes d’évolution ; les propositions restent à valider.
 - [Produit](docs/PRODUCT.md) : périmètre, règles de révision et ordre de réalisation.
 - [Architecture](docs/ARCHITECTURE.md) : choix techniques et raisons de ces choix.
 - [Catalogue pédagogique](docs/CURRICULUM.md) : 12 thèmes, 30 parcours, 150 objectifs de leçons.
 - [Production et inspection](docs/content/WORKFLOW.md) : rôles, corrections et validation des contenus.
+- [Analyse IA des défis](docs/CHALLENGE_AI.md) : fonctions Firebase, invitations, quotas et activation de la bêta.
 - [Signalements assistés](docs/content/REPORTS.md) : formulaire, worker Mistral et configuration des secrets GitHub.
 
 ## Développement
 
 Après `npm ci`, lancer `npm run dev` et ouvrir `http://localhost:3000/`. Choisir un parcours dans `/courses`, découvrir ou consolider sur `/today`, réviser uniquement des cartes sur `/reviews` et relire sur `/library`. Les 30 parcours réunissent 150 leçons et 450 cartes. Le rendez-vous quotidien est un repère : les leçons sont libres et les lots de cinq révisions peuvent être renouvelés. Le profil permet de régler l’objectif personnel sans blocage. `npm run build` compile ; `npm test` vérifie les règles avec Node 24+.
+
+Pour vérifier le serveur local : `npm --prefix functions ci`, `npm run functions:build`, puis `npm run functions:test`. Les tests de règles et transactions avec émulateur sont documentés dans `tests/challenge-ai/README.md`. Aucun appel fournisseur ni déploiement ne fait partie du build.
 
 Google et Internet sont obligatoires. Firestore synchronise la progression, le parcours actif et l’objectif quotidien. Les préférences cloud sont chargées à la connexion, au rechargement ou à la reconnexion ; les anciens réglages locaux sont repris seulement si aucune préférence cloud n’existe. Un changement est confirmé après sauvegarde serveur. L’import de l’ancienne progression sans compte reste explicite dans le menu Compte. Publier les règles Firestore avant le frontend.

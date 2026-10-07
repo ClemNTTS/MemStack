@@ -11,16 +11,30 @@ export type Challenge = {
   checkpoints: string[]
   counterexamples: string[]
   sources: { title: string, url: string }[]
+  files: { name: string, description: string, language: string, content: string }[]
+  rubricVersion: number
+  acceptableAlternatives: string[]
 }
 
 export type ChallengeOutcome = '' | 'retry' | 'understood'
 
 export type ChallengeAttempt = {
   id: string
-  version: 1
+  version: 1 | 2
   challengeId: string
   challengeVersion: number
   answer: string
   submittedAt: string
   outcome: ChallengeOutcome
+  observations?: string
+  actions?: string
+}
+
+export type ChallengeAnalysis = {
+  status: 'processing' | 'completed' | 'failed' | 'needs_review'
+  message: string
+  challengeVersion: number
+  rubricVersion: number
+  model: string
+  promptVersion: string
 }

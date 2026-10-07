@@ -1,0 +1,13 @@
+{
+  "name": "memstack-challenge-rules-tests",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test provider-contract.test.mjs client-server-contract.test.mjs",
+    "test:rules": "node --test rules.test.mjs claim.integration.test.mjs"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^5.0.0",
+    "firebase": "^12.19.0"
+  }
+}

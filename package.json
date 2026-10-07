@@ -10,7 +10,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "test": "tsc -p tsconfig.test.json && node --test src/review/*.test.ts src/components/*.test.ts src/progress/*.test.ts src/reports/*.test.ts src/challenges/*.test.ts src/data/catalog/*.test.ts scripts/content-reports/*.test.mjs",
+    "test": "tsc -p tsconfig.test.json && node --test src/review/*.test.ts src/components/*.test.ts src/progress/*.test.ts src/reports/*.test.ts src/challenges/*.test.ts src/data/catalog/*.test.ts scripts/content-reports/*.test.mjs functions/src/*.test.mjs tests/challenge-ai/provider-contract.test.mjs tests/challenge-ai/client-server-contract.test.mjs",
+    "functions:build": "npm --prefix functions run build",
+    "functions:test": "npm --prefix functions test",
+    "test:challenge-rules": "npm --prefix tests/challenge-ai test",
     "reports:process": "node --env-file-if-exists=.env scripts/content-reports/run.mjs",
     "reports:check": "node scripts/content-reports/run.mjs --check"
   },

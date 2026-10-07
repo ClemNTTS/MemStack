@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import { rateChallengeAttempt, readChallengeAttempts, submitChallengeAttempt } from '../firebase/challenges'
 import { useProgress } from '../progress/ProgressProvider'
 import type { ChallengeAttempt, ChallengeOutcome } from '../types/challenge'
-import { validateChallengeAnswer } from './attemptModel'
+import { validateChallengeForm } from './attemptModel'
 
 type ChallengeContextValue = {
   attempts: ChallengeAttempt[]
@@ -12,7 +12,7 @@ type ChallengeContextValue = {
   saving: boolean
   error: string
   retry: () => void
-  submitAttempt: (challengeId: string, answer: string) => Promise<ChallengeAttempt | null>
+  submitAttempt: (challengeId: string, observations: string, actions: string) => Promise<ChallengeAttempt | null>
   rateAttempt: (id: string, outcome: Exclude<ChallengeOutcome, ''>) => Promise<boolean>
 }
 
@@ -61,11 +61,11 @@ function AccountChallenges({ uid, children }: { uid: string, children: ReactNode
       .sort((left, right) => right.submittedAt.localeCompare(left.submittedAt)))
   }
 
-  async function submitAttempt(challengeId: string, rawAnswer: string): Promise<ChallengeAttempt | null> {
+  async function submitAttempt(challengeId: string, observations: string, actions: string): Promise<ChallengeAttempt | null> {
     if (!canSave()) return null
     let answer: string
-    try { answer = validateChallengeAnswer(challengeId, rawAnswer) }
-    catch { setError('Écris ta réponse avant de consulter la correction, en 4 000 caractères maximum.'); return null }
+    try { answer = validateChallengeForm(challengeId, observations, actions).answer }
+    catch { setError('Complète les deux champs, avec 4 000 caractères maximum au total.'); return null }
     const operation = generation.current
     inFlight.current = true
     setSaving(true)
@@ -74,7 +74,7 @@ function AccountChallenges({ uid, children }: { uid: string, children: ReactNode
       if (!pending.current || pending.current.challengeId !== challengeId || pending.current.answer !== answer) {
         pending.current = { id: crypto.randomUUID(), challengeId, answer }
       }
-      const attempt = await submitChallengeAttempt(uid, pending.current.id, challengeId, answer)
+      const attempt = await submitChallengeAttempt(uid, pending.current.id, challengeId, observations, actions)
       if (generation.current !== operation || !navigator.onLine) return null
       remember(attempt)
       pending.current = null

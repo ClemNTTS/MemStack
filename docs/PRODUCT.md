@@ -1,5 +1,7 @@
 # Produit
 
+Ce document décrit le MVP et les fonctionnalités actuelles. La [vision finale proposée](VISION.md) décrit la cible à discuter, notamment les défis sans exécution de code ; elle ne vaut pas engagement d’implémentation.
+
 ## Intention
 
 MemStack aide une personne à apprendre régulièrement des notions de développement et à les retenir. La valeur centrale est une session courte que l'on peut refaire chaque jour, sans dépendre d'une nouvelle leçon publiée quotidiennement.
@@ -21,11 +23,11 @@ Challenges avec exécution de code, veille automatisée, éditeur de leçons, no
 
 ## Première extension : défis de diagnostic
 
-Trois défis Docker mettent les notions en situation : images et conteneurs, volumes et persistance, ports et réseaux. Depuis `/challenges`, observer un scénario et sa configuration, rédiger un diagnostic ou une proposition, puis comparer avec une correction expliquée, des points essentiels et des contre-exemples. Les leçons liées sont conseillées ; aucun prérequis ni quota ne bloque l’accès.
+Trois défis Docker mettent les notions en situation : images et conteneurs, volumes et persistance, ports et réseaux. Depuis `/challenges`, observer un scénario et sa configuration, lire les fichiers du dossier et remplir « Ce que je constate » et « Ce que je ferais », puis comparer avec une correction expliquée, des points essentiels et des contre-exemples. Les leçons liées sont conseillées ; aucun prérequis ni quota ne bloque l’accès.
 
 Une tentative non vide est enregistrée sur le compte avant d’afficher la correction. L’historique conserve la réponse, la date serveur et la version du défi ; il est distinct des cartes et des complétions de leçons. L’autoévaluation facultative « À retravailler » / « Compris » est un repère personnel enregistré une seule fois par tentative, sans note automatique ni promesse de maîtrise. Une nouvelle tentative conserve les précédentes. La relecture d’une correction n’écrit rien et le rechargement retrouve l’historique ; un brouillon non envoyé n’est pas sauvegardé.
 
-Aucun code n’est exécuté et aucune IA ne juge les réponses. L’exécution isolée de code et la veille restent des extensions ultérieures.
+Aucun code n’est exécuté. Le retour personnalisé Mistral est implémenté en option : un seul message explique les points justes, incomplets ou erronés et accepte les alternatives défendables, sans note ni certification. La correction de référence reste accessible après sauvegarde, même si l’analyse échoue. Le serveur Firebase est réservé aux comptes invités avec quotas ; il n’est pas encore déployé. L’activation exige configuration, tests et passage à Blaze. Les signalements restent gratuits ; paiements et clés personnelles sont différés. Voir [CHALLENGE_AI.md](CHALLENGE_AI.md). La veille reste une option à évaluer séparément.
 
 ## Atelier personnel
 

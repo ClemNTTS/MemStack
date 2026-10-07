@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { catalogCourses, catalogLessons } from '../data/catalog/index.ts'
-import { challenges } from '../data/challenges.ts'
-import { acknowledgeChallengeAttempt, decodeChallengeAttempt, matchesAttemptSubmission, validateChallengeAnswer } from './attemptModel.ts'
+import { challenges, getChallengeVersion } from '../data/challenges.ts'
+import { acknowledgeChallengeAttempt, decodeChallengeAttempt, matchesAttemptSubmission, validateChallengeAnswer, validateChallengeForm } from './attemptModel.ts'
 import type { ChallengeAttempt } from '../types/challenge'
 
 const attempt: ChallengeAttempt = {
@@ -83,4 +83,29 @@ test('a successful client write alone cannot reveal correction before server con
   release!(attempt)
   assert.equal((await result).id, attempt.id)
   assert.equal(acknowledged, true)
+})
+
+test('two-field responses are trimmed, bounded, and preserve their immutable aggregation', () => {
+  const form = validateChallengeForm(attempt.challengeId, '  Image v1  ', ' Recréer avec v2 ')
+  assert.deepEqual(form, { observations: 'Image v1', actions: 'Recréer avec v2', answer: 'Image v1\n\nRecréer avec v2' })
+  const current = { ...stored, version: 2, challengeVersion: 2, ...form }
+  assert.deepEqual(decodeChallengeAttempt(id, current), { id, ...current })
+  for (const patch of [{ observations: '' }, { actions: 'x'.repeat(2001) }, { answer: 'Autre réponse' }, { challengeVersion: 1 }, { observations: ' Image v1 ' }]) {
+    assert.equal(decodeChallengeAttempt(id, { ...current, ...patch }), null)
+  }
+  assert.throws(() => validateChallengeForm(attempt.challengeId, 'x'.repeat(2000), 'y'.repeat(2000)))
+  assert.equal(validateChallengeForm(attempt.challengeId, 'x'.repeat(1999), 'y'.repeat(1999)).answer.length, 4000)
+})
+
+test('historical corrections stay available alongside versioned dossiers', () => {
+  for (const current of challenges) {
+    assert.equal(current.version, 2)
+    assert.ok(current.files.length >= 2)
+    assert.ok(current.acceptableAlternatives.length > 0)
+    const legacy = getChallengeVersion(current.id, 1)
+    assert.ok(legacy)
+    assert.equal(legacy.version, 1)
+    assert.ok(legacy.correction.length > 100)
+  }
+  assert.equal(getChallengeVersion(attempt.challengeId, 99), undefined)
 })
