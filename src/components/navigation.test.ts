@@ -22,3 +22,11 @@ test('local illustrations use the repository base without rewriting external ima
   assert.equal(assetHref('/memo/learning.png', '/'), '/memo/learning.png')
   assert.equal(assetHref('https://example.com/image.png', '/MemStack/'), 'https://example.com/image.png')
 })
+
+test('custom domain Pages routes retain fragments at the root', () => {
+  assert.equal(routeHref('/courses', '/', true), '/#/courses')
+  assert.equal(routeHref('/today?start=cards', '/', true), '/#/today?start=cards')
+  assert.equal(routeFromLocation({ pathname: '/', search: '', hash: '#/challenges/docker-images-diagnostic' }, '/', true), '/challenges/docker-images-diagnostic')
+  assert.equal(routeFromLocation({ pathname: '/', search: '', hash: '#/today?start=cards' }, '/', true), '/today?start=cards')
+  assert.equal(assetHref('/memo/learning.png', '/'), '/memo/learning.png')
+})

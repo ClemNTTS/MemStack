@@ -1,7 +1,7 @@
 import { getApp, getApps, initializeApp } from 'firebase/app'
 import { connectAuthEmulator, getAuth } from 'firebase/auth'
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore'
-import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check'
+import { initializeAppCheck, ReCaptchaEnterpriseProvider, ReCaptchaV3Provider } from 'firebase/app-check'
 
 // Public web identifiers. Firestore rules control access to user data.
 const firebaseConfig = {
@@ -29,7 +29,9 @@ export function getFirebaseServices() {
       connectFirestoreEmulator(db, 'localhost', 8080)
     } else if (import.meta.env.VITE_FIREBASE_APPCHECK_SITE_KEY) {
       initializeAppCheck(app, {
-        provider: new ReCaptchaV3Provider(import.meta.env.VITE_FIREBASE_APPCHECK_SITE_KEY),
+        provider: import.meta.env.VITE_FIREBASE_APPCHECK_PROVIDER === 'enterprise'
+          ? new ReCaptchaEnterpriseProvider(import.meta.env.VITE_FIREBASE_APPCHECK_SITE_KEY)
+          : new ReCaptchaV3Provider(import.meta.env.VITE_FIREBASE_APPCHECK_SITE_KEY),
         isTokenAutoRefreshEnabled: true,
       })
     }
