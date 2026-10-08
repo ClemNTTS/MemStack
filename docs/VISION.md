@@ -37,7 +37,7 @@ Les trois activités gardent des états séparés. Une tentative de défi ne ter
 
 ## Format retenu pour la cible : dossier, formulaire et retour du LLM
 
-**La direction retenue est un scénario accompagné de fichiers à lire, un formulaire de raisonnement et un seul message de retour personnalisé du LLM.** Ce format sert au diagnostic, à une revue de code ou à une décision simple. Les trois dossiers Docker, les deux champs et le service de retour sont implémentés en option. Le service Firebase/Mistral n’est pas encore déployé ni activé ; les essais locaux précèdent la bêta invitée.
+**La direction retenue est un scénario accompagné de fichiers à lire, un formulaire de raisonnement et un seul message de retour personnalisé du LLM.** Ce format sert au diagnostic, à une revue de code ou à une décision simple. Les trois dossiers Docker, les deux champs et le service de retour sont implémentés en option. Le service Firebase/Mistral est déployé pour une bêta limitée au propriétaire, après tests locaux et essais fournisseur.
 
 Le formulaire recommandé garde deux champs obligatoires :
 
@@ -160,7 +160,7 @@ Conserver Mémo et les badges de jalons. Ne pas ajouter par défaut points, clas
 | Étendre les situations utiles | Couvrir les grandes compétences du socle par des cas distincts, inspectés et versionnés | Chaque ajout entraîne une décision nouvelle ; la maintenance reste compatible avec un projet personnel |
 | Consolider la version aboutie | Vérifier synchronisation, accessibilité, qualité, signalements et repères personnels | Les critères de fin ci-dessous sont remplis et les limites restantes sont documentées |
 
-Les dossiers restent du contenu statique et les tentatives des données personnelles Firestore. L’analyse personnalisée exige une exécution serveur pour protéger la clé du fournisseur et contrôler les appels ; son besoin est décrit dans [ARCHITECTURE.md](ARCHITECTURE.md). Firebase Functions à Paris et Mistral sont retenus pour la bêta. L’implémentation est désactivée par défaut, avec invitations et quotas serveur. Le propriétaire a autorisé Blaze et le déploiement après tests ; le plafond Mistral enregistré est de 10 € par mois pour le compte, signalements compris. Le modèle versionné et l’activation de production restent à configurer ; voir [CHALLENGE_AI.md](CHALLENGE_AI.md). Tout nouveau schéma de tentative ou élargissement des IDs autorisés nécessite des règles, tests et une compatibilité avec l’historique.
+Les dossiers restent du contenu statique et les tentatives des données personnelles Firestore. L’analyse personnalisée exige une exécution serveur pour protéger la clé du fournisseur et contrôler les appels ; son besoin est décrit dans [ARCHITECTURE.md](ARCHITECTURE.md). Firebase Functions à Paris et Mistral sont retenus pour la bêta. L’implémentation est désactivée par défaut, avec invitations et quotas serveur. Le propriétaire a autorisé Blaze et le déploiement après tests ; le plafond Mistral enregistré est de 10 € par mois pour le compte, signalements compris. Le modèle versionné retenu est Mistral Large 2512, avec le prompt v2 ; l’activation reste limitée au propriétaire ; voir [CHALLENGE_AI.md](CHALLENGE_AI.md). Tout nouveau schéma de tentative ou élargissement des IDs autorisés nécessite des règles, tests et une compatibilité avec l’historique.
 
 ## Quand considérer la version finale atteinte ?
 
@@ -185,7 +185,7 @@ La réussite ne se mesure pas au nombre de fonctionnalités. Les observations ut
 | Quel public prioritaire ? | Développeur web en consolidation ; adapter vocabulaire et indices si le débutant absolu devient la cible |
 | Quels thèmes pour le prochain lot ? | Garder Docker, puis choisir revue de code et diagnostic web/backend selon les besoins rencontrés |
 | Quels champs de formulaire ? | Deux champs : « Ce que je constate » et « Ce que je ferais », avec justification et vérification dans la consigne ; incertitudes facultatives si utile |
-| Quel modèle pour le retour ? | Firebase Functions/Mistral retenus ; choisir un modèle versionné après essai sur les cas, dans le budget partagé de 10 €/mois |
+| Quel modèle pour le retour ? | Firebase Functions/Mistral retenus ; Large 2512 retenu après essai sur les cas, dans le budget partagé de 10 €/mois |
 | Quelle place dans la routine ? | Proposer « Appliquer » indépendamment ; aucun défi imposé après chaque leçon |
 | Faut-il planifier le retour aux défis ? | Commencer par le filtre personnel « À retravailler » ; décider après usage si un rappel apporte quelque chose |
 | Que montrer après une mise à jour ? | Afficher clairement les versions et conserver les dossiers/corrections historiques, comme pour v1/v2 |

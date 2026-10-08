@@ -1,6 +1,6 @@
 # Vérification indépendante des défis IA
 
-Inspection du 7 octobre 2026. Cette revue porte sur l’implémentation locale ; elle ne confirme pas une activation en production ni la qualité d’un retour réel de Mistral.
+Inspection initiale du 7 octobre 2026, complétée le 8 octobre par une évaluation fournisseur et un test de production. Les résultats initiaux ci-dessous concernent l’implémentation locale ; les sections datées suivantes décrivent les vérifications réelles.
 
 ## Résultats
 
@@ -36,7 +36,7 @@ Le serveur dérive le propriétaire du jeton Firebase, charge lui-même la tenta
 
 Les quotas actuels limitent les demandes et réservent un budget de jetons conservateur, y compris en cas d’échec incertain. Ils protègent les dépenses de la bêta ; ce ne sont pas des crédits commerciaux débités à l’utilisateur. Aucun paiement n’est implémenté.
 
-Restent à valider avant activation : configuration Blaze, Secret Manager, modèle versionné, comptes invités, App Check, déploiement de la fonction et des règles, puis une tentative réelle. Le test émulateur couvre les transactions de production mais pas le transport callable déployé. L’efficacité pédagogique et l’acceptation des réponses alternatives demandent une évaluation humaine sur les exemples préparés.
+Lors de la revue initiale, restaient à valider Blaze, Secret Manager, le modèle, les invitations, App Check et le déploiement. Ces étapes ont été réalisées le 8 octobre pour le seul compte propriétaire. Le test émulateur couvre les transactions de production mais pas le transport callable déployé. L’efficacité pédagogique et l’acceptation des réponses alternatives demandent une évaluation humaine sur les exemples préparés.
 
 L’arrêt après erreur incertaine est volontaire : `needs_review` ne se relance pas automatiquement. Aucune procédure de reprise administrative n’est implémentée. Les plafonds quotidiens sont des réservations de demandes et de jetons, pas une garantie de plafond de facture Firebase globale ; il faut distinguer ces contrôles applicatifs de toute protection financière configurée dans la plateforme.
 
@@ -58,3 +58,9 @@ Le prompt v2 distingue les propos de l’élève de la correction, rend les alte
 La dernière vérification ne supprime pas toutes les réserves : l’alternative reçoit encore une remarque d’« omission mineure » pour une explication implicite, et la réponse hostile reçoit un commentaire inutile sur sa demande de révéler les consignes. Le modèle n’invente plus de compliment inversant la réponse dans ces derniers cas, mais son appréciation n’est pas un verdict fiable certifié. Cette évaluation justifie une expérimentation limitée au propriétaire, avec correction de référence visible ; elle ne valide pas une ouverture publique.
 
 Vérification manuelle navigateur sur émulateurs Auth/Firestore : dossier version 2 et deux champs visibles ; une réponse fictive enregistrée est confirmée avant affichage de la correction, avec lien de référence et historique. IA désactivée pendant ce test ; aucun appel fournisseur.
+
+## Vérification de production du 8 octobre 2026
+
+GitHub Pages a publié le frontend activé après 102 tests réussis et un build réussi. Le callable déployé utilise Large 2512 et le prompt v2. Un test sur memstack.fr avec le compte propriétaire et App Check Enterprise a analysé une tentative synthétique déjà enregistrée. Le message personnalisé est apparu et reconnaît la réponse comme complète ; le lien de correction garde la route du défi et place le focus sur la correction. Le message contient néanmoins une formulation contradictoire (« pas mentionné explicitement » puis reconnaissance de la sauvegarde citée) et une précision présentée à tort comme venant du fichier : la limite pédagogique reste réelle.
+
+Après rechargement et ouverture de l’historique, le même retour est relu sans nouveau bouton d’analyse ni appel fournisseur. La tentative synthétique de contrôle reste dans l’historique du propriétaire.

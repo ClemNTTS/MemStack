@@ -14,7 +14,7 @@ Depuis le dépôt : `npm --prefix functions ci`, `npm --prefix functions run bui
 
 ## Activation humaine
 
-Le projet utilise Blaze. Le propriétaire a autorisé le service et son déploiement. Le secret Mistral est installé dans Secret Manager ; les paramètres privés invitent le compte propriétaire, exigent App Check et limitent les appels à 5 par compte et 25 globalement par jour UTC. Aucun service n'est déployé par les scripts de build ou de test.
+Le projet utilise Blaze. Le propriétaire a autorisé le service et son déploiement. Le secret Mistral est installé dans Secret Manager ; les paramètres privés invitent le compte propriétaire, exigent App Check et limitent les appels à 5 par compte et 25 globalement par jour UTC. Le callable est déployé avec `mistral-large-2512`, le prompt `challenge-feedback-v2` et une sortie JSON Schema stricte. Le frontend utilise App Check Enterprise. Aucun service n'est déployé par les scripts de build ou de test.
 
 Le plafond Mistral enregistré est de 10 €/mois pour tout le compte, y compris le worker de signalements. L'alerte projet de 5 €/mois et le cap Functions de 5 €/mois ont été configurés dans Firebase. Les alertes seules ne bloquent rien. Le spend cap en Preview suspend Cloud Run Functions à 100 %, mais le délai de quelques minutes peut entraîner un dépassement facturé et il ne couvre pas Firestore ou Artifact Registry. Voir la [documentation des spend caps Firebase](https://firebase.google.com/docs/projects/billing/spend-caps). Les images de build de europe-west9 sont nettoyées après sept jours. Ces protections ne constituent pas un plafond absolu de toute la facture.
 
