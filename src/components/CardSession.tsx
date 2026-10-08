@@ -84,14 +84,17 @@ function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel, 
         <div className="card-deck">
           <button className="memo-rating" type="button" disabled={!isRevealed} aria-label={ratingLabels.forgotten} title={ratingLabels.forgotten} onClick={() => rateCard('forgotten')}>
             <Memo expression="forgotten" />
-            <span aria-hidden="true">← ×</span>
+            <span aria-hidden="true" className="rating-symbol">← ×</span>
+            <span className="rating-mobile-label" aria-hidden="true">À retrouver</span>
           </button>
           <FlashCard card={currentCard} isRevealed={isRevealed} onFlip={() => setIsRevealed((previous) => !previous)} onRate={rateCard} />
           <button className="memo-rating" type="button" disabled={!isRevealed} aria-label={ratingLabels.recalled} title={ratingLabels.recalled} onClick={() => rateCard('recalled')}>
             <Memo expression="recalled" />
-            <span aria-hidden="true">✓ →</span>
+            <span aria-hidden="true" className="rating-symbol">✓ →</span>
+            <span className="rating-mobile-label" aria-hidden="true">Retrouvée</span>
           </button>
         </div>
+        <p className="card-rating-prompt" aria-hidden="true">{isRevealed ? 'Avais-tu retrouvé la réponse ? À gauche : non. À droite : oui.' : 'Retrouve la réponse avant de retourner la carte.'}</p>
         <ContentReportButton context={cardReportContext(currentCard, catalogLessons)} />
         <p id="card-instructions" className="sr-only">
           {isRevealed ? 'Avais-tu retrouvé la réponse ? À gauche : non. À droite : oui. Glisse la carte ou choisis Mémo.' : 'Clique sur la carte pour révéler la réponse.'}

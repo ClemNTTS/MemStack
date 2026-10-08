@@ -63,9 +63,14 @@ function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLa
     if (history.length === 1 && !currentVisit.selectedChoiceId) return
     const conversation = endRef.current?.parentElement
     if (conversation) {
+      const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'
+      if (window.getComputedStyle(conversation).overflowY === 'visible') {
+        endRef.current?.scrollIntoView({ block: 'nearest', behavior })
+        return
+      }
       conversation.scrollTo({
         top: conversation.scrollHeight,
-        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+        behavior,
       })
     }
   }, [history.length, currentVisit.selectedChoiceId])

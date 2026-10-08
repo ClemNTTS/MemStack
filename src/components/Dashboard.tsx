@@ -22,7 +22,7 @@ function Dashboard() {
     <WorkshopBackground stage="rest" beat={0} />
     <div className="dashboard-heading learning-hero">
       <div><p className="lesson-category">Ton rendez-vous avec Mémo</p><h1>Une idée de plus.<br /><span>Un peu mieux retenue.</span></h1><p>Un petit pas chaque jour. Tu choisis quand t’arrêter.</p><div className="hero-meta"><a href={appHref('/profile')}>Repère du jour : {discoveredToday} / {dailyLessonGoal} leçon{dailyLessonGoal > 1 ? 's' : ''}</a><span>{discoveredToday >= dailyLessonGoal ? 'Objectif atteint · tu peux continuer' : 'À ton rythme, sans limite'}</span></div></div>
-      <img className="memo-learning" src={`${import.meta.env.BASE_URL}memo/learning.png`} alt="Mémo apprend avec son livre ouvert" width="300" height="250" />
+      <img className="memo-learning" src={`${import.meta.env.BASE_URL}memo/learning.webp`} alt="Mémo apprend avec son livre ouvert" width="300" height="250" />
     </div>
     <section className="dashboard-session" aria-labelledby="today-title">
       <div><p className="lesson-category">Prochaine leçon conseillée · {course.theme}</p><h2 id="today-title">{plan.lesson?.title ?? 'Un chemin parcouru.'}</h2><p>{plan.lesson ? `${plan.lesson.estimatedMinutes} min · ${plan.lesson.cardIds.length} nouvelles cartes · ${course.title}` : 'Ton parcours est terminé. Tes cartes continuent de revenir aux bonnes échéances.'}</p>

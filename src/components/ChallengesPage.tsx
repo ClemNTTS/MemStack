@@ -20,7 +20,7 @@ function ChallengesPage() {
     <WorkshopBackground stage="rest" beat={0} />
     <div className="challenges-intro">
       <PageHeading eyebrow={`L’atelier pratique · ${themes.length} thèmes`} title="Et si tu devais le résoudre ?" description="Lis les fichiers, pose ton diagnostic et propose une action. Compare ensuite ton raisonnement avec la correction et, si disponible, le retour personnalisé." />
-      <img src={appAsset('memo/learning.png')} alt="" width="160" height="160" />
+      <img src={appAsset('memo/learning.webp')} alt="" width="160" height="160" />
     </div>
     <p className="dashboard-note">Les défis sont accessibles librement. Tes tentatives sont synchronisées ; ton autoévaluation est un repère personnel, sans note automatique.</p>
     {loading && <p role="status">Chargement de tes tentatives…</p>}

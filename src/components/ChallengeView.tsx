@@ -74,7 +74,7 @@ function ChallengeView({ challengeId }: { challengeId: string }) {
       {selected && <p className="dashboard-note">Dossier de la tentative · version {selected.challengeVersion}</p>}
       <LessonText text={displayed!.scenario} />
       {displayed!.files.length > 0 && <><h3>Les fichiers du dossier</h3>
-      <div className="challenge-files">{displayed!.files.map(file => <details key={file.name} open><summary><strong>{file.name}</strong> · {file.description}</summary><pre><code>{file.content}</code></pre></details>)}</div></>}
+      <div className="challenge-files">{displayed!.files.map(file => <details key={file.name} open><summary><strong>{file.name}</strong> · {file.description}</summary><pre tabIndex={0} aria-label={`Contenu de ${file.name}, défilement horizontal disponible`}><code>{file.content}</code></pre></details>)}</div></>}
       <h3>À toi de diagnostiquer</h3>
       <LessonText text={displayed!.prompt} />
     </section>

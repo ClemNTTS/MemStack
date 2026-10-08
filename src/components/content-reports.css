@@ -1,4 +1,5 @@
 .content-report-trigger {
+  min-height: 44px;
   border: 0;
   padding: .5rem .25rem;
   background: transparent;
@@ -40,3 +41,12 @@
 .content-report-dialog textarea { resize: vertical; }
 .content-report-note { margin: 0; font-size: .8rem; line-height: 1.6; color: #6a5b7d; }
 .content-report-trigger:focus-visible { outline: 2px solid #8b68ba; outline-offset: 3px; }
+
+@media (max-width: 650px) {
+  .content-report-dialog { width: calc(100vw - 1.5rem); max-height: calc(100dvh - 1.5rem); padding: 1rem; }
+  .content-report-heading { gap: .5rem; }
+  .content-report-heading .sound-toggle { min-height: 44px; flex-shrink: 0; }
+  .content-report-dialog select, .content-report-dialog textarea { font-size: 1rem; min-height: 48px; }
+  .content-report-dialog textarea { scroll-margin-block: 1rem; }
+  .content-report-dialog form > button { min-height: 48px; }
+}

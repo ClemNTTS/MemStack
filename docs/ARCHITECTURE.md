@@ -112,6 +112,12 @@ La clé Mistral et les quotas justifient maintenant ce service limité. Une éve
 
 ## Déploiement
 
+### Installation et interface mobile
+
+Le manifeste Web, les icônes PNG et les métadonnées Apple permettent d’ajouter MemStack à l’écran d’accueil et de l’ouvrir en mode autonome. `InstallApp`, dans le profil, propose le dialogue d’installation lorsque le navigateur le fournit et des instructions pour iOS/Android. Le module chargé au démarrage conserve l’événement d’installation même avant le chargement de l’atelier. Aucun nouveau service ou backend n’est nécessaire.
+
+Aucun service worker ni cache hors ligne n’est ajouté : le garde Google/réseau reste obligatoire, y compris dans l’application installée. Les mises à jour sont reçues à la prochaine ouverture/recharge réseau. La navigation mobile est placée en bas hors session ; une sortie explicite conserve l’espace de lecture pendant les leçons et révisions. Les marges tiennent compte des zones sûres des téléphones. Voir [PWA.md](PWA.md) pour l’installation et les limites de vérification.
+
 `.github/workflows/pages.yml` installe avec `npm ci`, lance les tests, construit avec `--base=/` pour memstack.fr et publie uniquement `dist/`. Pages doit utiliser la source **GitHub Actions**, sans build Jekyll des sources.
 
 En local, la navigation conserve les chemins `/today`, `/courses`, etc. En production, `src/navigation/` génère des liens `/#/today` : les fragments permettent le rechargement et l’ouverture directe sans réécriture serveur. Les illustrations et Mémo utilisent le même chemin de base. Aucun changement des IDs ou de la progression.

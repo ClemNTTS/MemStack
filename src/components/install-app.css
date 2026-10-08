@@ -1,0 +1,17 @@
+.install-app {
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  border: 1px solid #d8d0e6;
+  border-radius: 1.25rem;
+  background: #fffaf2;
+  color: #302b40;
+}
+
+.install-app h2 { margin: 0; font-size: 1.2rem; }
+.install-app p, .install-app li { line-height: 1.6; }
+.install-app ol { padding-left: 1.4rem; }
+.install-app li + li { margin-top: .6rem; }
+.install-app summary { padding: .75rem 0; cursor: pointer; min-height: 44px; box-sizing: border-box; font-weight: 650; }
+.install-app-button { min-height: 48px; padding: .75rem 1rem; border: 0; border-radius: .75rem; background: #655a91; color: white; font: inherit; font-weight: 650; cursor: pointer; }
+.install-app-button:disabled { opacity: .65; cursor: wait; }
+.install-app-button:focus-visible, .install-app summary:focus-visible { outline: 3px solid #655a91; outline-offset: 4px; }

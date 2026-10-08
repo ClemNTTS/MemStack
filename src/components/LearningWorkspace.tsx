@@ -1,6 +1,7 @@
 import { appHref, currentRoute, usesHashRoutes } from '../navigation/browser'
 import { useEffect, useRef, useState } from 'react'
 import type { MouseEvent } from 'react'
+import { House, BookOpen, RotateCcw, Zap, Library } from 'lucide-react'
 import TodaySession from './TodaySession'
 import Dashboard from './Dashboard'
 import CoursesPage from './CoursesPage'
@@ -70,11 +71,11 @@ function Pages() {
     window.scrollTo(0, 0)
   }
   const links = [
-    { href: '/', label: 'Aujourd’hui', current: path === '/' || path === '/today' },
-    { href: '/courses', label: 'Parcours', current: path.startsWith('/courses') },
-    { href: '/reviews', label: 'Révisions', current: path === '/reviews' },
-    { href: '/challenges', label: 'Défis', current: path.startsWith('/challenges') },
-    { href: '/library', label: 'Bibliothèque', current: path === '/library' || Boolean(lesson) },
+    { href: '/', label: 'Aujourd’hui', icon: House, current: path === '/' || path === '/today' },
+    { href: '/courses', label: 'Parcours', icon: BookOpen, current: path.startsWith('/courses') },
+    { href: '/reviews', label: 'Révisions', icon: RotateCcw, current: path === '/reviews' },
+    { href: '/challenges', label: 'Défis', icon: Zap, current: path.startsWith('/challenges') },
+    { href: '/library', label: 'Bibliothèque', icon: Library, current: path === '/library' || Boolean(lesson) },
   ]
   let page
   if (path === '/') page = <Dashboard />
@@ -89,7 +90,8 @@ function Pages() {
     <a className="skip-link" href="#main-content">Aller au contenu</a>
     <header className="site-header">
       <a className="brand" href={appHref('/')} aria-label="MemStack, accueil">memstack<span> / l’atelier</span></a>
-      <nav aria-label="Navigation principale">{links.map((link) => <a key={link.href} href={appHref(link.href)} aria-current={link.current ? 'page' : undefined}>{link.label}</a>)}</nav>
+      {immersive && <a className="mobile-session-exit" href={appHref(lesson ? '/library' : '/')}><span aria-hidden="true">←</span> Quitter la session</a>}
+      <nav aria-label="Navigation principale">{links.map((link) => <a key={link.href} href={appHref(link.href)} aria-current={link.current ? 'page' : undefined}><link.icon className="navigation-icon" aria-hidden="true" strokeWidth={1.7} /><span>{link.label}</span></a>)}</nav>
       <AccountBar />
     </header>
     <div id="main-content" className="page-content" tabIndex={-1} key={`${path}-${navigation}`}>{page}</div>

@@ -42,6 +42,9 @@
 .challenge-files details { min-width: 0; padding: 1rem; background: #fff; border: 1px solid #e4d9ed; border-radius: .8rem; }
 .challenge-files summary { cursor: pointer; overflow-wrap: anywhere; }
 .challenge-files pre { overflow-x: auto; max-width: 100%; padding: .8rem; background: #f6f2f9; font-size: .85rem; line-height: 1.6; }
+.challenge-files pre:focus-visible { outline: 3px solid #8b68ba; outline-offset: 2px; }
+.challenge-tile, .challenge-page section, .challenge-section-heading > h2 { min-width: 0; }
+.challenge-tile h2, .challenge-page h1 { overflow-wrap: anywhere; }
 .challenge-feedback { border: 1px solid #dacce6; border-radius: 1rem; padding: 1rem; margin: 1.25rem 0; background: #f5effa; overflow-wrap: anywhere; }
 #challenge-reference-correction { scroll-margin-top: 2rem; }
 
@@ -50,6 +53,16 @@
   .challenges-intro > img { width: 100px; height: 100px; }
 }
 @media (max-width: 480px) {
+  .challenge-response textarea { font-size: 1rem; scroll-margin-block: 1rem; }
+  .challenge-files details { padding: .75rem; }
+  .challenge-files summary, .challenge-own-response summary, .challenge-sources summary { min-height: 44px; box-sizing: border-box; padding-block: .5rem; line-height: 1.6; }
+  .challenge-response form > button, .challenge-tile > .dashboard-cta { width: 100%; justify-self: stretch; }
+  .challenge-history .sound-toggle { min-height: 44px; }
+  .challenge-prerequisites li a { display: inline-block; padding-block: .5rem; line-height: 1.6; }
+  .challenge-section-heading { gap: .75rem; }
+  .challenge-section-heading .memo { width: 44px; height: 44px; flex-shrink: 0; }
+  .challenge-section-heading h2 { font-size: 1.35rem; }
+  .challenge-self-assessment { padding: 1rem; }
   .challenges-intro { display: block; }
   .challenges-intro > img { display: none; }
   .challenge-scenario, .challenge-response, .challenge-correction { padding: 1.1rem; }
