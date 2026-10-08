@@ -90,7 +90,7 @@ L'activation serveur est désactivée par défaut, la liste d'invités et le mod
 
 Le formulaire et le dossier sont transmis au fournisseur, sans UID, email ni progression ; le consentement précède l'envoi. Aucun payload fournisseur, secret ou réponse personnelle n'est journalisé. Les retours sont pédagogiques et probabilistes, sans score certifiant. Les protections de prompt ne dispensent pas d'évaluer les réponses correctes, partielles, fausses, alternatives et hostiles.
 
-**État du déploiement :** implémentation locale, service non déployé actuellement. Le propriétaire a autorisé Blaze et le déploiement après tests. Le plafond Mistral enregistré est de 10 €/mois pour tout le compte, dont le worker de signalements ; les quotas applicatifs et alertes Firebase complètent ce plafond sans garantir une limite globale de facture Google Cloud. Le modèle versionné, App Check, les invitations et le secret restent à configurer avant activation. Aucune facturation, paiement utilisateur ou clé personnelle n'est implémentée. Voir [CHALLENGE_AI.md](CHALLENGE_AI.md) pour préparation, tests et opération.
+**État du déploiement :** fonction déployée sur Blaze, en bêta limitée au propriétaire. Secret Manager, App Check Enterprise, invitation et quotas sont configurés. Le modèle versionné retenu est `mistral-large-2512`, avec prompt v2 et JSON Schema strict. Le plafond Mistral enregistré est de 10 €/mois pour tout le compte, dont le worker de signalements ; une alerte projet et un cap Functions sont configurés à 5 €/mois chacun, sans garantir une limite globale de facture Google Cloud. Aucune facturation utilisateur ni clé personnelle n'est implémentée. Voir [CHALLENGE_AI.md](CHALLENGE_AI.md) et le rapport de vérification pour les limites de l'évaluation.
 
 ### Signalements assistés
 
@@ -106,7 +106,7 @@ Firebase Auth identifie l'utilisateur. Les règles de sécurité Firestore doive
 
 ## Pourquoi pas d'API REST maintenant ?
 
-Le SDK Firestore fournit déjà au client l'accès aux données, sous contrôle des règles de sécurité. Les opérations de progression n’ont pas besoin d’une API REST supplémentaire. Le seul point d’entrée interactif ajouté est un callable Firebase pour l’analyse IA des défis, encore non déployé ; les règles Firestore restent responsables des accès client.
+Le SDK Firestore fournit déjà au client l'accès aux données, sous contrôle des règles de sécurité. Les opérations de progression n’ont pas besoin d’une API REST supplémentaire. Le seul point d’entrée interactif ajouté est le callable Firebase pour l’analyse IA des défis ; les règles Firestore restent responsables des accès client.
 
 La clé Mistral et les quotas justifient maintenant ce service limité. Une éventuelle veille demanderait un cadrage distinct ; aucune exécution de code n’est prévue.
 

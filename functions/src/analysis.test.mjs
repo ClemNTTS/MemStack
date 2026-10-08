@@ -42,3 +42,13 @@ test('provider response is bounded and malformed/truncated/failed results are re
   await assert.rejects(callMistral({ ...args, fetchImpl: async () => ({ ok: false }) }))
   await assert.rejects(callMistral({ ...args, fetchImpl: async () => { throw new Error('timeout') } }))
 })
+
+test('provider enforces a string message with a strict output schema', async () => {
+  await callMistral({ apiKey: 'test', model: 'model-version', dossier, attempt, fetchImpl: async (_url, options) => {
+    const format = JSON.parse(options.body).response_format
+    assert.equal(format.type, 'json_schema')
+    assert.equal(format.json_schema.strict, true)
+    assert.deepEqual(format.json_schema.schema, { type: 'object', properties: { message: { type: 'string' } }, required: ['message'], additionalProperties: false })
+    return { ok: true, text: async () => JSON.stringify({ choices: [{ finish_reason: 'stop', message: { content: '{"message":"Retour valide"}' } }] }) }
+  } })
+})

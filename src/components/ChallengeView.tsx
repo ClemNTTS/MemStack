@@ -95,7 +95,7 @@ function ChallengeView({ challengeId }: { challengeId: string }) {
       {selected.challengeVersion !== challenge.version && <p className="challenge-version-note" role="status">Cette tentative concerne la version {selected.challengeVersion}. Sa correction d’origine est conservée.</p>}
       <details className="challenge-own-response"><summary>Relire ta réponse</summary>{selected.version === 2 ? <><h3>Ce que je constate</h3><LessonText text={selected.observations!} /><h3>Ce que je ferais</h3><LessonText text={selected.actions!} /></> : <LessonText text={selected.answer} />}</details>
       {user && <ChallengeFeedback key={`${user.uid}-${selected.id}`} uid={user.uid} attempt={selected} autoStart={autoAnalyzeId === selected.id} online={online} />}
-      <h3 id="challenge-reference-correction">La correction expliquée</h3>
+      <h3 id="challenge-reference-correction" tabIndex={-1}>La correction expliquée</h3>
       <LessonText text={reference?.correction ?? 'Cette version du dossier n’est pas disponible.'} />
       <h3>Les points à retrouver dans ton raisonnement</h3>
       <ul className="challenge-checkpoints">{reference?.checkpoints.map(point => <li key={point}><LessonText text={point} /></li>)}</ul>

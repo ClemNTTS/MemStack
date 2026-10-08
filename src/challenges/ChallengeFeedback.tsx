@@ -93,6 +93,11 @@ export default function ChallengeFeedback({ uid, attempt, autoStart, online }: {
       <p className="dashboard-note">En lançant l’analyse, ton raisonnement et le dossier seront transmis à Mistral pour produire un retour pédagogique.</p>
       <button className="catalog-button secondary" type="button" disabled={busy || !online} onClick={() => { void request(generation.current) }}>{analysis?.status === 'processing' ? 'Vérifier l’analyse' : 'Analyser ma réponse'}</button>
     </>}
-    <p><a className="text-link" href="#challenge-reference-correction">Consulter la correction de référence ↓</a></p>
+    <p><a className="text-link" href="#challenge-reference-correction" onClick={event => {
+      event.preventDefault()
+      const correction = document.getElementById('challenge-reference-correction')
+      correction?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      correction?.focus({ preventScroll: true })
+    }}>Consulter la correction de référence ↓</a></p>
   </section>
 }

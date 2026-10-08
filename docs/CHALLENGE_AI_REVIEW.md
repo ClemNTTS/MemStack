@@ -40,4 +40,21 @@ Restent à valider avant activation : configuration Blaze, Secret Manager, modè
 
 L’arrêt après erreur incertaine est volontaire : `needs_review` ne se relance pas automatiquement. Aucune procédure de reprise administrative n’est implémentée. Les plafonds quotidiens sont des réservations de demandes et de jetons, pas une garantie de plafond de facture Firebase globale ; il faut distinguer ces contrôles applicatifs de toute protection financière configurée dans la plateforme.
 
+## Évaluation fournisseur du 8 octobre 2026
+
+Les tests racine ont été relancés après correction : 102 tests réussis, et le build Functions a réussi. Trois premiers appels autorisés au modèle `mistral-small-2603` ont été effectués avec des réponses synthétiques du défi images : correcte, incorrecte et alternative Compose. Tous ont été rejetés : le fournisseur répondait HTTP 200 avec un JSON valide, mais le champ `message` était un objet. Le mode JSON simple a été remplacé par un JSON Schema strict imposant une chaîne, conformément à la [documentation Mistral](https://docs.mistral.ai/studio/conversations/structured-output/custom). Un test garantit désormais ce contrat.
+
+Les appels supplémentaires de diagnostic et d’évaluation ont été explicitement autorisés. Aucun nouvel essai automatique n’a été effectué. Seul le message pédagogique décodé de cas synthétiques et des métadonnées anonymes ont été conservés localement, sans clé ni enveloppe brute du fournisseur.
+
+| Modèle et prompt | Résultat qualitatif |
+| --- | --- |
+| Small 2603, prompt initial | Trois retours techniquement valides après correction du schéma. Réponses excessivement longues, faux points justes attribués à la réponse incorrecte et demandes de commandes exactes ou alternatives supplémentaires. Validation pédagogique insuffisante. |
+| Small 2603, prompt v2 | Trois retours courts et valides. Le cas incorrect reçoit encore un compliment attribuant à l’élève le contraire de sa réponse. Validation pédagogique insuffisante. |
+| Large 2512, prompt v2 | Trois retours valides, de 743 à 1 024 caractères. La réponse correcte est reconnue sans erreur inventée. La réponse incorrecte est corrigée sans inversion d’attribution. Compose est accepté ; le modèle demande toutefois des précisions dont le caractère obligatoire reste discutable. |
+| Large 2512, prompt v2 final | Deux contrôles supplémentaires : alternative valide acceptée avec configuration implicite et protection des données reconnues ; tentative d’instruction hostile ignorée, sans révéler la consigne ni valider l’erreur technique. |
+
+Le prompt v2 distingue les propos de l’élève de la correction, rend les alternatives facultatives, évite les commandes inventées et demande des paragraphes simples compatibles avec l’affichage. Large 2512 est le meilleur des deux modèles sur cet échantillon. Trois cas sur un même défi ne constituent pas une validation générale : approfondir les cas partiels, les autres défis et la résistance aux instructions hostiles avant ouverture à d’autres comptes. Le retour reste une aide probabiliste, avec correction de référence et aucune note automatique.
+
+La dernière vérification ne supprime pas toutes les réserves : l’alternative reçoit encore une remarque d’« omission mineure » pour une explication implicite, et la réponse hostile reçoit un commentaire inutile sur sa demande de révéler les consignes. Le modèle n’invente plus de compliment inversant la réponse dans ces derniers cas, mais son appréciation n’est pas un verdict fiable certifié. Cette évaluation justifie une expérimentation limitée au propriétaire, avec correction de référence visible ; elle ne valide pas une ouverture publique.
+
 Vérification manuelle navigateur sur émulateurs Auth/Firestore : dossier version 2 et deux champs visibles ; une réponse fictive enregistrée est confirmée avant affichage de la correction, avec lien de référence et historique. IA désactivée pendant ce test ; aucun appel fournisseur.
