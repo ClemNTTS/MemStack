@@ -37,7 +37,7 @@ Les trois activités gardent des états séparés. Une tentative de défi ne ter
 
 ## Format retenu pour la cible : dossier, formulaire et retour du LLM
 
-**La direction retenue est un scénario accompagné de fichiers à lire, un formulaire de raisonnement et un seul message de retour personnalisé du LLM.** Ce format sert au diagnostic, à une revue de code ou à une décision simple. Les trois dossiers Docker, les deux champs et le service de retour sont implémentés en option. Le service Firebase/Mistral est déployé pour une bêta limitée au propriétaire, après tests locaux et essais fournisseur.
+**La direction retenue est un scénario accompagné de fichiers à lire, un formulaire de raisonnement et un seul message de retour personnalisé du LLM.** Ce format sert au diagnostic, à une revue de code ou à une décision simple. Les 36 dossiers répartis sur 12 thématiques, les deux champs et le service de retour sont implémentés en option. Le service Firebase/Mistral est déployé pour une bêta limitée au propriétaire, après tests locaux et essais fournisseur.
 
 Le formulaire recommandé garde deux champs obligatoires :
 
@@ -119,7 +119,7 @@ La cible recommandée comprend les capacités suivantes :
 6. **Une boucle de qualité complète** : signalement, réception et suivi compréhensibles ; proposition assistée, inspection puis validation humaine avant publication.
 7. **Une expérience utilisable sur les appareils visés** : mobile et bureau, clavier, labels accessibles, mouvements réduits, code lisible et erreurs de sauvegarde explicites.
 
-Le filtre des défis, la comparaison visuelle, de nouveaux repères statistiques et le suivi des signalements sont des propositions, pas des fonctions annoncées comme existantes. Ajouter le signalement des défis demandera de définir leurs cibles versionnées et leur inspection : le worker actuel de corrections de catalogue ne doit pas être supposé compatible automatiquement.
+La recherche et le filtre des défis par thématique sont implémentés. La comparaison visuelle, de nouveaux repères statistiques et le suivi des signalements restent des propositions. Ajouter le signalement des défis demandera de définir leurs cibles versionnées et leur inspection : le worker actuel de corrections de catalogue ne doit pas être supposé compatible automatiquement.
 
 ## Ce qui reste optionnel
 

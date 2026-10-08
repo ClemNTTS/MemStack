@@ -1,4 +1,433 @@
 {
   "version": 1,
-  "entries": []
+  "entries": [
+    {
+      "reportId": "review-2026-10-08-fund-collections",
+      "lessonId": "fund-collections",
+      "cardId": "",
+      "contentVersion": "7736545b7a9f916db7146a83a6a999608fce92545cd44bacdfe829bd1ee68daa",
+      "patches": [
+        {
+          "target": "step",
+          "id": "explanation",
+          "field": "text",
+          "value": "Le choix dépend des opérations attendues. Un tableau convient aux positions indexées et aux répétitions ; Set et Map conservent aussi un ordre d’insertion, mais ont d’autres rôles. Un Set d’objets compare leur identité : deux objets distincts avec le même texte restent deux entrées. Pour l’unicité métier, utilise une clé stable."
+        }
+      ],
+      "sources": [
+        "https://tc39.es/ecma262/#sec-keyed-collections"
+      ],
+      "reason": "fund-collections  Corrigé : ordre d’insertion Set/Map ; unicité objet correctement fondée sur identité."
+    },
+    {
+      "reportId": "review-2026-10-08-ui-box-model",
+      "lessonId": "ui-box-model",
+      "cardId": "",
+      "contentVersion": "d59242755170e3b828a2621ac15f281463ebf8ab9ee631a75a1c1980c24bd5bd",
+      "patches": [
+        {
+          "target": "card",
+          "id": "ui-box-model-recall-3",
+          "field": "question",
+          "value": "Une boîte border-box de 200px avec 10px de marge à gauche et à droite requiert quelle largeur totale ?"
+        },
+        {
+          "target": "card",
+          "id": "ui-box-model-recall-3",
+          "field": "answer",
+          "value": "220px : la boîte occupe 200px et les marges horizontales ajoutent 20px."
+        }
+      ],
+      "sources": [
+        "https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Box_model"
+      ],
+      "reason": "ui-box-model  Corrigé : rappel redondant remplacé par application sur marges horizontales."
+    },
+    {
+      "reportId": "review-2026-10-08-js-await",
+      "lessonId": "js-await",
+      "cardId": "",
+      "contentVersion": "42407c17066e3fd8273dff7976454732c8b02e2c1f05f5584a45068c07b8cf0b",
+      "patches": [
+        {
+          "target": "step",
+          "id": "example",
+          "field": "text",
+          "value": "```javascript\nasync function lire() {\n  const data = await charger()\n  afficher(data)\n  return data\n}\nlire()\nafficher(\"chargement\")\n```\n\nSi `charger()` renvoie une promesse, `afficher(\"chargement\")` s’exécute avant `afficher(data)`, même si la promesse est déjà accomplie. Le résultat de `lire()` est une promesse de `data`."
+        }
+      ],
+      "sources": [
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await"
+      ],
+      "reason": "js-await  Corrigé : résultat retourné par l’exemple et ordre asynchrone précis."
+    },
+    {
+      "reportId": "review-2026-10-08-sql-keys",
+      "lessonId": "sql-keys",
+      "cardId": "",
+      "contentVersion": "1463b0b4b64f98af0a8847ebaa50eeae0391a0028993aa1f4050bf585b229eca",
+      "patches": [
+        {
+          "target": "step",
+          "id": "concept",
+          "field": "text",
+          "value": "Une clé primaire identifie chaque ligne. Une contrainte UNIQUE interdit les doublons selon sa définition. Une clé étrangère impose que les valeurs renseignées correspondent à une clé référencée existante, selon ses règles pour NULL."
+        },
+        {
+          "target": "step",
+          "id": "example",
+          "field": "text",
+          "value": "Extraits de schéma : users(id PRIMARY KEY, email UNIQUE) protège les identités et emails. lessons(owner_id REFERENCES users(id)) refuse un ID de propriétaire inexistant, mais autorise owner_id NULL sans NOT NULL. NOT NULL interdit séparément la valeur manquante."
+        }
+      ],
+      "sources": [
+        "https://www.postgresql.org/docs/current/ddl-constraints.html"
+      ],
+      "reason": "sql-keys  Corrigé : foreign key nullable sans NOT NULL et ID inexistant clairement distingués."
+    },
+    {
+      "reportId": "review-2026-10-08-docker-images-containers",
+      "lessonId": "docker-images-containers",
+      "cardId": "",
+      "contentVersion": "c66a5928b1b84d650a8a5bd99a2a3dca158b38612c9b418bbfa0f8015a5f338d",
+      "patches": [
+        {
+          "target": "step",
+          "id": "precision",
+          "field": "text",
+          "value": "Le redémarrage relance les processus dans le même conteneur. Il ne remplace pas le code qui y a été intégré lors de sa création."
+        }
+      ],
+      "sources": [
+        "https://docs.docker.com/engine/storage/volumes/",
+        "https://docs.docker.com/reference/cli/docker/container/restart/"
+      ],
+      "reason": "docker-images-containers  Corrigé : répétition entre branche erronée et fil commun réduite."
+    },
+    {
+      "reportId": "review-2026-10-08-docker-volumes-persistence",
+      "lessonId": "docker-volumes-persistence",
+      "cardId": "",
+      "contentVersion": "22efcadb0bbfa120b9cdd235f2f1d79faa69573b818eb8f50f70839bcbeb943f",
+      "patches": [
+        {
+          "target": "step",
+          "id": "conclusion",
+          "field": "text",
+          "value": "Avant de supprimer un conteneur qui possède déjà des données dans sa couche modifiable, sauvegarde et transfère ces données vers le volume : le montage ne les migre pas automatiquement. Un volume nommé reste après suppression du conteneur, tant que tu ne supprimes pas le volume. Persistance ne veut pas dire sauvegarde : garde aussi une copie des données importantes."
+        }
+      ],
+      "sources": [
+        "https://docs.docker.com/engine/storage/volumes/",
+        "https://docs.docker.com/reference/cli/docker/container/restart/"
+      ],
+      "reason": "docker-volumes-persistence  Corrigé : migration des fichiers existants avant suppression explicitée."
+    },
+    {
+      "reportId": "review-2026-10-08-cloud-cost",
+      "lessonId": "cloud-cost",
+      "cardId": "",
+      "contentVersion": "8659e51bd3ac6e6cf77c9f0d32854ac02ff359a8402420477dbf882083c6e444",
+      "patches": [
+        {
+          "target": "step",
+          "id": "explanation",
+          "field": "text",
+          "value": "Estime plusieurs niveaux de trafic, fixe des limites adaptées et surveille les postes réels. Les données de facturation et les actions déclenchées peuvent être retardées : même une automatisation de coupure ne garantit pas un arrêt au centime près. Un quota gratuit n’est pas une promesse permanente de coût nul ; vérifie la source et la date lorsque tu donnes un prix. Ici, on apprend à identifier les postes, pas à promettre une facture."
+        }
+      ],
+      "sources": [
+        "https://cloud.google.com/billing/docs/how-to/budgets"
+      ],
+      "reason": "cloud-cost  Corrigé : délais des données de facturation/actions ajoutés ; une coupure automatisée ne garantit pas un plafond au centime."
+    },
+    {
+      "reportId": "review-2026-10-08-terraform-state",
+      "lessonId": "terraform-state",
+      "cardId": "",
+      "contentVersion": "e5d78bd9e00bcce9a7722a71165a0e5aad0c63a42b24f37c8f311a9dd9919890",
+      "patches": [
+        {
+          "target": "card",
+          "id": "terraform-state-recall-2",
+          "field": "question",
+          "value": "Que protège le marquage sensitive de Terraform, sans supprimer forcément la valeur de l’état ?"
+        },
+        {
+          "target": "card",
+          "id": "terraform-state-recall-2",
+          "field": "answer",
+          "value": "Il masque la valeur dans certaines sorties ; il ne suffit pas à protéger son stockage."
+        },
+        {
+          "target": "card",
+          "id": "terraform-state-recall-3",
+          "field": "question",
+          "value": "Comment protéger un état Terraform susceptible de contenir des secrets ?"
+        },
+        {
+          "target": "card",
+          "id": "terraform-state-recall-3",
+          "field": "answer",
+          "value": "Utiliser un backend avec accès limités et protection des données, sans publier l’état dans le dépôt."
+        }
+      ],
+      "sources": [
+        "https://developer.hashicorp.com/terraform/language/state/sensitive-data"
+      ],
+      "reason": "terraform-state  Corrigé : cartes différenciées masquage/protection ; sensitive ne retire pas nécessairement une valeur de l’état."
+    },
+    {
+      "reportId": "review-2026-10-08-k8s-service",
+      "lessonId": "k8s-service",
+      "cardId": "",
+      "contentVersion": "b86e77a10e2029cce921d5a80ca6da3a177cf8aa0201d6646b3cbfd0fa4554f4",
+      "patches": [
+        {
+          "target": "step",
+          "id": "concept",
+          "field": "text",
+          "value": "Dans le cas courant d’un Service ClusterIP avec sélecteur, Kubernetes fournit une adresse stable pour joindre des Pods. Le sélecteur de labels associe le Service à ses cibles. Le port du Service et targetPort décrivent deux côtés du trajet."
+        },
+        {
+          "target": "step",
+          "id": "explanation",
+          "field": "text",
+          "value": "Un Service ClusterIP est interne au cluster par défaut ; il ne publie pas automatiquement l’API sur Internet. La readiness participe aux cibles utilisables dans la configuration normale. Vérifie sélecteurs, endpoints et ports séparément. D’autres configurations existent : un Service peut être sans sélecteur, et un Service headless ne fournit pas la même adresse virtuelle unique."
+        },
+        {
+          "target": "card",
+          "id": "k8s-service-recall-1",
+          "field": "question",
+          "value": "Pourquoi utiliser un Service ClusterIP plutôt que l’adresse d’un Pod ?"
+        },
+        {
+          "target": "card",
+          "id": "k8s-service-recall-1",
+          "field": "answer",
+          "value": "Pour joindre une adresse stable malgré le remplacement des Pods ciblés."
+        },
+        {
+          "target": "card",
+          "id": "k8s-service-recall-2",
+          "field": "question",
+          "value": "Que détermine le sélecteur de labels d’un Service lorsqu’il est configuré ?"
+        }
+      ],
+      "sources": [
+        "https://kubernetes.io/docs/concepts/services-networking/service/"
+      ],
+      "reason": "k8s-service  Corrigé : cas courant ClusterIP avec sélecteur explicitement délimité ; sans sélecteur et headless mentionnés."
+    },
+    {
+      "reportId": "review-2026-10-08-obs-cardinality",
+      "lessonId": "obs-cardinality",
+      "cardId": "",
+      "contentVersion": "c75c6f814b3dcf9d34a970bab5508c0b2e59f587a80e77c59c724453b17b4b3f",
+      "patches": [
+        {
+          "target": "choice",
+          "id": "prediction/misconception",
+          "field": "feedback",
+          "value": "Le label unique multiplie les séries stockées et le coût, même si une agrégation ultérieure peut encore les regrouper."
+        }
+      ],
+      "sources": [
+        "https://prometheus.io/docs/practices/naming/"
+      ],
+      "reason": "obs-cardinality  Corrigé : label unique multiplie les séries et le coût ; ne prétend plus qu’une agrégation ultérieure est impossible."
+    },
+    {
+      "reportId": "review-2026-10-08-sre-restore",
+      "lessonId": "sre-restore",
+      "cardId": "",
+      "contentVersion": "102f2e61c26879e144beb088d21ddd35ab335e9d3d77dca8eec681f1c75f3ba2",
+      "patches": [
+        {
+          "target": "step",
+          "id": "example",
+          "field": "text",
+          "value": "Avec une copie réussie chaque jour et une dernière copie restaurable, un incident juste avant la suivante peut faire perdre environ un jour de modifications. Des copies manquées augmentent cette perte. Restaurer dans un environnement séparé permet de vérifier données, accès et durée sans écraser la production."
+        }
+      ],
+      "sources": [
+        "https://docs.cloud.google.com/architecture/dr-scenarios-planning-guide"
+      ],
+      "reason": "sre-restore  Corrigé : perte d’environ un jour conditionnée aux copies quotidiennes réussies et restaurables ; copies manquées explicitement distinguées."
+    },
+    {
+      "reportId": "review-2026-10-08-security-csrf",
+      "lessonId": "security-csrf",
+      "cardId": "",
+      "contentVersion": "bb8a19e42ab50d168dc9a065f9654cf46a3fa3321c1ecf638b8a6b3994f1211d",
+      "patches": [
+        {
+          "target": "card",
+          "id": "security-csrf-recall-3",
+          "field": "question",
+          "value": "Pourquoi éviter une modification d’état métier par GET ?"
+        },
+        {
+          "target": "card",
+          "id": "security-csrf-recall-3",
+          "field": "answer",
+          "value": "GET est une méthode sûre : son usage ne demande pas de modification métier. Des navigations et chargements peuvent le déclencher sans cette intention."
+        }
+      ],
+      "sources": [
+        "https://www.rfc-editor.org/rfc/rfc9110.html#name-safe-methods"
+      ],
+      "reason": "security-csrf  Corrigé : GET défini comme méthode sûre au sens de l’intention métier, évitant de nier les effets accessoires tels que les logs ; jeton/SameSite/CORS distingués."
+    },
+    {
+      "reportId": "review-2026-10-08-tests-unit-integration",
+      "lessonId": "tests-unit-integration",
+      "cardId": "",
+      "contentVersion": "a209ce25ed2cc1798f8b7845cb27a34d06d14cd851ac7c4b5b8996968b29503d",
+      "patches": [
+        {
+          "target": "step",
+          "id": "concept",
+          "field": "text",
+          "value": "Un test vérifie un comportement pour les scénarios exercés, dans une frontière donnée. Un test unitaire peut vérifier une fonction de calcul ; un test d’intégration vérifie sa coopération avec un stockage réel. Un parcours de bout en bout traverse l’interface et les services nécessaires."
+        }
+      ],
+      "sources": [
+        "https://nodejs.org/api/test.html"
+      ],
+      "reason": "tests-unit-integration  Corrigé : un test vérifie les scénarios exercés, pas une preuve générale de tout comportement ; frontières du calcul et de la persistance cohérentes."
+    },
+    {
+      "reportId": "review-2026-10-08-tests-regression",
+      "lessonId": "tests-regression",
+      "cardId": "",
+      "contentVersion": "d92d868dceb8a764244930d1ce4e94d8ad4a2149db01e9eaf9bce1d1aebf3e9f",
+      "patches": [
+        {
+          "target": "step",
+          "id": "situation",
+          "field": "text",
+          "value": "La préférence « zéro notification » produisait quand même cinq notifications. Tu corriges la valeur par défaut. Comment empêcher le bug de revenir ?"
+        },
+        {
+          "target": "step",
+          "id": "example",
+          "field": "text",
+          "value": "Prépare une préférence explicitement égale à zéro, appelle le calcul du nombre de notifications et attends zéro. Ce test échoue si une valeur par défaut remplace zéro par cinq, sans dépendre du nom d’une fonction interne."
+        },
+        {
+          "target": "step",
+          "id": "explanation",
+          "field": "text",
+          "value": "Réduis le scénario au minimum sans retirer sa cause : ici, conserve la préférence zéro, distincte d’une préférence absente. Enregistre le résultat observable et le contexte utile. Si le bug n’est plus reproductible, documente cette limite ; n’affirme pas avoir démontré le cycle échec puis réussite."
+        }
+      ],
+      "sources": [
+        "https://nodejs.org/api/test.html"
+      ],
+      "reason": "tests-regression  Corrigé : nouveau scénario zéro notification, distinct du cas d’égalité ; cycle échec/réussite et observables préservés."
+    },
+    {
+      "reportId": "review-2026-10-08-arch-domain-ui",
+      "lessonId": "arch-domain-ui",
+      "cardId": "",
+      "contentVersion": "1284b1b40202b5025d64cca8065ec02c4790d2a77733c465037438327fa1fdc2",
+      "patches": [
+        {
+          "target": "step",
+          "id": "concept",
+          "field": "text",
+          "value": "Une règle métier décrit une décision du domaine : par exemple, un produit pourrait fixer une nouvelle échéance après un oubli. Son intervalle exact dépend de sa politique de révision. L’interface décrit comment recueillir et montrer la réponse. Isoler le calcul permet de le vérifier sans rendre l’écran."
+        }
+      ],
+      "sources": [
+        "https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/architectural-principles"
+      ],
+      "reason": "arch-domain-ui  Corrigé : exemple de règle de révision présenté comme politique hypothétique, sans attribuer arbitrairement un délai de 24 heures au produit."
+    },
+    {
+      "reportId": "review-2026-10-08-perf-web-vitals",
+      "lessonId": "perf-web-vitals",
+      "cardId": "",
+      "contentVersion": "223cc3a39bfb696c13571a173ab77634d4bdaf8dd12f55e379be93c737bd77ce",
+      "patches": [
+        {
+          "target": "step",
+          "id": "concept",
+          "field": "text",
+          "value": "Les Core Web Vitals distinguent plusieurs aspects : LCP mesure le délai d’affichage du plus grand élément de contenu pris en compte dans la zone visible, INP la réactivité des interactions et CLS les décalages inattendus de la mise en page. Le plus grand élément n’est pas forcément celui que le produit considère comme principal. Ces métriques ne résument pas toute la qualité d’une application."
+        },
+        {
+          "target": "card",
+          "id": "perf-web-vitals-recall-1",
+          "field": "question",
+          "value": "Quel aspect du chargement mesure le LCP ?"
+        },
+        {
+          "target": "card",
+          "id": "perf-web-vitals-recall-1",
+          "field": "answer",
+          "value": "Le délai d’affichage du plus grand élément de contenu pris en compte dans la zone visible."
+        }
+      ],
+      "sources": [
+        "https://web.dev/articles/lcp"
+      ],
+      "reason": "perf-web-vitals  Corrigé : LCP décrit le plus grand contenu éligible visible, pas nécessairement le contenu jugé principal par le produit ; INP/CLS distincts."
+    },
+    {
+      "reportId": "review-2026-10-08-git-working-tree",
+      "lessonId": "git-working-tree",
+      "cardId": "",
+      "contentVersion": "c83ac2474b61158f63325741b6c58d7bd27f009250d18cee875af764776ee684",
+      "patches": [
+        {
+          "target": "step",
+          "id": "situation",
+          "field": "text",
+          "value": "Tu fais git add, puis enregistres encore une modification du fichier. Le commit va-t-il photographier cette dernière version sur disque ?"
+        }
+      ],
+      "sources": [
+        "https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository"
+      ],
+      "reason": "git-working-tree  Corrigé : modification après add explicitement enregistrée sur disque ; pas de confusion avec un tampon d’éditeur non sauvegardé."
+    },
+    {
+      "reportId": "review-2026-10-08-debug-reproduce",
+      "lessonId": "debug-reproduce",
+      "cardId": "",
+      "contentVersion": "3a9f62ccf69cda934ecbbacb6815b3f829a1da5eb2207609caaf724638e4e32a",
+      "patches": [
+        {
+          "target": "step",
+          "id": "example",
+          "field": "text",
+          "value": "Dans Europe/Paris, une carte est due le 7 octobre à 23 h 59. Le 8 octobre à 00 h 01, ouvrir /today après rechargement : elle est absente alors qu’elle reste due. Les deux instants, le fuseau et les données minimales permettent de reproduire le passage de minuit."
+        }
+      ],
+      "sources": [
+        "https://nodejs.org/api/test.html"
+      ],
+      "reason": "debug-reproduce  Corrigé : scénario précis 23 h 59 / 00 h 01 en Europe/Paris, aligné sur la question du jour local."
+    },
+    {
+      "reportId": "review-2026-10-08-react-render",
+      "lessonId": "react-render",
+      "cardId": "",
+      "contentVersion": "d354803ea8e7bf18a9949e55c9c7d74106b7acd3714e38fbf010f903b3649214",
+      "patches": [
+        {
+          "target": "step",
+          "id": "figure",
+          "field": "alt",
+          "value": "Dans ce parcours menant à l’écran, une mise à jour déclenche un rendu puis un commit. Un rendu peut aussi être abandonné ; le navigateur peint les changements validés."
+        }
+      ],
+      "sources": [
+        "https://react.dev/learn/render-and-commit"
+      ],
+      "reason": "Délimiter le parcours illustré : un rendu peut être abandonné sans commit, comme expliqué dans la leçon."
+    }
+  ]
 }

@@ -72,7 +72,7 @@ Effacer le cache conserve la progression et les préférences synchronisées, ma
 
 ### Défis de diagnostic
 
-`src/data/challenges.ts` adapte les trois dossiers Docker versionnés de `shared/challengeDossiers.json`, avec fichiers, correction, points essentiels, alternatives, contre-exemples et sources primaires. `ChallengesPage` et `ChallengeView` utilisent `/challenges` et `/challenges/:id`, les liens à fragments Pages et `LessonText` pour afficher le code comme texte. Les accès Google/réseau existants restent obligatoires. Le menu, l’accueil et le parcours Docker donnent accès aux défis sans verrou de prérequis.
+`src/data/challenges.ts` adapte les 36 dossiers versionnés répartis sur 12 thématiques de `shared/challengeDossiers.json`, avec fichiers, correction, points essentiels, alternatives, contre-exemples et sources primaires. `ChallengesPage` propose une recherche par titre/parcours et un filtre par thématique. Le thème est dérivé du parcours existant, sans nouvelle donnée personnelle. `ChallengesPage` et `ChallengeView` utilisent `/challenges` et `/challenges/:id`, les liens à fragments Pages et `LessonText` pour afficher le code comme texte. Les accès Google/réseau existants restent obligatoires. Le menu, l’accueil et le parcours Docker donnent accès aux défis sans verrou de prérequis.
 
 `src/challenges/ChallengeProvider.tsx` et `src/firebase/challenges.ts` gèrent les tentatives et leurs analyses séparées ; les tentatives sont sous `users/{uid}/challengeAttempts/{id}` : `version`, `challengeVersion`, `challengeId`, `answer`, `observations` et `actions` pour v2, `submittedAt` (timestamp serveur), `outcome` (`''`, `retry`, `understood`). Une lecture serveur précède l’usage. L’interface attend l’accusé serveur avant de montrer la correction ou de confirmer l’autoévaluation ; les réponses obsolètes après changement de compte sont ignorées. Le provider est monté sur les pages de défis : une erreur de cette collection ne bloque pas le reste de l’atelier.
 
@@ -82,7 +82,7 @@ La correction est livrée avec le frontend, donc visible dans les sources du bun
 
 ### Analyse des réponses aux défis — implémentation opt-in
 
-Les trois dossiers Docker sont définis dans `shared/challengeDossiers.json` : fichiers, correction, checkpoints, alternatives et versions historiques. Les tentatives v2 ajoutent `observations` et `actions`, au maximum 2 000 caractères chacun et 4 000 au total avec le séparateur. Les anciennes tentatives v1 restent lisibles. Les analyses ne modifient aucune carte ni complétion.
+Les 36 dossiers sont définis dans `shared/challengeDossiers.json` : fichiers, correction, checkpoints, alternatives et versions historiques. Les tentatives v2 ajoutent `observations` et `actions`, au maximum 2 000 caractères chacun et 4 000 au total avec le séparateur. Les anciennes tentatives v1 restent lisibles. Les analyses ne modifient aucune carte ni complétion.
 
 `functions/` ajoute le callable `analyzeChallengeAttempt` en région `europe-west9`, Node 24. GitHub Pages ne peut pas protéger une clé fournisseur ni contrôler les coûts ; le worker de signalements planifié n'est pas adapté à un retour interactif. Ce service reçoit uniquement `{attemptId}`, vérifie Firebase Auth/App Check et charge la tentative du compte ainsi que le dossier de confiance de sa version. Il appelle Mistral côté serveur, puis persiste un message unique et ses versions dans `users/{uid}/challengeAnalyses/{attemptId}`. Les règles autorisent seulement la lecture du propriétaire ; analyses et compteurs ne sont jamais écrits par le client.
 

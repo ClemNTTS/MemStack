@@ -4,6 +4,9 @@ import { catalogCourses, catalogLessons } from '../data/catalog/index.ts'
 import { challenges, getChallengeVersion } from '../data/challenges.ts'
 import { acknowledgeChallengeAttempt, decodeChallengeAttempt, matchesAttemptSubmission, validateChallengeAnswer, validateChallengeForm } from './attemptModel.ts'
 import type { ChallengeAttempt } from '../types/challenge'
+import curriculum from '../../docs/content/curriculum.json' with { type: 'json' }
+import dossiers from '../../shared/challengeDossiers.json' with { type: 'json' }
+import { createHash } from 'node:crypto'
 
 const attempt: ChallengeAttempt = {
   id: 'test-attempt', version: 1, challengeId: 'docker-images-diagnostic', challengeVersion: 1,
@@ -12,9 +15,19 @@ const attempt: ChallengeAttempt = {
 }
 const { id, ...stored } = attempt
 
+test('published Docker snapshots retain the original correction for historical attempts', () => {
+  const historical = dossiers.challenges.filter(challenge => ['docker-images-diagnostic', 'docker-volumes-diagnostic', 'docker-ports-diagnostic'].includes(challenge.id))
+  assert.equal(createHash('sha256').update(JSON.stringify(historical)).digest('hex'), '844bc51879d5d80a2b2333404bf8d711b38ec72ec587dcec6de5b93a12d9cebf')
+})
+
 test('challenge catalogue references existing lessons and primary sources without altering discovery', () => {
-  assert.equal(challenges.length, 3)
+  assert.ok(challenges.length >= curriculum.themes.length * 3)
+  for (const theme of curriculum.themes) {
+    const courseIds = curriculum.courses.filter(course => course.theme === theme.title).map(course => course.id)
+    assert.ok(challenges.filter(challenge => courseIds.includes(challenge.courseId)).length >= 3, theme.title)
+  }
   assert.equal(new Set(challenges.map(challenge => challenge.id)).size, challenges.length)
+  assert.equal(new Set(challenges.map(challenge => challenge.prompt)).size, challenges.length, 'Chaque défi pose une question propre à son scénario')
   for (const challenge of challenges) {
     const course = catalogCourses.find(course => course.id === challenge.courseId)
     assert.ok(course)
@@ -30,7 +43,7 @@ test('challenge catalogue references existing lessons and primary sources withou
     for (const source of challenge.sources) {
       const url = new URL(source.url)
       assert.equal(url.protocol, 'https:')
-      assert.equal(url.hostname, 'docs.docker.com')
+      assert.ok(['docs.docker.com', 'developer.mozilla.org', 'react.dev', 'www.typescriptlang.org', 'nodejs.org', 'www.postgresql.org', 'firebase.google.com', 'kubernetes.io', 'developer.hashicorp.com', 'docs.github.com', 'cloud.google.com', 'docs.cloud.google.com', 'learn.microsoft.com', 'opentelemetry.io', 'prometheus.io', 'sre.google', 'cheatsheetseries.owasp.org', 'git-scm.com', 'web.dev', 'www.w3.org', 'www.rfc-editor.org', 'tc39.es', 'html.spec.whatwg.org', 'martinfowler.com'].includes(url.hostname), source.url)
     }
   }
 })
@@ -103,9 +116,11 @@ test('historical corrections stay available alongside versioned dossiers', () =>
     assert.ok(current.files.length >= 2)
     assert.ok(current.acceptableAlternatives.length > 0)
     const legacy = getChallengeVersion(current.id, 1)
-    assert.ok(legacy)
-    assert.equal(legacy.version, 1)
-    assert.ok(legacy.correction.length > 100)
+    if (current.id.startsWith('docker-')) {
+      assert.ok(legacy)
+      assert.equal(legacy.version, 1)
+      assert.ok(legacy.correction.length > 100)
+    } else assert.equal(legacy, undefined)
   }
   assert.equal(getChallengeVersion(attempt.challengeId, 99), undefined)
 })

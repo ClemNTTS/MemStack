@@ -274,6 +274,1557 @@
       "acceptableAlternatives": [
         "Changer API_URL et vérifier une requête vers memstack-api:3000 suffit, sans republier le port."
       ]
+    },
+    {
+      "id": "fund-shared-cart-diagnostic",
+      "version": 2,
+      "title": "Le panier modifié sans validation",
+      "courseId": "data-reasoning",
+      "lessonIds": [
+        "fund-values-references",
+        "fund-mutation"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Dans un outil de commande, une copie sert à préparer une modification. Pourtant, le panier initial change avant que le client valide. Les articles sont des objets simples ; seul leur prix doit être modifié dans ce brouillon.",
+      "prompt": "Pourquoi le panier original change-t-il pendant la préparation du brouillon ? Explique comment séparer les articles modifiés sans changer le panier avant validation, puis comment le vérifier.",
+      "correction": "Le tableau est copié, mais les deux tableaux référencent le même objet article.\n\nJe remplace dans le brouillon l’article modifié par un nouvel objet, en gardant le panier original intact jusqu’à validation.\n\nJe teste que le prix original reste 10, que le brouillon vaut 20 et que valider applique seulement la modification souhaitée.\n\nUne mutation peut être voulue quand le partage est explicite ; ici la séparation brouillon/original est une exigence du produit.",
+      "checkpoints": [
+        "Le tableau est copié, mais les deux tableaux référencent le même objet article.",
+        "Je remplace dans le brouillon l’article modifié par un nouvel objet, en gardant le panier original intact jusqu’à validation.",
+        "Je teste que le prix original reste 10, que le brouillon vaut 20 et que valider applique seulement la modification souhaitée."
+      ],
+      "counterexamples": [
+        "À éviter : Copier le tableau avec spread copie automatiquement tous les objets imbriqués.",
+        "Une mutation peut être voulue quand le partage est explicite ; ici la séparation brouillon/original est une exigence du produit."
+      ],
+      "sources": [
+        {
+          "title": "MDN — Object.assign et copie superficielle",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign"
+        }
+      ],
+      "files": [
+        {
+          "name": "cart.js",
+          "description": "Code actuel à diagnostiquer",
+          "language": "javascript",
+          "content": "const cart = [{ id: \"a\", price: 10 }]\nconst draft = [...cart]\ndraft[0].price = 20\nconsole.log(cart[0].price) // 20"
+        },
+        {
+          "name": "expected-state.txt",
+          "description": "Contrat et observation du scénario",
+          "language": "text",
+          "content": "Avant validation : cart[0].price doit rester 10 ; draft[0].price doit être 20.\nSeul le brouillon peut changer avant validation explicite."
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Pour ces objets simples, une copie explicite de chaque article ou structuredClone du panier constitue aussi une solution valable."
+      ]
+    },
+    {
+      "id": "fund-stock-invariant-diagnostic",
+      "version": 2,
+      "title": "Un retrait fait passer le stock sous zéro",
+      "courseId": "data-reasoning",
+      "lessonIds": [
+        "fund-invariants"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Une fonction synchrone en mémoire traite un seul retrait à la fois. La règle métier impose une quantité entière strictement positive et un stock jamais négatif. Le cas joint est autorisé par le code actuel.",
+      "prompt": "Quelles entrées violent la règle de retrait et à quel moment faut-il les refuser ? Propose un comportement qui conserve le stock lors d’un refus et les cas limites à vérifier.",
+      "correction": "La soustraction ne vérifie ni la validité de la quantité ni sa compatibilité avec le stock disponible.\n\nJe refuse les quantités non entières, nulles ou négatives et celles supérieures au stock, avant de modifier la valeur.\n\nJe vérifie les cas quantité 1, quantité égale au stock, supérieure au stock, négative et fractionnaire ; un refus conserve le stock.\n\nAvec des retraits concurrents en base, ces validations seules ne suffisent plus : il faut aussi une opération atomique. Cette concurrence est exclue du dossier.",
+      "checkpoints": [
+        "La soustraction ne vérifie ni la validité de la quantité ni sa compatibilité avec le stock disponible.",
+        "Je refuse les quantités non entières, nulles ou négatives et celles supérieures au stock, avant de modifier la valeur.",
+        "Je vérifie les cas quantité 1, quantité égale au stock, supérieure au stock, négative et fractionnaire ; un refus conserve le stock."
+      ],
+      "counterexamples": [
+        "À éviter : Ramener systématiquement le résultat à zéro suffit : une commande trop grande peut quand même être acceptée.",
+        "Avec des retraits concurrents en base, ces validations seules ne suffisent plus : il faut aussi une opération atomique. Cette concurrence est exclue du dossier."
+      ],
+      "sources": [
+        {
+          "title": "MDN — Number.isInteger",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isInteger"
+        }
+      ],
+      "files": [
+        {
+          "name": "stock.js",
+          "description": "Code actuel à diagnostiquer",
+          "language": "javascript",
+          "content": "function withdraw(stock, quantity) {\n  return stock - quantity\n}\nwithdraw(3, 4) // -1\nwithdraw(3, -2) // 5"
+        },
+        {
+          "name": "contract.txt",
+          "description": "Contrat et observation du scénario",
+          "language": "text",
+          "content": "Stock initial : entier non négatif.\nRetrait : entier strictement positif, au plus égal au stock.\nUn refus conserve le stock ; aucun retrait concurrent dans ce scénario."
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Un résultat métier explicite ou une exception gérée sont acceptables si le refus ne change pas le stock."
+      ]
+    },
+    {
+      "id": "systems-env-process-diagnostic",
+      "version": 2,
+      "title": "Le service garde son ancienne configuration",
+      "courseId": "systems-basics",
+      "lessonIds": [
+        "systems-process",
+        "systems-environment"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Un service Node lit sa configuration au démarrage. Modifier la variable dans un nouveau terminal ne change pas le service déjà lancé. Il n’y a aucun mécanisme de rechargement de configuration.",
+      "prompt": "Pourquoi PORT=4000 dans le nouveau terminal ne modifie-t-il pas le service existant ? Indique où configurer la valeur et quelles preuves vérifier après relance.",
+      "correction": "Le processus existant a conservé l’environnement reçu au lancement et a déjà choisi son port.\n\nJe configure PORT=4000 dans le mécanisme qui lance réellement le service, puis organise son redémarrage avec cette configuration.\n\nJe contrôle le port d’écoute et la réponse du nouveau processus ; je vérifie aussi le démarrage suivant, pas seulement mon terminal.\n\nUn enfant hérite normalement de l’environnement de son parent au lancement ; cela ne signifie pas que les modifications ultérieures sont partagées.",
+      "checkpoints": [
+        "Le processus existant a conservé l’environnement reçu au lancement et a déjà choisi son port.",
+        "Je configure PORT=4000 dans le mécanisme qui lance réellement le service, puis organise son redémarrage avec cette configuration.",
+        "Je contrôle le port d’écoute et la réponse du nouveau processus ; je vérifie aussi le démarrage suivant, pas seulement mon terminal."
+      ],
+      "counterexamples": [
+        "À éviter : Changer PORT dans n’importe quel terminal reconfigure immédiatement tous les processus.",
+        "Un enfant hérite normalement de l’environnement de son parent au lancement ; cela ne signifie pas que les modifications ultérieures sont partagées."
+      ],
+      "sources": [
+        {
+          "title": "Node.js — Processus et environnement",
+          "url": "https://nodejs.org/api/process.html"
+        }
+      ],
+      "files": [
+        {
+          "name": "server.js",
+          "description": "Code actuel à diagnostiquer",
+          "language": "javascript",
+          "content": "const port = Number(process.env.PORT || 3000)\n// server.listen(port), exécuté une fois au démarrage"
+        },
+        {
+          "name": "operations.txt",
+          "description": "Constat ou opérations du scénario",
+          "language": "text",
+          "content": "09:00 lancement du service avec PORT=3000\n09:10 nouveau terminal : PORT=4000\n09:11 le service existant répond encore sur 3000"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Configurer un gestionnaire de services ou le déploiement plutôt que le terminal est valable ; un rechargement serait une autre conception s’il était réellement implémenté."
+      ]
+    },
+    {
+      "id": "http-stale-cache-diagnostic",
+      "version": 2,
+      "title": "Une réponse 304 masque le nouveau contenu",
+      "courseId": "http-basics",
+      "lessonIds": [
+        "http-cache"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Le navigateur a une version v1 en cache. Le contenu est passé à v2, mais le serveur utilise toujours le même ETag. La requête conditionnelle ci-dessous obtient 304.",
+      "prompt": "Explique pourquoi le navigateur réutilise v1 malgré v2 sur le serveur. Que changer dans la validation du cache, et que devraient montrer deux revalidations successives ?",
+      "correction": "Le validateur ne reflète pas le changement du contenu : le 304 permet de réutiliser le corps v1 en cache.\n\nJe corrige la génération ou la version de l’ETag pour qu’un changement de représentation change le validateur et qu’une comparaison différente renvoie le nouveau corps.\n\nJe rejoue avec l’ancien ETag : le serveur doit répondre 200 avec v2 et un nouveau validateur, puis 304 pour une revalidation de v2 inchangée.\n\nUn 304 est normal quand la représentation n’a pas changé ; le problème est ici le validateur resté identique malgré v2.",
+      "checkpoints": [
+        "Le validateur ne reflète pas le changement du contenu : le 304 permet de réutiliser le corps v1 en cache.",
+        "Je corrige la génération ou la version de l’ETag pour qu’un changement de représentation change le validateur et qu’une comparaison différente renvoie le nouveau corps.",
+        "Je rejoue avec l’ancien ETag : le serveur doit répondre 200 avec v2 et un nouveau validateur, puis 304 pour une revalidation de v2 inchangée."
+      ],
+      "counterexamples": [
+        "À éviter : 304 transporte obligatoirement le nouveau contenu v2, il suffit de lire son corps.",
+        "Un 304 est normal quand la représentation n’a pas changé ; le problème est ici le validateur resté identique malgré v2."
+      ],
+      "sources": [
+        {
+          "title": "MDN — HTTP 304",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/304"
+        }
+      ],
+      "files": [
+        {
+          "name": "http-exchange.txt",
+          "description": "Constat ou opérations du scénario",
+          "language": "text",
+          "content": "Cache navigateur : corps=v1, ETag=\"page-1\"\nGET /guide\nIf-None-Match: \"page-1\"\n\nHTTP/1.1 304 Not Modified\nETag: \"page-1\"\n\nÉtat serveur : corps=v2, ETag=\"page-1\""
+        },
+        {
+          "name": "release.txt",
+          "description": "Contrat et observation du scénario",
+          "language": "text",
+          "content": "La publication a réellement remplacé v1 par v2 sur /guide.\nLe navigateur détient v1 en cache.\nLe serveur doit revalider la représentation actuelle, pas seulement son ancien nom de tag."
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Versionner l’URL des ressources immuables peut résoudre le problème ; désactiver temporairement le cache est une mesure de diagnostic, pas la seule correction possible."
+      ]
+    },
+    {
+      "id": "web-fetch-error-diagnostic",
+      "version": 2,
+      "title": "Une suppression échouée affiche un succès",
+      "courseId": "browser-runtime",
+      "lessonIds": [
+        "browser-fetch-errors"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Le réseau fonctionne, mais l’API refuse la suppression avec un statut 403. L’interface affiche quand même « Supprimé ». La requête renvoie une réponse HTTP exploitable.",
+      "prompt": "Pourquoi le catch ne s’exécute-t-il pas pour le 403 fourni ? Propose une séparation entre succès, refus HTTP et panne réseau, puis les vérifications côté interface.",
+      "correction": "Fetch résout sa promesse pour cette réponse HTTP 403 ; le catch ne traite pas automatiquement les statuts d’erreur.\n\nJe contrôle response.ok ou le statut avant d’afficher le succès et traite le refus HTTP séparément d’une panne réseau.\n\nJe teste une suppression 2xx, le 403 fourni et une erreur réseau ; l’élément ne doit pas disparaître après un refus.\n\nUne réponse HTTP 2xx ne garantit pas à elle seule tous les effets métier : le contrat de cette API doit aussi être respecté.",
+      "checkpoints": [
+        "Fetch résout sa promesse pour cette réponse HTTP 403 ; le catch ne traite pas automatiquement les statuts d’erreur.",
+        "Je contrôle response.ok ou le statut avant d’afficher le succès et traite le refus HTTP séparément d’une panne réseau.",
+        "Je teste une suppression 2xx, le 403 fourni et une erreur réseau ; l’élément ne doit pas disparaître après un refus."
+      ],
+      "counterexamples": [
+        "À éviter : Fetch rejette toujours sa promesse dès que le serveur répond 403.",
+        "Une réponse HTTP 2xx ne garantit pas à elle seule tous les effets métier : le contrat de cette API doit aussi être respecté."
+      ],
+      "sources": [
+        {
+          "title": "MDN — Utiliser Fetch",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch"
+        }
+      ],
+      "files": [
+        {
+          "name": "delete.js",
+          "description": "Code actuel à diagnostiquer",
+          "language": "javascript",
+          "content": "try {\n  await fetch(\"/api/items/42\", { method: \"DELETE\" })\n  showMessage(\"Supprimé\")\n} catch {\n  showMessage(\"Échec réseau\")\n}"
+        },
+        {
+          "name": "response.txt",
+          "description": "Constat ou opérations du scénario",
+          "language": "text",
+          "content": "HTTP/1.1 403 Forbidden\nContent-Type: application/json\n{\"error\":\"forbidden\"}"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Un adaptateur central qui transforme les réponses non réussies en erreurs typées est valable s’il conserve les informations utiles."
+      ]
+    },
+    {
+      "id": "web-keyboard-action-diagnostic",
+      "version": 2,
+      "title": "Le bouton invisible au clavier",
+      "courseId": "accessible-ui",
+      "lessonIds": [
+        "ui-semantic-html",
+        "ui-keyboard-focus"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Un bouton de sauvegarde fonctionne à la souris. En parcourant la page avec Tab puis Entrée, il est impossible de l’atteindre. La sauvegarde est une action, pas une navigation.",
+      "prompt": "Quel choix HTML explique l’absence de focus et d’activation au clavier ? Propose un contrôle adapté à la sauvegarde et un parcours de vérification sans souris.",
+      "correction": "Le div n’offre pas le comportement clavier et la sémantique d’un bouton natif.\n\nJe remplace ce contrôle par un button avec type=\"button\", un nom accessible et un style de focus visible, en gardant l’action de sauvegarde.\n\nJe parcours avec Tab, active avec Entrée et Espace et vérifie le nom annoncé et la sauvegarde unique.\n\nUn lien convient pour naviguer vers une ressource ; il ne remplace pas systématiquement un bouton qui déclenche une action.",
+      "checkpoints": [
+        "Le div n’offre pas le comportement clavier et la sémantique d’un bouton natif.",
+        "Je remplace ce contrôle par un button avec type=\"button\", un nom accessible et un style de focus visible, en gardant l’action de sauvegarde.",
+        "Je parcours avec Tab, active avec Entrée et Espace et vérifie le nom annoncé et la sauvegarde unique."
+      ],
+      "counterexamples": [
+        "À éviter : Ajouter uniquement un rôle button rend le div automatiquement activable au clavier.",
+        "Un lien convient pour naviguer vers une ressource ; il ne remplace pas systématiquement un bouton qui déclenche une action."
+      ],
+      "sources": [
+        {
+          "title": "MDN — Bouton HTML",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button"
+        }
+      ],
+      "files": [
+        {
+          "name": "toolbar.html",
+          "description": "Code actuel à diagnostiquer",
+          "language": "html",
+          "content": "<div class=\"save\" onclick=\"save()\">Enregistrer</div>"
+        },
+        {
+          "name": "keyboard-test.txt",
+          "description": "Test actuellement écrit",
+          "language": "text",
+          "content": "Tab traverse les champs puis passe directement au lien suivant.\nL’action Enregistrer n’a ni focus visible ni arrêt de tabulation."
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Un composant qui rend un vrai button convient ; un contrôle personnalisé n’est acceptable que s’il reproduit entièrement focus, rôle et interactions clavier."
+      ]
+    },
+    {
+      "id": "js-zero-default-diagnostic",
+      "version": 2,
+      "title": "La limite zéro devient vingt",
+      "courseId": "javascript-core",
+      "lessonIds": [
+        "js-nullish"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "L’utilisateur peut explicitement choisir une limite de zéro pour masquer une liste. Seule une préférence absente (null ou undefined) doit utiliser la valeur 20.",
+      "prompt": "Pourquoi la préférence zéro devient-elle vingt ? Choisis un défaut qui respecte la distinction entre zéro et absence, puis précise les entrées à tester.",
+      "correction": "L’opérateur || remplace toute valeur falsy, donc aussi le zéro pourtant valide.\n\nJ’utilise une vérification de null/undefined ou ?? pour appliquer le défaut seulement quand la préférence est absente.\n\nJe vérifie que 0 reste 0, qu’une limite positive reste inchangée et que null et undefined donnent 20.\n\nSi le produit interdisait zéro, il faudrait le valider ; ce dossier dit explicitement qu’il est autorisé.",
+      "checkpoints": [
+        "L’opérateur || remplace toute valeur falsy, donc aussi le zéro pourtant valide.",
+        "J’utilise une vérification de null/undefined ou ?? pour appliquer le défaut seulement quand la préférence est absente.",
+        "Je vérifie que 0 reste 0, qu’une limite positive reste inchangée et que null et undefined donnent 20."
+      ],
+      "counterexamples": [
+        "À éviter : Zéro est une valeur absente en JavaScript, donc ?? doit lui aussi le remplacer.",
+        "Si le produit interdisait zéro, il faudrait le valider ; ce dossier dit explicitement qu’il est autorisé."
+      ],
+      "sources": [
+        {
+          "title": "MDN — Opérateur de coalescence nulle",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing"
+        }
+      ],
+      "files": [
+        {
+          "name": "preferences.js",
+          "description": "Code actuel à diagnostiquer",
+          "language": "javascript",
+          "content": "function getLimit(preference) {\n  return preference || 20\n}\ngetLimit(0) // 20\ngetLimit(undefined) // 20"
+        },
+        {
+          "name": "preference-contract.txt",
+          "description": "Contrat et observation du scénario",
+          "language": "text",
+          "content": "Préférence 0 : masquer la liste.\nPréférence positive : utiliser cette limite.\nnull ou undefined : appliquer la limite par défaut 20."
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Une condition explicite sur null et undefined est équivalente ; un schéma de validation peut être ajouté sans rendre zéro invalide."
+      ]
+    },
+    {
+      "id": "js-serial-requests-diagnostic",
+      "version": 2,
+      "title": "Trois lectures indépendantes prennent neuf secondes",
+      "courseId": "javascript-async",
+      "lessonIds": [
+        "js-concurrency",
+        "js-async-errors"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Trois lectures HTTP indépendantes mettent chacune environ trois secondes. Il n’existe aucune dépendance entre leurs entrées. La page doit afficher l’ensemble seulement si les trois réussissent.",
+      "prompt": "Les trois lectures ont-elles besoin de s’attendre ? Propose un chargement concurrent conforme à l’affichage tout-ou-rien, en expliquant aussi ce qu’il se passe si une lecture échoue.",
+      "correction": "Les await successifs ne démarrent la lecture suivante qu’après la précédente malgré leur indépendance.\n\nJe démarre les trois lectures ensemble puis attends leurs résultats avec Promise.all, avec un état d’erreur pour le groupe.\n\nJe vérifie leur démarrage concurrent, l’affichage seulement après les trois succès et le comportement si une lecture échoue.\n\nLa durée pourrait approcher trois secondes dans ces conditions, sans garantie exacte ; la concurrence peut être limitée par le service ou le navigateur.",
+      "checkpoints": [
+        "Les await successifs ne démarrent la lecture suivante qu’après la précédente malgré leur indépendance.",
+        "Je démarre les trois lectures ensemble puis attends leurs résultats avec Promise.all, avec un état d’erreur pour le groupe.",
+        "Je vérifie leur démarrage concurrent, l’affichage seulement après les trois succès et le comportement si une lecture échoue."
+      ],
+      "counterexamples": [
+        "À éviter : Promise.all annule automatiquement les requêtes réseau restantes dès qu’une promesse échoue.",
+        "La durée pourrait approcher trois secondes dans ces conditions, sans garantie exacte ; la concurrence peut être limitée par le service ou le navigateur."
+      ],
+      "sources": [
+        {
+          "title": "MDN — Promise.all",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"
+        }
+      ],
+      "files": [
+        {
+          "name": "load.js",
+          "description": "Code actuel à diagnostiquer",
+          "language": "javascript",
+          "content": "const profile = await loadProfile()\nconst courses = await loadCourses()\nconst alerts = await loadAlerts()\nrender({ profile, courses, alerts })"
+        },
+        {
+          "name": "timing.txt",
+          "description": "Chronologie observée",
+          "language": "text",
+          "content": "profile 0–3 s\ncourses 3–6 s\nalerts 6–9 s"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Promise.allSettled convient si chaque résultat est contrôlé et que la moindre erreur empêche l’affichage du groupe, conformément au contrat tout-ou-rien. Démarrer toutes les promesses puis les attendre séparément impose de traiter immédiatement leurs rejets, sans laisser un rejet non suivi pendant l’attente d’une autre."
+      ]
+    },
+    {
+      "id": "ts-unchecked-api-diagnostic",
+      "version": 2,
+      "title": "Le type compilé ne valide pas la réponse",
+      "courseId": "typescript-core",
+      "lessonIds": [
+        "ts-unknown",
+        "ts-runtime"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Un endpoint externe renvoie parfois un nom numérique. Le code compile grâce à une assertion TypeScript, puis échoue lorsqu’il appelle toUpperCase. L’entrée réseau n’est pas fiable.",
+      "prompt": "Quelle garantie l’assertion as Profile donne-t-elle réellement sur ce JSON ? Indique où vérifier name et comment éviter une erreur accidentelle sur les entrées invalides.",
+      "correction": "L’assertion as Profile ne vérifie pas le JSON à l’exécution et la valeur reçue ne respecte pas le contrat.\n\nJe traite la réponse comme une donnée inconnue, vérifie la structure et que name est une chaîne avant de construire un Profile exploitable ; je gère le rejet de validation.\n\nJe teste le JSON valide, name numérique, un champ absent et une valeur null ; les cas invalides donnent une erreur contrôlée.\n\nUne assertion peut être justifiée après une validation fiable ; elle ne constitue pas cette validation.",
+      "checkpoints": [
+        "L’assertion as Profile ne vérifie pas le JSON à l’exécution et la valeur reçue ne respecte pas le contrat.",
+        "Je traite la réponse comme une donnée inconnue, vérifie la structure et que name est une chaîne avant de construire un Profile exploitable ; je gère le rejet de validation.",
+        "Je teste le JSON valide, name numérique, un champ absent et une valeur null ; les cas invalides donnent une erreur contrôlée."
+      ],
+      "counterexamples": [
+        "À éviter : L’assertion TypeScript convertit à l’exécution tous les nombres reçus en chaînes.",
+        "Une assertion peut être justifiée après une validation fiable ; elle ne constitue pas cette validation."
+      ],
+      "sources": [
+        {
+          "title": "TypeScript — Narrowing",
+          "url": "https://www.typescriptlang.org/docs/handbook/2/narrowing.html"
+        }
+      ],
+      "files": [
+        {
+          "name": "profile.ts",
+          "description": "Code actuel à diagnostiquer",
+          "language": "typescript",
+          "content": "type Profile = { name: string }\nconst profile = await response.json() as Profile\nconsole.log(profile.name.toUpperCase())"
+        },
+        {
+          "name": "response.json",
+          "description": "Données reçues dans ce scénario",
+          "language": "json",
+          "content": "{\"name\":42}"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Un validateur de schéma à l’exécution est valable au même titre qu’un garde de type correct couvrant la structure."
+      ]
+    },
+    {
+      "id": "react-mutated-list-diagnostic",
+      "version": 2,
+      "title": "Un ajout ne déclenche pas le rendu",
+      "courseId": "react-state",
+      "lessonIds": [
+        "react-state-update"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Un composant ajoute un élément dans un tableau d’état puis réutilise la même référence. Aucun autre changement d’état ne force le rendu. L’élément n’apparaît pas immédiatement.",
+      "prompt": "Que reçoit setItems après le push, et pourquoi l’ajout reste-t-il invisible ? Propose une mise à jour qui protège l’ancien état et vérifie plusieurs ajouts rapprochés.",
+      "correction": "Le tableau d’état a été muté et setItems reçoit sa référence existante, ce qui ne représente pas un nouvel état pour React.\n\nJe crée un nouveau tableau et utilise si nécessaire la mise à jour fonctionnelle setItems(previous => [...previous, \"nouveau\"]).\n\nJe vérifie un ajout et plusieurs ajouts rapprochés, sans mutation du tableau précédent ni rendu forcé artificiel.\n\nDes références nouvelles ne corrigent pas toutes les erreurs métier ; ici le contenu ajouté et le comportement attendu sont simples et explicites.",
+      "checkpoints": [
+        "Le tableau d’état a été muté et setItems reçoit sa référence existante, ce qui ne représente pas un nouvel état pour React.",
+        "Je crée un nouveau tableau et utilise si nécessaire la mise à jour fonctionnelle setItems(previous => [...previous, \"nouveau\"]).",
+        "Je vérifie un ajout et plusieurs ajouts rapprochés, sans mutation du tableau précédent ni rendu forcé artificiel."
+      ],
+      "counterexamples": [
+        "À éviter : Il suffit d’ajouter un délai : React détectera ensuite la mutation du tableau.",
+        "Des références nouvelles ne corrigent pas toutes les erreurs métier ; ici le contenu ajouté et le comportement attendu sont simples et explicites."
+      ],
+      "sources": [
+        {
+          "title": "React — Mettre à jour un tableau en état",
+          "url": "https://react.dev/learn/updating-arrays-in-state"
+        }
+      ],
+      "files": [
+        {
+          "name": "List.tsx",
+          "description": "Code actuel à diagnostiquer",
+          "language": "tsx",
+          "content": "const [items, setItems] = useState<string[]>([])\nfunction addItem() {\n  items.push(\"nouveau\")\n  setItems(items)\n}"
+        },
+        {
+          "name": "render-trace.txt",
+          "description": "Contrat et observation du scénario",
+          "language": "text",
+          "content": "État initial : items=[]\nAprès push : le même tableau contient nouveau\nObject.is(état précédent, valeur envoyée à setItems) : true\nAucun autre changement d’état ne déclenche de rendu."
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Un reducer qui produit un nouveau tableau est valable ; une copie faite avant push convient aussi si elle n’altère pas l’état précédent."
+      ]
+    },
+    {
+      "id": "react-stale-search-diagnostic",
+      "version": 2,
+      "title": "L’ancienne recherche remplace la nouvelle",
+      "courseId": "react-effects",
+      "lessonIds": [
+        "react-effect-cleanup",
+        "react-loading-states"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "La recherche \"r\" part avant \"react\", mais sa réponse arrive après. Le champ montre \"react\" alors que les résultats concernent \"r\". Les deux requêtes sont valides.",
+      "prompt": "Lis la chronologie : quelle réponse ne devrait plus modifier l’écran ? Propose une protection contre les résultats obsolètes et vérifie l’ordre inversé des réponses.",
+      "correction": "Chaque réponse met à jour l’état sans vérifier si elle appartient encore à la recherche courante.\n\nJe protège l’effet avec un indicateur invalidé par son nettoyage ou un identifiant de requête ; je peux aussi annuler la requête précédente si search le permet.\n\nJe reproduis les réponses dans l’ordre inversé et vérifie que seule la réponse de react est affichée, y compris après changement ou démontage.\n\nAnnuler économise parfois du travail mais peut arriver trop tard ; empêcher l’application d’un résultat obsolète est l’exigence centrale.",
+      "checkpoints": [
+        "Chaque réponse met à jour l’état sans vérifier si elle appartient encore à la recherche courante.",
+        "Je protège l’effet avec un indicateur invalidé par son nettoyage ou un identifiant de requête ; je peux aussi annuler la requête précédente si search le permet.",
+        "Je reproduis les réponses dans l’ordre inversé et vérifie que seule la réponse de react est affichée, y compris après changement ou démontage."
+      ],
+      "counterexamples": [
+        "À éviter : Un debounce seul garantit que les réponses réseau arrivent toujours dans le bon ordre.",
+        "Annuler économise parfois du travail mais peut arriver trop tard ; empêcher l’application d’un résultat obsolète est l’exigence centrale."
+      ],
+      "sources": [
+        {
+          "title": "React — Synchroniser avec un effet",
+          "url": "https://react.dev/learn/synchronizing-with-effects"
+        }
+      ],
+      "files": [
+        {
+          "name": "Search.tsx",
+          "description": "Code actuel à diagnostiquer",
+          "language": "tsx",
+          "content": "useEffect(() => {\n  search(query).then(setResults)\n}, [query])"
+        },
+        {
+          "name": "timeline.txt",
+          "description": "Chronologie observée",
+          "language": "text",
+          "content": "0 ms query=r, requête A\n50 ms query=react, requête B\n150 ms réponse B appliquée\n400 ms réponse A appliquée"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Un cache de requêtes gérant la clé query et l’obsolescence est acceptable ; une annulation doit être accompagnée d’une gestion correcte des erreurs d’annulation."
+      ]
+    },
+    {
+      "id": "react-index-keys-diagnostic",
+      "version": 2,
+      "title": "La saisie reste sur la mauvaise ligne",
+      "courseId": "react-state",
+      "lessonIds": [
+        "react-list-keys"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Chaque ligne possède une saisie locale. Après suppression du premier article, le texte saisi dans la seconde ligne se retrouve associé à un autre article. Les identifiants métier sont stables et uniques.",
+      "prompt": "Pourquoi supprimer Alpha déplace-t-il le brouillon d’une autre ligne ? Choisis une identité de ligne compatible avec suppression et réordonnancement, puis vérifie son effet.",
+      "correction": "Les clés d’index changent de sens après suppression : React peut réutiliser une instance de ligne et son état pour un autre article.\n\nJe donne à chaque Row la clé stable item.id pour conserver son identité quand la liste change.\n\nJe saisis dans Beta, supprime Alpha et réordonne les lignes ; le brouillon doit rester associé à l’identifiant b.\n\nUne clé d’index peut convenir à une liste réellement statique sans état associé ; ce dossier comprend suppression et état local.",
+      "checkpoints": [
+        "Les clés d’index changent de sens après suppression : React peut réutiliser une instance de ligne et son état pour un autre article.",
+        "Je donne à chaque Row la clé stable item.id pour conserver son identité quand la liste change.",
+        "Je saisis dans Beta, supprime Alpha et réordonne les lignes ; le brouillon doit rester associé à l’identifiant b."
+      ],
+      "counterexamples": [
+        "À éviter : Générer une clé aléatoire à chaque rendu préserve mieux la saisie locale.",
+        "Une clé d’index peut convenir à une liste réellement statique sans état associé ; ce dossier comprend suppression et état local."
+      ],
+      "sources": [
+        {
+          "title": "React — Afficher des listes",
+          "url": "https://react.dev/learn/rendering-lists"
+        }
+      ],
+      "files": [
+        {
+          "name": "Rows.tsx",
+          "description": "Code actuel à diagnostiquer",
+          "language": "tsx",
+          "content": "items.map((item, index) => (\n  <Row key={index} item={item} />\n))\n// Row conserve un brouillon dans son propre useState"
+        },
+        {
+          "name": "items.json",
+          "description": "Données reçues dans ce scénario",
+          "language": "json",
+          "content": "[{\"id\":\"a\",\"name\":\"Alpha\"},{\"id\":\"b\",\"name\":\"Beta\"},{\"id\":\"c\",\"name\":\"Gamma\"}]"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Un identifiant stable créé à l’insertion convient ; contrôler les brouillons par identifiant peut aussi traiter l’association, sans rendre les clés aléatoires souhaitables."
+      ]
+    },
+    {
+      "id": "backend-invalid-body-diagnostic",
+      "version": 2,
+      "title": "Une quantité texte atteint la logique métier",
+      "courseId": "node-server",
+      "lessonIds": [
+        "node-validation"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "L’API réserve des places. Elle exige une quantité entière de 1 à 5. Le corps JSON est externe et le code ci-dessous le transmet directement à la fonction métier.",
+      "prompt": "Quelles vérifications manquent avant reserve ? Définis les entrées acceptées et refusées, le résultat HTTP du refus et comment prouver qu’aucune réservation invalide ne part.",
+      "correction": "Aucune validation à la frontière HTTP n’assure le type entier ni l’intervalle 1 à 5.\n\nJe valide la structure du corps, le type numérique entier et l’intervalle avant reserve, puis renvoie une erreur client documentée en cas de refus.\n\nJe vérifie 1 et 5, puis 0, 6, une fraction, une chaîne et un champ absent ; reserve ne doit pas être appelé pour les valeurs rejetées.\n\nLa validation HTTP ne remplace pas les contraintes de disponibilité de places ni les permissions nécessaires à la réservation.",
+      "checkpoints": [
+        "Aucune validation à la frontière HTTP n’assure le type entier ni l’intervalle 1 à 5.",
+        "Je valide la structure du corps, le type numérique entier et l’intervalle avant reserve, puis renvoie une erreur client documentée en cas de refus.",
+        "Je vérifie 1 et 5, puis 0, 6, une fraction, une chaîne et un champ absent ; reserve ne doit pas être appelé pour les valeurs rejetées."
+      ],
+      "counterexamples": [
+        "À éviter : Déclarer quantity comme number dans TypeScript suffit à valider le JSON reçu.",
+        "La validation HTTP ne remplace pas les contraintes de disponibilité de places ni les permissions nécessaires à la réservation."
+      ],
+      "sources": [
+        {
+          "title": "OWASP — Validation des entrées",
+          "url": "https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html"
+        }
+      ],
+      "files": [
+        {
+          "name": "route.js",
+          "description": "Code actuel à diagnostiquer",
+          "language": "javascript",
+          "content": "// Extrait de route ; res représente la réponse HTTP\nconst quantity = req.body.quantity\nawait reserve(quantity)\nres.status(201).json({ ok: true })"
+        },
+        {
+          "name": "request.json",
+          "description": "Données reçues dans ce scénario",
+          "language": "json",
+          "content": "{\"quantity\":\"beaucoup\"}"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Une bibliothèque de schéma ou une validation explicite conviennent ; une conversion de chaîne n’est acceptable que si le contrat API l’autorise clairement."
+      ]
+    },
+    {
+      "id": "backend-payment-retry-diagnostic",
+      "version": 2,
+      "title": "Le paiement est créé deux fois",
+      "courseId": "rest-design",
+      "lessonIds": [
+        "rest-idempotency"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "L’API a créé un paiement, mais le client n’a pas reçu l’accusé. Il répète le POST et un deuxième paiement est créé. Le dossier porte sur la création d’une commande de paiement, pas sur un fournisseur bancaire particulier.",
+      "prompt": "Que peut-on conclure d’un accusé perdu ? Propose une protection serveur contre un doublon, y compris deux requêtes simultanées et une clé réutilisée avec un autre montant.",
+      "correction": "Un POST répété sans déduplication ne garantit pas un effet unique ; l’absence de réponse ne prouve pas l’échec de la première opération.\n\nJe réutilise une clé d’idempotence pour la même intention et fais réserver côté serveur un résultat unique de façon atomique ; une réutilisation avec un autre contenu est refusée.\n\nJe teste deux requêtes identiques, concurrentes et après perte d’accusé : un seul paiement et le même résultat ; une même clé avec un montant différent est rejetée.\n\nLa clé ne déduplique que si l’autorité serveur l’applique ; transmettre une clé ignorée par le serveur n’offre aucune garantie.",
+      "checkpoints": [
+        "Un POST répété sans déduplication ne garantit pas un effet unique ; l’absence de réponse ne prouve pas l’échec de la première opération.",
+        "Je réutilise une clé d’idempotence pour la même intention et fais réserver côté serveur un résultat unique de façon atomique ; une réutilisation avec un autre contenu est refusée.",
+        "Je teste deux requêtes identiques, concurrentes et après perte d’accusé : un seul paiement et le même résultat ; une même clé avec un montant différent est rejetée."
+      ],
+      "counterexamples": [
+        "À éviter : Un timeout prouve que rien n’a été enregistré : répéter le POST est forcément sans risque.",
+        "La clé ne déduplique que si l’autorité serveur l’applique ; transmettre une clé ignorée par le serveur n’offre aucune garantie."
+      ],
+      "sources": [
+        {
+          "title": "MDN — Méthode POST",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods/POST"
+        },
+        {
+          "title": "PostgreSQL — Isolation des transactions",
+          "url": "https://www.postgresql.org/docs/current/transaction-iso.html"
+        }
+      ],
+      "files": [
+        {
+          "name": "requests.txt",
+          "description": "Constat ou opérations du scénario",
+          "language": "text",
+          "content": "POST /payments {\"orderId\":\"o-42\",\"amount\":10}\nServeur : paiement p1 créé ; réponse perdue\nPOST /payments {\"orderId\":\"o-42\",\"amount\":10}\nServeur : paiement p2 créé"
+        },
+        {
+          "name": "handler.js",
+          "description": "Code actuel à diagnostiquer",
+          "language": "javascript",
+          "content": "async function createPayment(body) {\n  return db.insertPayment(body)\n}"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Une contrainte unique sur une identité métier de paiement avec restitution du résultat peut convenir si elle couvre correctement la même intention et les courses concurrentes."
+      ]
+    },
+    {
+      "id": "backend-env-secret-diagnostic",
+      "version": 2,
+      "title": "Le serveur écoute avant de vérifier sa configuration",
+      "courseId": "node-server",
+      "lessonIds": [
+        "node-config"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Un service nécessite DATABASE_URL. En production elle est absente, mais le serveur annonce être prêt puis chaque requête échoue. Les journaux ne doivent contenir aucun secret.",
+      "prompt": "Pourquoi l’annonce « prêt » est-elle trompeuse ? Propose une validation avant écoute, un diagnostic exploitable sans secret et les cas de démarrage à vérifier.",
+      "correction": "La configuration obligatoire n’est pas validée avant d’annoncer la disponibilité du service.\n\nJe vérifie présence et forme attendue de DATABASE_URL au démarrage, refuse de démarrer en cas d’absence et fournis un diagnostic sans afficher sa valeur.\n\nJe teste une configuration absente et une valide ; l’absence produit un échec de démarrage contrôlé sans service prétendument prêt ni secret journalisé.\n\nUne variable présente n’assure pas que la base est joignable ; validation de configuration et disponibilité réseau sont deux vérifications distinctes.",
+      "checkpoints": [
+        "La configuration obligatoire n’est pas validée avant d’annoncer la disponibilité du service.",
+        "Je vérifie présence et forme attendue de DATABASE_URL au démarrage, refuse de démarrer en cas d’absence et fournis un diagnostic sans afficher sa valeur.",
+        "Je teste une configuration absente et une valide ; l’absence produit un échec de démarrage contrôlé sans service prétendument prêt ni secret journalisé."
+      ],
+      "counterexamples": [
+        "À éviter : Afficher toute l’URL de connexion dans les logs est nécessaire pour diagnostiquer une variable manquante.",
+        "Une variable présente n’assure pas que la base est joignable ; validation de configuration et disponibilité réseau sont deux vérifications distinctes."
+      ],
+      "sources": [
+        {
+          "title": "Node.js — Processus et environnement",
+          "url": "https://nodejs.org/api/process.html"
+        }
+      ],
+      "files": [
+        {
+          "name": "boot.js",
+          "description": "Code actuel à diagnostiquer",
+          "language": "javascript",
+          "content": "const databaseUrl = process.env.DATABASE_URL\nserver.listen(3000)\n// Les routes construisent plus tard la connexion avec databaseUrl"
+        },
+        {
+          "name": "logs.txt",
+          "description": "Journal des opérations observées",
+          "language": "text",
+          "content": "Service prêt sur 3000\nGET /orders -> échec de connexion : configuration absente"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Un module de configuration validée ou un schéma sont valables ; une vérification de disponibilité de la base complète le contrôle de configuration sans s’y substituer."
+      ]
+    },
+    {
+      "id": "data-left-join-diagnostic",
+      "version": 2,
+      "title": "Les clients sans commande disparaissent",
+      "courseId": "sql-basics",
+      "lessonIds": [
+        "sql-joins",
+        "sql-null"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Un rapport doit compter les commandes confirmées de tous les clients, y compris zéro. La jointure ci-dessous omet Bob qui n’a aucune commande. Les identifiants de commandes ne sont jamais nuls.",
+      "prompt": "À quelle étape Bob est-il éliminé malgré LEFT JOIN ? Corrige le comptage pour inclure tous les clients avec zéro quand nécessaire, puis propose trois données de vérification.",
+      "correction": "Le filtre WHERE écarte les lignes sans commande, dont le statut est NULL, et annule ici l’intérêt de la jointure externe.\n\nJe déplace la condition status dans ON et conserve COUNT(o.id) pour compter uniquement les commandes correspondantes.\n\nJe vérifie un client sans commande, avec seulement une commande non confirmée et avec deux commandes confirmées ; ils doivent donner 0, 0 et 2.\n\nUn filtre dans WHERE est correct si l’objectif est justement de ne garder que les clients ayant certaines commandes ; ce n’est pas ce rapport.",
+      "checkpoints": [
+        "Le filtre WHERE écarte les lignes sans commande, dont le statut est NULL, et annule ici l’intérêt de la jointure externe.",
+        "Je déplace la condition status dans ON et conserve COUNT(o.id) pour compter uniquement les commandes correspondantes.",
+        "Je vérifie un client sans commande, avec seulement une commande non confirmée et avec deux commandes confirmées ; ils doivent donner 0, 0 et 2."
+      ],
+      "counterexamples": [
+        "À éviter : COUNT(*) donne toujours zéro pour un client sans commande dans une jointure externe.",
+        "Un filtre dans WHERE est correct si l’objectif est justement de ne garder que les clients ayant certaines commandes ; ce n’est pas ce rapport."
+      ],
+      "sources": [
+        {
+          "title": "PostgreSQL — Jointures",
+          "url": "https://www.postgresql.org/docs/current/tutorial-join.html"
+        }
+      ],
+      "files": [
+        {
+          "name": "report.sql",
+          "description": "Code actuel à diagnostiquer",
+          "language": "sql",
+          "content": "SELECT c.id, COUNT(o.id) AS confirmed\nFROM clients c\nLEFT JOIN orders o ON o.client_id = c.id\nWHERE o.status = 'confirmed'\nGROUP BY c.id;"
+        },
+        {
+          "name": "rows.txt",
+          "description": "Constat ou opérations du scénario",
+          "language": "text",
+          "content": "clients : alice, bob\norders : o1 -> alice, status=confirmed\nRapport actuel : alice=1\nAttendu : alice=1, bob=0"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Une sous-requête préagrégée puis LEFT JOIN avec remplacement du résultat absent par zéro est valable."
+      ]
+    },
+    {
+      "id": "data-transfer-atomicity-diagnostic",
+      "version": 2,
+      "title": "Le débit réussit, le crédit échoue",
+      "courseId": "sql-basics",
+      "lessonIds": [
+        "sql-transactions"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Un transfert entre deux comptes utilise deux UPDATE en autocommit. Le second échoue à cause d’une interruption avant son exécution. Le stock monétaire total doit être conservé ; aucune opération bancaire externe n’est impliquée.",
+      "prompt": "Pourquoi le total des deux soldes diminue-t-il après l’interruption ? Décris l’unité à valider ou annuler et les vérifications de succès et d’échec.",
+      "correction": "Les deux écritures ne forment pas une unité atomique : le débit peut être conservé sans crédit correspondant.\n\nJe place les deux écritures dans une transaction avec vérification des comptes et du solde, puis COMMIT seulement si tout réussit ; sinon ROLLBACK.\n\nJe simule l’échec du second changement : les deux soldes doivent rester initiaux ; je teste aussi un succès et la conservation du total.\n\nUne transaction SQL ne rend pas atomique un appel externe ; le dossier exclut cet appel et limite l’analyse aux écritures dans la même base.",
+      "checkpoints": [
+        "Les deux écritures ne forment pas une unité atomique : le débit peut être conservé sans crédit correspondant.",
+        "Je place les deux écritures dans une transaction avec vérification des comptes et du solde, puis COMMIT seulement si tout réussit ; sinon ROLLBACK.",
+        "Je simule l’échec du second changement : les deux soldes doivent rester initiaux ; je teste aussi un succès et la conservation du total."
+      ],
+      "counterexamples": [
+        "À éviter : Exécuter le débit en premier rend automatiquement le crédit transactionnel.",
+        "Une transaction SQL ne rend pas atomique un appel externe ; le dossier exclut cet appel et limite l’analyse aux écritures dans la même base."
+      ],
+      "sources": [
+        {
+          "title": "PostgreSQL — Isolation des transactions",
+          "url": "https://www.postgresql.org/docs/current/transaction-iso.html"
+        },
+        {
+          "title": "PostgreSQL — Transactions",
+          "url": "https://www.postgresql.org/docs/current/tutorial-transactions.html"
+        }
+      ],
+      "files": [
+        {
+          "name": "transfer.sql",
+          "description": "Code actuel à diagnostiquer",
+          "language": "sql",
+          "content": "-- Deux commandes indépendantes en autocommit\nUPDATE accounts SET balance = balance - 10 WHERE id = 'a';\nUPDATE accounts SET balance = balance + 10 WHERE id = 'b';"
+        },
+        {
+          "name": "incident.txt",
+          "description": "Constat ou opérations du scénario",
+          "language": "text",
+          "content": "Avant : a=50, b=20\nPremier UPDATE validé\nInterruption avant le second UPDATE\nAprès : a=40, b=20"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Une opération transactionnelle encapsulée côté base convient ; les écritures concurrentes nécessitent en plus une stratégie de verrouillage ou une condition atomique adaptée."
+      ]
+    },
+    {
+      "id": "data-firestore-retry-diagnostic",
+      "version": 2,
+      "title": "Une transaction envoie deux notifications",
+      "courseId": "document-data",
+      "lessonIds": [
+        "firestore-transactions"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Une transaction Firestore incrémente un compteur et envoie une notification externe dans sa fonction. En présence d’une écriture concurrente, la notification est envoyée deux fois alors qu’une seule réservation est finalement validée.",
+      "prompt": "La transaction validée une fois garantit-elle un seul envoi externe ? Explique la chronologie et choisis une séparation qui traite les répétitions et la fiabilité de livraison.",
+      "correction": "Firestore peut relancer le callback d’une transaction ; un effet externe à l’intérieur peut donc être répété indépendamment du commit.\n\nJe garde le callback sans effet externe et déclenche l’action après confirmation ; pour une livraison fiable je peux enregistrer un événement à traiter avec déduplication.\n\nJe provoque un conflit et vérifie une seule modification validée, puis contrôle la politique de livraison et la déduplication de la notification.\n\nDéplacer l’envoi après commit ne garantit pas à lui seul une livraison exactement une fois ; la durabilité et les retries demandent une stratégie explicite.",
+      "checkpoints": [
+        "Firestore peut relancer le callback d’une transaction ; un effet externe à l’intérieur peut donc être répété indépendamment du commit.",
+        "Je garde le callback sans effet externe et déclenche l’action après confirmation ; pour une livraison fiable je peux enregistrer un événement à traiter avec déduplication.",
+        "Je provoque un conflit et vérifie une seule modification validée, puis contrôle la politique de livraison et la déduplication de la notification."
+      ],
+      "counterexamples": [
+        "À éviter : Le callback Firestore ne peut s’exécuter qu’une seule fois puisqu’il s’agit d’une transaction.",
+        "Déplacer l’envoi après commit ne garantit pas à lui seul une livraison exactement une fois ; la durabilité et les retries demandent une stratégie explicite."
+      ],
+      "sources": [
+        {
+          "title": "Firebase — Transactions Firestore",
+          "url": "https://firebase.google.com/docs/firestore/manage-data/transactions"
+        }
+      ],
+      "files": [
+        {
+          "name": "reserve.js",
+          "description": "Code actuel à diagnostiquer",
+          "language": "javascript",
+          "content": "await runTransaction(db, async transaction => {\n  const snapshot = await transaction.get(counterRef)\n  await sendNotification(\"Réservation\") // effet externe\n  transaction.update(counterRef, { count: snapshot.data().count + 1 })\n})"
+        },
+        {
+          "name": "trace.txt",
+          "description": "Chronologie observée",
+          "language": "text",
+          "content": "Callback exécuté une première fois\nConflit sur le compteur\nCallback relancé\nTransaction validée une fois ; deux notifications émises"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Un outbox transactionnel et un worker idempotent conviennent ; un simple envoi après commit évite la répétition du callback mais peut perdre la notification en cas de panne."
+      ]
+    },
+    {
+      "id": "security-object-owner-diagnostic",
+      "version": 2,
+      "title": "Être connecté donne accès au document d’autrui",
+      "courseId": "identity-access",
+      "lessonIds": [
+        "security-authn-authz",
+        "security-object-access"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Une route vérifie seulement que la session existe. Alice remplace l’identifiant dans l’URL et obtient la note privée de Bob. La politique autorise uniquement le propriétaire à lire sa note.",
+      "prompt": "Quel contrôle manque entre la session d’Alice et la note de Bob ? Indique où imposer la politique propriétaire et les accès autorisés ou refusés à vérifier.",
+      "correction": "La route authentifie Alice mais ne contrôle pas sa permission sur le document demandé.\n\nJe vérifie côté serveur que le propriétaire de la note correspond à l’identité authentifiée avant de retourner le contenu, avec un refus adapté au contrat.\n\nJe teste le propriétaire autorisé, un autre compte refusé, l’absence de session et un identifiant inexistant sans fuite du contenu.\n\nUn partage peut autoriser d’autres lecteurs si le produit le prévoit ; la politique de ce dossier est strictement propriétaire.",
+      "checkpoints": [
+        "La route authentifie Alice mais ne contrôle pas sa permission sur le document demandé.",
+        "Je vérifie côté serveur que le propriétaire de la note correspond à l’identité authentifiée avant de retourner le contenu, avec un refus adapté au contrat.",
+        "Je teste le propriétaire autorisé, un autre compte refusé, l’absence de session et un identifiant inexistant sans fuite du contenu."
+      ],
+      "counterexamples": [
+        "À éviter : Cacher le lien de Bob dans l’interface suffit à protéger la route.",
+        "Un partage peut autoriser d’autres lecteurs si le produit le prévoit ; la politique de ce dossier est strictement propriétaire."
+      ],
+      "sources": [
+        {
+          "title": "OWASP — Autorisation",
+          "url": "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html"
+        }
+      ],
+      "files": [
+        {
+          "name": "handler.js",
+          "description": "Code actuel à diagnostiquer",
+          "language": "javascript",
+          "content": "if (!session.user) return unauthorized()\nconst note = await db.getNote(req.params.id)\nreturn json(note)"
+        },
+        {
+          "name": "access.txt",
+          "description": "Constat ou opérations du scénario",
+          "language": "text",
+          "content": "Session : alice\nGET /notes/n-bob\nDocument : ownerId=bob\nRéponse actuelle : 200, contenu privé"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Une requête filtrée par propriétaire ou des règles d’accès de la base peuvent convenir si chaque accès passe effectivement par cette autorité."
+      ]
+    },
+    {
+      "id": "security-sql-concatenation-diagnostic",
+      "version": 2,
+      "title": "La recherche mélange données et instruction SQL",
+      "courseId": "web-security",
+      "lessonIds": [
+        "security-injection"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Un champ de recherche est inséré directement dans une requête SQL. La recherche doit traiter toute saisie comme une valeur littérale, jamais comme une partie de l’instruction.",
+      "prompt": "Pourquoi une apostrophe dans un nom peut-elle changer la requête ? Sépare instruction et donnée et explique comment vérifier une saisie qui ressemble à du SQL.",
+      "correction": "La concaténation confond la structure SQL et une donnée non fiable, permettant une injection ou une erreur de syntaxe.\n\nJe passe la valeur par un paramètre du pilote SQL au lieu de la concaténer et garde séparée la requête fixe.\n\nJe teste un nom normal, un nom avec apostrophe et une saisie ressemblant à du SQL ; ils doivent rester de simples valeurs sans élargir les résultats.\n\nLa validation de format peut compléter les paramètres ; elle ne doit pas remplacer la séparation entre valeurs et instruction.",
+      "checkpoints": [
+        "La concaténation confond la structure SQL et une donnée non fiable, permettant une injection ou une erreur de syntaxe.",
+        "Je passe la valeur par un paramètre du pilote SQL au lieu de la concaténer et garde séparée la requête fixe.",
+        "Je teste un nom normal, un nom avec apostrophe et une saisie ressemblant à du SQL ; ils doivent rester de simples valeurs sans élargir les résultats."
+      ],
+      "counterexamples": [
+        "À éviter : Retirer uniquement les espaces de l’entrée suffit à empêcher toute injection SQL.",
+        "La validation de format peut compléter les paramètres ; elle ne doit pas remplacer la séparation entre valeurs et instruction."
+      ],
+      "sources": [
+        {
+          "title": "OWASP — Prévention des injections SQL",
+          "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html"
+        }
+      ],
+      "files": [
+        {
+          "name": "search.js",
+          "description": "Code actuel à diagnostiquer",
+          "language": "javascript",
+          "content": "const sql = \"SELECT id, name FROM users WHERE name = '\" + input + \"'\"\nreturn db.query(sql)"
+        },
+        {
+          "name": "input.txt",
+          "description": "Constat ou opérations du scénario",
+          "language": "text",
+          "content": "Alice\nUne valeur contenant une apostrophe casse la requête.\nLa saisie provient d’un utilisateur externe."
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Un ORM utilisant réellement des paramètres convient ; une liste autorisée séparée est nécessaire pour les identifiants SQL dynamiques qui ne se paramètrent pas comme des valeurs."
+      ]
+    },
+    {
+      "id": "security-html-comment-diagnostic",
+      "version": 2,
+      "title": "Un commentaire devient du HTML actif",
+      "courseId": "web-security",
+      "lessonIds": [
+        "security-xss"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Les commentaires doivent être affichés en texte brut. Le code utilise innerHTML avec une valeur stockée fournie par un utilisateur. Aucune mise en forme HTML n’est requise.",
+      "prompt": "Pourquoi ce commentaire stocké devient-il actif ? Choisis un rendu adapté au texte brut et vérifie le traitement des balises sans bloquer les commentaires normaux.",
+      "correction": "L’entrée non fiable est interprétée comme du HTML au lieu de rester du texte, créant un risque de script via un gestionnaire d’événement.\n\nJ’utilise textContent ou un rendu de texte échappé adapté à ce contexte, puisque le produit ne demande aucun HTML.\n\nJe vérifie que le texte avec balises s’affiche littéralement, qu’aucun événement de la saisie ne s’exécute et que les commentaires ordinaires restent lisibles.\n\nLes protections dépendent du contexte de sortie : le texte HTML, une URL et du JavaScript demandent des traitements différents.",
+      "checkpoints": [
+        "L’entrée non fiable est interprétée comme du HTML au lieu de rester du texte, créant un risque de script via un gestionnaire d’événement.",
+        "J’utilise textContent ou un rendu de texte échappé adapté à ce contexte, puisque le produit ne demande aucun HTML.",
+        "Je vérifie que le texte avec balises s’affiche littéralement, qu’aucun événement de la saisie ne s’exécute et que les commentaires ordinaires restent lisibles."
+      ],
+      "counterexamples": [
+        "À éviter : Bloquer seulement la balise script supprime toutes les possibilités de XSS.",
+        "Les protections dépendent du contexte de sortie : le texte HTML, une URL et du JavaScript demandent des traitements différents."
+      ],
+      "sources": [
+        {
+          "title": "OWASP — Prévention XSS",
+          "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html"
+        }
+      ],
+      "files": [
+        {
+          "name": "comments.js",
+          "description": "Code actuel à diagnostiquer",
+          "language": "javascript",
+          "content": "commentElement.innerHTML = storedComment"
+        },
+        {
+          "name": "comment.txt",
+          "description": "Constat ou opérations du scénario",
+          "language": "text",
+          "content": "<img src=\"invalide\" onerror=\"alert(1)\">"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Le rendu texte normal d’un framework convient ; si du HTML devenait nécessaire, il faudrait une sanitation robuste et adaptée aux balises autorisées."
+      ]
+    },
+    {
+      "id": "tests-empty-pass-diagnostic",
+      "version": 2,
+      "title": "Le test passe sans vérifier le résultat",
+      "courseId": "test-strategy",
+      "lessonIds": [
+        "tests-regression"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "La fonction discount doit renvoyer 90 pour un prix de 100 et une remise de 10 %. Elle renvoie par erreur 100, mais le test reste vert.",
+      "prompt": "Que prouve ce test vert alors que discount renvoie 100 ? Ajoute une preuve du comportement attendu et explique comment constater qu’elle protège la régression.",
+      "correction": "Le test appelle la fonction sans assertion ; il ne vérifie aucun résultat et ne détecte donc pas cette régression.\n\nJe compare le résultat à 90 avec une assertion et corrige la fonction pour respecter la remise définie.\n\nJe constate que le test échoue sur la version fautive et passe après correction, puis couvre une remise nulle et une autre valeur utile.\n\nUne exécution sans assertion peut détecter une exception inattendue, mais pas garantir le calcul souhaité.",
+      "checkpoints": [
+        "Le test appelle la fonction sans assertion ; il ne vérifie aucun résultat et ne détecte donc pas cette régression.",
+        "Je compare le résultat à 90 avec une assertion et corrige la fonction pour respecter la remise définie.",
+        "Je constate que le test échoue sur la version fautive et passe après correction, puis couvre une remise nulle et une autre valeur utile."
+      ],
+      "counterexamples": [
+        "À éviter : Un test vert prouve que la remise vaut 90 même sans aucune assertion.",
+        "Une exécution sans assertion peut détecter une exception inattendue, mais pas garantir le calcul souhaité."
+      ],
+      "sources": [
+        {
+          "title": "Node.js — Tests et horloges simulées",
+          "url": "https://nodejs.org/api/test.html"
+        }
+      ],
+      "files": [
+        {
+          "name": "discount.js",
+          "description": "Code actuel à diagnostiquer",
+          "language": "javascript",
+          "content": "export function discount(price, percent) {\n  return price\n}"
+        },
+        {
+          "name": "discount.test.js",
+          "description": "Test actuellement écrit",
+          "language": "javascript",
+          "content": "test(\"applique une remise\", () => {\n  discount(100, 10)\n})"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Une table de cas ou une assertion équivalente conviennent ; vérifier seulement le nombre d’appels ne démontre pas le montant correct."
+      ]
+    },
+    {
+      "id": "tests-expiry-boundary-diagnostic",
+      "version": 2,
+      "title": "Le jeton est valide exactement à son expiration",
+      "courseId": "test-strategy",
+      "lessonIds": [
+        "tests-boundaries",
+        "tests-determinism"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Le contrat dit qu’un jeton est invalide dès now >= expiresAt. Le test couvre uniquement un instant bien avant l’expiration ; la comparaison actuelle accepte la frontière.",
+      "prompt": "Quelle valeur exacte révèle la mauvaise comparaison ? Propose des tests autour de expiresAt qui respectent le contrat sans attendre le temps réel.",
+      "correction": "La condition <= inclut exactement expiresAt alors que le contrat exige un refus à cet instant.\n\nJe remplace par now < expiresAt et teste les instants juste avant, exactement à l’expiration et juste après avec un temps injecté.\n\nPour expiresAt=1000 je vérifie true à 999, false à 1000 et false à 1001, sans attente réelle.\n\nCertaines politiques incluent la frontière, mais ici le contrat fourni impose explicitement l’exclusion.",
+      "checkpoints": [
+        "La condition <= inclut exactement expiresAt alors que le contrat exige un refus à cet instant.",
+        "Je remplace par now < expiresAt et teste les instants juste avant, exactement à l’expiration et juste après avec un temps injecté.",
+        "Pour expiresAt=1000 je vérifie true à 999, false à 1000 et false à 1001, sans attente réelle."
+      ],
+      "counterexamples": [
+        "À éviter : Attendre une seconde dans le test est indispensable pour vérifier une expiration.",
+        "Certaines politiques incluent la frontière, mais ici le contrat fourni impose explicitement l’exclusion."
+      ],
+      "sources": [
+        {
+          "title": "Node.js — Tests et horloges simulées",
+          "url": "https://nodejs.org/api/test.html"
+        }
+      ],
+      "files": [
+        {
+          "name": "token.js",
+          "description": "Code actuel à diagnostiquer",
+          "language": "javascript",
+          "content": "export function isValid(expiresAt, now) {\n  return now <= expiresAt\n}"
+        },
+        {
+          "name": "token.test.js",
+          "description": "Test actuellement écrit",
+          "language": "javascript",
+          "content": "assert.equal(isValid(1000, 500), true)"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Une horloge simulée convient aussi ; ici l’argument now rend déjà la vérification déterministe."
+      ]
+    },
+    {
+      "id": "tests-mock-contract-diagnostic",
+      "version": 2,
+      "title": "Le faux service masque une réponse réelle différente",
+      "courseId": "test-strategy",
+      "lessonIds": [
+        "tests-unit-integration",
+        "tests-doubles"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Le test d’un adaptateur utilise un faux qui renvoie directement un tableau. Le fournisseur renvoie un objet avec items ; le code testé casse au premier appel réel.",
+      "prompt": "Quel écart entre le faux et la réponse réelle invalide la preuve actuelle ? Corrige la frontière testée et choisis les réponses utiles pour vérifier l’adaptateur.",
+      "correction": "Le double de test ne représente pas le contrat réel ; son succès ne prouve pas la compatibilité de l’adaptateur.\n\nJe corrige l’adaptateur et le faux selon la forme items documentée puis ajoute un test de frontière avec une réponse représentative du fournisseur.\n\nJe vérifie la réponse enveloppée valide, une structure invalide et le comportement d’erreur, puis une intégration contrôlée si possible.\n\nLes doubles restent utiles pour isoler pannes et logique ; leur contrat doit rester fidèle et leurs limites explicites.",
+      "checkpoints": [
+        "Le double de test ne représente pas le contrat réel ; son succès ne prouve pas la compatibilité de l’adaptateur.",
+        "Je corrige l’adaptateur et le faux selon la forme items documentée puis ajoute un test de frontière avec une réponse représentative du fournisseur.",
+        "Je vérifie la réponse enveloppée valide, une structure invalide et le comportement d’erreur, puis une intégration contrôlée si possible."
+      ],
+      "counterexamples": [
+        "À éviter : Tous les tests utilisant des doubles prouvent automatiquement que le fournisseur réel est compatible.",
+        "Les doubles restent utiles pour isoler pannes et logique ; leur contrat doit rester fidèle et leurs limites explicites."
+      ],
+      "sources": [
+        {
+          "title": "Node.js — Tests et horloges simulées",
+          "url": "https://nodejs.org/api/test.html"
+        }
+      ],
+      "files": [
+        {
+          "name": "adapter.js",
+          "description": "Code actuel à diagnostiquer",
+          "language": "javascript",
+          "content": "const result = await transport.get(\"/items\")\nreturn result.map(item => item.id)"
+        },
+        {
+          "name": "fake-and-real.json",
+          "description": "Données reçues dans ce scénario",
+          "language": "json",
+          "content": "{\"fake\":[{\"id\":\"a\"}],\"real\":{\"items\":[{\"id\":\"a\"}]}}"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Un test de contrat contre un serveur local représentatif ou une fixture documentée convient ; un test réel limité apporte une preuve différente du test unitaire."
+      ]
+    },
+    {
+      "id": "architecture-rule-ui-diagnostic",
+      "version": 2,
+      "title": "La règle métier diverge entre deux écrans",
+      "courseId": "architecture-boundaries",
+      "lessonIds": [
+        "arch-domain-ui",
+        "arch-contracts"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Une remise de 10 % doit s’appliquer à partir de 100 euros inclus. La page web et l’export calculent différemment le montant à 100. Les deux doivent exposer la même règle.",
+      "prompt": "Quelle divergence apparaît exactement à 100 euros ? Propose un contrat métier commun aux deux consommateurs et une preuve qui protège ce seuil.",
+      "correction": "La règle est dupliquée et les comparaisons divergent sur le seuil de 100 inclus.\n\nJe définis une fonction métier commune pour le montant remisé, indépendante de l’affichage, puis l’utilise depuis les deux consommateurs.\n\nJe teste la règle à 99, 100 et 101 et vérifie que la page et l’export utilisent bien ce même contrat.\n\nPartager une règle n’oblige pas à fusionner les interfaces ; chacune peut conserver sa présentation propre.",
+      "checkpoints": [
+        "La règle est dupliquée et les comparaisons divergent sur le seuil de 100 inclus.",
+        "Je définis une fonction métier commune pour le montant remisé, indépendante de l’affichage, puis l’utilise depuis les deux consommateurs.",
+        "Je teste la règle à 99, 100 et 101 et vérifie que la page et l’export utilisent bien ce même contrat."
+      ],
+      "counterexamples": [
+        "À éviter : Corriger seulement le texte affiché règle aussi le montant erroné de l’export.",
+        "Partager une règle n’oblige pas à fusionner les interfaces ; chacune peut conserver sa présentation propre."
+      ],
+      "sources": [
+        {
+          "title": "Martin Fowler — Presentation Domain Data Layering",
+          "url": "https://martinfowler.com/bliki/PresentationDomainDataLayering.html"
+        }
+      ],
+      "files": [
+        {
+          "name": "checkout.js",
+          "description": "Code actuel à diagnostiquer",
+          "language": "javascript",
+          "content": "const total = price >= 100 ? price * 0.9 : price"
+        },
+        {
+          "name": "export.js",
+          "description": "Code actuel à diagnostiquer",
+          "language": "javascript",
+          "content": "const total = price > 100 ? price * 0.9 : price"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Un module partagé ou un calcul côté autorité serveur conviennent selon le système ; aucune bibliothèque complexe n’est nécessaire pour cette règle simple."
+      ]
+    },
+    {
+      "id": "architecture-invalid-state-diagnostic",
+      "version": 2,
+      "title": "L’écran annonce succès et chargement ensemble",
+      "courseId": "architecture-boundaries",
+      "lessonIds": [
+        "arch-state-machine"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Une soumission est représentée par trois booléens. Le chemin de succès oublie de retirer loading et l’écran montre deux états incompatibles. Une seule soumission peut être active à la fois.",
+      "prompt": "Quelle transition laisse ici une combinaison impossible à l’écran ? Propose une représentation de la soumission et vérifie ses sorties de succès et d’échec.",
+      "correction": "Les booléens indépendants permettent une combinaison incohérente et la transition de succès ne clôt pas le chargement.\n\nJe représente un état unique idle, saving, saved ou failed avec des transitions explicites, en mettant à jour l’état après confirmation de save.\n\nJe teste succès et échec : saved ou failed doivent remplacer saving ; aucune vue ne doit afficher simultanément succès et chargement.\n\nDes états concurrents peuvent être valides pour des opérations différentes ; le dossier porte sur une unique soumission.",
+      "checkpoints": [
+        "Les booléens indépendants permettent une combinaison incohérente et la transition de succès ne clôt pas le chargement.",
+        "Je représente un état unique idle, saving, saved ou failed avec des transitions explicites, en mettant à jour l’état après confirmation de save.",
+        "Je teste succès et échec : saved ou failed doivent remplacer saving ; aucune vue ne doit afficher simultanément succès et chargement."
+      ],
+      "counterexamples": [
+        "À éviter : Un type TypeScript seul rend impossible toute transition erronée à l’exécution.",
+        "Des états concurrents peuvent être valides pour des opérations différentes ; le dossier porte sur une unique soumission."
+      ],
+      "sources": [
+        {
+          "title": "TypeScript — Narrowing",
+          "url": "https://www.typescriptlang.org/docs/handbook/2/narrowing.html"
+        }
+      ],
+      "files": [
+        {
+          "name": "submit.js",
+          "description": "Code actuel à diagnostiquer",
+          "language": "javascript",
+          "content": "state = { loading: true, success: false, error: false }\nawait save()\nstate = { ...state, success: true }"
+        },
+        {
+          "name": "state.json",
+          "description": "Données reçues dans ce scénario",
+          "language": "json",
+          "content": "{\"loading\":true,\"success\":true,\"error\":false}"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Un reducer ou une union discriminée conviennent ; conserver les booléens est acceptable si toutes les transitions garantissent réellement l’invariant."
+      ]
+    },
+    {
+      "id": "architecture-lost-write-diagnostic",
+      "version": 2,
+      "title": "Deux modifications écrasent le même document",
+      "courseId": "distributed-basics",
+      "lessonIds": [
+        "dist-concurrent-writes"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Deux collaborateurs lisent la même version 7 d’une note. Alice modifie le titre et Bob le texte. Les PUT remplacent tout le document sans vérifier la version ; le second rétablit un ancien titre.",
+      "prompt": "Quelle modification est perdue par le second PUT ? Propose un contrôle atomique de version et le comportement utilisateur quand les deux écritures partent de v7.",
+      "correction": "Le second remplacement part d’une ancienne lecture et écrase silencieusement la modification de titre d’Alice.\n\nJe transmets une version attendue et la compare atomiquement côté serveur ; un conflit est signalé avec la version récente pour une résolution explicite.\n\nJe simule deux écritures issues de v7 : la première réussit, la seconde reçoit un conflit et ne remplace pas silencieusement le document.\n\nUne stratégie dernier arrivé gagne peut être une décision produit explicite ; elle ne satisfait pas ici l’exigence de signaler les conflits.",
+      "checkpoints": [
+        "Le second remplacement part d’une ancienne lecture et écrase silencieusement la modification de titre d’Alice.",
+        "Je transmets une version attendue et la compare atomiquement côté serveur ; un conflit est signalé avec la version récente pour une résolution explicite.",
+        "Je simule deux écritures issues de v7 : la première réussit, la seconde reçoit un conflit et ne remplace pas silencieusement le document."
+      ],
+      "counterexamples": [
+        "À éviter : Choisir la dernière heure du navigateur garantit toujours de conserver toutes les modifications concurrentes.",
+        "Une stratégie dernier arrivé gagne peut être une décision produit explicite ; elle ne satisfait pas ici l’exigence de signaler les conflits."
+      ],
+      "sources": [
+        {
+          "title": "Patterns of Distributed Systems — Versioned Value",
+          "url": "https://martinfowler.com/articles/patterns-of-distributed-systems/versioned-value.html"
+        }
+      ],
+      "files": [
+        {
+          "name": "timeline.txt",
+          "description": "Chronologie observée",
+          "language": "text",
+          "content": "Version 7 : title=Ancien, text=Initial\nAlice envoie {title:Nouveau,text:Initial}\nBob envoie {title:Ancien,text:Modifié}\nRésultat : title=Ancien,text=Modifié"
+        },
+        {
+          "name": "contract.txt",
+          "description": "Contrat attendu",
+          "language": "text",
+          "content": "PUT remplace actuellement toute la note.\nAucun contrôle de version attendue.\nLe produit doit signaler les conflits plutôt que perdre silencieusement une modification."
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Un ETag avec If-Match convient si la précondition et l’écriture sont vérifiées atomiquement, puis que le conflit est signalé au collaborateur."
+      ]
+    },
+    {
+      "id": "performance-lcp-lazy-diagnostic",
+      "version": 2,
+      "title": "L’image principale commence à charger trop tard",
+      "courseId": "performance-basics",
+      "lessonIds": [
+        "perf-images",
+        "perf-web-vitals"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "L’image en haut de page est l’élément LCP. Elle est visible immédiatement mais utilise loading=\"lazy\". La trace montre un téléchargement tardif malgré un fichier déjà raisonnablement compressé.",
+      "prompt": "Quel délai de la trace est influencé par loading=lazy sur cette image visible ? Choisis une intervention ciblée et les mesures nécessaires pour confirmer son intérêt.",
+      "correction": "Le chargement différé retarde la ressource principale immédiatement visible et contribue au LCP tardif.\n\nJe retire lazy de cette image, garde des dimensions adaptées et peux donner une priorité élevée si la mesure confirme son intérêt.\n\nJe compare plusieurs mesures dans les mêmes conditions : démarrage de requête, LCP et absence de régression sur les autres ressources.\n\nLe chargement différé reste utile pour des images hors écran ; une priorité élevée partout ferait perdre le bénéfice du ciblage.",
+      "checkpoints": [
+        "Le chargement différé retarde la ressource principale immédiatement visible et contribue au LCP tardif.",
+        "Je retire lazy de cette image, garde des dimensions adaptées et peux donner une priorité élevée si la mesure confirme son intérêt.",
+        "Je compare plusieurs mesures dans les mêmes conditions : démarrage de requête, LCP et absence de régression sur les autres ressources."
+      ],
+      "counterexamples": [
+        "À éviter : Toutes les images, y compris l’image LCP visible, doivent toujours être lazy pour accélérer la page.",
+        "Le chargement différé reste utile pour des images hors écran ; une priorité élevée partout ferait perdre le bénéfice du ciblage."
+      ],
+      "sources": [
+        {
+          "title": "web.dev — Optimiser le LCP",
+          "url": "https://web.dev/articles/optimize-lcp"
+        }
+      ],
+      "files": [
+        {
+          "name": "hero.html",
+          "description": "Code actuel à diagnostiquer",
+          "language": "html",
+          "content": "<img src=\"hero.webp\" loading=\"lazy\" width=\"1200\" height=\"600\" alt=\"Présentation du produit\">"
+        },
+        {
+          "name": "trace.txt",
+          "description": "Chronologie observée",
+          "language": "text",
+          "content": "HTML reçu : 100 ms\nImage LCP découverte : 120 ms\nDébut de requête image : 1200 ms\nFin téléchargement : 1600 ms\nLCP : 1700 ms"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Passer cette image en chargement immédiat avec fetchpriority=high est acceptable si les mesures vérifient son intérêt et l’absence de régression sur les autres ressources. Un preload peut aider quand la découverte est tardive, ce qui n’est pas le facteur observé ici."
+      ]
+    },
+    {
+      "id": "performance-eager-module-diagnostic",
+      "version": 2,
+      "title": "L’export alourdit chaque visite",
+      "courseId": "performance-basics",
+      "lessonIds": [
+        "perf-bundle",
+        "perf-measure"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Une grosse bibliothèque PDF est chargée dès l’ouverture alors que l’export n’est utilisé que depuis un bouton. La trace attribue 600 Ko de JavaScript compressé à cette dépendance sur la page initiale.",
+      "prompt": "Quel coût initial est payé sans utiliser l’export ? Propose un moment de chargement du module et vérifie à la fois l’ouverture de page et le premier export.",
+      "correction": "Une dépendance réservée à une action occasionnelle est incluse dans le chargement initial.\n\nJe charge le module par import dynamique au moment pertinent, avec un état de chargement et un traitement d’échec pour le bouton.\n\nJe vérifie l’absence du module dans le chargement initial, son chargement à l’export et le fonctionnement du premier puis du second export.\n\nLe découpage reporte le coût et peut augmenter la latence du premier export ; il faut mesurer ce compromis.",
+      "checkpoints": [
+        "Une dépendance réservée à une action occasionnelle est incluse dans le chargement initial.",
+        "Je charge le module par import dynamique au moment pertinent, avec un état de chargement et un traitement d’échec pour le bouton.",
+        "Je vérifie l’absence du module dans le chargement initial, son chargement à l’export et le fonctionnement du premier puis du second export."
+      ],
+      "counterexamples": [
+        "À éviter : Découper le module supprime forcément tous les octets téléchargés, même quand on utilise l’export.",
+        "Le découpage reporte le coût et peut augmenter la latence du premier export ; il faut mesurer ce compromis."
+      ],
+      "sources": [
+        {
+          "title": "web.dev — Chargement différé par import dynamique",
+          "url": "https://web.dev/articles/code-splitting-with-dynamic-imports-in-nextjs"
+        }
+      ],
+      "files": [
+        {
+          "name": "export.js",
+          "description": "Code actuel à diagnostiquer",
+          "language": "javascript",
+          "content": "import { buildPdf } from \"heavy-pdf\"\nexport function onExport(data) {\n  return buildPdf(data)\n}"
+        },
+        {
+          "name": "usage.txt",
+          "description": "Constat ou opérations du scénario",
+          "language": "text",
+          "content": "L’export est déclenché explicitement après ouverture.\nLa page initiale n’utilise aucune API de heavy-pdf.\nBundle initial : 820 Ko compressés, dont 600 Ko attribués à heavy-pdf."
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Un découpage par route dédiée à l’export ou un préchargement après l’essentiel peuvent convenir selon le parcours et les mesures."
+      ]
+    },
+    {
+      "id": "performance-nplusone-diagnostic",
+      "version": 2,
+      "title": "Une page déclenche une requête par auteur",
+      "courseId": "performance-basics",
+      "lessonIds": [
+        "perf-n-plus-one"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Une page affiche 50 publications et leur auteur. Le chargement exécute une requête pour les publications puis une par ligne pour l’auteur. Les publications sont paginées et une base SQL contient les deux tables.",
+      "prompt": "Que révèlent les 51 requêtes pour 50 lignes ? Regroupe la lecture sans perdre la pagination et explique comment vérifier résultats et coût avec peu puis beaucoup de lignes.",
+      "correction": "Le motif N+1 multiplie les allers-retours, avec en plus des lectures répétées pour les auteurs partagés.\n\nJe regroupe les auteurs par identifiants uniques ou utilise une jointure sur la page de publications, en conservant la pagination et les données nécessaires.\n\nJe contrôle le nombre de requêtes et la latence pour 1 puis 50 lignes, ainsi que les auteurs manquants et les résultats identiques.\n\nUne jointure n’est pas automatiquement plus rapide dans tous les cas ; le plan, le volume et les mesures guident le choix.",
+      "checkpoints": [
+        "Le motif N+1 multiplie les allers-retours, avec en plus des lectures répétées pour les auteurs partagés.",
+        "Je regroupe les auteurs par identifiants uniques ou utilise une jointure sur la page de publications, en conservant la pagination et les données nécessaires.",
+        "Je contrôle le nombre de requêtes et la latence pour 1 puis 50 lignes, ainsi que les auteurs manquants et les résultats identiques."
+      ],
+      "counterexamples": [
+        "À éviter : Charger tous les auteurs de la base sans limite est toujours la meilleure solution au N+1.",
+        "Une jointure n’est pas automatiquement plus rapide dans tous les cas ; le plan, le volume et les mesures guident le choix."
+      ],
+      "sources": [
+        {
+          "title": "PostgreSQL — Jointures",
+          "url": "https://www.postgresql.org/docs/current/tutorial-join.html"
+        },
+        {
+          "title": "PostgreSQL — EXPLAIN",
+          "url": "https://www.postgresql.org/docs/current/using-explain.html"
+        }
+      ],
+      "files": [
+        {
+          "name": "load.js",
+          "description": "Code actuel à diagnostiquer",
+          "language": "javascript",
+          "content": "const posts = await db.getPosts({ limit: 50 })\nfor (const post of posts) {\n  post.author = await db.getAuthor(post.authorId)\n}"
+        },
+        {
+          "name": "query-log.txt",
+          "description": "Journal des opérations observées",
+          "language": "text",
+          "content": "1 SELECT publications LIMIT 50\n50 SELECT auteur WHERE id = ...\nTotal : 51 allers-retours ; beaucoup d’auteurs répétés"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Un chargeur qui regroupe les lectures ou un cache par requête peuvent convenir ; lancer simplement 50 requêtes concurrentes réduit parfois l’attente sans supprimer le N+1."
+      ]
+    },
+    {
+      "id": "engineering-staged-old-version-diagnostic",
+      "version": 2,
+      "title": "Le commit conserve l’ancienne correction",
+      "courseId": "git-collaboration",
+      "lessonIds": [
+        "git-working-tree"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Une développeuse prépare un fichier avec git add, le corrige encore, puis commit. Le commit contient la première version. Le fichier local garde pourtant la dernière correction.",
+      "prompt": "Quelle version git commit prend-il dans cette séquence ? Décris comment préparer seulement la correction voulue et vérifier le contenu avant puis après commit.",
+      "correction": "git add a préparé v1 ; la modification ultérieure v2 n’a pas été ajoutée à l’index et le commit utilise le contenu préparé.\n\nJe relis les différences du travail et de l’index, prépare la correction v2 voulue puis crée un commit cohérent sans inclure les autres changements.\n\nJe vérifie git diff --cached avant le commit et le contenu du commit après, ainsi que le statut des changements restant locaux.\n\nDes options comme git commit -a modifient la préparation des fichiers suivis ; elles ne figurent pas dans les commandes du dossier.",
+      "checkpoints": [
+        "git add a préparé v1 ; la modification ultérieure v2 n’a pas été ajoutée à l’index et le commit utilise le contenu préparé.",
+        "Je relis les différences du travail et de l’index, prépare la correction v2 voulue puis crée un commit cohérent sans inclure les autres changements.",
+        "Je vérifie git diff --cached avant le commit et le contenu du commit après, ainsi que le statut des changements restant locaux."
+      ],
+      "counterexamples": [
+        "À éviter : Un commit inclut automatiquement toutes les modifications locales d’un fichier déjà ajouté une fois.",
+        "Des options comme git commit -a modifient la préparation des fichiers suivis ; elles ne figurent pas dans les commandes du dossier."
+      ],
+      "sources": [
+        {
+          "title": "Git — git add",
+          "url": "https://git-scm.com/docs/git-add"
+        }
+      ],
+      "files": [
+        {
+          "name": "commands.txt",
+          "description": "Constat ou opérations du scénario",
+          "language": "text",
+          "content": "Modification v1 de fix.ts\ngit add fix.ts\nModification v2 de fix.ts\ngit commit -m \"Fix calculation\""
+        },
+        {
+          "name": "status.txt",
+          "description": "Constat ou opérations du scénario",
+          "language": "text",
+          "content": "Avant commit : fix.ts modifié dans l’index et dans le répertoire de travail\nIndex : v1\nRépertoire de travail : v2"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "git add -p convient pour sélectionner les morceaux ; si le commit v1 est déjà partagé, un nouveau commit de correction convient sans réécrire l’historique partagé."
+      ]
+    },
+    {
+      "id": "engineering-semantic-conflict-diagnostic",
+      "version": 2,
+      "title": "Le conflit résolu supprime une règle utile",
+      "courseId": "git-collaboration",
+      "lessonIds": [
+        "git-conflicts",
+        "git-review"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Deux branches ajoutent une validation différente : remise maximale 50 % et prix strictement positif. La résolution garde uniquement la branche prix. Les marqueurs ont disparu mais une règle est perdue.",
+      "prompt": "Quelle exigence a disparu malgré la suppression des marqueurs ? Explique une résolution qui garde le sens des deux branches et les tests nécessaires.",
+      "correction": "La résolution est syntaxiquement complète mais a supprimé l’exigence de remise maximale.\n\nJe reconstruis le comportement combiné en conservant les deux validations et relis les intentions des deux changements.\n\nJe teste séparément prix nul, remise 60 %, leur combinaison et un cas valide avant de conclure que le conflit est résolu.\n\nChoisir une seule branche peut être correct si les règles sont réellement incompatibles et qu’une décision explicite le justifie ; ce dossier exige les deux.",
+      "checkpoints": [
+        "La résolution est syntaxiquement complète mais a supprimé l’exigence de remise maximale.",
+        "Je reconstruis le comportement combiné en conservant les deux validations et relis les intentions des deux changements.",
+        "Je teste séparément prix nul, remise 60 %, leur combinaison et un cas valide avant de conclure que le conflit est résolu."
+      ],
+      "counterexamples": [
+        "À éviter : L’absence de marqueurs de conflit prouve que toutes les règles des deux branches sont conservées.",
+        "Choisir une seule branche peut être correct si les règles sont réellement incompatibles et qu’une décision explicite le justifie ; ce dossier exige les deux."
+      ],
+      "sources": [
+        {
+          "title": "Git — git merge",
+          "url": "https://git-scm.com/docs/git-merge"
+        }
+      ],
+      "files": [
+        {
+          "name": "conflict.txt",
+          "description": "Constat ou opérations du scénario",
+          "language": "text",
+          "content": "Branche A : refuser discount > 50\nBranche B : refuser price <= 0\nRésolution retenue : refuser price <= 0"
+        },
+        {
+          "name": "requirements.txt",
+          "description": "Contrat attendu",
+          "language": "text",
+          "content": "Le contrat final exige les deux validations.\nLes tests doivent couvrir prix nul et remise 60 %."
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Demander aux auteurs de confirmer une combinaison ambiguë est valable ; réorganiser les validations convient si le contrat final est conservé."
+      ]
+    },
+    {
+      "id": "engineering-stack-origin-diagnostic",
+      "version": 2,
+      "title": "Le dernier cadre de pile est accusé à tort",
+      "courseId": "maintenance-basics",
+      "lessonIds": [
+        "debug-stack-trace",
+        "debug-reproduce"
+      ],
+      "estimatedMinutes": 6,
+      "scenario": "Une route échoue quand le champ name manque. La pile remonte du formatage vers la route. Un collègue propose de modifier seulement le routeur parce que son nom apparaît dans la pile.",
+      "prompt": "Quel cadre indique le lieu de l’exception et quelle entrée la déclenche ? Propose une reproduction et un traitement compatible avec le contrat plutôt que d’accuser le dernier appel.",
+      "correction": "La pile indique le lieu de l’exception dans formatName ; l’entrée fournie manque name, tandis que le routeur est un cadre de propagation.\n\nJe reproduis avec cette entrée et vérifie le contrat du profil pour décider d’une validation en amont ou d’un traitement explicite du champ absent.\n\nJe teste une entrée avec name valide et celle sans name ; le cas invalide doit avoir un comportement documenté plutôt qu’un TypeError accidentel.\n\nLe lieu où l’exception est levée n’explique pas à lui seul pourquoi la donnée est invalide ; la cause peut être une violation antérieure du contrat.",
+      "checkpoints": [
+        "La pile indique le lieu de l’exception dans formatName ; l’entrée fournie manque name, tandis que le routeur est un cadre de propagation.",
+        "Je reproduis avec cette entrée et vérifie le contrat du profil pour décider d’une validation en amont ou d’un traitement explicite du champ absent.",
+        "Je teste une entrée avec name valide et celle sans name ; le cas invalide doit avoir un comportement documenté plutôt qu’un TypeError accidentel."
+      ],
+      "counterexamples": [
+        "À éviter : Le dernier cadre de la pile est toujours la cause exacte de l’erreur.",
+        "Le lieu où l’exception est levée n’explique pas à lui seul pourquoi la donnée est invalide ; la cause peut être une violation antérieure du contrat."
+      ],
+      "sources": [
+        {
+          "title": "Node.js — Erreurs",
+          "url": "https://nodejs.org/api/errors.html"
+        }
+      ],
+      "files": [
+        {
+          "name": "error.txt",
+          "description": "Constat ou opérations du scénario",
+          "language": "text",
+          "content": "TypeError: Cannot read properties of undefined (reading 'toUpperCase')\n    at formatName (names.js:4)\n    at buildResponse (profile.js:12)\n    at routeHandler (routes.js:20)"
+        },
+        {
+          "name": "names.js",
+          "description": "Code actuel à diagnostiquer",
+          "language": "javascript",
+          "content": "export function formatName(profile) {\n  return profile.name.toUpperCase()\n}"
+        },
+        {
+          "name": "input.json",
+          "description": "Données reçues dans ce scénario",
+          "language": "json",
+          "content": "{\"id\":\"u-1\"}"
+        }
+      ],
+      "rubricVersion": 1,
+      "acceptableAlternatives": [
+        "Une réduction minimale du cas et un point d’arrêt au formatage sont valables ; un nom de repli convient seulement si le produit autorise réellement ce champ absent."
+      ]
     }
   ]
 }

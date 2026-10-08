@@ -6,8 +6,8 @@ import { validateChallengeForm } from './attemptModel.ts'
 
 test('qualitative evaluation cases cover each current dossier and fit the actual submission form', () => {
   assert.equal(evaluation.version, 1)
-  assert.equal(evaluation.cases.length, 15)
-  assert.equal(new Set(evaluation.cases.map(entry => entry.id)).size, 15)
+  assert.equal(evaluation.cases.length, challenges.length * 5)
+  assert.equal(new Set(evaluation.cases.map(entry => entry.id)).size, evaluation.cases.length)
   for (const challenge of challenges) {
     const cases = evaluation.cases.filter(entry => entry.challengeId === challenge.id)
     assert.equal(cases.length, 5)

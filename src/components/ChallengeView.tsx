@@ -3,7 +3,7 @@ import { appHref } from '../navigation/browser'
 import { challenges, getChallengeVersion } from '../data/challenges'
 import ChallengeFeedback from '../challenges/ChallengeFeedback'
 import { challengeAiEnabled } from '../firebase/challengeAnalyses'
-import { catalogLessons } from '../data/catalog'
+import { catalogCourses, catalogLessons } from '../data/catalog'
 import { useChallenges } from '../challenges/ChallengeProvider'
 import { useProgress } from '../progress/ProgressProvider'
 import { PageHeading } from './CatalogShared'
@@ -57,7 +57,7 @@ function ChallengeView({ challengeId }: { challengeId: string }) {
   return <main className="dashboard challenge-page">
     <WorkshopBackground stage="rest" beat={0} />
     <a className="text-link breadcrumb" href={appHref('/challenges')}>← Tous les défis</a>
-    <PageHeading eyebrow={`Docker · Diagnostic · ${challenge.estimatedMinutes} min`} title={challenge.title} description="Lis le dossier, explique ton diagnostic et propose une action avec sa vérification. Compare ensuite ton raisonnement avec la correction." />
+    <PageHeading eyebrow={`${catalogCourses.find(course => course.id === challenge.courseId)?.title} · Diagnostic · ${challenge.estimatedMinutes} min`} title={challenge.title} description="Lis le dossier, explique ton diagnostic et propose une action avec sa vérification. Compare ensuite ton raisonnement avec la correction." />
     <section className="challenge-prerequisites" aria-label="Notions utiles">
       <p>Pour te préparer ou retrouver une notion :</p>
       <ul>{challenge.lessonIds.map(id => {

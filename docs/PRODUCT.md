@@ -23,7 +23,7 @@ Challenges avec exécution de code, veille automatisée, éditeur de leçons, no
 
 ## Première extension : défis de diagnostic
 
-Trois défis Docker mettent les notions en situation : images et conteneurs, volumes et persistance, ports et réseaux. Depuis `/challenges`, observer un scénario et sa configuration, lire les fichiers du dossier et remplir « Ce que je constate » et « Ce que je ferais », puis comparer avec une correction expliquée, des points essentiels et des contre-exemples. Les leçons liées sont conseillées ; aucun prérequis ni quota ne bloque l’accès.
+Trente-six défis couvrent les douze thématiques du programme, avec au moins trois scénarios par thème. Les trois défis Docker historiques sont conservés. Le catalogue se filtre par thématique et par recherche. Depuis `/challenges`, observer un scénario et sa configuration, lire les fichiers du dossier et remplir « Ce que je constate » et « Ce que je ferais », puis comparer avec une correction expliquée, des points essentiels et des contre-exemples. Les leçons liées sont conseillées ; aucun prérequis ni quota ne bloque l’accès.
 
 Une tentative non vide est enregistrée sur le compte avant d’afficher la correction. L’historique conserve la réponse, la date serveur et la version du défi ; il est distinct des cartes et des complétions de leçons. L’autoévaluation facultative « À retravailler » / « Compris » est un repère personnel enregistré une seule fois par tentative, sans note automatique ni promesse de maîtrise. Une nouvelle tentative conserve les précédentes. La relecture d’une correction n’écrit rien et le rechargement retrouve l’historique ; un brouillon non envoyé n’est pas sauvegardé.
 

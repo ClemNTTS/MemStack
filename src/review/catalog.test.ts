@@ -5,6 +5,7 @@ import { catalogCards, catalogCourses, catalogLessons } from '../data/catalog/in
 import { indexLessonSteps } from '../lesson/lessonFlow.ts'
 import { dockerLessons } from '../data/dockerCourse.ts'
 import { catalogVisuals } from '../data/catalog/visuals.ts'
+import corrections from '../data/catalog/corrections.json' with { type: 'json' }
 
 test('the complete curriculum contains 150 lessons in 30 ordered courses without orphan cards', () => {
   const plan = JSON.parse(readFileSync(new URL('../../docs/content/curriculum.json', import.meta.url), 'utf8')) as {
@@ -80,7 +81,9 @@ test('all thirty diagrams are integrated into their intended lessons and every c
   for (const [lessonId, visual] of Object.entries(catalogVisuals)) {
     const lesson = catalogLessons.find((entry) => entry.id === lessonId)
     assert.ok(lesson, lessonId)
-    assert.ok(lesson.steps.some((step) => step.type === 'image' && step.src === visual.src && step.alt === visual.alt), lessonId)
+    const approvedAlt = corrections.entries.filter(entry => entry.lessonId === lessonId).flatMap(entry => entry.patches)
+      .filter(patch => patch.target === 'step' && patch.id === 'figure' && patch.field === 'alt').at(-1)?.value ?? visual.alt
+    assert.ok(lesson.steps.some((step) => step.type === 'image' && step.src === visual.src && step.alt === approvedAlt), lessonId)
   }
   for (const course of catalogCourses) {
     assert.ok(course.lessonIds.some((id) => catalogLessons.find((lesson) => lesson.id === id)?.steps.some((step) => step.type === 'image')), course.id)

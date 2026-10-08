@@ -283,3 +283,9 @@ Les 150 leçons constituent des introductions ciblées, pas une certification de
 ### Présentation des exemples — 6 octobre 2026
 
 Les exemples Docker, JavaScript, TypeScript, React, CSS et SQL concernés sont séparés de leurs explications dans des blocs de code indentés. Les filtres et jointures SQL restent explicitement des extraits. Les commandes Docker conservent leurs arguments ; les continuations de ligne sont affichées en Bash. Les IDs, transitions, cartes et sources sont conservés. Vérification technique : parser testé, graphes et références vérifiés par npm test ; aucun changement de règle pédagogique ou de révision.
+
+## Relecture du 8 octobre 2026
+
+Relecture complète des 150 leçons et 450 cartes par deux agents, suivie d’un contrôle croisé des corrections : [lot A](REVIEW_A_2026-10-08.md) et [lot B](REVIEW_B_2026-10-08.md). Dix-huit leçons ont reçu des corrections de précision ou de répétitions inutiles, sur 32 champs textuels. Le registre `corrections.json` applique ces changements sans modifier les IDs ni les transitions. Les rappels utiles entre dialogue et cartes ont été conservés. Cette inspection ne mesure pas la difficulté réelle auprès des apprenants.
+
+Les légendes et alternatives des figures ont également été relues. Une précision supplémentaire sur le rendu React porte le registre à 19 leçons et 33 champs corrigés ; voir [VISUALS.md](VISUALS.md).

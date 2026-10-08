@@ -1,9 +1,20 @@
 import test from 'node:test'
+import { readFileSync } from 'node:fs'
 import assert from 'node:assert/strict'
 import { callMistral, checkQuota, existingDecision, makeMessages, publicAnalysis, validateAttempt, validateAttemptId } from './analysis.mjs'
 
 const dossier = { id: 'docker-images-diagnostic', version: 2, rubricVersion: 1 }
 const attempt = { version: 2, challengeVersion: 2, challengeId: dossier.id, observations: 'Image ancienne', actions: 'Reconstruire', answer: 'Image ancienne\n\nReconstruire', submittedAt: { toMillis: () => 0 } }
+
+test('all published evaluation responses fit the trusted server dossier and reserved prompt budget', () => {
+  const catalog = JSON.parse(readFileSync(new URL('../../shared/challengeDossiers.json', import.meta.url), 'utf8')).challenges
+  const cases = JSON.parse(readFileSync(new URL('../../shared/challengeEvaluationCases.json', import.meta.url), 'utf8')).cases
+  for (const entry of cases) {
+    const stored = { ...attempt, challengeId: entry.challengeId, challengeVersion: entry.challengeVersion,
+      observations: entry.observations, actions: entry.actions, answer: `${entry.observations}\n\n${entry.actions}` }
+    assert.equal(validateAttempt(stored, catalog).id, entry.challengeId, entry.id)
+  }
+})
 
 test('request accepts only a bounded stable attempt id', () => {
   assert.equal(validateAttemptId({ attemptId: 'a-123' }), 'a-123')

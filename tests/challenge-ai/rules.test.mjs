@@ -4,6 +4,7 @@ import { initializeTestEnvironment, assertFails, assertSucceeds } from '@firebas
 import { doc, getDoc, setDoc, updateDoc, deleteDoc, serverTimestamp } from 'firebase/firestore'
 
 let env
+const dossiers = JSON.parse(await readFile(new URL('../../shared/challengeDossiers.json', import.meta.url), 'utf8')).challenges
 before(async () => {
   if (!process.env.FIRESTORE_EMULATOR_HOST) throw new Error('Run with a Firestore emulator; no production access is permitted')
   env = await initializeTestEnvironment({ projectId: 'demo-memstack-challenge-ai', firestore: {
@@ -40,6 +41,20 @@ test('invalid structured submissions cannot enter history', async () => {
     { answer: 'Réponse fabriquée' }, { challengeVersion: 1 }, { version: 3 }, { outcome: 'understood' }, { feedback: 'fake' } ]) {
     await assertFails(setDoc(doc(db('alice'), path), { ...payload(2), ...patch }))
   }
+})
+
+test('every published dossier can be saved while unknown IDs and invented historical versions are denied', async () => {
+  for (const dossier of dossiers.filter(entry => entry.version === 2)) {
+    await assertSucceeds(setDoc(doc(db('alice'), `users/alice/challengeAttempts/${dossier.id}`), {
+      ...payload(2), challengeId: dossier.id,
+    }))
+    if (!dossiers.some(entry => entry.id === dossier.id && entry.version === 1)) {
+      await assertFails(setDoc(doc(db('alice'), `users/alice/challengeAttempts/legacy-${dossier.id}`), {
+        ...payload(1), challengeId: dossier.id,
+      }))
+    }
+  }
+  await assertFails(setDoc(doc(db('alice'), path), { ...payload(2), challengeId: 'unknown-diagnostic' }))
 })
 
 test('clients cannot forge analysis results or read and change server quota counters', async () => {

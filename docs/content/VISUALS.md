@@ -87,3 +87,7 @@ Chaque proposition ci-dessous est un scénario d’anticipation ou de diagnostic
 ## Contrôles et limites
 
 Le manifest couvre les 30 parcours avec 30 illustrations locales. Les alternatives, légendes et choix sont inspectés avec les dialogues et cartes par le rôle pédagogique. Le contrôle XML vérifie la syntaxe des fichiers ; les tests de catalogue vérifient existence, insertion et chemins atteignables. Ces contrôles techniques ne prouvent ni efficacité d’apprentissage ni absence d’ambiguïté : consigner le verdict humain/agent dans `REVIEW.md` et ajuster après usage réel.
+
+## Relecture du 8 octobre 2026
+
+Les alternatives et légendes des 30 figures ont été relues. Pour React, la description et la note du schéma délimitent désormais le parcours menant à un commit et rappellent qu’un rendu peut être abandonné. L’alternative de la leçon est corrigée via le registre ; la description SVG reste cohérente. Source : https://react.dev/learn/render-and-commit.
