@@ -50,7 +50,17 @@ function ChallengesPage() {
       <PageHeading eyebrow={`L’atelier pratique · ${themes.length} thèmes`} title="Et si tu devais le résoudre ?" description="Lis les fichiers, pose ton diagnostic et propose une action. Retrouve ici les verdicts IA de tes examens et choisis ton prochain défi." />
       <img src={appAsset('memo/learning.webp')} alt="" width="160" height="160" />
     </div>
-    <p className="dashboard-note">Les défis sont réservés aux membres ayant accès à l’option IA et se débloquent après toutes les leçons de leur thématique. Tes tentatives sont synchronisées ; seule l’analyse IA évalue tes réponses.</p>
+    <p className="dashboard-note">Les défis sont réservés aux membres ayant accès à l’option IA et se débloquent après les leçons utiles au défi et au moins deux leçons de leur thématique. Tes tentatives sont synchronisées ; seule l’analyse IA évalue tes réponses.</p>
+    {resultsReady && !challengeAiEnabled && <section className="exam-next" aria-labelledby="exam-consultation-title">
+      <h2 id="exam-consultation-title">Consulter tes défis</h2>
+      <p>L’analyse IA est indisponible sur cette version. Les nouvelles tentatives sont suspendues ; ton historique reste consultable.</p>
+    </section>}
+    {resultsReady && challengeAiEnabled && <section className="exam-next" aria-labelledby="exam-next-title">
+      <h2 id="exam-next-title">Ta prochaine tentative</h2>
+      {theme !== 'all' && <p>{theme} : {count(scoped, 'validated')} validés · {count(scoped, 'retry')} à retravailler · {count(scoped, 'unattempted')} jamais tentés.</p>}
+      <p className="dashboard-note">{theme === 'all' ? 'Toutes les thématiques' : theme} · priorité aux défis à retravailler, puis jamais tentés, parmi les défis dont les prérequis sont terminés. La recherche ne change pas cette suggestion.</p>
+      {next ? <><p><strong>{next.challenge.title}</strong> · {statusLabels[next.summary!.status]}</p><a className="dashboard-cta" href={appHref(`/challenges/${next.challenge.id}`)}>{next.summary?.status === 'retry' ? 'Retravailler ce défi' : 'Essayer ce défi'} →</a></> : <p>Aucun défi à retravailler ou jamais tenté disponible dans cette sélection. Consulte les résultats ci-dessous ou termine les prérequis d’un défi.</p>}
+    </section>}
     <AiAccessPanel />
     {loading && <p role="status">Chargement de tes tentatives…</p>}
     {error && <div className="inline-error" role="alert"><p>{error}</p><button className="catalog-button secondary" type="button" onClick={retry}>Réessayer</button></div>}
@@ -88,16 +98,6 @@ function ChallengesPage() {
       </details>
     </section>}
     <div className="catalog-filters"><label>Rechercher un défi<input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Docker, React, sécurité…" /></label><label>Thématique<select value={theme} onChange={event => setTheme(event.target.value)}><option value="all">Toutes les thématiques</option>{themes.map(entry => <option key={entry.id} value={entry.title}>{entry.title}</option>)}</select></label></div>
-    {resultsReady && !challengeAiEnabled && <section className="exam-next" aria-labelledby="exam-consultation-title">
-      <h2 id="exam-consultation-title">Consulter tes défis</h2>
-      <p>L’analyse IA est indisponible sur cette version. Les nouvelles tentatives sont suspendues ; ton historique reste consultable.</p>
-    </section>}
-    {resultsReady && challengeAiEnabled && <section className="exam-next" aria-labelledby="exam-next-title">
-      <h2 id="exam-next-title">Ta prochaine tentative</h2>
-      {theme !== 'all' && <p>{theme} : {count(scoped, 'validated')} validés · {count(scoped, 'retry')} à retravailler · {count(scoped, 'unattempted')} jamais tentés.</p>}
-      <p className="dashboard-note">{theme === 'all' ? 'Toutes les thématiques' : theme} · priorité aux défis à retravailler, puis jamais tentés, parmi les thématiques débloquées. La recherche ne change pas cette suggestion.</p>
-      {next ? <><p><strong>{next.challenge.title}</strong> · {statusLabels[next.summary!.status]}</p><a className="dashboard-cta" href={appHref(`/challenges/${next.challenge.id}`)}>{next.summary?.status === 'retry' ? 'Retravailler ce défi' : 'Essayer ce défi'} →</a></> : <p>Aucun défi à retravailler ou jamais tenté disponible dans cette sélection. Consulte les résultats ci-dessous ou termine les leçons d’une thématique.</p>}
-    </section>}
     <label>État d’examen<select value={statusFilter} disabled={!resultsReady} onChange={event => setStatusFilter(event.target.value)}><option value="all">Tous les états</option>{Object.entries(statusLabels).map(([status, label]) => <option key={status} value={status}>{label}</option>)}</select></label>
     <p className="dashboard-note">Le filtre d’état ne change pas la prochaine tentative proposée.</p>
     <p className="results-count" role="status">{filtered.length} défis affichés · {challenges.length} dans le catalogue</p>
@@ -111,7 +111,7 @@ function ChallengesPage() {
           <p>{courseFor(challenge.courseId)?.title} · {challenge.files.length} fichier{challenge.files.length > 1 ? 's' : ''} à lire</p>
           <p className="challenge-status">{summary ? statusLabels[summary.status] : error || analysesError ? 'Résultat non disponible : recharge les données.' : 'Résultat en cours de chargement'}</p>
           {!loading && !error && history.length > 0 && <p className="dashboard-note">{history.length} tentative{history.length > 1 ? 's' : ''}</p>}
-          {access.unlocked ? <a className="dashboard-cta" href={appHref(`/challenges/${challenge.id}`)}>{challengeAiEnabled && summary?.status === 'retry' ? 'Retravailler ce défi' : history.length ? 'Voir le défi et son historique' : 'Voir ce défi'} →</a> : <><p className="dashboard-note">Termine la thématique pour débloquer ce défi · {access.completed} / {access.total} leçons terminées.</p><a className="text-link" href={appHref('/courses')}>Voir les parcours →</a></>}
+          {access.unlocked ? <a className="dashboard-cta" href={appHref(`/challenges/${challenge.id}`)}>{challengeAiEnabled && summary?.status === 'retry' ? 'Retravailler ce défi' : history.length ? 'Voir le défi et son historique' : 'Voir ce défi'} →</a> : <><p className="dashboard-note">Prépare ce défi · {access.requiredCompleted} / {access.requiredTotal} leçons utiles terminées · {Math.min(access.completed, access.minimumCompleted)} / {access.minimumCompleted} leçons minimum dans la thématique.</p><a className="text-link" href={appHref('/courses')}>Voir les parcours →</a></>}
         </article>
       })}
     </div>

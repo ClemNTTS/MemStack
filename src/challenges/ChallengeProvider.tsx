@@ -105,7 +105,7 @@ function AccountChallenges({ uid, children }: { uid: string, children: ReactNode
     if (!challengeAiEnabled || !canSave()) return null
     const challenge = challenges.find(entry => entry.id === challengeId)
     if (!challenge || !getChallengeThemeProgress(challenge, catalogCourses, account.progress.completedLessons).unlocked) {
-      setError('Termine toutes les leçons de cette thématique avant de commencer un défi.')
+      setError('Termine les leçons prérequises de ce défi et au moins deux leçons de sa thématique avant de commencer.')
       return null
     }
     let answer: string

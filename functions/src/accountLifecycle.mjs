@@ -2,6 +2,22 @@ import { HttpsError } from 'firebase-functions/v2/https'
 
 const MAX_DOCUMENTS = 5000
 const MAX_BYTES = 8 * 1024 * 1024
+const EXPORT_COOLDOWN_MS = 15 * 60 * 1000
+
+export async function reserveAccountExport(db, uid, now = Date.now()) {
+  const marker = db.doc(`_accountLifecycle/${uid}`)
+  const budget = db.doc(`users/${uid}/operationLimits/export`)
+  await db.runTransaction(async transaction => {
+    const [lifecycle, previous] = await Promise.all([transaction.get(marker), transaction.get(budget)])
+    if (lifecycle.exists) throw new HttpsError('failed-precondition', 'Suppression en cours ou terminée.')
+    const lastStartedAt = previous.data()?.lastStartedAt
+    if (Number.isFinite(lastStartedAt) && now - lastStartedAt < EXPORT_COOLDOWN_MS) {
+      throw new HttpsError('resource-exhausted', 'Un export a déjà été demandé. Réessaie après 15 minutes.')
+    }
+    // Failed exports also consume the reservation, preventing costly retry loops.
+    transaction.set(budget, { lastStartedAt: now })
+  })
+}
 
 export function requireOwnAccount(request, deleting = false, now = Date.now()) {
   if (!request.auth) throw new HttpsError('unauthenticated', 'Connexion Google requise.')
@@ -62,7 +78,7 @@ export function createAccountLifecycle({ db, auth }) {
   return {
     exportAccountData: async request => {
       const uid = requireOwnAccount(request)
-      if ((await db.doc(`_accountLifecycle/${uid}`).get()).exists) throw new HttpsError('failed-precondition', 'Suppression en cours ou terminée.')
+      await reserveAccountExport(db, uid)
       const account = await auth.getUser(uid)
       const documents = await exportAccountTree(db, uid)
       const audit = (await ownAudits(db, uid)).map(entry => {

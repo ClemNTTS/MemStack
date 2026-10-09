@@ -3,7 +3,7 @@ import type { Course } from '../types/course.ts'
 import type { LearningProgress } from '../types/progress.ts'
 
 export function getChallengeThemeProgress(
-  challenge: Pick<Challenge, 'courseId'>,
+  challenge: Pick<Challenge, 'courseId' | 'lessonIds'>,
   courses: Course[],
   completedLessons: LearningProgress['completedLessons'],
 ) {
@@ -11,11 +11,19 @@ export function getChallengeThemeProgress(
   const themeCourses = course ? courses.filter(entry => entry.theme === course.theme) : []
   const lessonIds = [...new Set(themeCourses.flatMap(entry => entry.lessonIds))]
   const completed = lessonIds.filter(id => Object.hasOwn(completedLessons, id)).length
+  const requiredLessonIds = [...new Set(challenge.lessonIds)]
+  const validPrerequisites = requiredLessonIds.length > 0 && requiredLessonIds.every(id => course?.lessonIds.includes(id))
+  const missingLessonIds = requiredLessonIds.filter(id => !Object.hasOwn(completedLessons, id))
+  const minimumCompleted = Math.min(2, lessonIds.length)
   return {
     theme: course?.theme,
     courseIds: themeCourses.map(entry => entry.id),
     completed,
     total: lessonIds.length,
-    unlocked: lessonIds.length > 0 && completed === lessonIds.length,
+    requiredCompleted: requiredLessonIds.length - missingLessonIds.length,
+    requiredTotal: requiredLessonIds.length,
+    missingLessonIds,
+    minimumCompleted,
+    unlocked: validPrerequisites && minimumCompleted > 0 && completed >= minimumCompleted && missingLessonIds.length === 0,
   }
 }

@@ -13,6 +13,8 @@ function Dashboard() {
   const course = catalogCourses.find(course => course.id === activeCourseId)!
   const plan = planLearning(course, progress)
   const stats = learningStats(progress)
+  const consolidateFirst = plan.pendingCardIds.length > 0
+  const reviewFirst = !consolidateFirst && stats.due > 0
   const today = localDay(new Date())
   const discoveredToday = Object.values(progress.completedLessons).filter(at => localDay(new Date(at)) === today).length
   const suggestions = getRelearningSuggestions(progress)
@@ -25,9 +27,9 @@ function Dashboard() {
       <img className="memo-learning" src={`${import.meta.env.BASE_URL}memo/learning.webp`} alt="Mémo apprend avec son livre ouvert" width="300" height="250" />
     </div>
     <section className="dashboard-session" aria-labelledby="today-title">
-      <div><p className="lesson-category">Prochaine leçon conseillée · {course.theme}</p><h2 id="today-title">{plan.lesson?.title ?? 'Un chemin parcouru.'}</h2><p>{plan.lesson ? `${plan.lesson.estimatedMinutes} min · ${plan.lesson.cardIds.length} nouvelles cartes · ${course.title}` : 'Ton parcours est terminé. Tes cartes continuent de revenir aux bonnes échéances.'}</p>
-        {(stats.due > 0 || plan.pendingCardIds.length > 0) && <p className="dashboard-note">Mémo te conseille de consolider tes cartes d’abord. La découverte reste accessible.</p>}
-      </div><a className="dashboard-cta" href={appHref(plan.lesson ? '/today?start=lesson' : '/courses')}>{plan.lesson ? 'Découvrir cette leçon' : 'Explorer les parcours'} <span aria-hidden="true">↗</span></a>
+      <div><p className="lesson-category">{consolidateFirst ? 'Tes nouvelles cartes · tous les parcours' : reviewFirst ? 'Tes révisions · tous les parcours' : `Prochaine leçon conseillée · ${course.theme}`}</p><h2 id="today-title">{consolidateFirst ? 'Consolide ta dernière découverte.' : reviewFirst ? 'Un petit rappel avant de continuer.' : plan.lesson?.title ?? 'Un chemin parcouru.'}</h2><p>{consolidateFirst ? `${plan.pendingCardIds.length} cartes de leçons terminées à découvrir, puis les révisions dues.` : reviewFirst ? `${stats.due} cartes dues, par lots de cinq. Tu choisis quand t’arrêter.` : plan.lesson ? `${plan.lesson.estimatedMinutes} min · ${plan.lesson.cardIds.length} nouvelles cartes · ${course.title}` : 'Ton parcours est terminé. Tes cartes continuent de revenir aux bonnes échéances.'}</p>
+        {(consolidateFirst || reviewFirst) && <p className="dashboard-note">Mémo te conseille tes cartes d’abord. {plan.lesson ? <a className="text-link" href={appHref('/today?start=lesson')}>Découvrir plutôt « {plan.lesson.title} » →</a> : <a className="text-link" href={appHref('/courses')}>Explorer un autre parcours →</a>}</p>}
+      </div><a className="dashboard-cta" href={appHref(consolidateFirst ? '/today?start=cards' : reviewFirst ? '/reviews' : plan.lesson ? '/today?start=lesson' : '/courses')}>{consolidateFirst ? 'Consolider mes cartes' : reviewFirst ? 'Réviser mes cartes' : plan.lesson ? 'Découvrir cette leçon' : 'Explorer les parcours'} <span aria-hidden="true">↗</span></a>
     </section>
     <section className="stats-strip" aria-label="Ton apprentissage">
       <div><strong>{stats.completed}</strong><span>{stats.completed === 1 ? 'leçon terminée' : 'leçons terminées'}</span></div><div><strong>{stats.learned}</strong><span>{stats.learned === 1 ? 'carte découverte' : 'cartes découvertes'}</span></div><div><strong>{stats.due}</strong><span>{stats.due === 1 ? 'carte due' : 'cartes dues'}</span></div>

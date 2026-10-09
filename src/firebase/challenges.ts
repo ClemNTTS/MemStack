@@ -3,6 +3,7 @@ import { acknowledgeChallengeAttempt, decodeChallengeAttempt, matchesAttemptSubm
 import type { ChallengeAttempt } from '../types/challenge'
 import { getFirebaseServices } from './client'
 import { challenges } from '../data/challenges'
+import { reserveWrite } from './writeBudget'
 
 function requireAccount(uid: string) {
   const services = getFirebaseServices()
@@ -49,6 +50,7 @@ export async function submitChallengeAttempt(uid: string, id: string, challengeI
         const attempt = decodeServerAttempt(existing.id, existing.data())
         if (!matchesAttemptSubmission(attempt, challengeId, challengeVersion, answer)) throw new Error('Tentative déjà utilisée')
       } else {
+        await reserveWrite(transaction, db, uid, 'attempts', id)
         transaction.set(ref, { version: 2, challengeId, challengeVersion, ...form, submittedAt: serverTimestamp(), outcome: '' })
       }
     })

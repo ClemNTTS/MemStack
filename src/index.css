@@ -825,6 +825,10 @@ a.dashboard-cta:hover { background: #514064; text-decoration: none; }
 .section-heading { margin: 3rem 0 1.25rem; }
 .dashboard-chip, .badge-status { padding: .4rem .75rem; border-radius: 2rem; font-size: .75rem; background: #ebe3f3; color: #6c557f; }
 .dashboard-note { font-size: .8rem; color: #786e82; }
+.reports-list { display: grid; gap: 1.25rem; margin-top: 1.5rem; }
+.reports-list article { min-width: 0; overflow-wrap: anywhere; }
+.reports-list details { margin-block: 1rem; }
+.reports-list summary { cursor: pointer; font-weight: 600; }
 .course-overview { color: #6c557f; font-size: .875rem; margin-bottom: 1rem; }
 .course-overview progress { width: 35%; height: 6px; appearance: none; border: 0; border-radius: 1rem; overflow: hidden; background: #e5ddeb; }
 .course-overview progress::-webkit-progress-bar { background: #e5ddeb; }

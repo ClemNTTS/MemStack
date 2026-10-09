@@ -1,7 +1,7 @@
 import { before, after, test } from 'node:test'
 import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
-import { createAccountLifecycle } from '../../functions/src/accountLifecycle.mjs'
+import { createAccountLifecycle, reserveAccountExport } from '../../functions/src/accountLifecycle.mjs'
 
 const require = createRequire(new URL('../../functions/package.json', import.meta.url))
 const { initializeApp, deleteApp } = require('firebase-admin/app')
@@ -31,7 +31,7 @@ test('own export and confirmed deletion leave other accounts and global quotas u
   const handlers = createAccountLifecycle({ db, auth: { getUser: async target => { assert.equal(target, uid); return { email: 'test@example.invalid', metadata: { creationTime: 'now', lastSignInTime: 'now' } } }, deleteUser: async target => { deleted.push(target) } } })
   await assert.rejects(handlers.deleteAccountData({ ...request(uid), data: { confirmation: 'SUPPRIMER', uid: other } }))
   const exported = await handlers.exportAccountData(request(uid))
-  assert.equal(exported.documents.length, 5)
+  assert.equal(exported.documents.length, 6)
   assert.equal(exported.accessAudit[0].actorUid, null)
   assert.equal(exported.accessAudit[0].targetUid, uid)
   await handlers.deleteAccountData({ ...request(uid), data: { confirmation: 'SUPPRIMER' } })
@@ -42,4 +42,15 @@ test('own export and confirmed deletion leave other accounts and global quotas u
   assert.equal((await db.doc('_challengeAccessAudit/lifecycle-test').get()).data().targetUid, null)
   assert.equal((await db.doc(`_accountLifecycle/${uid}`).get()).data().status, 'deleted')
   await assert.rejects(handlers.exportAccountData(request(uid)))
+})
+
+test('concurrent exports reserve once, cooldown cannot be reset by retries and deletion wins', async () => {
+  const uid = 'export-cooldown'
+  const now = 1800000000000
+  const results = await Promise.allSettled([reserveAccountExport(db, uid, now), reserveAccountExport(db, uid, now)])
+  assert.equal(results.filter(result => result.status === 'fulfilled').length, 1)
+  await assert.rejects(reserveAccountExport(db, uid, now + 899999), error => error.code === 'resource-exhausted')
+  await reserveAccountExport(db, uid, now + 900000)
+  await db.doc(`_accountLifecycle/${uid}`).set({ status: 'deleting' })
+  await assert.rejects(reserveAccountExport(db, uid, now + 1800000), error => error.code === 'failed-precondition')
 })

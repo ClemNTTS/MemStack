@@ -96,8 +96,10 @@ function ChallengeView({ challengeId }: { challengeId: string }) {
 
   if (!themeAccess?.unlocked) return <main className="dashboard challenge-page">
     <a className="text-link breadcrumb" href={appHref('/challenges')}>← Tous les défis</a>
-    <PageHeading eyebrow="Défi verrouillé" title={challenge.title} description={`Termine toutes les leçons de la thématique ${themeAccess?.theme ?? 'associée'} pour accéder à ce défi.`} />
-    <p role="status">{themeAccess?.completed ?? 0} / {themeAccess?.total ?? 0} leçons terminées.</p>
+    <PageHeading eyebrow="Prépare ton défi" title={challenge.title} description={`Termine les leçons utiles à ce défi et au moins ${themeAccess?.minimumCompleted ?? 2} leçons de la thématique ${themeAccess?.theme ?? 'associée'}. Tu n’as pas besoin de terminer toute la thématique.`} />
+    <p role="status">{themeAccess?.requiredCompleted ?? 0} / {themeAccess?.requiredTotal ?? 0} leçons utiles terminées · {Math.min(themeAccess?.completed ?? 0, themeAccess?.minimumCompleted ?? 2)} / {themeAccess?.minimumCompleted ?? 2} leçons minimum dans la thématique.</p>
+    {themeAccess && themeAccess.missingLessonIds.length > 0 && <section className="overview-panel" aria-label="Leçons à terminer"><h2>Les notions à découvrir</h2><ul>{themeAccess.missingLessonIds.map(id => <li key={id}>{catalogLessons.find(lesson => lesson.id === id)?.title ?? 'Leçon du parcours'}</li>)}</ul></section>}
+    {themeAccess && themeAccess.completed < themeAccess.minimumCompleted && <p>Découvre encore {themeAccess.minimumCompleted - themeAccess.completed} leçon{themeAccess.minimumCompleted - themeAccess.completed > 1 ? 's' : ''} de cette thématique pour poser les bases avant ta première tentative.</p>}
     <a className="dashboard-cta" href={appHref('/courses')}>Continuer les parcours →</a>
   </main>
 
@@ -113,7 +115,7 @@ function ChallengeView({ challengeId }: { challengeId: string }) {
         const completed = Object.hasOwn(progress.completedLessons, id)
         return <li key={id}><a href={appHref(completed ? `/lessons/${id}` : `/courses/${challenge.courseId}`)}>{lesson?.title ?? id}{completed ? ' · relire' : ' · voir le parcours'}</a></li>
       })}</ul>
-      <p className="dashboard-note">Tu as terminé la thématique. Ces repères restent disponibles pour relire les notions utiles.</p>
+      <p className="dashboard-note">Tu as terminé les prérequis de ce défi. Ces repères restent disponibles pour relire les notions utiles.</p>
     </section>
     {loading && <p role="status">Chargement de tes tentatives…</p>}
     {error && <div className="inline-error" role="alert"><p>{error}</p><button className="catalog-button secondary" type="button" disabled={saving} onClick={retry}>Réessayer</button></div>}

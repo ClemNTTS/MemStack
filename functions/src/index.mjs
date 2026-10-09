@@ -12,6 +12,7 @@ import { getAccessStatus, requireGoogle, updateMemberAccess, validateMemberAcces
 initializeApp()
 const db = getFirestore()
 const dossiers = JSON.parse(readFileSync(new URL('../catalog/challengeDossiers.json', import.meta.url), 'utf8')).challenges
+const courses = JSON.parse(readFileSync(new URL('../catalog/curriculum.json', import.meta.url), 'utf8')).courses
 const key = defineSecret('MISTRAL_API_KEY')
 const enabled = defineBoolean('CHALLENGE_AI_ENABLED', { default: false })
 const appCheck = defineBoolean('CHALLENGE_AI_REQUIRE_APP_CHECK', { default: true })
@@ -65,7 +66,7 @@ export const analyzeChallengeAttempt = onCall({ region: 'europe-west9', secrets:
     const ref = db.doc(`users/${uid}/challengeAnalyses/${attemptId}`)
     // Existing feedback stays readable even when new calls are disabled.
     const now = Date.now()
-    const claim = await claimAnalysis({ db, uid, attemptId, now, dossiers, timestamp: Timestamp.fromMillis(now), config: {
+    const claim = await claimAnalysis({ db, uid, attemptId, now, dossiers, courses, timestamp: Timestamp.fromMillis(now), config: {
       enabled: enabled.value(), invited: invited.value().split(',').map(value => value.trim()), model: model.value().trim(), hasKey: Boolean(key.value()),
       limits: { user: userLimit.value(), global: globalLimit.value(), tokens: tokenLimit.value() }
     } })

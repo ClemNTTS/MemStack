@@ -23,7 +23,15 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm ci --prefix functions
+      - run: npm ci --prefix tests/challenge-ai
+      - name: Install Java for authorization tests
+        run: sudo apt-get update && sudo apt-get install --yes openjdk-21-jre-headless
+      - run: npm run functions:build
       - run: npm test
+      - name: Check authorization and transactions before publication
+        run: npx --yes firebase-tools@15.32.1 emulators:exec --only firestore --project demo-memstack-challenge-ai "npm --prefix tests/challenge-ai run test:rules"
+        env:
+          CI: true
       - run: npm run build -- --base=/
         env:
           VITE_CHALLENGE_AI_ENABLED: ${{ vars.CHALLENGE_AI_ENABLED || 'false' }}

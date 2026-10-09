@@ -16,14 +16,26 @@ before(async () => {
 after(async () => { if (app) await deleteApp(app) })
 const now = Date.parse('2026-10-07T12:00:00Z')
 const day = '2026-10-07'
-const dossier = { id: 'docker-images-diagnostic', version: 2, rubricVersion: 1 }
+const dossier = { id: 'docker-images-diagnostic', version: 2, rubricVersion: 1, courseId: 'course', lessonIds: ['one'] }
+const courses = [{ id: 'course', theme: 'Tests', lessons: [{ id: 'one' }, { id: 'two' }, { id: 'three' }] }]
 const config = { enabled: true, invited: ['alice', 'bob'], model: 'version-pinned', hasKey: true, limits: { user: 5, global: 25, tokens: 400000 } }
-const args = (uid, attemptId, patch = {}) => ({ db, uid, attemptId, now, config, dossiers: [dossier], timestamp: Timestamp.fromMillis(now), ...patch })
+const args = (uid, attemptId, patch = {}) => ({ db, uid, attemptId, now, config, dossiers: [dossier], courses, timestamp: Timestamp.fromMillis(now), ...patch })
 async function seed(uid, id) {
+  await db.doc(`users/${uid}/lessons/one`).set({ completedAt: 'date' })
+  await db.doc(`users/${uid}/lessons/two`).set({ completedAt: 'date' })
   await db.doc(`users/${uid}/settings/challengeAccess`).set({ aiEnabled: true })
   await db.doc(`users/${uid}/challengeAttempts/${id}`).set({ version: 2, challengeVersion: 2, challengeId: dossier.id,
     observations: 'Image ancienne', actions: 'Reconstruire', answer: 'Image ancienne\n\nReconstruire', submittedAt: Timestamp.fromMillis(now) })
 }
+
+test('missing prerequisite rejects analysis without quota or result writes', async () => {
+  const id = `prerequisite-${Date.now()}`
+  await seed('prerequisite-user', id)
+  await db.doc('users/prerequisite-user/lessons/one').delete()
+  await assert.rejects(claimAnalysis(args('prerequisite-user', id, { config: { ...config, invited: ['prerequisite-user'] } })), error => error.code === 'failed-precondition')
+  assert.equal((await db.doc(`users/prerequisite-user/challengeAiUsage/${day}`).get()).exists, false)
+  assert.equal((await db.doc(`users/prerequisite-user/challengeAnalyses/${id}`).get()).exists, false)
+})
 
 test('concurrent calls for one attempt reserve once, then expiry never opens a second provider call', async () => {
   const id = `concurrent-${Date.now()}`

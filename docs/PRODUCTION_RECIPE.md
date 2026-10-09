@@ -26,3 +26,14 @@ Les cinq endpoints déployés refusent les requêtes anonymes sans attestation a
 La première CI a révélé une dépendance serveur manquante : les workflows installent maintenant le lockfile `functions` avant les tests. Un échec initial de synchronisation navigateur n’a pas été reproduit après rechargement ; aucun contournement de droits n’a été ajouté.
 
 La suppression complète n’a pas été exercée sur une identité Google de production : les deux comptes administrateurs réutilisables sont conservés. Une publication éditoriale réelle n’a pas été fabriquée pour la recette ; la preuve de déploiement d’une correction reste couverte par les tests du worker et nécessite une vraie proposition revue et fusionnée. La politique de conservation et l’évaluation fournisseur étendue restent à terminer avant ouverture publique.
+# Vérification locale des correctifs de l’audit — 9 octobre 2026
+
+Ce lot n’est pas encore déployé. Trois agents ont traité le déblocage, l’interface et la qualité/exploitation, avec relectures croisées des contrôles serveur.
+
+- Défis : prérequis du dossier et minimum de deux leçons dans la thématique, contrôlés dans le client et avant une nouvelle réservation serveur. Premier défi après deux à cinq leçons selon la thématique, sans devoir tout terminer.
+- Signalements : titres lisibles, versions repliées, pages de vingt ; recette émulateur de 41 documents à dates identiques, sans doublon ni omission.
+- Aujourd’hui : action principale vers les cartes à découvrir ou les révisions dues, découverte toujours accessible.
+- Protection : compteurs atomiques de 20 tentatives et 10 signalements par heure ; export réservé toutes les 15 minutes, y compris après échec.
+- Validation : 160 tests applicatifs, 18 tests de règles/transactions sur émulateur, builds frontend et Functions réussis. Navigateur local avec compte dédié : priorité des cartes, suggestion de défi avant quota, prérequis d’un défi verrouillé, titres et versions de signalements vérifiés. Aucune nouvelle tentative ou analyse fournisseur créée pendant cette recette.
+
+Le corpus de onze réponses synthétiques est disponible pour qualifier l’IA, mais aucune nouvelle mesure de fiabilité du modèle n’est annoncée. Les recettes de suppression d’une identité jetable en production, correction éditoriale réelle, mobile/accessibilité complète et retour arrière restent à réaliser. Voir `RELEASE_READINESS.md`. La publication doit coordonner Functions, règles et frontend ; les clients précédents ne réservent pas les nouveaux budgets d’écriture.

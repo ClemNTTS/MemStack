@@ -2,13 +2,14 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { claimAnalysis } from './claim.mjs'
 
-const dossier = { id: 'docker-images-diagnostic', version: 2, rubricVersion: 1 }
+const dossier = { id: 'docker-images-diagnostic', version: 2, rubricVersion: 1, courseId: 'course', lessonIds: ['one'] }
 const attempt = { version: 2, challengeVersion: 2, challengeId: dossier.id, observations: 'Constat', actions: 'Action', answer: 'Constat\n\nAction', submittedAt: { toMillis: () => 1 } }
+const courses = [{ id: 'course', theme: 'Tests', lessons: [{ id: 'one' }, { id: 'two' }, { id: 'three' }] }]
 const config = { enabled: true, invited: ['alice'], model: 'model-2601', hasKey: true, limits: { user: 5, global: 25, tokens: 400000 } }
 const now = Date.UTC(2026, 9, 7)
 
 function fakeDb() {
-  const data = new Map([['users/alice/settings/challengeAccess', { aiEnabled: true }], ['users/alice/challengeAttempts/attempt-1', attempt], ['users/alice/challengeAttempts/attempt-2', attempt]])
+  const data = new Map([['users/alice/lessons/one', { completedAt: 'date' }], ['users/alice/lessons/two', { completedAt: 'date' }], ['users/alice/settings/challengeAccess', { aiEnabled: true }], ['users/alice/challengeAttempts/attempt-1', attempt], ['users/alice/challengeAttempts/attempt-2', attempt]])
   let queue = Promise.resolve()
   return {
     data,
@@ -31,7 +32,26 @@ function fakeDb() {
     }
   }
 }
-const args = db => ({ db, uid: 'alice', attemptId: 'attempt-1', now, config, dossiers: [dossier], timestamp: 1 })
+const args = db => ({ db, uid: 'alice', attemptId: 'attempt-1', now, config, dossiers: [dossier], courses, timestamp: 1 })
+
+test('server prerequisites block direct analysis calls before quota reservation', async () => {
+  for (const missing of ['one', 'two']) {
+    const db = fakeDb()
+    db.data.delete(`users/alice/lessons/${missing}`)
+    if (missing === 'one') db.data.set('users/alice/lessons/three', { completedAt: 'date' })
+    await assert.rejects(claimAnalysis(args(db)), error => error.code === 'failed-precondition')
+    assert.equal(db.data.has('_challengeAiUsage/2026-10-07'), false)
+    assert.equal(db.data.has('users/alice/challengeAnalyses/attempt-1'), false)
+  }
+})
+
+test('missing course configuration fails closed and unrelated completions do not count', async () => {
+  const db = fakeDb()
+  await assert.rejects(claimAnalysis({ ...args(db), courses: [] }), error => error.code === 'failed-precondition')
+  db.data.delete('users/alice/lessons/two')
+  db.data.set('users/alice/lessons/unrelated', { completedAt: 'date' })
+  await assert.rejects(claimAnalysis(args(db)), error => error.code === 'failed-precondition')
+})
 
 test('document invitation overrides env and deletion tombstone blocks cached results', async () => {
   const db = fakeDb()

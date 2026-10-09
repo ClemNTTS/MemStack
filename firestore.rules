@@ -16,6 +16,34 @@ service cloud.firestore {
     function isoDate(value) {
       return value is string && value.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}[.][0-9]{3}Z$');
     }
+    function writeBudget(uid, kind, documentId) {
+      let budget = getAfter(/databases/$(database)/documents/users/$(uid)/writeBudgets/$(kind)).data;
+      return budget.documentId == documentId;
+    }
+    match /users/{uid}/writeBudgets/{kind} {
+      function validBudget() {
+        let data = request.resource.data;
+        let target = kind == 'attempts' ? 'challengeAttempts' : 'contentReports';
+        let maximum = kind == 'attempts' ? 20 : 10;
+        return kind in ['attempts', 'reports']
+          && data.keys().hasAll(['count', 'windowStartedAt', 'documentId'])
+          && data.keys().hasOnly(['count', 'windowStartedAt', 'documentId'])
+          && data.count is int && data.count >= 1 && data.count <= maximum
+          && data.windowStartedAt is timestamp
+          && data.documentId is string && data.documentId.matches('^[a-zA-Z0-9-]{1,128}$')
+          && !exists(/databases/$(database)/documents/users/$(uid)/$(target)/$(data.documentId))
+          && existsAfter(/databases/$(database)/documents/users/$(uid)/$(target)/$(data.documentId));
+      }
+      allow read: if owner(uid);
+      allow create: if owner(uid) && validBudget()
+        && request.resource.data.count == 1 && request.resource.data.windowStartedAt == request.time;
+      allow update: if owner(uid) && validBudget()
+        && ((request.time < resource.data.windowStartedAt + duration.value(1, 'h')
+          && request.resource.data.windowStartedAt == resource.data.windowStartedAt
+          && request.resource.data.count == resource.data.count + 1)
+        || (request.time >= resource.data.windowStartedAt + duration.value(1, 'h')
+          && request.resource.data.windowStartedAt == request.time && request.resource.data.count == 1));
+    }
     match /users/{uid}/challengeAttempts/{attemptId} {
       function validLegacyAttempt(data) {
         return data.keys().hasAll(['version', 'challengeVersion', 'challengeId', 'answer', 'submittedAt', 'outcome'])
@@ -47,6 +75,7 @@ service cloud.firestore {
       }
       allow read: if challengeAccess(uid);
       allow create: if challengeAccess(uid)
+        && writeBudget(uid, 'attempts', attemptId)
         && attemptId.matches('^[a-zA-Z0-9-]{1,128}$')
         && validAttempt(request.resource.data)
         && request.resource.data.submittedAt == request.time
@@ -88,8 +117,9 @@ service cloud.firestore {
           && analysis.model == data.model;
       }
       allow read: if owner(uid);
-      allow create: if owner(uid) && reportId.matches('^[a-zA-Z0-9-]{1,128}$') && validExamReport(request.resource.data);
+      allow create: if owner(uid) && writeBudget(uid, 'reports', reportId) && reportId.matches('^[a-zA-Z0-9-]{1,128}$') && validExamReport(request.resource.data);
       allow create: if owner(uid)
+        && writeBudget(uid, 'reports', reportId)
         && reportId.matches('^[a-zA-Z0-9-]{1,128}$')
         && request.resource.data.keys().hasAll(['version', 'lessonId', 'cardId', 'kind', 'comment', 'contentSnapshot', 'contentVersion', 'createdAt', 'status'])
         && request.resource.data.keys().hasOnly(['version', 'lessonId', 'cardId', 'kind', 'comment', 'contentSnapshot', 'contentVersion', 'createdAt', 'status'])

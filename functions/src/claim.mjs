@@ -2,7 +2,7 @@ import { AnalysisError, PROMPT_VERSION, RESERVED_TOKENS, checkQuota, existingDec
 import { isInvited } from './accessService.mjs'
 
 // Dependency injection lets tests exercise the same transactional path as production.
-export async function claimAnalysis({ db, uid, attemptId, now, config, dossiers, timestamp }) {
+export async function claimAnalysis({ db, uid, attemptId, now, config, dossiers, courses, timestamp }) {
   const ref = db.doc(`users/${uid}/challengeAnalyses/${attemptId}`)
   const day = new Date(now).toISOString().slice(0, 10)
   const userQuota = db.doc(`users/${uid}/challengeAiUsage/${day}`)
@@ -25,6 +25,13 @@ export async function claimAnalysis({ db, uid, attemptId, now, config, dossiers,
     const attemptSnapshot = await transaction.get(db.doc(`users/${uid}/challengeAttempts/${attemptId}`))
     const attempt = attemptSnapshot.data()
     const dossier = validateAttempt(attempt, dossiers)
+    const course = courses?.find(entry => entry.id === dossier.courseId)
+    const themeLessonIds = [...new Set((courses ?? []).filter(entry => entry.theme === course?.theme).flatMap(entry => entry.lessons.map(lesson => lesson.id)))]
+    const requiredLessonIds = [...new Set(dossier.lessonIds ?? [])]
+    if (!course || !requiredLessonIds.length || !requiredLessonIds.every(id => course.lessons.some(lesson => lesson.id === id))) throw new AnalysisError('failed-precondition', 'Les prérequis du défi ne sont pas configurés.')
+    const lessonSnapshots = await Promise.all(themeLessonIds.map(id => transaction.get(db.doc(`users/${uid}/lessons/${id}`))))
+    const completed = new Set(themeLessonIds.filter((id, index) => lessonSnapshots[index].exists && typeof lessonSnapshots[index].data()?.completedAt === 'string'))
+    if (completed.size < Math.min(2, themeLessonIds.length) || requiredLessonIds.some(id => !completed.has(id))) throw new AnalysisError('failed-precondition', 'Termine les leçons prérequises et au moins deux leçons de cette thématique avant l’analyse.')
     const [userSnapshot, globalSnapshot] = await Promise.all([transaction.get(userQuota), transaction.get(globalQuota)])
     const user = userSnapshot.data() ?? {}
     const global = globalSnapshot.data() ?? {}
