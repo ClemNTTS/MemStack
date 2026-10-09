@@ -30,7 +30,7 @@ test('provider HTTP, malformed and truncated replies fail with no automatic seco
 test('valid personalized feedback is returned without retaining the provider envelope', async () => {
   const message = 'Le constat est juste, mais reconstruis l’image avant de recréer le conteneur.'
   const result = await callMistral({ apiKey: 'fake', model: 'test', dossier, attempt, fetchImpl: async () => ({ ok: true,
-    text: async () => JSON.stringify({ choices: [{ finish_reason: 'stop', message: { content: JSON.stringify({ message }) } }] }),
+    text: async () => JSON.stringify({ choices: [{ finish_reason: 'stop', message: { content: JSON.stringify({ message, verdict: 'retry' }) } }] }),
   }) })
-  assert.equal(result, message)
+  assert.deepEqual(result, { message, verdict: 'retry' })
 })

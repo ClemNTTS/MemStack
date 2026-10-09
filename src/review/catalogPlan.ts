@@ -1,5 +1,6 @@
 import { catalogCards, catalogLessons } from '../data/catalog/index.ts'
 import type { Course } from '../types/course.ts'
+import type { Lesson } from '../types/lesson.ts'
 import type { LearningProgress } from '../types/progress.ts'
 import { planCourse } from './coursePlan.ts'
 import { createDailyQueue, localDay } from './dailyQueue.ts'
@@ -25,6 +26,11 @@ export function planLearning(course: Course, progress: LearningProgress, now = n
 
 export function createLearningQueue(progress: LearningProgress, mode: LearningMode = 'today', now = new Date()) {
   return createDailyQueue(catalogCards, mode === 'today' ? pendingLearningCards(progress) : [], progress, now)
+}
+
+export function createCompletedLessonQueue(lesson: Lesson, progress: LearningProgress) {
+  if (!Object.hasOwn(progress.completedLessons, lesson.id)) return []
+  return createDailyQueue(catalogCards, lesson.cardIds, progress).filter(item => item.kind === 'new')
 }
 
 export function getRelearningSuggestions(progress: LearningProgress, now = new Date()) {

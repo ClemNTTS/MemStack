@@ -16,3 +16,15 @@ test('only complete valid analysis messages become visible feedback', () => {
   assert.ok(decodeChallengeAnalysis({ ...completed, status: 'needs_review', message: 'Une vérification est nécessaire.' }))
   assert.ok(decodeChallengeAnalysis({ ...completed, status: 'needs_review', message: '' }))
 })
+
+test('only completed server analyses with an explicit supported verdict validate an exam', () => {
+  for (const verdict of ['validated', 'retry']) {
+    assert.equal(decodeChallengeAnalysis({ ...completed, promptVersion: 'challenge-feedback-v3', verdict })?.verdict, verdict)
+  }
+  assert.equal(decodeChallengeAnalysis(completed)?.verdict, undefined)
+  for (const verdict of ['understood', '', true, null]) {
+    assert.equal(decodeChallengeAnalysis({ ...completed, verdict }), null)
+  }
+  assert.equal(decodeChallengeAnalysis({ ...completed, promptVersion: 'challenge-feedback-v3' }), null)
+  assert.equal(decodeChallengeAnalysis({ ...completed, status: 'processing', message: '', verdict: 'validated' }), null)
+})

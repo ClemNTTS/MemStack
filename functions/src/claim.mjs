@@ -7,6 +7,8 @@ export async function claimAnalysis({ db, uid, attemptId, now, config, dossiers,
   const userQuota = db.doc(`users/${uid}/challengeAiUsage/${day}`)
   const globalQuota = db.doc(`_challengeAiUsage/${day}`)
   return db.runTransaction(async transaction => {
+    const access = await transaction.get(db.doc(`users/${uid}/settings/challengeAccess`))
+    if (access.data()?.aiEnabled !== true) throw new AnalysisError('permission-denied', 'L’accès à l’option IA est requis.')
     const saved = await transaction.get(ref)
     const existing = saved.exists ? saved.data() : null
     const decision = existingDecision(existing, now)

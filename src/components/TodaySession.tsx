@@ -7,7 +7,7 @@ import type { Lesson } from '../types/lesson'
 import type { LearningProgress, ReviewKind } from '../types/progress'
 import { useProgress } from '../progress/ProgressProvider'
 import type { SessionCard } from '../review/dailyQueue'
-import { createLearningQueue, planLearning } from '../review/catalogPlan'
+import { createCompletedLessonQueue, createLearningQueue, planLearning } from '../review/catalogPlan'
 import type { LearningMode } from '../review/catalogPlan'
 import { scheduleReview } from '../review/schedule'
 import CardSession from './CardSession'
@@ -103,7 +103,15 @@ function LearningSession({ course, lessons, cards, mode = 'today', initialAction
         // Completed lessons are never resumed from the tab cache.
       }
       setJustCompletedLessonTitle(lesson.title)
-      returnToChoice()
+      const nextQueue = createCompletedLessonQueue(lesson, next)
+      if (nextQueue.length) {
+        setSessionRoute('/today?start=cards')
+        setLesson(undefined)
+        setQueue(nextQueue)
+        setBatch(value => value + 1)
+      } else {
+        returnToChoice()
+      }
     }
   }
 

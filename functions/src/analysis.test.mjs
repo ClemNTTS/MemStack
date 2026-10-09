@@ -48,7 +48,7 @@ test('prompt separates response data and exports no user identity or internal le
 test('provider response is bounded and malformed/truncated/failed results are rejected', async () => {
   const response = content => ({ ok: true, text: async () => JSON.stringify({ choices: [{ finish_reason: 'stop', message: { content } }] }) })
   const args = { apiKey: 'test', model: 'model-version', dossier, attempt }
-  assert.equal(await callMistral({ ...args, fetchImpl: async () => response('{"message":"Points justes et omissions"}') }), 'Points justes et omissions')
+  assert.deepEqual(await callMistral({ ...args, fetchImpl: async () => response('{"message":"Points justes et omissions","verdict":"retry"}') }), { message: 'Points justes et omissions', verdict: 'retry' })
   for (const content of ['not json', '{}', '{"message":""}', JSON.stringify({ message: 'a'.repeat(10001) })]) await assert.rejects(callMistral({ ...args, fetchImpl: async () => response(content) }))
   await assert.rejects(callMistral({ ...args, fetchImpl: async () => ({ ok: false }) }))
   await assert.rejects(callMistral({ ...args, fetchImpl: async () => { throw new Error('timeout') } }))
@@ -59,7 +59,19 @@ test('provider enforces a string message with a strict output schema', async () 
     const format = JSON.parse(options.body).response_format
     assert.equal(format.type, 'json_schema')
     assert.equal(format.json_schema.strict, true)
-    assert.deepEqual(format.json_schema.schema, { type: 'object', properties: { message: { type: 'string' } }, required: ['message'], additionalProperties: false })
-    return { ok: true, text: async () => JSON.stringify({ choices: [{ finish_reason: 'stop', message: { content: '{"message":"Retour valide"}' } }] }) }
+    assert.deepEqual(format.json_schema.schema, { type: 'object', properties: { message: { type: 'string' }, verdict: { type: 'string', enum: ['validated', 'retry'] } }, required: ['message', 'verdict'], additionalProperties: false })
+    return { ok: true, text: async () => JSON.stringify({ choices: [{ finish_reason: 'stop', message: { content: '{"message":"Retour valide","verdict":"validated"}' } }] }) }
   } })
+})
+
+test('missing, forged and unsupported verdicts never produce completed feedback', async () => {
+  for (const output of [{ message: 'Bien' }, { message: 'Bien', verdict: 'understood' }, { message: 'Bien', verdict: true }, { message: 'Bien', verdict: 'validated', score: 10 }]) {
+    await assert.rejects(callMistral({ apiKey: 'test', model: 'model-version', dossier, attempt, fetchImpl: async () => ({ ok: true,
+      text: async () => JSON.stringify({ choices: [{ finish_reason: 'stop', message: { content: JSON.stringify(output) } }] }),
+    }) }))
+  }
+  assert.equal(publicAnalysis({ status: 'processing', verdict: 'validated' }).verdict, undefined)
+  assert.equal(publicAnalysis({ status: 'completed', message: 'Historique' }).verdict, undefined)
+  assert.equal(publicAnalysis({ status: 'completed', verdict: 'retry' }).verdict, 'retry')
+  assert.throws(() => validateAttemptId({ attemptId: 'exam', verdict: 'validated' }))
 })

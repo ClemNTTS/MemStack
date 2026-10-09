@@ -34,8 +34,8 @@ export const analyzeChallengeAttempt = onCall({ region: 'europe-west9', secrets:
     if (!claim.start) return publicAnalysis(claim.result)
     let result
     try {
-      const message = await callMistral({ apiKey: key.value(), model: claim.result.model, dossier: claim.dossier, attempt: claim.attempt })
-      result = { status: 'completed', message, completedAt: Timestamp.now() }
+      const feedback = await callMistral({ apiKey: key.value(), model: claim.result.model, dossier: claim.dossier, attempt: claim.attempt })
+      result = { status: 'completed', ...feedback, completedAt: Timestamp.now() }
     } catch {
       result = { status: 'needs_review', message: '' }
     }

@@ -1,6 +1,6 @@
 import { getApp } from 'firebase/app'
 import { connectFunctionsEmulator, getFunctions, httpsCallable } from 'firebase/functions'
-import { doc, getDocFromServer } from 'firebase/firestore'
+import { collection, doc, getDocFromServer, getDocsFromServer } from 'firebase/firestore'
 import { getFirebaseServices } from './client'
 import { decodeChallengeAnalysis } from '../challenges/analysisModel'
 import type { ChallengeAnalysis } from '../types/challenge'
@@ -22,6 +22,19 @@ export async function readChallengeAnalysis(uid: string, attemptId: string): Pro
   const analysis = decodeChallengeAnalysis(snapshot.data())
   if (!analysis) throw new Error('Retour invalide')
   return analysis
+}
+
+export async function readChallengeAnalyses(uid: string): Promise<Record<string, ChallengeAnalysis>> {
+  const { db } = requireAccount(uid)
+  const snapshot = await getDocsFromServer(collection(db, 'users', uid, 'challengeAnalyses'))
+  requireAccount(uid)
+  const analyses: Record<string, ChallengeAnalysis> = Object.create(null)
+  for (const entry of snapshot.docs) {
+    const analysis = decodeChallengeAnalysis(entry.data())
+    if (!analysis) throw new Error('Retour invalide')
+    analyses[entry.id] = analysis
+  }
+  return analyses
 }
 
 export async function analyzeChallengeAttempt(uid: string, attemptId: string): Promise<ChallengeAnalysis> {

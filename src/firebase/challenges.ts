@@ -1,6 +1,6 @@
 import { collection, doc, getDocFromServer, getDocsFromServer, runTransaction, serverTimestamp, Timestamp } from 'firebase/firestore'
-import { acknowledgeChallengeAttempt, decodeChallengeAttempt, isChallengeOutcome, matchesAttemptSubmission, validateChallengeForm } from '../challenges/attemptModel'
-import type { ChallengeAttempt, ChallengeOutcome } from '../types/challenge'
+import { acknowledgeChallengeAttempt, decodeChallengeAttempt, matchesAttemptSubmission, validateChallengeForm } from '../challenges/attemptModel'
+import type { ChallengeAttempt } from '../types/challenge'
 import { getFirebaseServices } from './client'
 import { challenges } from '../data/challenges'
 
@@ -53,31 +53,4 @@ export async function submitChallengeAttempt(uid: string, id: string, challengeI
       }
     })
   }, () => readAttempt(uid, id), challengeId, challengeVersion, answer)
-}
-
-export async function rateChallengeAttempt(uid: string, id: string, outcome: Exclude<ChallengeOutcome, ''>): Promise<ChallengeAttempt> {
-  if (!/^[a-zA-Z0-9-]{1,128}$/.test(id) || !isChallengeOutcome(outcome) || !['retry', 'understood'].includes(outcome)) throw new Error('Évaluation invalide')
-  const { db } = requireAccount(uid)
-  const ref = doc(db, 'users', uid, 'challengeAttempts', id)
-  try {
-    await runTransaction(db, async transaction => {
-      requireAccount(uid)
-      const snapshot = await transaction.get(ref)
-      requireAccount(uid)
-      if (!snapshot.exists()) throw new Error('Tentative absente')
-      const existing = decodeServerAttempt(snapshot.id, snapshot.data())
-      if (existing.outcome !== '') {
-        if (existing.outcome !== outcome) throw new Error('Autoévaluation déjà enregistrée')
-        return
-      }
-      transaction.update(ref, { outcome })
-    })
-  } catch (error) {
-    const existing = await readAttempt(uid, id)
-    if (!existing || existing.outcome !== outcome) throw error
-    return existing
-  }
-  const attempt = await readAttempt(uid, id)
-  if (!attempt || attempt.outcome !== outcome) throw new Error('Évaluation non confirmée')
-  return attempt
 }

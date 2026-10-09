@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { analyzeChallengeAttempt, challengeAiEnabled, readChallengeAnalysis } from '../firebase/challengeAnalyses'
-import type { ChallengeAnalysis, ChallengeAttempt } from '../types/challenge'
+import type { Challenge, ChallengeAnalysis, ChallengeAttempt } from '../types/challenge'
+import { catalogLessons } from '../data/catalog'
+import { appHref } from '../navigation/browser'
+import { needsChallengeRevision } from './remediation'
 import LessonText from '../components/LessonText'
 
-export default function ChallengeFeedback({ uid, attempt, autoStart, online }: { uid: string, attempt: ChallengeAttempt, autoStart: boolean, online: boolean }) {
+export default function ChallengeFeedback({ uid, attempt, challenge, onRetry, canRetry, autoStart, online }: { uid: string, attempt: ChallengeAttempt, challenge: Challenge, onRetry: () => void, canRetry: boolean, autoStart: boolean, online: boolean }) {
   const [analysis, setAnalysis] = useState<ChallengeAnalysis | null>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
@@ -83,9 +86,9 @@ export default function ChallengeFeedback({ uid, attempt, autoStart, online }: {
     {busy && <p role="status">Chargement du retour…</p>}
     {analysis?.status === 'processing' && <p role="status">Mémo analyse ton raisonnement… Tu peux déjà consulter la correction.</p>}
     {pollingPaused && analysis?.status === 'processing' && <p role="status">Le suivi automatique est en pause. Utilise « Vérifier l’analyse » pour retrouver son résultat.</p>}
-    {analysis?.status === 'completed' && <><LessonText text={analysis.message} /><p className="dashboard-note">Retour généré par IA : compare-le à la correction de référence. Relire ce retour ne lance aucun appel.</p></>}
+    {analysis?.status === 'completed' && <><p role="status">{analysis.verdict === 'validated' ? 'Examen validé par l’IA.' : analysis.verdict === 'retry' ? 'Examen à retravailler : fais une nouvelle tentative après avoir étudié la correction.' : 'Retour historique : cette analyse ne comporte aucune validation d’examen.'}</p><LessonText text={analysis.message} /><p className="dashboard-note">Verdict et retour générés par IA : compare-les à la correction de référence. Relire ce retour ne lance aucun appel.</p></>}
     {analysis?.status === 'failed' && <p role="alert">L’analyse a échoué. Tu peux réessayer.</p>}
-    {analysis?.status === 'needs_review' && <p role="status">L’analyse doit être vérifiée avant de relancer un appel. Consulte la correction de référence.</p>}
+    {analysis?.status === 'needs_review' && <p role="status">L’analyse est indisponible pour cette tentative. L’examen n’est pas validé ; tu peux consulter la correction de référence.</p>}
     {error && <p role="alert">{error}</p>}
     {!challengeAiEnabled && !analysis && <p>L’analyse IA est désactivée sur cette version. Ta réponse est conservée pour comparer avec la correction.</p>}
     {attempt.version === 1 && <p>Cette ancienne tentative conserve sa correction d’origine et ne lance pas d’analyse IA.</p>}
@@ -93,6 +96,19 @@ export default function ChallengeFeedback({ uid, attempt, autoStart, online }: {
       <p className="dashboard-note">En lançant l’analyse, ton raisonnement et le dossier seront transmis à Mistral pour produire un retour pédagogique.</p>
       <button className="catalog-button secondary" type="button" disabled={busy || !online} onClick={() => { void request(generation.current) }}>{analysis?.status === 'processing' ? 'Vérifier l’analyse' : 'Analyser ma réponse'}</button>
     </>}
+    {needsChallengeRevision(challenge, attempt, analysis) && <section className="challenge-revision" aria-labelledby="challenge-revision-title">
+      <h3 id="challenge-revision-title">Préparer ta prochaine tentative</h3>
+      <p>Appuie-toi sur le retour IA ci-dessus pour repérer tes erreurs. Voici les notions et les leçons associées à ce défi.</p>
+      <h4>Les points à reprendre</h4>
+      <ul>{challenge.checkpoints.map(point => <li key={point}><LessonText text={point} /></li>)}</ul>
+      <h4>Relire les leçons utiles</h4>
+      <ul>{[...new Set(challenge.lessonIds)].map(id => {
+        const lesson = catalogLessons.find(entry => entry.id === id)
+        return lesson && <li key={id}><a className="text-link" href={appHref(`/lessons/${id}?challenge=${encodeURIComponent(challenge.id)}`)}>{lesson.title} · relire →</a></li>
+      })}</ul>
+      <p className="dashboard-note">La relecture ne modifie ni tes échéances de cartes ni ton verdict. Seule une nouvelle analyse IA évalue ta nouvelle réponse.</p>
+      <button className="catalog-button" type="button" disabled={!canRetry || !online} onClick={onRetry}>Refaire l’examen</button>
+    </section>}
     <p><a className="text-link" href="#challenge-reference-correction" onClick={event => {
       event.preventDefault()
       const correction = document.getElementById('challenge-reference-correction')

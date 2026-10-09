@@ -11,7 +11,12 @@ before(async () => {
     rules: await readFile(new URL('../../firestore.rules', import.meta.url), 'utf8'),
   } })
 })
-beforeEach(async () => env.clearFirestore())
+async function grantAccess() {
+  await env.withSecurityRulesDisabled(async context => {
+    await setDoc(doc(context.firestore(), 'users/alice/settings/challengeAccess'), { aiEnabled: true })
+  })
+}
+beforeEach(async () => { await env.clearFirestore(); await grantAccess() })
 after(async () => env?.cleanup())
 const db = uid => uid ? env.authenticatedContext(uid).firestore() : env.unauthenticatedContext().firestore()
 const path = 'users/alice/challengeAttempts/attempt-1'
@@ -23,6 +28,7 @@ const payload = version => ({ version, challengeId: 'docker-images-diagnostic', 
 test('both historical and structured attempts remain owner-only and immutable', async () => {
   for (const version of [1, 2]) {
     await env.clearFirestore()
+    await grantAccess()
     await assertFails(setDoc(doc(db(), path), payload(version)))
     await assertFails(setDoc(doc(db('bob'), path), payload(version)))
     await assertSucceeds(setDoc(doc(db('alice'), path), payload(version)))
@@ -31,7 +37,7 @@ test('both historical and structured attempts remain owner-only and immutable', 
     await assertFails(updateDoc(doc(db('alice'), path), { answer: 'Réécriture' }))
     await assertFails(updateDoc(doc(db('alice'), path), { submittedAt: serverTimestamp() }))
     await assertFails(deleteDoc(doc(db('alice'), path)))
-    await assertSucceeds(updateDoc(doc(db('alice'), path), { outcome: 'understood' }))
+    await assertFails(updateDoc(doc(db('alice'), path), { outcome: 'understood' }))
     await assertFails(updateDoc(doc(db('alice'), path), { outcome: 'retry' }))
   }
 })
@@ -69,4 +75,43 @@ test('clients cannot forge analysis results or read and change server quota coun
     await assertFails(getDoc(doc(db('alice'), counterPath)))
     await assertFails(setDoc(doc(db('alice'), counterPath), { used: 0 }))
   }
+})
+
+test('AI option access is server-owned and revoked access denies attempts and analyses', async () => {
+  const accessPath = 'users/alice/settings/challengeAccess'
+  await assertSucceeds(getDoc(doc(db('alice'), accessPath)))
+  await assertFails(getDoc(doc(db('bob'), accessPath)))
+  await assertFails(setDoc(doc(db('alice'), accessPath), { aiEnabled: true }))
+  await assertFails(updateDoc(doc(db('alice'), accessPath), { aiEnabled: false }))
+  await assertFails(deleteDoc(doc(db('alice'), accessPath)))
+  await assertSucceeds(setDoc(doc(db('alice'), path), payload(2)))
+  await env.withSecurityRulesDisabled(async context => {
+    await setDoc(doc(context.firestore(), 'users/alice/challengeAnalyses/attempt-1'), { status: 'completed' })
+    await setDoc(doc(context.firestore(), accessPath), { aiEnabled: false })
+  })
+  await assertFails(getDoc(doc(db('alice'), path)))
+  await assertFails(getDoc(doc(db('alice'), 'users/alice/challengeAnalyses/attempt-1')))
+  await assertFails(updateDoc(doc(db('alice'), path), { outcome: 'understood' }))
+  await assertFails(setDoc(doc(db('alice'), 'users/alice/challengeAttempts/attempt-2'), payload(2)))
+  await env.withSecurityRulesDisabled(async context => { await deleteDoc(doc(context.firestore(), accessPath)) })
+  await assertFails(setDoc(doc(db('alice'), 'users/alice/challengeAttempts/attempt-3'), payload(2)))
+})
+
+test('reviews and content reports remain available without the AI option', async () => {
+  await env.withSecurityRulesDisabled(async context => {
+    await deleteDoc(doc(context.firestore(), 'users/alice/settings/challengeAccess'))
+  })
+  const reviewPath = 'users/alice/reviews/free-review'
+  await assertSucceeds(setDoc(doc(db('alice'), reviewPath), {
+    cardId: 'docker-image-card', rating: 'recalled', reviewedAt: '2026-10-08T12:00:00.000Z', kind: 'review',
+  }))
+  await assertSucceeds(getDoc(doc(db('alice'), reviewPath)))
+  await assertFails(getDoc(doc(db('bob'), reviewPath)))
+  const reportPath = 'users/alice/contentReports/free-report'
+  await assertSucceeds(setDoc(doc(db('alice'), reportPath), {
+    version: 1, lessonId: 'docker-images', cardId: '', kind: 'unclear', comment: 'À clarifier',
+    contentSnapshot: 'Texte', contentVersion: 'a'.repeat(64), createdAt: serverTimestamp(), status: 'pending',
+  }))
+  await assertSucceeds(getDoc(doc(db('alice'), reportPath)))
+  await assertFails(getDoc(doc(db('bob'), reportPath)))
 })

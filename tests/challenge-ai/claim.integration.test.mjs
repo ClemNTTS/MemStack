@@ -20,6 +20,7 @@ const dossier = { id: 'docker-images-diagnostic', version: 2, rubricVersion: 1 }
 const config = { enabled: true, invited: ['alice', 'bob'], model: 'version-pinned', hasKey: true, limits: { user: 5, global: 25, tokens: 400000 } }
 const args = (uid, attemptId, patch = {}) => ({ db, uid, attemptId, now, config, dossiers: [dossier], timestamp: Timestamp.fromMillis(now), ...patch })
 async function seed(uid, id) {
+  await db.doc(`users/${uid}/settings/challengeAccess`).set({ aiEnabled: true })
   await db.doc(`users/${uid}/challengeAttempts/${id}`).set({ version: 2, challengeVersion: 2, challengeId: dossier.id,
     observations: 'Image ancienne', actions: 'Reconstruire', answer: 'Image ancienne\n\nReconstruire', submittedAt: Timestamp.fromMillis(now) })
 }
@@ -52,6 +53,7 @@ test('concurrent different users cannot exceed the last global slot', async () =
 test('owner cannot claim another account attempt or consume quota when not invited', async () => {
   const id = `owner-${Date.now()}`
   await seed('alice', id)
+  await db.doc('users/bob/settings/challengeAccess').set({ aiEnabled: true })
   await assert.rejects(claimAnalysis(args('bob', id)), error => error.code === 'failed-precondition')
   await assert.rejects(claimAnalysis(args('eve', id)), error => error.code === 'permission-denied')
   assert.equal((await db.doc(`users/bob/challengeAnalyses/${id}`).get()).exists, false)

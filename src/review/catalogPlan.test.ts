@@ -5,7 +5,7 @@ import { cards as legacyCards } from '../data/cards.ts'
 import { dockerCourse, dockerLessons } from '../data/dockerCourse.ts'
 import { decodeProgress, emptyProgress } from '../progress/storage.ts'
 import type { LearningProgress } from '../types/progress.ts'
-import { createLearningQueue, planLearning } from './catalogPlan.ts'
+import { createCompletedLessonQueue, createLearningQueue, planLearning } from './catalogPlan.ts'
 import { scheduleReview } from './schedule.ts'
 
 const previousDay = new Date(2026, 9, 5, 12)
@@ -13,6 +13,20 @@ const today = new Date(2026, 9, 6, 12)
 const nextDay = new Date(2026, 9, 7, 12)
 const javascript = catalogCourses.find(course => course.lessonIds.includes('js-scope'))!
 const javascriptLesson = catalogLessons.find(lesson => lesson.id === 'js-scope')!
+
+test('lesson completion immediately queues only its undiscovered cards', () => {
+  const progress = emptyProgress()
+  assert.deepEqual(createCompletedLessonQueue(javascriptLesson, progress), [])
+  progress.completedLessons[javascriptLesson.id] = today.toISOString()
+  progress.completedLessons[dockerLessons[0].id] = previousDay.toISOString()
+  const knownId = javascriptLesson.cardIds[0]
+  progress.cards[knownId] = scheduleReview({ cardId: knownId, rating: 'recalled', reviewedAt: previousDay.toISOString() })
+  const queue = createCompletedLessonQueue(javascriptLesson, progress)
+  assert.deepEqual(queue.map(item => item.card.id), javascriptLesson.cardIds.slice(1))
+  assert.ok(queue.every(item => item.kind === 'new'))
+  completeWithCards(progress, javascriptLesson.id, today)
+  assert.deepEqual(createCompletedLessonQueue(javascriptLesson, progress), [])
+})
 
 function completeWithCards(progress: LearningProgress, lessonId: string, at: Date) {
   const lesson = catalogLessons.find(candidate => candidate.id === lessonId)!

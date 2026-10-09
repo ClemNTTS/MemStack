@@ -69,3 +69,35 @@
   .challenge-history li { align-items: start; flex-direction: column; }
   .challenge-rating-buttons { flex-direction: column; }
 }
+
+.exam-overview, .exam-next { padding: 1.5rem; margin-block: 1.5rem; border: 1px solid #ddd0e9; border-radius: 1.35rem; background: #fffdf8d9; }
+.exam-overview h2, .exam-next h2 { margin-top: 0; }
+.exam-counts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.exam-counts > div { padding: 1rem; border-radius: 1rem; background: #f1eaf8; }
+.exam-counts dt { font-weight: 600; }
+.exam-counts dd { margin: .5rem 0 0; font-size: 2rem; font-weight: 700; }
+.exam-counts dd span { font-size: 1rem; font-weight: 400; }
+.exam-other-statuses { line-height: 1.7; }
+.exam-theme-details summary { cursor: pointer; min-height: 44px; padding-block: .75rem; box-sizing: border-box; font-weight: 600; }
+.exam-theme-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.exam-theme { min-width: 0; padding: 1rem; border: 1px solid #ddd0e9; border-radius: 1rem; }
+.exam-theme h3 { margin-top: 0; }
+.exam-theme .text-link { text-align: left; min-height: 44px; }
+.exam-next .dashboard-cta { display: inline-block; }
+.exam-theme-details summary:focus-visible, .exam-theme button:focus-visible { outline: 2px solid #8b68ba; outline-offset: 3px; }
+@media (max-width: 800px) {
+  .exam-theme-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 480px) {
+  .exam-overview, .exam-next { padding: 1.1rem; }
+  .exam-counts, .exam-theme-grid { grid-template-columns: 1fr; }
+  .exam-counts > div { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+  .exam-counts dd { margin: 0; }
+}
+
+.challenge-revision { margin-block: 1.5rem; padding: 1.25rem; border: 1px solid #ddd0e9; border-radius: 1rem; background: #f1eaf8; }
+.challenge-revision h3 { margin-top: 0; }
+.challenge-revision li { margin-block: .6rem; }
+.challenge-revision a, .challenge-replay-context a { display: inline-block; min-height: 44px; padding-block: .5rem; box-sizing: border-box; }
+.challenge-replay-context { position: relative; margin: 1rem; padding: 1rem; border-radius: 1rem; background: #f1eaf8; }
+.challenge-replay-context p { margin-top: 0; }

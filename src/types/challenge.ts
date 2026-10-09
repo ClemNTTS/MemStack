@@ -31,6 +31,7 @@ export type ChallengeAttempt = {
 }
 
 export type ChallengeAnalysis = {
+  verdict?: 'validated' | 'retry'
   status: 'processing' | 'completed' | 'failed' | 'needs_review'
   message: string
   challengeVersion: number

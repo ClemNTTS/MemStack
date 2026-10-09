@@ -12,6 +12,8 @@ import ChallengesPage from './ChallengesPage'
 import ChallengeView from './ChallengeView'
 import { ChallengeProvider } from '../challenges/ChallengeProvider'
 import { challenges } from '../data/challenges'
+import { ChallengeAccessGate } from '../challenges/ChallengeAccessGate'
+import { revisionChallenge } from '../challenges/remediation'
 import AccountBar from './AccountBar'
 import { useProgress } from '../progress/ProgressProvider'
 import { LearningPreferenceProvider, useLearningPreference } from '../progress/learningPreference'
@@ -33,6 +35,7 @@ function Pages() {
   const { activeCourseId } = useLearningPreference()
   const course = catalogCourses.find((item) => item.id === activeCourseId) ?? catalogCourses[0]
   const lesson = catalogLessons.find((item) => path === `/lessons/${item.id}`)
+  const returnChallenge = lesson ? revisionChallenge(lesson.id, new URLSearchParams(route.split('?')[1] ?? '').get('challenge'), challenges) : undefined
   const courseId = path.startsWith('/courses/') ? path.slice('/courses/'.length) : undefined
   const challengeId = path.startsWith('/challenges/') ? path.slice('/challenges/'.length) : undefined
   const immersive = Boolean(lesson) || path === '/today' || path === '/reviews'
@@ -82,8 +85,8 @@ function Pages() {
   else if (path === '/courses' || courseId !== undefined) page = <CoursesPage key={courseId ?? 'all'} courseId={courseId} />
   else if (path === '/library') page = <LibraryPage />
   else if (path === '/profile') page = <ProfilePage />
-  else if (path === '/challenges' || challengeId !== undefined) page = <ChallengeProvider>{challengeId !== undefined ? <ChallengeView key={challengeId} challengeId={challengeId} /> : <ChallengesPage />}</ChallengeProvider>
-  else if (lesson) page = <LessonReplay key={lesson.id} lesson={lesson} />
+  else if (path === '/challenges' || challengeId !== undefined) page = <ChallengeAccessGate><ChallengeProvider>{challengeId !== undefined ? <ChallengeView key={challengeId} challengeId={challengeId} /> : <ChallengesPage />}</ChallengeProvider></ChallengeAccessGate>
+  else if (lesson) page = <LessonReplay key={lesson.id} lesson={lesson} returnChallenge={returnChallenge} />
   else if (path === '/today' || path === '/reviews') page = <main className="app-shell"><TodaySession key={`${course.id}-${path}-${navigation}`} course={course} lessons={catalogLessons} cards={catalogCards} mode={path === '/reviews' ? 'reviews' : 'today'} initialAction={initialAction} onSessionRoute={setRoute} /></main>
   else page = <main className="dashboard"><p className="lesson-category">Page introuvable</p><h1>Ce chemin reste à tracer.</h1><a className="dashboard-cta" href={appHref('/')}>Retour à l’atelier</a></main>
   return <div className="learning-app" data-immersive={immersive} onClick={navigate}>

@@ -8,7 +8,7 @@ const config = { enabled: true, invited: ['alice'], model: 'model-2601', hasKey:
 const now = Date.UTC(2026, 9, 7)
 
 function fakeDb() {
-  const data = new Map([['users/alice/challengeAttempts/attempt-1', attempt], ['users/alice/challengeAttempts/attempt-2', attempt]])
+  const data = new Map([['users/alice/settings/challengeAccess', { aiEnabled: true }], ['users/alice/challengeAttempts/attempt-1', attempt], ['users/alice/challengeAttempts/attempt-2', attempt]])
   let queue = Promise.resolve()
   return {
     data,
@@ -65,4 +65,15 @@ test('disabled, uninvited, other owner, unknown model and exhausted quota preven
   await claimAnalysis({ ...args(db), config: { ...config, limits: { ...config.limits, user: 1 } } })
   await assert.rejects(claimAnalysis({ ...args(db), attemptId: 'attempt-2', config: { ...config, limits: { ...config.limits, user: 1 } } }))
   assert.equal(db.data.get('_challengeAiUsage/2026-10-07').requests, 1)
+})
+
+test('missing, false or revoked AI option access denies calls even for invited accounts and saved feedback', async () => {
+  for (const value of [undefined, { aiEnabled: false }, { aiEnabled: 'true' }]) {
+    const db = fakeDb()
+    if (value === undefined) db.data.delete('users/alice/settings/challengeAccess')
+    else db.data.set('users/alice/settings/challengeAccess', value)
+    db.data.set('users/alice/challengeAnalyses/attempt-1', { status: 'completed', message: 'Retour' })
+    await assert.rejects(claimAnalysis(args(db)), error => error.code === 'permission-denied')
+    assert.equal(db.data.has('_challengeAiUsage/2026-10-07'), false)
+  }
 })
