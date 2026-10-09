@@ -147,8 +147,10 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     let timeout: ReturnType<typeof setTimeout> | undefined
     try {
       setError('')
+      const provider = new GoogleAuthProvider()
+      provider.setCustomParameters({ prompt: 'select_account' })
       await Promise.race([
-        signInWithPopup(getFirebaseServices().auth, new GoogleAuthProvider()),
+        signInWithPopup(getFirebaseServices().auth, provider),
         new Promise<never>((_, reject) => { timeout = setTimeout(() => reject(new Error('Sign-in timeout')), 90000) }),
       ])
     } catch {
