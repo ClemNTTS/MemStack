@@ -1,8 +1,8 @@
 # Feuille de route vers la version finale
 
-État du 9 octobre 2026. Cette liste rapproche VISION.md, PRODUCT.md et le code actuel. La vision initiale précède les verdicts IA obligatoires et le déblocage après une thématique complète : les décisions utilisateur récentes priment. Les sept points ci-dessous ont une implémentation locale, distincte de la version déployée.
+État du 9 octobre 2026. Cette liste rapproche VISION.md, PRODUCT.md et le code actuel. La vision initiale précède les verdicts IA obligatoires et le déblocage après une thématique complète : les décisions utilisateur récentes priment. Les sept points ci-dessous sont déployés ; voir [la recette de production](PRODUCTION_RECIPE.md) pour les vérifications et leurs limites.
 
-## Implémentés localement, à mettre en service
+## Sept fonctionnalités déployées
 
 - Suivi des signalements et preuve de publication d’une correction.
 - Signalements versionnés des défis et analyses, sans modification des verdicts.
@@ -12,7 +12,7 @@
 - Gestion administrative des droits et invitations, avec journal atomique.
 - Filtres personnels des défis par état.
 
-Les nouveaux callables et règles doivent être déployés ensemble avant activation publique. L’administrateur initial exige une attribution explicite du propriétaire ; aucun compte de test n’est promu automatiquement. Les durées de conservation et la recette fournisseur restent des chantiers séparés.
+Les nouveaux callables et règles sont déployés. Les deux comptes administrateurs autorisés ont reçu leur rôle explicitement ; aucune promotion automatique n’est ajoutée. Les durées de conservation et la recette fournisseur restent des chantiers séparés.
 
 ## Déjà livré
 
@@ -26,14 +26,13 @@ Les nouveaux callables et règles doivent être déployés ensemble avant activa
 
 | Priorité | Fonctionnalité ou chantier | Ce qui manque | Critère de livraison |
 | --- | --- | --- | --- |
-| 1 | Mise en service des sept points locaux | Déploiement des nouveaux callables/règles et attribution explicite du rôle administrateur | Recette du frontend avec les services déployés et contrôle des droits réels |
 | 1 | Conservation et information sur les données | Durées, traitement fournisseur et procédures de maintenance restent à définir et communiquer | Politique décidée et affichée ; procédure opérationnelle d’export/suppression/rétention |
 | 1 | Évaluation réelle du service IA v4 | Tests automatisés disponibles, couverture fournisseur variée à compléter | Réponses correctes, partielles, fausses, alternatives, hors sujet et hostiles testées ; justesse des points manqués vérifiée |
 | 1 | Recette des parcours critiques | Vérifications ponctuelles réalisées, matrice complète mobile/bureau et incidents à consolider | Connexion, réseau interrompu, rechargement, changement de compte, clavier et mouvements réduits vérifiés |
 | 2 | Couverture professionnelle des cas | Le nombre de défis par thème ne démontre pas la couverture diagnostic/revue/décision | Manifeste des compétences et formats ; cas manquants rédigés, sourcés et inspectés |
 | 2 | Maintenance du contenu en usage | Catalogue inspecté, durées/difficultés/ambiguïtés à éprouver auprès des utilisateurs | Corrections issues de retours réels ; versionnement et historique préservés |
 
-## Améliorations locales incluses dans les sept points
+## Améliorations incluses dans les sept points
 
 - Brouillon d’examen par compte : retrouver une réponse non envoyée après navigation ou rechargement, avec séparation des comptes et suppression du brouillon après enregistrement confirmé.
 - État de l’option IA et du quota : expliquer l’accès du membre et la limite atteinte sans annoncer un crédit commercial ; toute valeur vient du serveur.
@@ -48,4 +47,4 @@ Les nouveaux callables et règles doivent être déployés ensemble avant activa
 
 L’exécution de code, le hors ligne, les classements, un tuteur conversationnel et un éditeur de contenu ne font pas partie de la cible actuelle.
 
-Prochain chantier recommandé : mettre en service les sept points vérifiés localement, puis compléter la recette réelle du service IA et la politique de conservation avant ouverture publique.
+Prochain chantier recommandé : compléter la recette réelle du service IA et la politique de conservation avant ouverture publique.
