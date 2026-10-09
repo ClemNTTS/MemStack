@@ -36,6 +36,10 @@ jobs:
       - run: npm test
       - run: npm run build
       - name: Authorization, quota concurrency and deletion against emulator only
-        run: npx --yes firebase-tools@15.32.1 emulators:exec --only firestore --project demo-memstack-challenge-ai "npm --prefix tests/challenge-ai run test:rules"
+        run: |
+          export PATH="/usr/lib/jvm/java-21-openjdk-amd64/bin:$PATH"
+          export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+          java -version
+          npx --yes firebase-tools@15.32.1 emulators:exec --only firestore --project demo-memstack-challenge-ai "npm --prefix tests/challenge-ai run test:rules"
         env:
           CI: true
