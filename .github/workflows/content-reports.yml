@@ -30,6 +30,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - run: npm ci --prefix functions
       - run: npm test
       - name: Analyze one report and prepare a draft pull request
         run: npm run reports:process
