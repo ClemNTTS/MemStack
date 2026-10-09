@@ -1,4 +1,5 @@
 import { AnalysisError, PROMPT_VERSION, RESERVED_TOKENS, checkQuota, existingDecision, validateAttempt } from './analysis.mjs'
+import { isInvited } from './accessService.mjs'
 
 // Dependency injection lets tests exercise the same transactional path as production.
 export async function claimAnalysis({ db, uid, attemptId, now, config, dossiers, timestamp }) {
@@ -7,6 +8,7 @@ export async function claimAnalysis({ db, uid, attemptId, now, config, dossiers,
   const userQuota = db.doc(`users/${uid}/challengeAiUsage/${day}`)
   const globalQuota = db.doc(`_challengeAiUsage/${day}`)
   return db.runTransaction(async transaction => {
+    if ((await transaction.get(db.doc(`_accountLifecycle/${uid}`))).exists) throw new AnalysisError('failed-precondition', 'Ce compte est en cours de suppression.')
     const access = await transaction.get(db.doc(`users/${uid}/settings/challengeAccess`))
     if (access.data()?.aiEnabled !== true) throw new AnalysisError('permission-denied', 'L’accès à l’option IA est requis.')
     const saved = await transaction.get(ref)
@@ -18,7 +20,7 @@ export async function claimAnalysis({ db, uid, attemptId, now, config, dossiers,
       return { result }
     }
     if (decision === 'return') return { result: existing }
-    if (!config.enabled || !config.invited.includes(uid)) throw new AnalysisError('permission-denied', 'Les analyses IA sont réservées à la bêta invitée.')
+    if (!config.enabled || !isInvited(access.data(), uid, config.invited)) throw new AnalysisError('permission-denied', 'Les analyses IA sont réservées à la bêta invitée.')
     if (!config.model || config.model.includes('latest') || !config.hasKey) throw new AnalysisError('failed-precondition', 'Le service d’analyse n’est pas configuré.')
     const attemptSnapshot = await transaction.get(db.doc(`users/${uid}/challengeAttempts/${attemptId}`))
     const attempt = attemptSnapshot.data()

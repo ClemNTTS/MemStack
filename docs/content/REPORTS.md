@@ -31,7 +31,19 @@ Node 24+, `npm test` et `npm run build`. `npm run reports:check` vérifie l’im
 
 `npm run reports:process` charge le `.env` local uniquement dans Node. Il nécessite également l’accès serveur Firestore, `GITHUB_TOKEN`, `GITHUB_REPOSITORY` et `GITHUB_SHA` correspondant à un checkout propre du commit de `main` ; ce n’est pas une commande de simulation. GitHub Actions fournit ces trois variables GitHub automatiquement. Ne pas la lancer sur des signalements réels pour un simple test du formulaire.
 
-Une exécution interrompue ne relance pas automatiquement la facturation : après expiration du bail de quinze minutes, le signalement passe en revue manuelle. Une PR déjà créée est retrouvée par sa branche déterministe, y compris si elle a été fermée ou fusionnée. Les statuts terminaux sont `needs_review`, `no_change`, `pr_open`, `pr_closed` et `pr_merged`. Ils restent consultables dans Firestore ; leur suivi dans l’interface n’est pas encore implémenté. Une branche créée sans PR demande une reprise manuelle.
+Une exécution interrompue ne relance pas automatiquement la facturation : après expiration du bail de quinze minutes, le signalement passe en revue manuelle. Une PR déjà créée est retrouvée par sa branche déterministe, y compris si elle a été fermée ou fusionnée. Une branche créée sans PR demande une reprise manuelle.
+
+## Suivi et cibles d’examen
+
+L’espace **Mes signalements**, accessible depuis Compte, lit uniquement les documents du propriétaire depuis le serveur. Il affiche reçu, en cours, revue humaine nécessaire, sans modification, correction proposée, proposition fermée, correction intégrée et correction publiée. Le bouton Actualiser relit les données, sans appel Mistral. Un échec de lecture ne devient pas une liste vide. Les commentaires et brouillons sont effacés de l’interface lors d’un changement de compte.
+
+Avant de traiter un nouveau signalement, le worker réconcilie les propositions ouvertes et fusionnées, par pages de vingt documents. `pr_merged` signifie intégré au dépôt, **pas publié**. `published` exige un run réussi du workflow `pages.yml` sur main, dont le SHA contient le commit de fusion, et la présence de l’entrée exacte reportId/contentVersion dans `corrections.json` au SHA déployé. Le suivi contient alors le commit publié et le lien du déploiement. Une correction retirée du registre n’est pas annoncée publiée. Le job nécessite la permission GitHub `actions: read`. Le suivi conserve sa dernière preuve de publication ; il ne surveille pas une suppression éditoriale ultérieure.
+
+Les leçons/cartes conservent le schéma 1. Les nouveaux signalements de défis et de retours IA utilisent le schéma 2 : `targetType`, `challengeId`, versions du défi et de la grille, et pour l’analyse `attemptId`, `promptVersion` et `model`. Le snapshot du défi ou de l’analyse est haché SHA-256. Le snapshot d’analyse n’inclut pas la réponse du membre. Les règles comparent ses références avec la tentative et l’analyse serveur de son propre compte ; aucune référence à l’analyse d’un autre compte n’est acceptée.
+
+Ces cibles entrent directement dans `needs_review` et restent disponibles pour une revue humaine via les outils administrateur de confiance (Firestore). Elles ne passent pas au rédacteur de corrections de leçons et ne créent pas de PR automatique. Une personne peut décider d’une correction éditoriale versionnée ; **aucune décision ne modifie la tentative ni le verdict IA**. Ce circuit ne promet ni délai de traitement ni validation manuelle d’examen.
+
+Chaque écriture du worker est une transaction qui lit `_accountLifecycle/{uid}` et refuse un compte en cours de suppression. Elle conserve aussi la précondition `updateTime` du document signalé : une donnée supprimée ne peut pas être recréée par un résultat tardif. La réconciliation et les tests utilisent des réponses simulées ; aucune exécution réseau de production n’est nécessaire à leur validation locale.
 
 Une correction factuelle doit citer des sources réellement consultées. Si le contenu a changé depuis le signalement, demander une revue ; ne pas appliquer une ancienne proposition à une autre version.
 

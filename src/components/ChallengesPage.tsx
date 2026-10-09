@@ -12,6 +12,8 @@ import { PageHeading, themes } from './CatalogShared'
 import WorkshopBackground from './WorkshopBackground'
 import './challenges.css'
 import './themeSummary.css'
+import AiAccessPanel from './AiAccessPanel'
+import { matchesExamStatus } from '../challenges/statusFilter'
 
 const statusLabels = {
   validated: 'Validé',
@@ -27,6 +29,7 @@ function ChallengesPage() {
   const { progress } = useProgress()
   const [theme, setTheme] = useState('all')
   const [search, setSearch] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all')
   const courseFor = (courseId: string) => catalogCourses.find(course => course.id === courseId)
   const resultsReady = !loading && !error && analysesReady
   const exams = challenges.map(challenge => ({
@@ -36,7 +39,7 @@ function ChallengesPage() {
     summary: resultsReady ? getChallengeExamSummary(challenge, attempts, analyses) : null,
   }))
   const scoped = exams.filter(exam => theme === 'all' || exam.theme === theme)
-  const filtered = scoped.filter(({ challenge, theme: challengeTheme }) => `${challenge.title} ${courseFor(challenge.courseId)?.title} ${challengeTheme}`.toLocaleLowerCase('fr-FR').includes(search.trim().toLocaleLowerCase('fr-FR')))
+  const filtered = scoped.filter(({ challenge, theme: challengeTheme, summary }) => matchesExamStatus(statusFilter, summary?.status, resultsReady) && `${challenge.title} ${courseFor(challenge.courseId)?.title} ${challengeTheme}`.toLocaleLowerCase('fr-FR').includes(search.trim().toLocaleLowerCase('fr-FR')))
   const next = resultsReady ? scoped.find(exam => exam.access.unlocked && exam.summary?.status === 'retry')
     ?? scoped.find(exam => exam.access.unlocked && exam.summary?.status === 'unattempted') : undefined
   const count = (entries: typeof exams, status: keyof typeof statusLabels) => entries.filter(exam => exam.summary?.status === status).length
@@ -48,6 +51,7 @@ function ChallengesPage() {
       <img src={appAsset('memo/learning.webp')} alt="" width="160" height="160" />
     </div>
     <p className="dashboard-note">Les défis sont réservés aux membres ayant accès à l’option IA et se débloquent après toutes les leçons de leur thématique. Tes tentatives sont synchronisées ; seule l’analyse IA évalue tes réponses.</p>
+    <AiAccessPanel />
     {loading && <p role="status">Chargement de tes tentatives…</p>}
     {error && <div className="inline-error" role="alert"><p>{error}</p><button className="catalog-button secondary" type="button" onClick={retry}>Réessayer</button></div>}
     {!loading && !error && analysesLoading && <p role="status">Chargement des résultats d’examen…</p>}
@@ -94,8 +98,10 @@ function ChallengesPage() {
       <p className="dashboard-note">{theme === 'all' ? 'Toutes les thématiques' : theme} · priorité aux défis à retravailler, puis jamais tentés, parmi les thématiques débloquées. La recherche ne change pas cette suggestion.</p>
       {next ? <><p><strong>{next.challenge.title}</strong> · {statusLabels[next.summary!.status]}</p><a className="dashboard-cta" href={appHref(`/challenges/${next.challenge.id}`)}>{next.summary?.status === 'retry' ? 'Retravailler ce défi' : 'Essayer ce défi'} →</a></> : <p>Aucun défi à retravailler ou jamais tenté disponible dans cette sélection. Consulte les résultats ci-dessous ou termine les leçons d’une thématique.</p>}
     </section>}
+    <label>État d’examen<select value={statusFilter} disabled={!resultsReady} onChange={event => setStatusFilter(event.target.value)}><option value="all">Tous les états</option>{Object.entries(statusLabels).map(([status, label]) => <option key={status} value={status}>{label}</option>)}</select></label>
+    <p className="dashboard-note">Le filtre d’état ne change pas la prochaine tentative proposée.</p>
     <p className="results-count" role="status">{filtered.length} défis affichés · {challenges.length} dans le catalogue</p>
-    {filtered.length === 0 && <section className="overview-panel"><h2>Aucun défi trouvé.</h2><p>Essaie un autre mot ou change de thématique.</p><button className="catalog-button secondary" onClick={() => { setSearch(''); setTheme('all') }}>Effacer les filtres</button></section>}
+    {filtered.length === 0 && resultsReady && <section className="overview-panel"><h2>Aucun défi trouvé.</h2><p>Essaie un autre mot ou change de thématique ou d’état.</p><button className="catalog-button secondary" onClick={() => { setSearch(''); setTheme('all'); setStatusFilter('all') }}>Effacer les filtres</button></section>}
     <div className="challenge-grid">
       {filtered.map(({ challenge, access, summary }) => {
         const history = attempts.filter(attempt => attempt.challengeId === challenge.id)

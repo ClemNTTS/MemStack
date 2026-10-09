@@ -3,6 +3,7 @@ import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { spawnSync } from 'node:child_process'
 import { processReport } from './process.mjs'
+import { reconcileReports } from './reconcile.mjs'
 import { createFirestore, firestoreToken, createGithub, createMistral, fetchSource } from './services.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
@@ -40,6 +41,8 @@ async function main() {
     || changes.stdout.trim()) throw new Error('Worker requires the exact clean checkout being reviewed')
   const token = await firestoreToken(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT))
   const firestore = createFirestore(token)
+  const github = createGithub(process.env.GITHUB_TOKEN, process.env.GITHUB_REPOSITORY, process.env.GITHUB_SHA)
+  await reconcileReports({ firestore, github })
   // Recover interrupted runs first. Limit one report per run, at most four inference calls.
   const report = await firestore.query('processing') || await firestore.query('pending')
   if (!report) {
@@ -52,7 +55,7 @@ async function main() {
     sourceMarkdown: await readFile(resolve(root, 'docs/content/SOURCES.md'), 'utf8'),
     corrections: JSON.parse(await readFile(resolve(root, 'src/data/catalog/corrections.json'), 'utf8')),
     download: fetchSource, complete: createMistral(process.env.MISTRAL_API_KEY, process.env.MISTRAL_MODEL),
-    github: createGithub(process.env.GITHUB_TOKEN, process.env.GITHUB_REPOSITORY, process.env.GITHUB_SHA), firestore, verifyFiles,
+    github, firestore, verifyFiles,
   })
   console.log(result ? `Content report processing finished: ${result.status}.` : 'Another run owns the active report lease.')
 }

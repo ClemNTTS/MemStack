@@ -7,6 +7,8 @@ import Dashboard from './Dashboard'
 import CoursesPage from './CoursesPage'
 import LibraryPage from './LibraryPage'
 import ProfilePage from './ProfilePage'
+import ReportsPage from '../reports/ReportsPage'
+import AdminAiPage from './AdminAiPage'
 import LessonReplay from './LessonReplay'
 import ChallengesPage from './ChallengesPage'
 import ChallengeView from './ChallengeView'
@@ -41,7 +43,7 @@ function Pages() {
   const immersive = Boolean(lesson) || path === '/today' || path === '/reviews'
   const previousRoute = useRef(route)
   useEffect(() => {
-    const title = lesson?.title ?? (path === '/challenges' ? 'Défis' : challengeId ? challenges.find(challenge => challenge.id === challengeId)?.title : path === '/courses' ? 'Parcours' : courseId ? catalogCourses.find(course => course.id === courseId)?.title : path === '/library' ? 'Bibliothèque' : path === '/profile' ? 'Ma progression' : path === '/reviews' ? 'Révisions' : path === '/' || path === '/today' ? 'Aujourd’hui' : 'Page introuvable')
+    const title = lesson?.title ?? (path === '/reports' ? 'Mes signalements' : path === '/admin/ai' ? 'Membres IA' : path === '/challenges' ? 'Défis' : challengeId ? challenges.find(challenge => challenge.id === challengeId)?.title : path === '/courses' ? 'Parcours' : courseId ? catalogCourses.find(course => course.id === courseId)?.title : path === '/library' ? 'Bibliothèque' : path === '/profile' ? 'Ma progression' : path === '/reviews' ? 'Révisions' : path === '/' || path === '/today' ? 'Aujourd’hui' : 'Page introuvable')
     document.title = `${title ?? 'Page introuvable'} · MemStack`
     if (previousRoute.current !== route) {
       document.querySelector('.account-menu')?.removeAttribute('open')
@@ -85,6 +87,8 @@ function Pages() {
   else if (path === '/courses' || courseId !== undefined) page = <CoursesPage key={courseId ?? 'all'} courseId={courseId} />
   else if (path === '/library') page = <LibraryPage />
   else if (path === '/profile') page = <ProfilePage />
+  else if (path === '/reports') page = <ReportsPage />
+  else if (path === '/admin/ai') page = <AdminAiPage />
   else if (path === '/challenges' || challengeId !== undefined) page = <ChallengeAccessGate><ChallengeProvider>{challengeId !== undefined ? <ChallengeView key={challengeId} challengeId={challengeId} /> : <ChallengesPage />}</ChallengeProvider></ChallengeAccessGate>
   else if (lesson) page = <LessonReplay key={lesson.id} lesson={lesson} returnChallenge={returnChallenge} />
   else if (path === '/today' || path === '/reviews') page = <main className="app-shell"><TodaySession key={`${course.id}-${path}-${navigation}`} course={course} lessons={catalogLessons} cards={catalogCards} mode={path === '/reviews' ? 'reviews' : 'today'} initialAction={initialAction} onSessionRoute={setRoute} /></main>

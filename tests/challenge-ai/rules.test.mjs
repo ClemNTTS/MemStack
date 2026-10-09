@@ -25,6 +25,49 @@ const payload = version => ({ version, challengeId: 'docker-images-diagnostic', 
   ...(version === 2 ? { observations: 'Image ancienne', actions: 'Reconstruire et recréer' } : {}),
   submittedAt: serverTimestamp(), outcome: '' })
 
+const examReport = (patch = {}) => ({ version: 2, targetType: 'challenge', lessonId: '', cardId: '',
+  challengeId: 'docker-images-diagnostic', challengeVersion: 2, rubricVersion: 2,
+  attemptId: '', promptVersion: '', model: '', kind: 'unclear', comment: 'Préciser le cas.',
+  contentSnapshot: '{}', contentVersion: 'a'.repeat(64), createdAt: serverTimestamp(), status: 'needs_review', ...patch })
+
+test('versioned exam reports are own immutable review requests, never verdict edits', async () => {
+  const reportPath = 'users/alice/contentReports/exam-report'
+  await assertSucceeds(setDoc(doc(db('alice'), reportPath), examReport()))
+  await assertFails(getDoc(doc(db('bob'), reportPath)))
+  await assertFails(updateDoc(doc(db('alice'), reportPath), { status: 'published' }))
+  await assertFails(deleteDoc(doc(db('alice'), reportPath)))
+  for (const patch of [{ status: 'pending' }, { targetType: 'analysis' }, { verdict: 'validated' }, { model: 'fabricated' }, { rubricVersion: 0 }]) {
+    await assertFails(setDoc(doc(db('alice'), 'users/alice/contentReports/invalid-report'), examReport(patch)))
+  }
+})
+
+test('analysis reports reference the owner immutable attempt and server analysis versions', async () => {
+  await env.withSecurityRulesDisabled(async context => {
+    const server = context.firestore()
+    await setDoc(doc(server, path), payload(2))
+    await setDoc(doc(server, 'users/alice/challengeAnalyses/attempt-1'), {
+      status: 'completed', challengeVersion: 2, rubricVersion: 2, promptVersion: 'v4', model: 'pinned-model', verdict: 'retry', message: 'Retour'
+    })
+  })
+  const input = examReport({ targetType: 'analysis', attemptId: 'attempt-1', promptVersion: 'v4', model: 'pinned-model' })
+  await assertSucceeds(setDoc(doc(db('alice'), 'users/alice/contentReports/analysis-report'), input))
+  for (const patch of [{ attemptId: 'another-attempt' }, { model: 'different-model' }, { rubricVersion: 3 }, { challengeId: 'other-challenge' }]) {
+    await assertFails(setDoc(doc(db('alice'), 'users/alice/contentReports/bad-analysis-report'), { ...input, ...patch }))
+  }
+})
+
+test('deletion marker blocks account reads and writes even with a valid old token', async () => {
+  await env.withSecurityRulesDisabled(async context => {
+    await setDoc(doc(context.firestore(), '_accountLifecycle/alice'), { status: 'deleting' })
+  })
+  await assertFails(getDoc(doc(db('alice'), 'users/alice/settings/challengeAccess')))
+  await assertFails(setDoc(doc(db('alice'), path), payload(2)))
+  await assertFails(setDoc(doc(db('alice'), 'users/alice/contentReports/report'), examReport()))
+  await assertFails(setDoc(doc(db('alice'), 'users/alice/lessons/lesson'), { completedAt: '2026-10-09T00:00:00.000Z' }))
+  await assertFails(getDoc(doc(db('alice'), '_accountLifecycle/alice')))
+  await assertFails(setDoc(doc(db('alice'), '_challengeAccessAudit/audit'), { actorUid: 'alice' }))
+})
+
 test('both historical and structured attempts remain owner-only and immutable', async () => {
   for (const version of [1, 2]) {
     await env.clearFirestore()

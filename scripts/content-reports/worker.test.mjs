@@ -139,18 +139,32 @@ test('lease and existing PR recovery avoid repeated inference charges', async ()
 })
 
 test('Firestore update always uses server updateTime precondition and field masks', async () => {
-  let url
   let body
   const firestore = createFirestore('test-token', async (input, options) => {
-    url = new URL(input)
+    if (input.endsWith(':beginTransaction')) return Response.json({ transaction: 'transaction-1' })
+    if (input.endsWith(':batchGet')) return Response.json([{ missing: 'marker' }])
     body = JSON.parse(options.body)
-    return Response.json({ updateTime: 'v2' })
+    return Response.json({ writeResults: [{ updateTime: 'v2' }] })
   })
   const result = await firestore.patch({ ...report(), documentName: 'projects/memstack-9f581/databases/(default)/documents/users/example/contentReports/report-123' }, { status: 'processing', attempts: 1 })
-  assert.equal(url.searchParams.get('currentDocument.updateTime'), 'v1')
-  assert.deepEqual(url.searchParams.getAll('updateMask.fieldPaths'), ['status', 'attempts'])
-  assert.equal(body.fields.attempts.integerValue, '1')
+  assert.equal(body.transaction, 'transaction-1')
+  assert.equal(body.writes[0].currentDocument.updateTime, 'v1')
+  assert.deepEqual(body.writes[0].updateMask.fieldPaths, ['status', 'attempts'])
+  assert.equal(body.writes[0].update.fields.attempts.integerValue, '1')
   assert.equal(result.updateTime, 'v2')
+})
+
+test('worker refuses report writes after an account deletion marker without commit', async () => {
+  const calls = []
+  const firestore = createFirestore('test-token', async (input) => {
+    calls.push(input)
+    if (input.endsWith(':beginTransaction')) return Response.json({ transaction: 'transaction-1' })
+    if (input.endsWith(':batchGet')) return Response.json([{ found: { name: 'marker' } }])
+    return Response.json({})
+  })
+  await assert.rejects(firestore.patch({ ...report(), documentName: 'projects/memstack-9f581/databases/(default)/documents/users/example/contentReports/report-123' }, { status: 'processing' }))
+  assert.equal(calls.some(url => url.endsWith(':commit')), false)
+  assert.equal(calls.at(-1).endsWith(':rollback'), true)
 })
 
 test('recovery distinguishes closed and merged pull requests without new inference', async () => {

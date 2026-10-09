@@ -33,6 +33,17 @@ function fakeDb() {
 }
 const args = db => ({ db, uid: 'alice', attemptId: 'attempt-1', now, config, dossiers: [dossier], timestamp: 1 })
 
+test('document invitation overrides env and deletion tombstone blocks cached results', async () => {
+  const db = fakeDb()
+  db.data.set('users/alice/settings/challengeAccess', { aiEnabled: true, betaInvited: false })
+  await assert.rejects(claimAnalysis(args(db)))
+  db.data.set('users/alice/settings/challengeAccess', { aiEnabled: true, betaInvited: true })
+  assert.equal((await claimAnalysis({ ...args(db), config: { ...config, invited: [] } })).start, true)
+  db.data.set('_accountLifecycle/alice', { status: 'deleting' })
+  await assert.rejects(claimAnalysis(args(db)))
+  assert.equal(db.data.get('users/alice/challengeAiUsage/2026-10-07').requests, 1)
+})
+
 test('concurrent duplicate claims reserve one request and one provider dispatch', async () => {
   const db = fakeDb()
   const claims = await Promise.all([claimAnalysis(args(db)), claimAnalysis(args(db))])

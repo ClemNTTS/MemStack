@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "test": "node --test provider-contract.test.mjs client-server-contract.test.mjs",
-    "test:rules": "node --test rules.test.mjs claim.integration.test.mjs"
+    "test:rules": "node --test rules.test.mjs claim.integration.test.mjs accountLifecycle.integration.test.mjs"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^5.0.0",

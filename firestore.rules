@@ -2,7 +2,8 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function owner(uid) {
-      return request.auth != null && request.auth.uid == uid;
+      return request.auth != null && request.auth.uid == uid
+        && !exists(/databases/$(database)/documents/_accountLifecycle/$(uid));
     }
     function challengeAccess(uid) {
       return owner(uid) && exists(/databases/$(database)/documents/users/$(uid)/settings/challengeAccess)
@@ -57,7 +58,37 @@ service cloud.firestore {
       // Only trusted server code writes feedback; counters remain denied by default.
     }
     match /users/{uid}/contentReports/{reportId} {
+      function validExamReport(data) {
+        return data.keys().hasAll(['version', 'targetType', 'lessonId', 'cardId', 'challengeId', 'challengeVersion', 'rubricVersion', 'attemptId', 'promptVersion', 'model', 'kind', 'comment', 'contentSnapshot', 'contentVersion', 'createdAt', 'status'])
+          && data.keys().hasOnly(['version', 'targetType', 'lessonId', 'cardId', 'challengeId', 'challengeVersion', 'rubricVersion', 'attemptId', 'promptVersion', 'model', 'kind', 'comment', 'contentSnapshot', 'contentVersion', 'createdAt', 'status'])
+          && data.version == 2 && data.version is int
+          && data.lessonId == '' && data.cardId == ''
+          && data.challengeId is string && data.challengeId.size() <= 128
+          && data.challengeId.matches('^[a-z0-9]+(-[a-z0-9]+)*$')
+          && data.challengeVersion is int && data.challengeVersion >= 1
+          && data.rubricVersion is int && data.rubricVersion >= 1
+          && data.attemptId is string && data.attemptId.size() <= 128
+          && data.promptVersion is string && data.promptVersion.size() <= 100
+          && data.model is string && data.model.size() <= 100
+          && data.kind in ['factual', 'unclear', 'code', 'other']
+          && data.comment is string && data.comment.size() >= 1 && data.comment.size() <= 2000
+          && data.contentSnapshot is string && data.contentSnapshot.size() >= 1 && data.contentSnapshot.size() <= 12000
+          && data.contentVersion is string && data.contentVersion.matches('^[a-f0-9]{64}$')
+          && data.createdAt == request.time && data.status == 'needs_review'
+          && ((data.targetType == 'challenge' && data.attemptId == '' && data.promptVersion == '' && data.model == '')
+            || (data.targetType == 'analysis' && validAnalysisTarget(data)));
+      }
+      function validAnalysisTarget(data) {
+        let attempt = get(/databases/$(database)/documents/users/$(uid)/challengeAttempts/$(data.attemptId)).data;
+        let analysis = get(/databases/$(database)/documents/users/$(uid)/challengeAnalyses/$(data.attemptId)).data;
+        return data.attemptId.matches('^[a-zA-Z0-9-]{1,128}$')
+          && attempt.challengeId == data.challengeId && attempt.challengeVersion == data.challengeVersion
+          && analysis.status == 'completed' && analysis.challengeVersion == data.challengeVersion
+          && analysis.rubricVersion == data.rubricVersion && analysis.promptVersion == data.promptVersion
+          && analysis.model == data.model;
+      }
       allow read: if owner(uid);
+      allow create: if owner(uid) && reportId.matches('^[a-zA-Z0-9-]{1,128}$') && validExamReport(request.resource.data);
       allow create: if owner(uid)
         && reportId.matches('^[a-zA-Z0-9-]{1,128}$')
         && request.resource.data.keys().hasAll(['version', 'lessonId', 'cardId', 'kind', 'comment', 'contentSnapshot', 'contentVersion', 'createdAt', 'status'])

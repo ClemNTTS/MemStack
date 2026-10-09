@@ -5,6 +5,8 @@ import { catalogLessons } from '../data/catalog'
 import { appHref } from '../navigation/browser'
 import { needsChallengeRevision, targetedRevision } from './remediation'
 import LessonText from '../components/LessonText'
+import ContentReportButton from '../components/ContentReportButton'
+import { analysisReportContext } from '../reports/contentReport'
 
 export default function ChallengeFeedback({ uid, attempt, challenge, onRetry, canRetry, autoStart, online, onAnalysisChange }: { uid: string, attempt: ChallengeAttempt, challenge: Challenge, onRetry: () => void, canRetry: boolean, autoStart: boolean, online: boolean, onAnalysisChange?: () => void }) {
   const [analysis, setAnalysis] = useState<ChallengeAnalysis | null>(null)
@@ -89,6 +91,7 @@ export default function ChallengeFeedback({ uid, attempt, challenge, onRetry, ca
     {analysis?.status === 'processing' && <p role="status">Mémo analyse ton raisonnement… Tu peux déjà consulter la correction.</p>}
     {pollingPaused && analysis?.status === 'processing' && <p role="status">Le suivi automatique est en pause. Utilise « Vérifier l’analyse » pour retrouver son résultat.</p>}
     {analysis?.status === 'completed' && <><p role="status">{analysis.verdict === 'validated' ? 'Examen validé par l’IA.' : analysis.verdict === 'retry' ? 'Examen à retravailler : fais une nouvelle tentative après avoir étudié la correction.' : 'Retour historique : cette analyse ne comporte aucune validation d’examen.'}</p><LessonText text={analysis.message} /><p className="dashboard-note">Verdict et retour générés par IA : compare-les à la correction de référence. Relire ce retour ne lance aucun appel.</p></>}
+    {analysis?.status === 'completed' && <ContentReportButton key={`${uid}/${attempt.id}`} context={analysisReportContext(challenge, attempt, analysis)} />}
     {analysis?.status === 'failed' && <p role="alert">L’analyse a échoué. Tu peux réessayer.</p>}
     {analysis?.status === 'needs_review' && <p role="status">L’analyse est indisponible pour cette tentative. L’examen n’est pas validé ; tu peux consulter la correction de référence.</p>}
     {error && <p role="alert">{error}</p>}

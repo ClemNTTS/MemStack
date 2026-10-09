@@ -29,26 +29,38 @@ export function createFirestore(token, fetcher = fetch) {
   const base = 'https://firestore.googleapis.com/v1/projects/memstack-9f581/databases/(default)/documents'
   const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }
   return {
-    async query(status) {
+    async query(status, limit = 1, afterName) {
       const result = await requestJson(`${base}:runQuery`, { method: 'POST', headers, body: JSON.stringify({ structuredQuery: {
         from: [{ collectionId: 'contentReports', allDescendants: true }],
-        where: { fieldFilter: { field: { fieldPath: 'status' }, op: 'EQUAL', value: { stringValue: status } } }, limit: 1,
+        where: { fieldFilter: { field: { fieldPath: 'status' }, op: 'EQUAL', value: { stringValue: status } } }, limit,
+        orderBy: [{ field: { fieldPath: '__name__' }, direction: 'ASCENDING' }],
+        ...(afterName ? { startAt: { values: [{ referenceValue: afterName }], before: false } } : {}),
       } }) }, fetcher)
-      const document = result.find(entry => entry.document)?.document
-      if (!document) return null
-      if (!/^projects\/memstack-9f581\/databases\/\(default\)\/documents\/users\/[^/]+\/contentReports\/[a-zA-Z0-9-]+$/.test(document.name)) {
-        throw new Error('Invalid report document path')
-      }
-      return { ...decodeDocument(document), documentName: document.name, updateTime: document.updateTime,
-        reportId: document.name.split('/').at(-1) }
+      const reports = result.filter(entry => entry.document).map(({ document }) => {
+        if (!/^projects\/memstack-9f581\/databases\/\(default\)\/documents\/users\/[^/]+\/contentReports\/[a-zA-Z0-9-]+$/.test(document.name)) throw new Error('Invalid report document path')
+        return { ...decodeDocument(document), documentName: document.name, updateTime: document.updateTime,
+          reportId: document.name.split('/').at(-1) }
+      })
+      return limit === 1 ? reports[0] || null : reports
     },
     async patch(report, changes) {
-      const url = new URL(`https://firestore.googleapis.com/v1/${report.documentName}`)
-      for (const key of Object.keys(changes)) url.searchParams.append('updateMask.fieldPaths', key)
-      url.searchParams.set('currentDocument.updateTime', report.updateTime)
-      const result = await requestJson(url.href, { method: 'PATCH', headers,
-        body: JSON.stringify({ fields: Object.fromEntries(Object.entries(changes).map(([key, value]) => [key, firestoreValue(value)])) }) }, fetcher)
-      return { ...report, ...changes, updateTime: result.updateTime }
+      const uid = report.documentName.match(/\/users\/([^/]+)\/contentReports\//)?.[1]
+      if (!uid) throw new Error('Invalid report owner')
+      const { transaction } = await requestJson(`${base}:beginTransaction`, { method: 'POST', headers, body: '{}' }, fetcher)
+      try {
+        const marker = `${base.replace('https://firestore.googleapis.com/v1/', '')}/_accountLifecycle/${uid}`
+        const read = await requestJson(`${base}:batchGet`, { method: 'POST', headers,
+          body: JSON.stringify({ documents: [marker], transaction }) }, fetcher)
+        if (read.some(entry => entry.found)) throw new Error('Account deletion in progress')
+        const result = await requestJson(`${base}:commit`, { method: 'POST', headers, body: JSON.stringify({ transaction, writes: [{
+          update: { name: report.documentName, fields: Object.fromEntries(Object.entries(changes).map(([key, value]) => [key, firestoreValue(value)])) },
+          updateMask: { fieldPaths: Object.keys(changes) }, currentDocument: { updateTime: report.updateTime },
+        }] }) }, fetcher)
+        return { ...report, ...changes, updateTime: result.writeResults[0].updateTime }
+      } catch (error) {
+        await requestJson(`${base}:rollback`, { method: 'POST', headers, body: JSON.stringify({ transaction }) }, fetcher).catch(() => {})
+        throw error
+      }
     },
   }
 }
@@ -117,6 +129,24 @@ export function createGithub(token, repository, expectedSha, fetcher = fetch) {
     'X-GitHub-Api-Version': '2022-11-28', 'Content-Type': 'application/json' }
   const call = (path, data) => requestJson(`${base}${path}`, { headers, ...(data ? { method: 'POST', body: JSON.stringify(data) } : {}) }, fetcher)
   return {
+    async publishedCorrection(mergeSha, reportId, contentVersion) {
+      if (!/^[a-f0-9]{40}$/.test(mergeSha || '')) return null
+      const result = await call('/actions/workflows/pages.yml/runs?branch=main&status=success&per_page=10')
+      for (const run of result.workflow_runs || []) {
+        if (run.conclusion !== 'success' || !/^[a-f0-9]{40}$/.test(run.head_sha || '')) continue
+        const comparison = await call(`/compare/${mergeSha}...${run.head_sha}`)
+        if (['identical', 'ahead'].includes(comparison.status)) {
+          const file = await call(`/contents/src/data/catalog/corrections.json?ref=${run.head_sha}`)
+          if (file.encoding !== 'base64' || typeof file.content !== 'string' || file.content.length > 2000000) continue
+          const registry = JSON.parse(Buffer.from(file.content, 'base64').toString('utf8'))
+          if (registry.version === 1 && Array.isArray(registry.entries)
+            && registry.entries.some(entry => entry.reportId === reportId && entry.contentVersion === contentVersion)) {
+            return { deploymentSha: run.head_sha, deploymentUrl: run.html_url }
+          }
+        }
+      }
+      return null
+    },
     async findPullRequest(branch) {
       const [owner] = repository.split('/')
       const entries = await call(`/pulls?state=all&head=${encodeURIComponent(`${owner}:${branch}`)}&per_page=10`)

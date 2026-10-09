@@ -12,6 +12,9 @@ import { PageHeading } from './CatalogShared'
 import LessonText from './LessonText'
 import Memo from './Memo'
 import WorkshopBackground from './WorkshopBackground'
+import ContentReportButton from './ContentReportButton'
+import { challengeReportContext } from '../reports/contentReport'
+import { loadChallengeDraft, removeChallengeDraft, saveChallengeDraft } from '../challenges/challengeDraft'
 import './challenges.css'
 
 function ChallengeView({ challengeId }: { challengeId: string }) {
@@ -21,6 +24,9 @@ function ChallengeView({ challengeId }: { challengeId: string }) {
   const themeAccess = challenge ? getChallengeThemeProgress(challenge, catalogCourses, progress.completedLessons) : null
   const [observations, setObservations] = useState('')
   const [actions, setActions] = useState('')
+  const [draftScope, setDraftScope] = useState('')
+  const [draftMessage, setDraftMessage] = useState('')
+  const scope = `${user?.uid ?? ''}:${challengeId}:${challenge?.version ?? 0}`
   const [autoAnalyzeId, setAutoAnalyzeId] = useState<string | null>(null)
   const [selectedAttemptId, setSelectedAttemptId] = useState<string | null>(null)
   const correctionRef = useRef<HTMLHeadingElement>(null)
@@ -32,13 +38,35 @@ function ChallengeView({ challengeId }: { challengeId: string }) {
   const displayed = reference ?? challenge
   const currentUid = useRef(user?.uid)
   currentUid.current = user?.uid
+  const currentScope = useRef(scope)
+  currentScope.current = scope
 
   useEffect(() => {
-    setObservations('')
-    setActions('')
+    let draft = { observations: '', actions: '' }
+    setDraftMessage('')
+    if (user && challenge) {
+      try {
+        draft = loadChallengeDraft(window.localStorage, user.uid, challenge.id, challenge.version)
+        if (draft.observations || draft.actions) setDraftMessage('Ton brouillon local a été retrouvé.')
+      } catch { setDraftMessage('Ton brouillon local n’a pas pu être chargé.') }
+    }
+    setObservations(draft.observations)
+    setActions(draft.actions)
+    setDraftScope(scope)
     setAutoAnalyzeId(null)
     setSelectedAttemptId(null)
-  }, [challengeId, user?.uid])
+  }, [scope])
+
+  function updateDraft(field: 'observations' | 'actions', value: string) {
+    if (!user || !challenge || draftScope !== scope) return
+    const next = { observations, actions, [field]: value }
+    if (field === 'observations') setObservations(value)
+    else setActions(value)
+    try {
+      saveChallengeDraft(window.localStorage, user.uid, challenge.id, challenge.version, next)
+      setDraftMessage('Brouillon enregistré sur cet appareil pour ce compte.')
+    } catch { setDraftMessage('Le brouillon n’a pas pu être sauvegardé. Garde cette page ouverte.') }
+  }
 
   useEffect(() => {
     if (selected) correctionRef.current?.focus()
@@ -48,10 +76,15 @@ function ChallengeView({ challengeId }: { challengeId: string }) {
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (!challengeAiEnabled || !challenge || !themeAccess?.unlocked || !observations.trim() || !actions.trim() || saving || !ready || !online) return
+    if (draftScope !== scope || !challengeAiEnabled || !challenge || !themeAccess?.unlocked || !observations.trim() || !actions.trim() || saving || !ready || !online) return
     const uid = user?.uid
+    const submittedScope = scope
     const attempt = await submitAttempt(challenge.id, observations, actions)
-    if (attempt && currentUid.current === uid) {
+    if (attempt) {
+      try { removeChallengeDraft(window.localStorage, uid!, challenge.id, challenge.version) }
+      catch { if (currentScope.current === submittedScope) setDraftMessage('La tentative est enregistrée, mais le brouillon local n’a pas pu être effacé.') }
+    }
+    if (attempt && currentUid.current === uid && currentScope.current === submittedScope) {
       setSelectedAttemptId(attempt.id)
       setAutoAnalyzeId(attempt.id)
       setObservations('')
@@ -72,6 +105,7 @@ function ChallengeView({ challengeId }: { challengeId: string }) {
     <WorkshopBackground stage="rest" beat={0} />
     <a className="text-link breadcrumb" href={appHref('/challenges')}>← Tous les défis</a>
     <PageHeading eyebrow={`${catalogCourses.find(course => course.id === challenge.courseId)?.title} · Diagnostic · ${challenge.estimatedMinutes} min`} title={challenge.title} description="Lis le dossier, explique ton diagnostic et propose une action avec sa vérification. Compare ensuite ton raisonnement avec la correction." />
+    <ContentReportButton key={challenge.id} context={challengeReportContext(challenge)} />
     <section className="challenge-prerequisites" aria-label="Notions utiles">
       <p>Pour te préparer ou retrouver une notion :</p>
       <ul>{challenge.lessonIds.map(id => {
@@ -96,9 +130,11 @@ function ChallengeView({ challengeId }: { challengeId: string }) {
       <h2 id="challenge-response-title">Ton raisonnement</h2>
       <form onSubmit={submit}>
         <label htmlFor="challenge-observations">Ce que je constate</label>
-        <textarea ref={responseRef} id="challenge-observations" rows={5} maxLength={2000} required value={observations} disabled={loading || saving} onChange={event => setObservations(event.target.value)} aria-describedby="challenge-response-note" placeholder="Quels indices relèves-tu dans les fichiers ? Comment expliques-tu le problème ?" />
+        <textarea ref={responseRef} id="challenge-observations" rows={5} maxLength={2000} required value={draftScope === scope ? observations : ''} disabled={loading || saving || draftScope !== scope} onChange={event => updateDraft('observations', event.target.value)} aria-describedby="challenge-response-note" placeholder="Quels indices relèves-tu dans les fichiers ? Comment expliques-tu le problème ?" />
         <label htmlFor="challenge-actions">Ce que je ferais</label>
-        <textarea id="challenge-actions" rows={5} maxLength={2000} required value={actions} disabled={loading || saving} onChange={event => setActions(event.target.value)} aria-describedby="challenge-response-note" placeholder="Quelle action proposes-tu, pourquoi et comment vérifierais-tu son résultat ?" />
+        <textarea id="challenge-actions" rows={5} maxLength={2000} required value={draftScope === scope ? actions : ''} disabled={loading || saving || draftScope !== scope} onChange={event => updateDraft('actions', event.target.value)} aria-describedby="challenge-response-note" placeholder="Quelle action proposes-tu, pourquoi et comment vérifierais-tu son résultat ?" />
+        <p className="dashboard-note">Ce brouillon reste sur cet appareil ; il n’est pas envoyé à l’IA avant l’enregistrement de la tentative.</p>
+        {draftMessage && <p className="dashboard-note" role="status">{draftMessage}</p>}
         <p id="challenge-response-note" className="dashboard-note">{observations.length + actions.length + 2} / 4 000 caractères au total · 2 000 par champ. Ta tentative est enregistrée avant tout retour.</p>
         {challengeAiEnabled ? <p className="dashboard-note">Après enregistrement, ton raisonnement et le dossier seront transmis à Mistral pour produire un retour pédagogique.</p> : <p className="dashboard-note" role="status">L’analyse IA est indisponible sur cette version. Les nouvelles tentatives sont suspendues ; ton historique reste consultable.</p>}
         <button className="catalog-button" type="submit" disabled={!challengeAiEnabled || !ready || saving || !online || !observations.trim() || !actions.trim() || observations.trim().length + actions.trim().length + 2 > 4000}>{saving ? 'Enregistrement…' : 'Enregistrer et analyser'}</button>
