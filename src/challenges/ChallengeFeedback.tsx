@@ -3,10 +3,10 @@ import { analyzeChallengeAttempt, challengeAiEnabled, readChallengeAnalysis } fr
 import type { Challenge, ChallengeAnalysis, ChallengeAttempt } from '../types/challenge'
 import { catalogLessons } from '../data/catalog'
 import { appHref } from '../navigation/browser'
-import { needsChallengeRevision } from './remediation'
+import { needsChallengeRevision, targetedRevision } from './remediation'
 import LessonText from '../components/LessonText'
 
-export default function ChallengeFeedback({ uid, attempt, challenge, onRetry, canRetry, autoStart, online }: { uid: string, attempt: ChallengeAttempt, challenge: Challenge, onRetry: () => void, canRetry: boolean, autoStart: boolean, online: boolean }) {
+export default function ChallengeFeedback({ uid, attempt, challenge, onRetry, canRetry, autoStart, online, onAnalysisChange }: { uid: string, attempt: ChallengeAttempt, challenge: Challenge, onRetry: () => void, canRetry: boolean, autoStart: boolean, online: boolean, onAnalysisChange?: () => void }) {
   const [analysis, setAnalysis] = useState<ChallengeAnalysis | null>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
@@ -22,7 +22,7 @@ export default function ChallengeFeedback({ uid, attempt, challenge, onRetry, ca
     setPollingPaused(false)
     try {
       const result = await analyzeChallengeAttempt(uid, attempt.id)
-      if (generation.current === operation) setAnalysis(result)
+      if (generation.current === operation) { setAnalysis(result); if (result.status === 'completed') onAnalysisChange?.() }
     } catch {
       if (generation.current === operation) setError('L’analyse n’a pas abouti. Ta tentative est enregistrée et la correction reste disponible.')
     } finally {
@@ -66,7 +66,7 @@ export default function ChallengeFeedback({ uid, attempt, challenge, onRetry, ca
       reads++
       reading = true
       readChallengeAnalysis(uid, attempt.id).then(result => {
-        if (active && generation.current === operation && result) setAnalysis(result)
+        if (active && generation.current === operation && result) { setAnalysis(result); if (result.status === 'completed') onAnalysisChange?.() }
       }).catch(() => {
         if (active && generation.current === operation) {
           setError('Le suivi de l’analyse est interrompu. Réessaie ou consulte la correction.')
@@ -80,6 +80,8 @@ export default function ChallengeFeedback({ uid, attempt, challenge, onRetry, ca
     }, 120000)
     return () => { active = false; window.clearInterval(timer); window.clearTimeout(timeout) }
   }, [analysis?.status, online, uid, attempt.id, pollingPaused])
+
+  const revision = targetedRevision(challenge, analysis)
 
   return <section className="challenge-feedback" aria-labelledby="challenge-feedback-title">
     <h3 id="challenge-feedback-title">Ton retour personnalisé</h3>
@@ -98,11 +100,11 @@ export default function ChallengeFeedback({ uid, attempt, challenge, onRetry, ca
     </>}
     {needsChallengeRevision(challenge, attempt, analysis) && <section className="challenge-revision" aria-labelledby="challenge-revision-title">
       <h3 id="challenge-revision-title">Préparer ta prochaine tentative</h3>
-      <p>Appuie-toi sur le retour IA ci-dessus pour repérer tes erreurs. Voici les notions et les leçons associées à ce défi.</p>
+      <p>{revision ? 'Voici les points identifiés par l’IA comme manqués et les leçons qui leur correspondent.' : 'Cet ancien retour ne précise pas les points manqués. Compare-le à la correction ; les leçons ci-dessous couvrent l’ensemble du défi.'}</p>
       <h4>Les points à reprendre</h4>
-      <ul>{challenge.checkpoints.map(point => <li key={point}><LessonText text={point} /></li>)}</ul>
+      <ul>{(revision?.points.map(point => point.text) ?? challenge.checkpoints).map(point => <li key={point}><LessonText text={point} /></li>)}</ul>
       <h4>Relire les leçons utiles</h4>
-      <ul>{[...new Set(challenge.lessonIds)].map(id => {
+      <ul>{(revision?.lessonIds ?? [...new Set(challenge.lessonIds)]).map(id => {
         const lesson = catalogLessons.find(entry => entry.id === id)
         return lesson && <li key={id}><a className="text-link" href={appHref(`/lessons/${id}?challenge=${encodeURIComponent(challenge.id)}`)}>{lesson.title} · relire →</a></li>
       })}</ul>

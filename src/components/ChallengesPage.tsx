@@ -5,11 +5,13 @@ import { catalogCourses } from '../data/catalog'
 import { useChallenges } from '../challenges/ChallengeProvider'
 import { getChallengeThemeProgress } from '../challenges/themeAccess'
 import { getChallengeExamSummary } from '../challenges/examSummary'
+import { getThemeSummary } from '../challenges/themeSummary'
 import { challengeAiEnabled } from '../firebase/challengeAnalyses'
 import { useProgress } from '../progress/ProgressProvider'
 import { PageHeading, themes } from './CatalogShared'
 import WorkshopBackground from './WorkshopBackground'
 import './challenges.css'
+import './themeSummary.css'
 
 const statusLabels = {
   validated: 'Validé',
@@ -60,16 +62,23 @@ function ChallengesPage() {
       <p className="exam-other-statuses">{count(exams, 'pending')} en attente · {count(exams, 'unavailable')} analyses indisponibles · {count(exams, 'historical')} historiques sans verdict actuel</p>
       <p className="dashboard-note">Ces trois états ne constituent ni une réussite ni un échec. Un historique sans verdict actuel demande une nouvelle tentative pour obtenir une validation de la version actuelle. Les défis verrouillés sont inclus dans le bilan.</p>
       <details className="exam-theme-details">
-        <summary>Voir le bilan par thématique</summary>
+        <summary>Voir la synthèse par thématique</summary>
         <div className="exam-theme-grid">{themes.map(entry => {
           const entries = exams.filter(exam => exam.theme === entry.title)
-          const access = entries[0]?.access
+          const synthesis = getThemeSummary(entry.title, catalogCourses, challenges, progress.completedLessons, attempts, analyses)
           return <section className="exam-theme" key={entry.id} aria-label={`Bilan ${entry.title}`}>
             <h3>{entry.title}</h3>
+            <dl className="theme-learning-counts">
+              <div><dt>Leçons terminées</dt><dd>{synthesis.lessonsCompleted} / {synthesis.lessonsTotal}</dd></div>
+              <div><dt>Examens validés par l’IA</dt><dd>{synthesis.examsValidated} / {synthesis.examsTotal}</dd></div>
+              <div><dt>Points à consolider</dt><dd>{synthesis.notions.length}</dd></div>
+            </dl>
+            <p className="dashboard-note">Les leçons terminées indiquent ta progression de lecture. Les examens et points à consolider reposent sur les analyses IA actuelles.</p>
+            {synthesis.notions.length > 0 ? <ul className="theme-consolidation">{synthesis.notions.map(notion => <li key={`${notion.challengeId}:${notion.checkpointIndex}`}><a href={appHref(`/challenges/${notion.challengeId}`)}>{notion.label}</a></li>)}</ul> : <p className="dashboard-note">Aucun point précis identifié dans les résultats actuels. Cela ne prouve pas la maîtrise de la thématique.</p>}
+            {synthesis.retriesWithoutNotions > 0 && <p className="dashboard-note">{synthesis.retriesWithoutNotions} défi{synthesis.retriesWithoutNotions > 1 ? 's' : ''} à retravailler sans détail structuré des points manqués. Consulte leur retour IA.</p>}
             <p>{count(entries, 'validated')} validés · {count(entries, 'retry')} à retravailler · {count(entries, 'unattempted')} jamais tentés</p>
             <p className="dashboard-note">{count(entries, 'pending')} en attente · {count(entries, 'unavailable')} indisponibles · {count(entries, 'historical')} historiques</p>
-            <p className="dashboard-note">{access?.unlocked ? 'Thématique débloquée' : `${access?.completed ?? 0} / ${access?.total ?? 0} leçons terminées`}</p>
-            <button className="text-link" type="button" onClick={() => { setTheme(entry.title); setSearch('') }}>Afficher les défis {entry.title} →</button>
+            <button className="catalog-button secondary" type="button" onClick={() => { setTheme(entry.title); setSearch('') }}>Afficher les défis {entry.title} →</button>
           </section>
         })}</div>
       </details>

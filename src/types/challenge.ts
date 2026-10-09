@@ -9,6 +9,7 @@ export type Challenge = {
   prompt: string
   correction: string
   checkpoints: string[]
+  checkpointLessonIds?: string[][]
   counterexamples: string[]
   sources: { title: string, url: string }[]
   files: { name: string, description: string, language: string, content: string }[]
@@ -31,6 +32,7 @@ export type ChallengeAttempt = {
 }
 
 export type ChallengeAnalysis = {
+  missedCheckpointIndices?: number[]
   verdict?: 'validated' | 'retry'
   status: 'processing' | 'completed' | 'failed' | 'needs_review'
   message: string

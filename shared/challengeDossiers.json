@@ -320,6 +320,17 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Pour ces objets simples, une copie explicite de chaque article ou structuredClone du panier constitue aussi une solution valable."
+      ],
+      "checkpointLessonIds": [
+        [
+          "fund-values-references"
+        ],
+        [
+          "fund-mutation"
+        ],
+        [
+          "fund-mutation"
+        ]
       ]
     },
     {
@@ -366,6 +377,17 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Un résultat métier explicite ou une exception gérée sont acceptables si le refus ne change pas le stock."
+      ],
+      "checkpointLessonIds": [
+        [
+          "fund-invariants"
+        ],
+        [
+          "fund-invariants"
+        ],
+        [
+          "fund-invariants"
+        ]
       ]
     },
     {
@@ -413,6 +435,19 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Configurer un gestionnaire de services ou le déploiement plutôt que le terminal est valable ; un rechargement serait une autre conception s’il était réellement implémenté."
+      ],
+      "checkpointLessonIds": [
+        [
+          "systems-process",
+          "systems-environment"
+        ],
+        [
+          "systems-environment"
+        ],
+        [
+          "systems-process",
+          "systems-environment"
+        ]
       ]
     },
     {
@@ -459,6 +494,17 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Versionner l’URL des ressources immuables peut résoudre le problème ; désactiver temporairement le cache est une mesure de diagnostic, pas la seule correction possible."
+      ],
+      "checkpointLessonIds": [
+        [
+          "http-cache"
+        ],
+        [
+          "http-cache"
+        ],
+        [
+          "http-cache"
+        ]
       ]
     },
     {
@@ -505,6 +551,17 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Un adaptateur central qui transforme les réponses non réussies en erreurs typées est valable s’il conserve les informations utiles."
+      ],
+      "checkpointLessonIds": [
+        [
+          "browser-fetch-errors"
+        ],
+        [
+          "browser-fetch-errors"
+        ],
+        [
+          "browser-fetch-errors"
+        ]
       ]
     },
     {
@@ -552,6 +609,18 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Un composant qui rend un vrai button convient ; un contrôle personnalisé n’est acceptable que s’il reproduit entièrement focus, rôle et interactions clavier."
+      ],
+      "checkpointLessonIds": [
+        [
+          "ui-semantic-html"
+        ],
+        [
+          "ui-semantic-html",
+          "ui-keyboard-focus"
+        ],
+        [
+          "ui-keyboard-focus"
+        ]
       ]
     },
     {
@@ -598,6 +667,17 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Une condition explicite sur null et undefined est équivalente ; un schéma de validation peut être ajouté sans rendre zéro invalide."
+      ],
+      "checkpointLessonIds": [
+        [
+          "js-nullish"
+        ],
+        [
+          "js-nullish"
+        ],
+        [
+          "js-nullish"
+        ]
       ]
     },
     {
@@ -645,6 +725,19 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Promise.allSettled convient si chaque résultat est contrôlé et que la moindre erreur empêche l’affichage du groupe, conformément au contrat tout-ou-rien. Démarrer toutes les promesses puis les attendre séparément impose de traiter immédiatement leurs rejets, sans laisser un rejet non suivi pendant l’attente d’une autre."
+      ],
+      "checkpointLessonIds": [
+        [
+          "js-concurrency"
+        ],
+        [
+          "js-concurrency",
+          "js-async-errors"
+        ],
+        [
+          "js-concurrency",
+          "js-async-errors"
+        ]
       ]
     },
     {
@@ -692,6 +785,18 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Un validateur de schéma à l’exécution est valable au même titre qu’un garde de type correct couvrant la structure."
+      ],
+      "checkpointLessonIds": [
+        [
+          "ts-runtime"
+        ],
+        [
+          "ts-unknown",
+          "ts-runtime"
+        ],
+        [
+          "ts-runtime"
+        ]
       ]
     },
     {
@@ -738,6 +843,17 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Un reducer qui produit un nouveau tableau est valable ; une copie faite avant push convient aussi si elle n’altère pas l’état précédent."
+      ],
+      "checkpointLessonIds": [
+        [
+          "react-state-update"
+        ],
+        [
+          "react-state-update"
+        ],
+        [
+          "react-state-update"
+        ]
       ]
     },
     {
@@ -785,6 +901,18 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Un cache de requêtes gérant la clé query et l’obsolescence est acceptable ; une annulation doit être accompagnée d’une gestion correcte des erreurs d’annulation."
+      ],
+      "checkpointLessonIds": [
+        [
+          "react-effect-cleanup"
+        ],
+        [
+          "react-effect-cleanup"
+        ],
+        [
+          "react-effect-cleanup",
+          "react-loading-states"
+        ]
       ]
     },
     {
@@ -831,6 +959,17 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Un identifiant stable créé à l’insertion convient ; contrôler les brouillons par identifiant peut aussi traiter l’association, sans rendre les clés aléatoires souhaitables."
+      ],
+      "checkpointLessonIds": [
+        [
+          "react-list-keys"
+        ],
+        [
+          "react-list-keys"
+        ],
+        [
+          "react-list-keys"
+        ]
       ]
     },
     {
@@ -877,6 +1016,17 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Une bibliothèque de schéma ou une validation explicite conviennent ; une conversion de chaîne n’est acceptable que si le contrat API l’autorise clairement."
+      ],
+      "checkpointLessonIds": [
+        [
+          "node-validation"
+        ],
+        [
+          "node-validation"
+        ],
+        [
+          "node-validation"
+        ]
       ]
     },
     {
@@ -927,6 +1077,17 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Une contrainte unique sur une identité métier de paiement avec restitution du résultat peut convenir si elle couvre correctement la même intention et les courses concurrentes."
+      ],
+      "checkpointLessonIds": [
+        [
+          "rest-idempotency"
+        ],
+        [
+          "rest-idempotency"
+        ],
+        [
+          "rest-idempotency"
+        ]
       ]
     },
     {
@@ -973,6 +1134,17 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Un module de configuration validée ou un schéma sont valables ; une vérification de disponibilité de la base complète le contrôle de configuration sans s’y substituer."
+      ],
+      "checkpointLessonIds": [
+        [
+          "node-config"
+        ],
+        [
+          "node-config"
+        ],
+        [
+          "node-config"
+        ]
       ]
     },
     {
@@ -1020,6 +1192,19 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Une sous-requête préagrégée puis LEFT JOIN avec remplacement du résultat absent par zéro est valable."
+      ],
+      "checkpointLessonIds": [
+        [
+          "sql-joins",
+          "sql-null"
+        ],
+        [
+          "sql-joins"
+        ],
+        [
+          "sql-joins",
+          "sql-null"
+        ]
       ]
     },
     {
@@ -1070,6 +1255,17 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Une opération transactionnelle encapsulée côté base convient ; les écritures concurrentes nécessitent en plus une stratégie de verrouillage ou une condition atomique adaptée."
+      ],
+      "checkpointLessonIds": [
+        [
+          "sql-transactions"
+        ],
+        [
+          "sql-transactions"
+        ],
+        [
+          "sql-transactions"
+        ]
       ]
     },
     {
@@ -1116,6 +1312,17 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Un outbox transactionnel et un worker idempotent conviennent ; un simple envoi après commit évite la répétition du callback mais peut perdre la notification en cas de panne."
+      ],
+      "checkpointLessonIds": [
+        [
+          "firestore-transactions"
+        ],
+        [
+          "firestore-transactions"
+        ],
+        [
+          "firestore-transactions"
+        ]
       ]
     },
     {
@@ -1163,6 +1370,18 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Une requête filtrée par propriétaire ou des règles d’accès de la base peuvent convenir si chaque accès passe effectivement par cette autorité."
+      ],
+      "checkpointLessonIds": [
+        [
+          "security-authn-authz"
+        ],
+        [
+          "security-object-access"
+        ],
+        [
+          "security-authn-authz",
+          "security-object-access"
+        ]
       ]
     },
     {
@@ -1209,6 +1428,17 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Un ORM utilisant réellement des paramètres convient ; une liste autorisée séparée est nécessaire pour les identifiants SQL dynamiques qui ne se paramètrent pas comme des valeurs."
+      ],
+      "checkpointLessonIds": [
+        [
+          "security-injection"
+        ],
+        [
+          "security-injection"
+        ],
+        [
+          "security-injection"
+        ]
       ]
     },
     {
@@ -1255,6 +1485,17 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Le rendu texte normal d’un framework convient ; si du HTML devenait nécessaire, il faudrait une sanitation robuste et adaptée aux balises autorisées."
+      ],
+      "checkpointLessonIds": [
+        [
+          "security-xss"
+        ],
+        [
+          "security-xss"
+        ],
+        [
+          "security-xss"
+        ]
       ]
     },
     {
@@ -1301,6 +1542,17 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Une table de cas ou une assertion équivalente conviennent ; vérifier seulement le nombre d’appels ne démontre pas le montant correct."
+      ],
+      "checkpointLessonIds": [
+        [
+          "tests-regression"
+        ],
+        [
+          "tests-regression"
+        ],
+        [
+          "tests-regression"
+        ]
       ]
     },
     {
@@ -1348,6 +1600,19 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Une horloge simulée convient aussi ; ici l’argument now rend déjà la vérification déterministe."
+      ],
+      "checkpointLessonIds": [
+        [
+          "tests-boundaries"
+        ],
+        [
+          "tests-boundaries",
+          "tests-determinism"
+        ],
+        [
+          "tests-boundaries",
+          "tests-determinism"
+        ]
       ]
     },
     {
@@ -1395,6 +1660,19 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Un test de contrat contre un serveur local représentatif ou une fixture documentée convient ; un test réel limité apporte une preuve différente du test unitaire."
+      ],
+      "checkpointLessonIds": [
+        [
+          "tests-doubles"
+        ],
+        [
+          "tests-unit-integration",
+          "tests-doubles"
+        ],
+        [
+          "tests-unit-integration",
+          "tests-doubles"
+        ]
       ]
     },
     {
@@ -1442,6 +1720,17 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Un module partagé ou un calcul côté autorité serveur conviennent selon le système ; aucune bibliothèque complexe n’est nécessaire pour cette règle simple."
+      ],
+      "checkpointLessonIds": [
+        [
+          "arch-contracts"
+        ],
+        [
+          "arch-domain-ui"
+        ],
+        [
+          "arch-contracts"
+        ]
       ]
     },
     {
@@ -1488,6 +1777,17 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Un reducer ou une union discriminée conviennent ; conserver les booléens est acceptable si toutes les transitions garantissent réellement l’invariant."
+      ],
+      "checkpointLessonIds": [
+        [
+          "arch-state-machine"
+        ],
+        [
+          "arch-state-machine"
+        ],
+        [
+          "arch-state-machine"
+        ]
       ]
     },
     {
@@ -1534,6 +1834,17 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Un ETag avec If-Match convient si la précondition et l’écriture sont vérifiées atomiquement, puis que le conflit est signalé au collaborateur."
+      ],
+      "checkpointLessonIds": [
+        [
+          "dist-concurrent-writes"
+        ],
+        [
+          "dist-concurrent-writes"
+        ],
+        [
+          "dist-concurrent-writes"
+        ]
       ]
     },
     {
@@ -1581,6 +1892,18 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Passer cette image en chargement immédiat avec fetchpriority=high est acceptable si les mesures vérifient son intérêt et l’absence de régression sur les autres ressources. Un preload peut aider quand la découverte est tardive, ce qui n’est pas le facteur observé ici."
+      ],
+      "checkpointLessonIds": [
+        [
+          "perf-images",
+          "perf-web-vitals"
+        ],
+        [
+          "perf-images"
+        ],
+        [
+          "perf-web-vitals"
+        ]
       ]
     },
     {
@@ -1628,6 +1951,17 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Un découpage par route dédiée à l’export ou un préchargement après l’essentiel peuvent convenir selon le parcours et les mesures."
+      ],
+      "checkpointLessonIds": [
+        [
+          "perf-bundle"
+        ],
+        [
+          "perf-bundle"
+        ],
+        [
+          "perf-measure"
+        ]
       ]
     },
     {
@@ -1678,6 +2012,17 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Un chargeur qui regroupe les lectures ou un cache par requête peuvent convenir ; lancer simplement 50 requêtes concurrentes réduit parfois l’attente sans supprimer le N+1."
+      ],
+      "checkpointLessonIds": [
+        [
+          "perf-n-plus-one"
+        ],
+        [
+          "perf-n-plus-one"
+        ],
+        [
+          "perf-n-plus-one"
+        ]
       ]
     },
     {
@@ -1724,6 +2069,17 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "git add -p convient pour sélectionner les morceaux ; si le commit v1 est déjà partagé, un nouveau commit de correction convient sans réécrire l’historique partagé."
+      ],
+      "checkpointLessonIds": [
+        [
+          "git-working-tree"
+        ],
+        [
+          "git-working-tree"
+        ],
+        [
+          "git-working-tree"
+        ]
       ]
     },
     {
@@ -1771,6 +2127,18 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Demander aux auteurs de confirmer une combinaison ambiguë est valable ; réorganiser les validations convient si le contrat final est conservé."
+      ],
+      "checkpointLessonIds": [
+        [
+          "git-conflicts"
+        ],
+        [
+          "git-conflicts",
+          "git-review"
+        ],
+        [
+          "git-review"
+        ]
       ]
     },
     {
@@ -1824,6 +2192,17 @@
       "rubricVersion": 1,
       "acceptableAlternatives": [
         "Une réduction minimale du cas et un point d’arrêt au formatage sont valables ; un nom de repli convient seulement si le produit autorise réellement ce champ absent."
+      ],
+      "checkpointLessonIds": [
+        [
+          "debug-stack-trace"
+        ],
+        [
+          "debug-reproduce"
+        ],
+        [
+          "debug-reproduce"
+        ]
       ]
     }
   ]

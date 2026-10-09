@@ -17,6 +17,15 @@ test('only complete valid analysis messages become visible feedback', () => {
   assert.ok(decodeChallengeAnalysis({ ...completed, status: 'needs_review', message: '' }))
 })
 
+test('v4 requires bounded unique missed indices consistent with the server verdict; v3 stays readable', () => {
+  const result = { ...completed, promptVersion: 'challenge-feedback-v4', verdict: 'retry', missedCheckpointIndices: [0, 2] }
+  assert.deepEqual(decodeChallengeAnalysis(result), result)
+  for (const missedCheckpointIndices of [undefined, [], [-1], [100], [0.5], [1, 1], ['1']]) assert.equal(decodeChallengeAnalysis({ ...result, missedCheckpointIndices }), null)
+  assert.ok(decodeChallengeAnalysis({ ...result, verdict: 'validated', missedCheckpointIndices: [] }))
+  assert.equal(decodeChallengeAnalysis({ ...result, verdict: 'validated' }), null)
+  assert.ok(decodeChallengeAnalysis({ ...completed, promptVersion: 'challenge-feedback-v3', verdict: 'retry' }))
+})
+
 test('only completed server analyses with an explicit supported verdict validate an exam', () => {
   for (const verdict of ['validated', 'retry']) {
     assert.equal(decodeChallengeAnalysis({ ...completed, promptVersion: 'challenge-feedback-v3', verdict })?.verdict, verdict)

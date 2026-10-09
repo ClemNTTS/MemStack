@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { appHref } from '../navigation/browser'
 import { challenges, getChallengeVersion } from '../data/challenges'
 import ChallengeFeedback from '../challenges/ChallengeFeedback'
+import AttemptComparison from '../challenges/ChallengeAttemptComparison'
 import { challengeAiEnabled } from '../firebase/challengeAnalyses'
 import { catalogCourses, catalogLessons } from '../data/catalog'
 import { useChallenges } from '../challenges/ChallengeProvider'
@@ -15,7 +16,7 @@ import './challenges.css'
 
 function ChallengeView({ challengeId }: { challengeId: string }) {
   const { user, progress, online } = useProgress()
-  const { attempts, loading, ready, error, saving, retry, submitAttempt } = useChallenges()
+  const { attempts, analyses, analysesLoading, analysesReady, analysesError, refreshAnalyses, loading, ready, error, saving, retry, submitAttempt } = useChallenges()
   const challenge = challenges.find(entry => entry.id === challengeId)
   const themeAccess = challenge ? getChallengeThemeProgress(challenge, catalogCourses, progress.completedLessons) : null
   const [observations, setObservations] = useState('')
@@ -107,7 +108,8 @@ function ChallengeView({ challengeId }: { challengeId: string }) {
       <p className="dashboard-note">Tentative du {new Date(selected.submittedAt).toLocaleString('fr-FR')} · Enregistrée sur ton compte</p>
       {selected.challengeVersion !== challenge.version && <p className="challenge-version-note" role="status">Cette tentative concerne la version {selected.challengeVersion}. Sa correction d’origine est conservée.</p>}
       <details className="challenge-own-response"><summary>Relire ta réponse</summary>{selected.version === 2 ? <><h3>Ce que je constate</h3><LessonText text={selected.observations!} /><h3>Ce que je ferais</h3><LessonText text={selected.actions!} /></> : <LessonText text={selected.answer} />}</details>
-      {user && <ChallengeFeedback key={`${user.uid}-${selected.id}`} uid={user.uid} attempt={selected} challenge={challenge} onRetry={() => setSelectedAttemptId(null)} canRetry={challengeAiEnabled && ready && !saving} autoStart={autoAnalyzeId === selected.id} online={online} />}
+      {user && <ChallengeFeedback key={`${user.uid}-${selected.id}`} uid={user.uid} attempt={selected} challenge={challenge} onRetry={() => setSelectedAttemptId(null)} canRetry={challengeAiEnabled && ready && !saving} autoStart={autoAnalyzeId === selected.id} online={online} onAnalysisChange={refreshAnalyses} />}
+      <AttemptComparison challenge={challenge} attempt={selected} attempts={history} analyses={analysesReady ? analyses : {}} loading={analysesLoading} error={analysesError} onRefresh={refreshAnalyses} />
       <h3 id="challenge-reference-correction" tabIndex={-1}>La correction expliquée</h3>
       <LessonText text={reference?.correction ?? 'Cette version du dossier n’est pas disponible.'} />
       <h3>Les points à retrouver dans ton raisonnement</h3>
