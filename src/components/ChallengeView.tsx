@@ -1,169 +1,127 @@
 import { useEffect, useRef, useState } from 'react'
 import { appHref } from '../navigation/browser'
 import { challenges, getChallengeVersion } from '../data/challenges'
-import ChallengeFeedback from '../challenges/ChallengeFeedback'
-import AttemptComparison from '../challenges/ChallengeAttemptComparison'
-import { challengeAiEnabled } from '../firebase/challengeAnalyses'
 import { catalogCourses, catalogLessons } from '../data/catalog'
 import { useChallenges } from '../challenges/ChallengeProvider'
 import { getChallengeThemeProgress } from '../challenges/themeAccess'
 import { useProgress } from '../progress/ProgressProvider'
 import { PageHeading } from './CatalogShared'
 import LessonText from './LessonText'
-import Memo from './Memo'
+import ChallengeQuestions from './ChallengeQuestions'
 import WorkshopBackground from './WorkshopBackground'
 import ContentReportButton from './ContentReportButton'
 import { challengeReportContext } from '../reports/contentReport'
-import { loadChallengeDraft, removeChallengeDraft, saveChallengeDraft } from '../challenges/challengeDraft'
+import { loadSelectionDraft, saveSelectionDraft, selectionDraftKey } from '../challenges/selectionDraft'
 import './challenges.css'
 
-function ChallengeView({ challengeId }: { challengeId: string }) {
+export default function ChallengeView({ challengeId }: { challengeId: string }) {
   const { user, progress, online } = useProgress()
-  const { attempts, analyses, analysesLoading, analysesReady, analysesError, refreshAnalyses, loading, ready, error, saving, retry, submitAttempt } = useChallenges()
+  const { attempts, analyses, loading, ready, error, saving, retry, submitAttempt } = useChallenges()
   const challenge = challenges.find(entry => entry.id === challengeId)
   const themeAccess = challenge ? getChallengeThemeProgress(challenge, catalogCourses, progress.completedLessons) : null
-  const [observations, setObservations] = useState('')
-  const [actions, setActions] = useState('')
-  const [draftScope, setDraftScope] = useState('')
-  const [draftMessage, setDraftMessage] = useState('')
   const scope = `${user?.uid ?? ''}:${challengeId}:${challenge?.version ?? 0}`
-  const [autoAnalyzeId, setAutoAnalyzeId] = useState<string | null>(null)
+  const [draftScope, setDraftScope] = useState('')
+  const [choices, setChoices] = useState<Record<string, string>>({})
+  const [draftMessage, setDraftMessage] = useState('')
   const [selectedAttemptId, setSelectedAttemptId] = useState<string | null>(null)
-  const correctionRef = useRef<HTMLHeadingElement>(null)
-  const responseRef = useRef<HTMLTextAreaElement>(null)
-  const previousAttemptId = useRef<string | undefined>(undefined)
+  const resultRef = useRef<HTMLHeadingElement>(null)
+  const currentScope = useRef(scope)
+  currentScope.current = scope
   const history = attempts.filter(attempt => attempt.challengeId === challengeId)
   const selected = history.find(attempt => attempt.id === selectedAttemptId)
   const reference = selected ? getChallengeVersion(challengeId, selected.challengeVersion) : challenge
   const displayed = reference ?? challenge
-  const currentUid = useRef(user?.uid)
-  currentUid.current = user?.uid
-  const currentScope = useRef(scope)
-  currentScope.current = scope
+  const complete = challenge?.questions?.every(question => choices[question.id])
 
   useEffect(() => {
-    let draft = { observations: '', actions: '' }
-    setDraftMessage('')
+    let draft = {}
+    let message = ''
     if (user && challenge) {
-      try {
-        draft = loadChallengeDraft(window.localStorage, user.uid, challenge.id, challenge.version)
-        if (draft.observations || draft.actions) setDraftMessage('Ton brouillon local a été retrouvé.')
-      } catch { setDraftMessage('Ton brouillon local n’a pas pu être chargé.') }
+      try { draft = loadSelectionDraft(window.localStorage, user.uid, challenge) }
+      catch { message = 'Le brouillon local n’a pas pu être retrouvé.' }
     }
-    setObservations(draft.observations)
-    setActions(draft.actions)
+    setChoices(draft)
+    setDraftMessage(message)
     setDraftScope(scope)
-    setAutoAnalyzeId(null)
     setSelectedAttemptId(null)
   }, [scope])
 
-  function updateDraft(field: 'observations' | 'actions', value: string) {
-    if (!user || !challenge || draftScope !== scope) return
-    const next = { observations, actions, [field]: value }
-    if (field === 'observations') setObservations(value)
-    else setActions(value)
-    try {
-      saveChallengeDraft(window.localStorage, user.uid, challenge.id, challenge.version, next)
-      setDraftMessage('Brouillon enregistré sur cet appareil pour ce compte.')
-    } catch { setDraftMessage('Le brouillon n’a pas pu être sauvegardé. Garde cette page ouverte.') }
-  }
+  useEffect(() => { if (selected) resultRef.current?.focus() }, [selected?.id])
 
-  useEffect(() => {
-    if (selected) correctionRef.current?.focus()
-    else if (previousAttemptId.current) responseRef.current?.focus()
-    previousAttemptId.current = selected?.id
-  }, [selected?.id])
+  function choose(questionId: string, optionId: string) {
+    if (!user || !challenge || draftScope !== scope) return
+    const next = { ...choices, [questionId]: optionId }
+    setChoices(next)
+    try { saveSelectionDraft(window.localStorage, user.uid, challenge, next); setDraftMessage('Brouillon enregistré sur cet appareil pour ce compte.') }
+    catch { setDraftMessage('Garde cette page ouverte : le brouillon n’a pas pu être sauvegardé.') }
+  }
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (draftScope !== scope || !challengeAiEnabled || !challenge || !themeAccess?.unlocked || !observations.trim() || !actions.trim() || saving || !ready || !online) return
-    const uid = user?.uid
+    if (!challenge || !user || draftScope !== scope || !complete || !themeAccess?.unlocked || !ready || !online || saving) return
     const submittedScope = scope
-    const attempt = await submitAttempt(challenge.id, observations, actions)
-    if (attempt) {
-      try { removeChallengeDraft(window.localStorage, uid!, challenge.id, challenge.version) }
-      catch { if (currentScope.current === submittedScope) setDraftMessage('La tentative est enregistrée, mais le brouillon local n’a pas pu être effacé.') }
-    }
-    if (attempt && currentUid.current === uid && currentScope.current === submittedScope) {
+    const uid = user.uid
+    const attempt = await submitAttempt(challenge.id, choices)
+    if (attempt && currentScope.current === submittedScope) {
       setSelectedAttemptId(attempt.id)
-      setAutoAnalyzeId(attempt.id)
-      setObservations('')
-      setActions('')
+      setChoices({})
+      try { window.localStorage.removeItem(selectionDraftKey(uid, challenge)) }
+      catch { setDraftMessage('La tentative est enregistrée ; le brouillon local n’a pas pu être effacé.') }
     }
   }
 
-  if (!challenge) return <main className="dashboard"><PageHeading eyebrow="Défi introuvable" title="Une autre situation ?" description="Ce défi n’existe pas dans l’atelier." /><a className="dashboard-cta" href={appHref('/challenges')}>Voir les défis</a></main>
-
+  if (!challenge) return <main className="dashboard"><PageHeading eyebrow="Défi introuvable" title="Une autre situation ?" description="Ce défi n’existe pas dans l’atelier." /><a href={appHref('/challenges')}>Voir les défis</a></main>
   if (!themeAccess?.unlocked) return <main className="dashboard challenge-page">
     <a className="text-link breadcrumb" href={appHref('/challenges')}>← Tous les défis</a>
-    <PageHeading eyebrow="Prépare ton défi" title={challenge.title} description={`Termine les leçons utiles à ce défi et au moins ${themeAccess?.minimumCompleted ?? 2} leçons de la thématique ${themeAccess?.theme ?? 'associée'}. Tu n’as pas besoin de terminer toute la thématique.`} />
-    <p role="status">{themeAccess?.requiredCompleted ?? 0} / {themeAccess?.requiredTotal ?? 0} leçons utiles terminées · {Math.min(themeAccess?.completed ?? 0, themeAccess?.minimumCompleted ?? 2)} / {themeAccess?.minimumCompleted ?? 2} leçons minimum dans la thématique.</p>
-    {themeAccess && themeAccess.missingLessonIds.length > 0 && <section className="overview-panel" aria-label="Leçons à terminer"><h2>Les notions à découvrir</h2><ul>{themeAccess.missingLessonIds.map(id => <li key={id}>{catalogLessons.find(lesson => lesson.id === id)?.title ?? 'Leçon du parcours'}</li>)}</ul></section>}
-    {themeAccess && themeAccess.completed < themeAccess.minimumCompleted && <p>Découvre encore {themeAccess.minimumCompleted - themeAccess.completed} leçon{themeAccess.minimumCompleted - themeAccess.completed > 1 ? 's' : ''} de cette thématique pour poser les bases avant ta première tentative.</p>}
+    <PageHeading eyebrow="Prépare ton défi" title={challenge.title} description={`Termine les leçons utiles et au moins ${themeAccess?.minimumCompleted ?? 2} leçons de la thématique ${themeAccess?.theme ?? 'associée'}.`} />
+    <ul>{themeAccess?.missingLessonIds.map(id => <li key={id}>{catalogLessons.find(lesson => lesson.id === id)?.title ?? id}</li>)}</ul>
     <a className="dashboard-cta" href={appHref('/courses')}>Continuer les parcours →</a>
   </main>
 
   return <main className="dashboard challenge-page">
     <WorkshopBackground stage="rest" beat={0} />
     <a className="text-link breadcrumb" href={appHref('/challenges')}>← Tous les défis</a>
-    <PageHeading eyebrow={`${catalogCourses.find(course => course.id === challenge.courseId)?.title} · Diagnostic · ${challenge.estimatedMinutes} min`} title={challenge.title} description="Lis le dossier, explique ton diagnostic et propose une action avec sa vérification. Compare ensuite ton raisonnement avec la correction." />
+    <PageHeading eyebrow={`${catalogCourses.find(course => course.id === challenge.courseId)?.title} · Diagnostic`} title={challenge.title} description="Lis le scénario et choisis les réponses adaptées. Le serveur corrige les choix ; l’IA et l’autoévaluation ne décident pas de ta réussite." />
     <ContentReportButton key={challenge.id} context={challengeReportContext(challenge)} />
-    <section className="challenge-prerequisites" aria-label="Notions utiles">
-      <p>Pour te préparer ou retrouver une notion :</p>
-      <ul>{challenge.lessonIds.map(id => {
-        const lesson = catalogLessons.find(entry => entry.id === id)
-        const completed = Object.hasOwn(progress.completedLessons, id)
-        return <li key={id}><a href={appHref(completed ? `/lessons/${id}` : `/courses/${challenge.courseId}`)}>{lesson?.title ?? id}{completed ? ' · relire' : ' · voir le parcours'}</a></li>
-      })}</ul>
-      <p className="dashboard-note">Tu as terminé les prérequis de ce défi. Ces repères restent disponibles pour relire les notions utiles.</p>
-    </section>
+    <section className="challenge-prerequisites"><p>Les notions utiles :</p><ul>{challenge.lessonIds.map(id => <li key={id}><a href={appHref(`/lessons/${id}`)}>{catalogLessons.find(lesson => lesson.id === id)?.title ?? id} · relire</a></li>)}</ul></section>
     {loading && <p role="status">Chargement de tes tentatives…</p>}
-    {error && <div className="inline-error" role="alert"><p>{error}</p><button className="catalog-button secondary" type="button" disabled={saving} onClick={retry}>Réessayer</button></div>}
+    {error && <div className="inline-error" role="alert"><p>{error}</p><button type="button" disabled={saving} onClick={retry}>Réessayer</button></div>}
     <section className="challenge-scenario" aria-labelledby="challenge-situation">
-      <div className="challenge-section-heading"><Memo expression="unsure" /><h2 id="challenge-situation">La situation</h2></div>
+      <h2 id="challenge-situation">La situation</h2>
       {selected && <p className="dashboard-note">Dossier de la tentative · version {selected.challengeVersion}</p>}
       <LessonText text={displayed!.scenario} />
-      {displayed!.files.length > 0 && <><h3>Les fichiers du dossier</h3>
-      <div className="challenge-files">{displayed!.files.map(file => <details key={file.name} open><summary><strong>{file.name}</strong> · {file.description}</summary><pre tabIndex={0} aria-label={`Contenu de ${file.name}, défilement horizontal disponible`}><code>{file.content}</code></pre></details>)}</div></>}
-      <h3>À toi de diagnostiquer</h3>
-      <LessonText text={displayed!.prompt} />
+      <div className="challenge-files">{displayed!.files.map(file => <details key={file.name} open><summary><strong>{file.name}</strong> · {file.description}</summary><pre tabIndex={0} aria-label={`Contenu de ${file.name}`}><code>{file.content}</code></pre></details>)}</div>
+      {selected?.version !== 3 && selected && <LessonText text={displayed!.prompt} />}
     </section>
     {!selected ? <section className="challenge-response" aria-labelledby="challenge-response-title">
-      <h2 id="challenge-response-title">Ton raisonnement</h2>
+      <h2 id="challenge-response-title">À toi de résoudre le défi</h2>
       <form onSubmit={submit}>
-        <label htmlFor="challenge-observations">Ce que je constate</label>
-        <textarea ref={responseRef} id="challenge-observations" rows={5} maxLength={2000} required value={draftScope === scope ? observations : ''} disabled={loading || saving || draftScope !== scope} onChange={event => updateDraft('observations', event.target.value)} aria-describedby="challenge-response-note" placeholder="Quels indices relèves-tu dans les fichiers ? Comment expliques-tu le problème ?" />
-        <label htmlFor="challenge-actions">Ce que je ferais</label>
-        <textarea id="challenge-actions" rows={5} maxLength={2000} required value={draftScope === scope ? actions : ''} disabled={loading || saving || draftScope !== scope} onChange={event => updateDraft('actions', event.target.value)} aria-describedby="challenge-response-note" placeholder="Quelle action proposes-tu, pourquoi et comment vérifierais-tu son résultat ?" />
-        <p className="dashboard-note">Ce brouillon reste sur cet appareil ; il n’est pas envoyé à l’IA avant l’enregistrement de la tentative.</p>
+        <ChallengeQuestions questions={challenge.questions!} choices={draftScope === scope ? choices : {}} disabled={!ready || saving || !online || draftScope !== scope} onChoose={choose} />
+        <p className="dashboard-note">Une réponse par question. Il faut strictement plus de 70 % de bonnes réponses pour réussir : {Math.floor(challenge.questions!.length * 0.7) + 1} sur {challenge.questions!.length}. Rien n’est exécuté.</p>
         {draftMessage && <p className="dashboard-note" role="status">{draftMessage}</p>}
-        <p id="challenge-response-note" className="dashboard-note">{observations.length + actions.length + 2} / 4 000 caractères au total · 2 000 par champ. Ta tentative est enregistrée avant tout retour.</p>
-        {challengeAiEnabled ? <p className="dashboard-note">Après enregistrement, ton raisonnement et le dossier seront transmis à Mistral pour produire un retour pédagogique.</p> : <p className="dashboard-note" role="status">L’analyse IA est indisponible sur cette version. Les nouvelles tentatives sont suspendues ; ton historique reste consultable.</p>}
-        <button className="catalog-button" type="submit" disabled={!challengeAiEnabled || !ready || saving || !online || !observations.trim() || !actions.trim() || observations.trim().length + actions.trim().length + 2 > 4000}>{saving ? 'Enregistrement…' : 'Enregistrer et analyser'}</button>
+        <button className="catalog-button" type="submit" disabled={!ready || saving || !online || !complete || draftScope !== scope}>{saving ? 'Correction et enregistrement…' : 'Soumettre mes réponses'}</button>
       </form>
     </section> : <section className="challenge-correction" aria-labelledby="challenge-correction-title">
-      <div className="challenge-section-heading"><Memo /><h2 id="challenge-correction-title" ref={correctionRef} tabIndex={-1}>Comparer, puis comprendre</h2></div>
-      <p className="dashboard-note">Tentative du {new Date(selected.submittedAt).toLocaleString('fr-FR')} · Enregistrée sur ton compte</p>
-      {selected.challengeVersion !== challenge.version && <p className="challenge-version-note" role="status">Cette tentative concerne la version {selected.challengeVersion}. Sa correction d’origine est conservée.</p>}
-      <details className="challenge-own-response"><summary>Relire ta réponse</summary>{selected.version === 2 ? <><h3>Ce que je constate</h3><LessonText text={selected.observations!} /><h3>Ce que je ferais</h3><LessonText text={selected.actions!} /></> : <LessonText text={selected.answer} />}</details>
-      {user && <ChallengeFeedback key={`${user.uid}-${selected.id}`} uid={user.uid} attempt={selected} challenge={challenge} onRetry={() => setSelectedAttemptId(null)} canRetry={challengeAiEnabled && ready && !saving} autoStart={autoAnalyzeId === selected.id} online={online} onAnalysisChange={refreshAnalyses} />}
-      <AttemptComparison challenge={challenge} attempt={selected} attempts={history} analyses={analysesReady ? analyses : {}} loading={analysesLoading} error={analysesError} onRefresh={refreshAnalyses} />
-      <h3 id="challenge-reference-correction" tabIndex={-1}>La correction expliquée</h3>
-      <LessonText text={reference?.correction ?? 'Cette version du dossier n’est pas disponible.'} />
-      <h3>Les points à retrouver dans ton raisonnement</h3>
-      <ul className="challenge-checkpoints">{reference?.checkpoints.map(point => <li key={point}><LessonText text={point} /></li>)}</ul>
-      <h3>Les nuances à garder en tête</h3>
-      <ul className="challenge-checkpoints">{reference?.counterexamples.map(point => <li key={point}><LessonText text={point} /></li>)}</ul>
-      <p className="dashboard-note">Seule l’analyse IA évalue cette réponse. La correction de référence permet de revoir les notions.</p>
-      <details className="challenge-sources"><summary>Sources pour aller plus loin</summary><ul>{reference?.sources.map(source => <li key={source.url}><a href={source.url} target="_blank" rel="noreferrer">{source.title}</a></li>)}</ul></details>
-      <button className="catalog-button secondary" type="button" disabled={!challengeAiEnabled || !ready || saving} onClick={() => setSelectedAttemptId(null)}>Faire une nouvelle tentative</button>
+      <h2 id="challenge-correction-title" ref={resultRef} tabIndex={-1}>Ton résultat et la correction</h2>
+      <p className="dashboard-note">Tentative enregistrée le {new Date(selected.submittedAt).toLocaleString('fr-FR')} · version {selected.challengeVersion}</p>
+      {selected.version === 3 && selected.result ? <>
+        <p role="status"><strong>{selected.result.verdict === 'validated' ? 'Défi validé.' : 'Défi à retravailler.'}</strong> {selected.result.correctCount}/{selected.result.totalCount} bonnes réponses · correction automatique.</p>
+        {reference?.questions?.map((question, index) => <section key={question.id} className="challenge-question-result">
+          <h3>{index + 1}. {question.prompt}</h3>
+          <p><strong>{selected.result!.criterionResults[index] ? 'Réponse correcte' : 'Réponse incorrecte'}</strong></p>
+          <LessonText text={question.options.find(option => option.id === selected.selections?.[question.id])?.text ?? 'Réponse indisponible'} />
+          <LessonText text={selected.result!.feedback[index]} />
+        </section>)}
+      </> : <>
+        <p>Cette tentative appartient à l’ancien format. Elle reste consultable et ne valide pas ce nouveau défi.</p>
+        {selected.version === 2 ? <><h3>Ce que je constate</h3><LessonText text={selected.observations!} /><h3>Ce que je ferais</h3><LessonText text={selected.actions!} /></> : <LessonText text={selected.answer} />}
+        {analyses[selected.id]?.status === 'completed' && <details><summary>Ancien retour IA, conservé dans l’historique</summary><LessonText text={analyses[selected.id].message} /></details>}
+      </>}
+      <h3>La correction expliquée</h3><LessonText text={reference?.correction ?? 'Correction historique indisponible.'} />
+      <h3>Les notions à revoir</h3><ul>{reference?.checkpoints.map(point => <li key={point}><LessonText text={point} /></li>)}</ul>
+      <details><summary>Sources pour aller plus loin</summary><ul>{reference?.sources.map(source => <li key={source.url}><a href={source.url} target="_blank" rel="noreferrer">{source.title}</a></li>)}</ul></details>
+      <button className="catalog-button secondary" type="button" disabled={!ready || saving || !online} onClick={() => setSelectedAttemptId(null)}>Faire une nouvelle tentative</button>
     </section>}
-    {history.length > 0 && <section className="challenge-history" aria-labelledby="challenge-history-title">
-      <h2 id="challenge-history-title">Tes tentatives</h2>
-      <p className="dashboard-note">Chaque tentative conserve ta réponse et son analyse IA. Revoir une correction ne modifie pas ton historique.</p>
-      <ol>{history.map(attempt => <li key={attempt.id}><div><strong>{new Date(attempt.submittedAt).toLocaleString('fr-FR')}</strong><span>{attempt.version === 2 ? 'Tentative enregistrée · retour IA dans le détail' : 'Tentative historique'}</span></div><button className="sound-toggle" type="button" disabled={!ready || saving} aria-pressed={selectedAttemptId === attempt.id} onClick={() => setSelectedAttemptId(attempt.id)}>Revoir la tentative</button></li>)}</ol>
-    </section>}
+    {history.length > 0 && <section className="challenge-history"><h2>Tes tentatives</h2><ol>{history.map(attempt => <li key={attempt.id}><div><strong>{new Date(attempt.submittedAt).toLocaleString('fr-FR')}</strong><span>{attempt.version === 3 ? attempt.result?.verdict === 'validated' ? 'Validé automatiquement' : 'À retravailler' : 'Ancien format'}</span></div><button className="sound-toggle" type="button" disabled={!ready || saving} aria-pressed={selectedAttemptId === attempt.id} onClick={() => setSelectedAttemptId(attempt.id)}>Revoir la tentative</button></li>)}</ol></section>}
   </main>
 }
-
-export default ChallengeView

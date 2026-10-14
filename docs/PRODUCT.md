@@ -81,3 +81,8 @@ L’analyse v4 identifie les points de grille manqués et le catalogue les assoc
 
 
 La liste actualisée des fonctionnalités manquantes et options pour la version finale figure dans [ROADMAP.md](ROADMAP.md).
+# Défis au format vérifiable
+
+Les 36 défis proposent chacun trois questions spécifiques au scénario, à choix unique. Le serveur vérifie les réponses et enregistre le résultat ; l’étudiant ne peut pas choisir son verdict. L’IA n’est plus un verrou de progression. Strictement plus de 70 % des réponses doit être correct : avec les trois questions actuelles, il faut 3/3. Le retour explique chaque question après confirmation de l’enregistrement et propose une nouvelle tentative ou la relecture des notions. Google, Internet et les prérequis restent nécessaires ; aucune invitation ni disponibilité Mistral n’est requise pour ce format. Les anciennes tentatives gardent leurs textes et corrections et apparaissent comme historiques.
+
+Les cartes et leçons ne changent pas à la soumission d’un défi. Une réussite QCM est un résultat d’exercice ; elle ne constitue pas une certification. Les sections historiques mentionnant une validation ou un accès obligatoire par l’IA sont remplacées par ce format pour les défis actifs.

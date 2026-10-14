@@ -6,6 +6,7 @@ import { onCall, HttpsError } from 'firebase-functions/v2/https'
 import { defineBoolean, defineInt, defineSecret, defineString } from 'firebase-functions/params'
 import { AnalysisError, callMistral, publicAnalysis, validateAttemptId } from './analysis.mjs'
 import { claimAnalysis } from './claim.mjs'
+import { submitCheckedChallenge } from './challengeChecks.mjs'
 import { createAccountLifecycle } from './accountLifecycle.mjs'
 import { getAccessStatus, requireGoogle, updateMemberAccess, validateMemberAccessRequest } from './accessService.mjs'
 
@@ -13,6 +14,8 @@ initializeApp()
 const db = getFirestore()
 const dossiers = JSON.parse(readFileSync(new URL('../catalog/challengeDossiers.json', import.meta.url), 'utf8')).challenges
 const courses = JSON.parse(readFileSync(new URL('../catalog/curriculum.json', import.meta.url), 'utf8')).courses
+const challengeQuestions = JSON.parse(readFileSync(new URL('../catalog/challengeQuestions.json', import.meta.url), 'utf8')).challenges
+const challengeAnswerKeys = JSON.parse(readFileSync(new URL('../catalog/challengeAnswerKeys.json', import.meta.url), 'utf8')).challenges
 const key = defineSecret('MISTRAL_API_KEY')
 const enabled = defineBoolean('CHALLENGE_AI_ENABLED', { default: false })
 const appCheck = defineBoolean('CHALLENGE_AI_REQUIRE_APP_CHECK', { default: true })
@@ -27,6 +30,14 @@ const callableOptions = { region: 'europe-west9', enforceAppCheck: true, maxInst
 const lifecycle = createAccountLifecycle({ db, auth: getAuth() })
 export const exportAccountData = onCall({ ...callableOptions, timeoutSeconds: 540, concurrency: 1 }, lifecycle.exportAccountData)
 export const deleteAccountData = onCall({ ...callableOptions, timeoutSeconds: 540, concurrency: 1 }, lifecycle.deleteAccountData)
+
+export const submitDeterministicChallenge = onCall(callableOptions, request => accessCall(async () => {
+  const uid = requireGoogle(request.auth)
+  const now = Date.now()
+  const attempt = await submitCheckedChallenge({ db, uid, data: request.data, questions: challengeQuestions,
+    answerKeys: challengeAnswerKeys, dossiers, courses, now, timestamp: Timestamp.fromMillis(now) })
+  return { id: request.data.attemptId, ...attempt, submittedAt: attempt.submittedAt.toDate().toISOString() }
+}))
 
 async function accessCall(action) {
   try { return await action() } catch (error) {

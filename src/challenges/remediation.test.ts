@@ -23,6 +23,8 @@ test('revision requires a completed current server retry, never a manual or hist
 test('targeted revision selects only missed reference points and their trusted lessons', () => {
   const dossier = { ...challenge, checkpoints: ['Cause', 'Action', 'Vérification'], lessonIds: ['cause', 'action'], checkpointLessonIds: [['cause'], ['action'], ['action']] }
   assert.deepEqual(targetedRevision(dossier, { ...analysis, missedCheckpointIndices: [1] }), { points: [{ index: 1, text: 'Action' }], lessonIds: ['action'] })
+  assert.deepEqual(targetedRevision(dossier, { ...analysis, promptVersion: 'challenge-feedback-v5', missedCheckpointIndices: [1] }), { points: [{ index: 1, text: 'Action' }], lessonIds: ['action'] })
+  assert.deepEqual(targetedRevision(dossier, { ...analysis, promptVersion: 'challenge-feedback-v6', missedCheckpointIndices: [1] }), { points: [{ index: 1, text: 'Action' }], lessonIds: ['action'] })
   assert.equal(targetedRevision(dossier, analysis), null)
   for (const missedCheckpointIndices of [[3], [-1], [1.5], [1, 1], []]) assert.equal(targetedRevision(dossier, { ...analysis, missedCheckpointIndices }), null)
   assert.deepEqual(targetedRevision({ ...dossier, checkpointLessonIds: [['https://evil.test'], ['action'], []] }, { ...analysis, missedCheckpointIndices: [0] })?.lessonIds, [])

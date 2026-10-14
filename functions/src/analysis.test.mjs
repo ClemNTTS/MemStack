@@ -1,7 +1,7 @@
 import test from 'node:test'
 import { readFileSync } from 'node:fs'
 import assert from 'node:assert/strict'
-import { callMistral, checkQuota, existingDecision, makeMessages, publicAnalysis, validateAttempt, validateAttemptId } from './analysis.mjs'
+import { callMistral, evaluationDossier, evaluationSchema, validateEvaluation, criterionDecision, explanationMessages, checkQuota, existingDecision, makeMessages, publicAnalysis, validateAttempt, validateAttemptId } from './analysis.mjs'
 
 const dossier = { id: 'docker-images-diagnostic', version: 2, rubricVersion: 1, checkpoints: ['diagnostic', 'action', 'verification'] }
 const attempt = { version: 2, challengeVersion: 2, challengeId: dossier.id, observations: 'Image ancienne', actions: 'Reconstruire', answer: 'Image ancienne\n\nReconstruire', submittedAt: { toMillis: () => 0 } }
@@ -45,44 +45,86 @@ test('prompt separates response data and exports no user identity or internal le
   assert.ok(!JSON.stringify(messages).includes('secret'))
   assert.ok(!('leaseUntil' in publicAnalysis({ status: 'completed', leaseUntil: 1 })))
 })
-test('provider response is bounded and malformed/truncated/failed results are rejected', async () => {
-  const response = content => ({ ok: true, text: async () => JSON.stringify({ choices: [{ finish_reason: 'stop', message: { content } }] }) })
-  const args = { apiKey: 'test', model: 'model-version', dossier, attempt }
-  assert.deepEqual(await callMistral({ ...args, fetchImpl: async () => response('{"message":"Points justes et omissions","verdict":"retry","missedCheckpointIndices":[1]}') }), { message: 'Points justes et omissions', verdict: 'retry', missedCheckpointIndices: [1] })
-  for (const content of ['not json', '{}', '{"message":""}', JSON.stringify({ message: 'a'.repeat(10001) })]) await assert.rejects(callMistral({ ...args, fetchImpl: async () => response(content) }))
-  await assert.rejects(callMistral({ ...args, fetchImpl: async () => ({ ok: false }) }))
-  await assert.rejects(callMistral({ ...args, fetchImpl: async () => { throw new Error('timeout') } }))
+
+test('strict threshold accepts 8/10 and rejects 7/10 without rounding', () => {
+  for (const [total, acquired, verdict] of [[10, 7, 'retry'], [10, 8, 'validated'], [3, 2, 'retry'], [3, 3, 'validated'], [4, 3, 'validated'], [1, 0, 'retry']]) {
+    const criteria = Array.from({ length: total }, (_, index) => index < acquired)
+    const result = criterionDecision(criteria)
+    assert.equal(result.verdict, verdict)
+    assert.deepEqual(result.missedCheckpointIndices, Array.from({ length: total - acquired }, (_, index) => acquired + index))
+    assert.deepEqual(result.criterionResults, criteria)
+  }
 })
 
-test('provider enforces a string message with a strict output schema', async () => {
-  await callMistral({ apiKey: 'test', model: 'model-version', dossier, attempt, fetchImpl: async (_url, options) => {
-    const format = JSON.parse(options.body).response_format
-    assert.equal(format.type, 'json_schema')
-    assert.equal(format.json_schema.strict, true)
-    assert.deepEqual(format.json_schema.schema, { type: 'object', properties: { message: { type: 'string' }, verdict: { type: 'string', enum: ['validated', 'retry'] }, missedCheckpointIndices: { type: 'array', items: { type: 'integer', minimum: 0, maximum: 2 }, maxItems: 3 } }, required: ['message', 'verdict', 'missedCheckpointIndices'], additionalProperties: false })
-    return { ok: true, text: async () => JSON.stringify({ choices: [{ finish_reason: 'stop', message: { content: '{"message":"Retour valide","verdict":"validated","missedCheckpointIndices":[]}' } }] }) }
+test('every trusted challenge has an ordered rule per boolean and stays immutable', () => {
+  const { challenges } = JSON.parse(readFileSync(new URL('../../shared/challengeDossiers.json', import.meta.url), 'utf8'))
+  for (const challenge of challenges) {
+    const snapshot = JSON.stringify(challenge)
+    const sent = JSON.parse(makeMessages(challenge, attempt)[1].content).referenceDossier
+    assert.equal(sent.checkpoints.length, challenge.checkpoints.length)
+    assert.ok(sent.checkpoints.every(point => typeof point === 'string' && point.trim()))
+    assert.equal(evaluationSchema(challenge).properties.criteria.items.type, 'boolean')
+    assert.equal(JSON.stringify(challenge), snapshot)
+  }
+  assert.deepEqual(evaluationDossier(dossier).checkpoints, dossier.checkpoints)
+})
+
+test('grading accepts only one real boolean per rule, with no verdict or explanation', () => {
+  assert.deepEqual(validateEvaluation({ criteria: [true, false, true] }, dossier), [true, false, true])
+  for (const value of [null, [], {}, { criteria: [] }, { criteria: [true] }, { criteria: [true, false, true, true] },
+    { criteria: ['true', false, true] }, { criteria: [1, false, true] }, { criteria: [null, false, true] },
+    { criteria: [true, false, true], verdict: 'validated' }, { criteria: [true, false, true], explanations: ['extra'] }]) {
+    assert.throws(() => validateEvaluation(value, dossier), /provider-output-invalid/)
+  }
+})
+
+const envelope = value => ({ ok: true, text: async () => JSON.stringify({ choices: [{ finish_reason: 'stop', message: { content: JSON.stringify(value) } }] }) })
+
+test('first call grades only; second receives fixed decisions and explains only', async () => {
+  const requests = []
+  const output = await callMistral({ apiKey: 'test', model: 'version', dossier, attempt, fetchImpl: async (_url, options) => {
+    const request = JSON.parse(options.body)
+    requests.push(request)
+    assert.equal(request.temperature, 0)
+    if (requests.length === 1) {
+      assert.deepEqual(request.response_format.json_schema.schema, evaluationSchema(dossier))
+      assert.ok(!request.messages[1].content.includes('fixedCriteria'))
+      return envelope({ criteria: [true, false, true] })
+    }
+    assert.deepEqual(JSON.parse(request.messages[1].content).fixedCriteria, [true, false, true])
+    assert.deepEqual(request.response_format.json_schema.schema.required, ['explanations'])
+    return envelope({ explanations: ['Diagnostic acquis.', 'Action à préciser.', 'Vérification acquise.'] })
   } })
+  assert.equal(requests.length, 2)
+  assert.equal(output.verdict, 'retry')
+  assert.deepEqual(output.missedCheckpointIndices, [1])
+  assert.deepEqual(output.criterionResults, [true, false, true])
+  assert.equal(output.explanationStatus, 'completed')
+  assert.ok(output.message.includes('Action à préciser.'))
+  assert.equal(explanationMessages(dossier, attempt, [true, false, true])[0].role, 'system')
 })
 
-test('missing, forged and unsupported verdicts never produce completed feedback', async () => {
-  for (const output of [{ message: 'Bien' }, { message: 'Bien', verdict: 'understood' }, { message: 'Bien', verdict: true }, { message: 'Bien', verdict: 'validated', score: 10 }]) {
-    await assert.rejects(callMistral({ apiKey: 'test', model: 'model-version', dossier, attempt, fetchImpl: async () => ({ ok: true,
-      text: async () => JSON.stringify({ choices: [{ finish_reason: 'stop', message: { content: JSON.stringify(output) } }] }),
-    }) }))
+test('explanation failures or attempted verdict overrides preserve the first assessment', async () => {
+  for (const criteria of [[true, true, true], [true, false, true]]) {
+    for (const explanation of [async () => { throw new Error('timeout') }, async () => ({ ok: false }),
+      async () => envelope({ explanations: ['ok'] }), async () => envelope({ verdict: 'validated', explanations: ['ok', 'ok', 'ok'] }),
+      async () => envelope({ explanations: ['ok', '', 'ok'] })]) {
+      let calls = 0
+      const output = await callMistral({ apiKey: 'test', model: 'version', dossier, attempt, fetchImpl: async () => ++calls === 1 ? envelope({ criteria }) : explanation() })
+      assert.equal(calls, 2)
+      assert.equal(output.verdict, criterionDecision(criteria).verdict)
+      assert.deepEqual(output.criterionResults, criteria)
+      assert.equal(output.explanationStatus, 'unavailable')
+      assert.ok(output.message.includes('Point 2'))
+    }
   }
-  assert.equal(publicAnalysis({ status: 'processing', verdict: 'validated' }).verdict, undefined)
-  assert.equal(publicAnalysis({ status: 'completed', message: 'Historique' }).verdict, undefined)
-  assert.equal(publicAnalysis({ status: 'completed', verdict: 'retry' }).verdict, 'retry')
-  assert.throws(() => validateAttemptId({ attemptId: 'exam', verdict: 'validated' }))
 })
 
-test('missed checkpoints reject provider URLs, unknown indices, duplicates and contradictory verdicts', async () => {
-  for (const missedCheckpointIndices of [undefined, [], [-1], [3], [0.5], [1, 1], ['https://evil.test']]) {
-    await assert.rejects(callMistral({ apiKey: 'test', model: 'version', dossier, attempt, fetchImpl: async () => ({ ok: true,
-      text: async () => JSON.stringify({ choices: [{ finish_reason: 'stop', message: { content: JSON.stringify({ message: 'Retour', verdict: 'retry', missedCheckpointIndices }) } }] }),
-    }) }))
+test('grading errors stop before explanation with no retry', async () => {
+  for (const response of [{ ok: false }, { ok: true, text: async () => 'not json' }, envelope({ criteria: ['true', true, true] }),
+    { ok: true, text: async () => JSON.stringify({ choices: [{ finish_reason: 'length', message: { content: '{}' } }] }) }]) {
+    let calls = 0
+    await assert.rejects(callMistral({ apiKey: 'test', model: 'version', dossier, attempt, fetchImpl: async () => { calls++; return response } }))
+    assert.equal(calls, 1)
   }
-  await assert.rejects(callMistral({ apiKey: 'test', model: 'version', dossier, attempt, fetchImpl: async () => ({ ok: true,
-    text: async () => JSON.stringify({ choices: [{ finish_reason: 'stop', message: { content: JSON.stringify({ message: 'Retour', verdict: 'validated', missedCheckpointIndices: [0] }) } }] }),
-  }) }))
 })

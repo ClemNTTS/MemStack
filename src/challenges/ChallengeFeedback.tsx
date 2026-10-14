@@ -93,7 +93,7 @@ export default function ChallengeFeedback({ uid, attempt, challenge, onRetry, ca
     {analysis?.status === 'completed' && <><p role="status">{analysis.verdict === 'validated' ? 'Examen validé par l’IA.' : analysis.verdict === 'retry' ? 'Examen à retravailler : fais une nouvelle tentative après avoir étudié la correction.' : 'Retour historique : cette analyse ne comporte aucune validation d’examen.'}</p><LessonText text={analysis.message} /><p className="dashboard-note">Verdict et retour générés par IA : compare-les à la correction de référence. Relire ce retour ne lance aucun appel.</p></>}
     {analysis?.status === 'completed' && <ContentReportButton key={`${uid}/${attempt.id}`} context={analysisReportContext(challenge, attempt, analysis)} />}
     {analysis?.status === 'failed' && <p role="alert">L’analyse a échoué. Tu peux réessayer.</p>}
-    {analysis?.status === 'needs_review' && <p role="status">L’analyse est indisponible pour cette tentative. L’examen n’est pas validé ; tu peux consulter la correction de référence.</p>}
+    {analysis?.status === 'needs_review' && <p role="status">Aucun verdict fiable n’a pu être établi pour cette tentative. Cela ne signifie pas que ta réponse est incorrecte. Tu peux consulter la correction de référence.</p>}
     {error && <p role="alert">{error}</p>}
     {!challengeAiEnabled && !analysis && <p>L’analyse IA est désactivée sur cette version. Ta réponse est conservée pour comparer avec la correction.</p>}
     {attempt.version === 1 && <p>Cette ancienne tentative conserve sa correction d’origine et ne lance pas d’analyse IA.</p>}

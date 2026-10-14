@@ -37,3 +37,35 @@ test('only completed server analyses with an explicit supported verdict validate
   assert.equal(decodeChallengeAnalysis({ ...completed, promptVersion: 'challenge-feedback-v3' }), null)
   assert.equal(decodeChallengeAnalysis({ ...completed, status: 'processing', message: '', verdict: 'validated' }), null)
 })
+
+test('v5 keeps the structured v4 contract and rejects incomplete results', () => {
+  const result = { ...completed, promptVersion: 'challenge-feedback-v5', verdict: 'retry', missedCheckpointIndices: [1] }
+  assert.deepEqual(decodeChallengeAnalysis(result), result)
+  for (const patch of [{ missedCheckpointIndices: undefined }, { missedCheckpointIndices: [] }, { verdict: undefined }, { verdict: 'validated' }]) {
+    assert.equal(decodeChallengeAnalysis({ ...result, ...patch }), null)
+  }
+  assert.ok(decodeChallengeAnalysis({ ...result, verdict: 'validated', missedCheckpointIndices: [] }))
+})
+
+test('v6 keeps the structured v4 contract and rejects incomplete results', () => {
+  const result = { ...completed, promptVersion: 'challenge-feedback-v6', verdict: 'retry', missedCheckpointIndices: [1] }
+  assert.deepEqual(decodeChallengeAnalysis(result), result)
+  for (const patch of [{ missedCheckpointIndices: undefined }, { missedCheckpointIndices: [] }, { verdict: undefined }, { verdict: 'validated' }]) {
+    assert.equal(decodeChallengeAnalysis({ ...result, ...patch }), null)
+  }
+  assert.ok(decodeChallengeAnalysis({ ...result, verdict: 'validated', missedCheckpointIndices: [] }))
+})
+
+test('v7 derives a strict threshold verdict from booleans and permits missed points on success', () => {
+  const result = { ...completed, promptVersion: 'challenge-feedback-v7', verdict: 'validated',
+    criterionResults: [true, true, true, false], missedCheckpointIndices: [3] }
+  assert.deepEqual(decodeChallengeAnalysis(result), result)
+  for (const patch of [{ criterionResults: undefined }, { criterionResults: [] }, { criterionResults: [true, true, 'true', false] },
+    { missedCheckpointIndices: [] }, { missedCheckpointIndices: [1] }, { verdict: 'retry' }, { status: 'processing', message: '' }]) {
+    assert.equal(decodeChallengeAnalysis({ ...result, ...patch }), null)
+  }
+  const boundary = { ...result, criterionResults: [true, true, true, true, true, true, true, false, false, false], missedCheckpointIndices: [7, 8, 9] }
+  assert.equal(decodeChallengeAnalysis(boundary), null)
+  assert.ok(decodeChallengeAnalysis({ ...boundary, verdict: 'retry' }))
+  assert.equal(decodeChallengeAnalysis({ ...result, promptVersion: 'challenge-feedback-v6' }), null)
+})

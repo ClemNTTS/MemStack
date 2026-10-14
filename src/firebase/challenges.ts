@@ -4,6 +4,32 @@ import type { ChallengeAttempt } from '../types/challenge'
 import { getFirebaseServices } from './client'
 import { challenges } from '../data/challenges'
 import { reserveWrite } from './writeBudget'
+import { getApp } from 'firebase/app'
+import { connectFunctionsEmulator, getFunctions, httpsCallable } from 'firebase/functions'
+import { validateChallengeSelections } from '../challenges/checkedAttempt'
+
+let checkedEmulatorConnected = false
+
+export async function submitCheckedAttempt(uid: string, id: string, challengeId: string, choices: Record<string, string>): Promise<ChallengeAttempt> {
+  requireAccount(uid)
+  const selections = validateChallengeSelections(challengeId, choices)
+  const functions = getFunctions(getApp(), 'europe-west9')
+  if (import.meta.env.VITE_FIREBASE_EMULATORS === 'true' && ['localhost', '127.0.0.1'].includes(location.hostname) && !checkedEmulatorConnected) {
+    connectFunctionsEmulator(functions, 'localhost', 5001)
+    checkedEmulatorConnected = true
+  }
+  let error: unknown
+  try {
+    await httpsCallable(functions, 'submitDeterministicChallenge')({ attemptId: id, challengeId, challengeVersion: 3, selections })
+  } catch (failure) { error = failure }
+  requireAccount(uid)
+  // Read from the server even after a lost acknowledgement; never reveal a local verdict.
+  const saved = await readAttempt(uid, id)
+  if (!saved || saved.version !== 3 || !matchesAttemptSubmission(saved, challengeId, 3, JSON.stringify(selections))) {
+    throw error ?? new Error('Le résultat n’a pas été confirmé par le serveur.')
+  }
+  return saved
+}
 
 function requireAccount(uid: string) {
   const services = getFirebaseServices()

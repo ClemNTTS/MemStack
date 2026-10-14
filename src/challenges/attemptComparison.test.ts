@@ -27,6 +27,28 @@ test('validated response clears missed points without grading historical self as
   assert.deepEqual(result.remaining, [])
 })
 
+test('v7 success can retain missed rules while comparison still tracks improvement', () => {
+  const expanded = { ...challenge, checkpoints: ['A', 'B', 'C', 'D'] }
+  const result = compareChallengeAttempts(expanded, second, [first, second], {
+    first: analysis([0, 3]), second: { ...analysis([3]), verdict: 'validated', promptVersion: 'challenge-feedback-v7', criterionResults: [true, true, true, false] }
+  })
+  assert.equal(result?.status, 'points')
+  if (result?.status !== 'points') return
+  assert.deepEqual(result.corrected, [0])
+  assert.deepEqual(result.remaining, [3])
+})
+
+test('v6 can compare structured points with historical v4 without dropping corrections', () => {
+  const result = compareChallengeAttempts(challenge, second, [first, second], {
+    first: analysis([0, 1]), second: { ...analysis([1, 2]), promptVersion: 'challenge-feedback-v6' },
+  })
+  assert.equal(result?.status, 'points')
+  if (result?.status !== 'points') return
+  assert.deepEqual(result.corrected, [0])
+  assert.deepEqual(result.remaining, [1])
+  assert.deepEqual(result.newlyMissed, [2])
+})
+
 test('legacy analyses compare verdicts only; malformed, missing or stale results never imply corrected points', () => {
   const old = { ...analysis([0]), promptVersion: 'challenge-feedback-v3', missedCheckpointIndices: undefined }
   assert.equal(compareChallengeAttempts(challenge, second, [first, second], { first: old, second: analysis([]) })?.status, 'verdicts')

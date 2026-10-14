@@ -1,5 +1,19 @@
 # Défis de diagnostic
 
+## Format actuel v3 : correction vérifiable par le code
+
+Les **36 défis** utilisent chacun trois questions à choix unique, soit **108 questions**. Elles portent sur le diagnostic, l’intervention et sa vérification ou sa limite, avec des distracteurs propres aux pièces du dossier. Les IDs de défis, les sources et les snapshots v1/v2 sont conservés ; les nouveaux exercices portent `challengeVersion: 3` et `rubricVersion: 2`.
+
+Les questions et options publiques sont dans `shared/challengeQuestions.json`. Les identifiants acceptés et les explications sont dans `shared/challengeAnswerKeys.json`, chargé uniquement par Functions ; ce fichier n’est jamais importé par le frontend. Un choix unique peut accepter plusieurs options individuellement défendables si la grille le prévoit. Rien n’est exécuté : les commandes et extraits sont lus comme des données.
+
+Le callable `submitDeterministicChallenge` exige Google et App Check, charge la grille de confiance, vérifie les prérequis puis corrige les sélections. Le verdict, les booléens et les explications sont écrits atomiquement avec la tentative ; le client attend une relecture serveur avant de révéler le résultat. Strictement plus de 70 % est requis : avec trois questions, il faut trois réponses correctes. Aucun bouton d’auto-validation, aucune analyse IA ni invitation IA ne décide de ce résultat. Le budget de 20 tentatives par heure, la déduplication et le marqueur de suppression restent appliqués.
+
+Les tentatives v3 et leurs résultats sont entièrement immuables et réservés à l’écriture serveur. Le propriétaire peut relire ses tentatives sans droit IA ; un autre compte ne peut ni lire ni écrire ces résultats. Une nouvelle réponse crée une nouvelle tentative. Les anciennes réponses, corrections et analyses restent historiques et ne valident pas le nouveau format. Les cartes, échéances et leçons terminées restent indépendantes.
+
+Les quatre rôles ont relu tous les dossiers. Les fixtures fortes et faibles couvrent les 36 défis ; la revue indépendante teste aussi les 972 combinaisons possibles. Voir [rédaction et sources](CHALLENGES_DETERMINISTIC_REVIEW.md), [étudiant fort](CHALLENGES_STRONG_STUDENT_REVIEW.md), [étudiant faible](CHALLENGES_WEAK_STUDENT_REVIEW.md) et [vérification](CHALLENGES_IMPLEMENTATION_REVIEW.md). Les corrections statiques historiques restent inspectables dans le bundle : ce dispositif valide des réponses, sans prétendre empêcher la recherche des solutions ni certifier une maîtrise.
+
+La publication exige de déployer le nouveau callable et les règles avant le frontend. Le build et les tests locaux ne déploient rien. Les sections ci-dessous décrivent l’historique v1/v2 ; leur ancienne autoévaluation et leur verdict IA ne sont plus le format actif.
+
 Trente-six situations originales couvrent les douze thématiques du programme ; les trois diagnostics Docker initiaux prolongent les leçons historiques. L’utilisateur écrit son raisonnement avant de consulter une correction structurée, ses repères et ses contre-exemples. Les commandes restent des exemples à lire. La version 2 ajoute des fichiers et deux champs : « Ce que je constate » et « Ce que je ferais » (action, justification, vérification). Après confirmation serveur, une analyse Mistral facultative explique les points justes, omissions et erreurs sans modifier la progression. La correction reste accessible même si cette analyse échoue. L’autoévaluation facultative (« À retravailler » / « Compris ») décrit le ressenti, pas une maîtrise certifiée.
 
 ## Programme et sources

@@ -1,0 +1,2309 @@
+{
+  "version": 1,
+  "challenges": [
+    {
+      "id": "docker-images-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Quelle image reste à l’origine de memstack-web après les commandes ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Un mélange de v1 et du correctif de v2."
+            },
+            {
+              "id": "b",
+              "text": "v2, la dernière image construite."
+            },
+            {
+              "id": "c",
+              "text": "v1, utilisée lors de sa création."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quelle intervention applique le correctif de v2 ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Renommer l’ancien puis redémarrer ce même conteneur."
+            },
+            {
+              "id": "b",
+              "text": "Redémarrer l’ancien après avoir donné à v2 le tag v1."
+            },
+            {
+              "id": "c",
+              "text": "Créer un remplaçant depuis v2 avec les ports, variables, volumes et réseau nécessaires."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Avant de supprimer memstack-web sans montage, quelle précaution protège ses données utiles ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Conserver son nom pour retrouver ses données au prochain lancement."
+            },
+            {
+              "id": "b",
+              "text": "Repérer et copier les données utiles de sa couche inscriptible vers un stockage conservé."
+            },
+            {
+              "id": "c",
+              "text": "Reconstruire v2 pour y inclure automatiquement ses écritures."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "docker-volumes-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Pourquoi le nouveau memstack-notes ne retrouve-t-il pas notes.json ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Docker attend avant de restaurer les notes de cette image."
+            },
+            {
+              "id": "b",
+              "text": "Son nom doit changer pour accéder aux notes de l’ancienne instance."
+            },
+            {
+              "id": "c",
+              "text": "Les notes étaient des écritures du conteneur supprimé, pas de son image."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quel montage conserve les prochaines notes lors des remplacements ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Réutiliser memstack-notes-data monté sur /app/data à chaque remplacement."
+            },
+            {
+              "id": "b",
+              "text": "Créer un nouveau volume nommé à chaque remplacement sur /app/data."
+            },
+            {
+              "id": "c",
+              "text": "Réutiliser memstack-notes-data mais le monter seulement sur /backup."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Que garantit le volume dans l’état décrit par incident.txt ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Persistance future ; ni récupération des notes détruites ni sauvegarde indépendante."
+            },
+            {
+              "id": "b",
+              "text": "Sauvegarde indépendante des notes même si le volume est supprimé."
+            },
+            {
+              "id": "c",
+              "text": "Récupération des anciennes notes dès que le nom du volume correspond au conteneur."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "docker-ports-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Pourquoi le worker échoue-t-il sur localhost:8080 ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "localhost désigne l’API mais la publication inverse les requêtes."
+            },
+            {
+              "id": "b",
+              "text": "localhost désigne toujours l’hôte mais le port interne est bloqué."
+            },
+            {
+              "id": "c",
+              "text": "localhost désigne le worker lui-même, pas le conteneur API."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quel couple d’URLs correspond aux clients du dossier ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Hôte : http://127.0.0.1:8080 ; worker : http://memstack-api:3000."
+            },
+            {
+              "id": "b",
+              "text": "Hôte : http://127.0.0.1:3000 ; worker : http://memstack-api:8080."
+            },
+            {
+              "id": "c",
+              "text": "Hôte : http://memstack-api:3000 ; worker : http://localhost:8080."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Quelle portée vérifier pour 127.0.0.1:8080:3000 ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "La publication bloque également l’accès du worker à memstack-api:3000."
+            },
+            {
+              "id": "b",
+              "text": "Le port publié est limité à la loopback de l’hôte, pas ouvert normalement aux autres machines."
+            },
+            {
+              "id": "c",
+              "text": "Le port publié est sur toutes les interfaces puisque l’API écoute sur 0.0.0.0."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fund-shared-cart-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Pourquoi cart[0].price vaut-il 20 après modification du brouillon ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Le spread réutilise le tableau mais copie profondément chaque article."
+            },
+            {
+              "id": "b",
+              "text": "console.log remplace le prix original par celui du dernier tableau créé."
+            },
+            {
+              "id": "c",
+              "text": "Les tableaux distincts référencent le même objet article."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quel changement isole le prix du brouillon pour ces objets simples ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Remplacer draft[0] par { ...draft[0], price: 20 }."
+            },
+            {
+              "id": "b",
+              "text": "Muter draft[0].price puis recopier seulement le tableau."
+            },
+            {
+              "id": "c",
+              "text": "Créer draft avec cart.slice() puis muter draft[0].price."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Quelle observation vérifie la séparation avant validation du client ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "cart[0].price = 20 et draft[0].price = 20."
+            },
+            {
+              "id": "b",
+              "text": "cart[0].price = 10 et draft[0].price = 20."
+            },
+            {
+              "id": "c",
+              "text": "cart[0].price = 10 et draft[0].price = 10."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fund-stock-invariant-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Quel défaut explique withdraw(3, -2) = 5 ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Le stock initial 3 est invalide car seuls les stocks pairs sont autorisés."
+            },
+            {
+              "id": "b",
+              "text": "Toute soustraction JavaScript augmente un stock inférieur à la quantité."
+            },
+            {
+              "id": "c",
+              "text": "La soustraction accepte une quantité négative sans vérifier le contrat."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Sur un stock 3, quelles quantités peuvent être retirées ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "1 et 3 ; pas 0, -2, 4 ni 1.5."
+            },
+            {
+              "id": "b",
+              "text": "0, 1 et 3 ; pas -2, 4 ni 1.5."
+            },
+            {
+              "id": "c",
+              "text": "1, 1.5 et 3 ; pas 0, -2 ni 4."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Quel résultat attendre d’un retrait de 4 sur un stock 3 ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Refus et stock ramené à -1."
+            },
+            {
+              "id": "b",
+              "text": "Refus et stock conservé à 3."
+            },
+            {
+              "id": "c",
+              "text": "Retrait accepté et stock ramené à 0."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "systems-env-process-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Pourquoi le service répond-il encore sur 3000 à 09:11 ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "PORT=4000 s’applique uniquement aux navigateurs et jamais à Node."
+            },
+            {
+              "id": "b",
+              "text": "Il a choisi son port au démarrage avec l’environnement reçu à 09:00."
+            },
+            {
+              "id": "c",
+              "text": "Le terminal partage sa variable mais Node attend une requête pour changer de port."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quelle opération fait démarrer ce service sur 4000 ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Configurer PORT=4000 dans son lanceur puis redémarrer avec ce lanceur."
+            },
+            {
+              "id": "b",
+              "text": "Définir PORT=4000 dans un terminal indépendant et garder le service actif."
+            },
+            {
+              "id": "c",
+              "text": "Modifier seulement le port dans l’URL du navigateur."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Quel contrôle confirme une configuration durable ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Vérifier seulement qu’une requête sur 3000 fonctionne encore."
+            },
+            {
+              "id": "b",
+              "text": "Vérifier écoute et réponse sur 4000, puis refaire un démarrage via le lanceur configuré."
+            },
+            {
+              "id": "c",
+              "text": "Afficher PORT=4000 dans un terminal indépendant puis considérer l’écoute corrigée."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "http-stale-cache-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Pourquoi le navigateur conserve-t-il v1 après le 304 ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "L’ETag inchangé affirme à tort que le corps en cache est actuel."
+            },
+            {
+              "id": "b",
+              "text": "Le 304 contient v2 mais le navigateur ignore son corps."
+            },
+            {
+              "id": "c",
+              "text": "If-None-Match exige de conserver toutes les anciennes versions."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quelle modification corrige la revalidation de /guide ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Garder page-1 à chaque publication et renvoyer 304 à toute revalidation."
+            },
+            {
+              "id": "b",
+              "text": "Supprimer v2 pour que navigateur et serveur utilisent l’ancien contenu."
+            },
+            {
+              "id": "c",
+              "text": "Changer le validateur avec le contenu et renvoyer v2 si l’ancien ETag ne correspond plus."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Quelle séquence attendre d’un client possédant d’abord l’ETag de v1 ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Ancien ETag : 304 ; nouvel ETag inchangé : 200 avec v1."
+            },
+            {
+              "id": "b",
+              "text": "Ancien ETag : 200 avec v2 ; nouvel ETag inchangé : 403."
+            },
+            {
+              "id": "c",
+              "text": "Ancien ETag : 200 avec v2 et nouvel ETag ; nouvel ETag inchangé : 304."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "web-fetch-error-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Pourquoi le code affiche-t-il Supprimé malgré le 403 ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Un DELETE résolu prouve la suppression quel que soit son statut."
+            },
+            {
+              "id": "b",
+              "text": "fetch fournit la réponse 403 sans rejeter automatiquement sa promesse."
+            },
+            {
+              "id": "c",
+              "text": "Le catch transforme automatiquement les refus HTTP en succès."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quel contrôle ajouter avant le message de succès ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Remplacer DELETE par GET et garder le message Supprimé."
+            },
+            {
+              "id": "b",
+              "text": "Lire response.ok ou le statut et traiter le refus HTTP."
+            },
+            {
+              "id": "c",
+              "text": "Attendre fetch une seconde fois pour convertir le 403 en exception."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Pour le 403 fourni, quel comportement vérifier ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Afficher un refus et conserver l’élément dans l’interface."
+            },
+            {
+              "id": "b",
+              "text": "Afficher Échec réseau et retirer l’élément avant relecture."
+            },
+            {
+              "id": "c",
+              "text": "Afficher Supprimé et retirer seulement l’élément local."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "web-keyboard-action-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Quel élément explique l’absence d’arrêt de Tab sur Enregistrer ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Le div cliquable n’a pas le comportement clavier natif d’un bouton."
+            },
+            {
+              "id": "b",
+              "text": "Une sauvegarde doit être exclusivement utilisable à la souris."
+            },
+            {
+              "id": "c",
+              "text": "Tout onclick désactive la navigation clavier de la page."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quel remplacement convient directement à cette action ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Un button type=button avec l’action, son nom accessible et un focus visible."
+            },
+            {
+              "id": "b",
+              "text": "Le div cliquable avec role=button et aria-label, mais sans tabulation ni gestion des touches."
+            },
+            {
+              "id": "c",
+              "text": "Un lien href=/ avec le même libellé et un focus visible, qui navigue sans appeler la sauvegarde."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Quel essai vérifie le contrôle corrigé ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Deux clics souris ; deux sauvegardes ; aucune lecture du nom annoncé."
+            },
+            {
+              "id": "b",
+              "text": "Présence du texte dans le DOM ; aucun essai de focus ou activation."
+            },
+            {
+              "id": "c",
+              "text": "Tab, Entrée et Espace ; nom annoncé ; une seule sauvegarde par activation."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "js-zero-default-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Pourquoi getLimit(0) renvoie-t-il 20 ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "|| remplace uniquement null et 0 est identique à null."
+            },
+            {
+              "id": "b",
+              "text": "|| traite 0 comme falsy et choisit la valeur de droite."
+            },
+            {
+              "id": "c",
+              "text": "JavaScript convertit tout nombre en undefined."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quelle expression applique 20 seulement pour null ou undefined ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "preference ?? 20"
+            },
+            {
+              "id": "b",
+              "text": "preference || 20"
+            },
+            {
+              "id": "c",
+              "text": "preference ? preference : 20"
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Quels résultats attendre pour 0, 7, null et undefined ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "0, 7, 20, 20."
+            },
+            {
+              "id": "b",
+              "text": "0, 20, 0, 0."
+            },
+            {
+              "id": "c",
+              "text": "20, 7, 20, 20."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "js-serial-requests-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Quel détail explique les neuf secondes de la trace ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Des promesses indépendantes sont obligatoirement séquentielles."
+            },
+            {
+              "id": "b",
+              "text": "Les trois lectures concurrentes sont ralenties par render."
+            },
+            {
+              "id": "c",
+              "text": "Chaque lecture démarre après résolution du await précédent."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quel schéma respecte l’affichage seulement si les trois lectures réussissent ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Démarrer les appels et afficher dès que Promise.race résout."
+            },
+            {
+              "id": "b",
+              "text": "Garder les await successifs et afficher chaque résultat immédiatement."
+            },
+            {
+              "id": "c",
+              "text": "Démarrer les appels dans Promise.all, afficher après résolution et traiter le rejet."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Si alerts échoue et les deux autres lectures réussissent, que vérifier ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Pas d’affichage de l’ensemble comme succès ; erreur du groupe gérée."
+            },
+            {
+              "id": "b",
+              "text": "Succès partiel avec alerts vide malgré le contrat fourni."
+            },
+            {
+              "id": "c",
+              "text": "Annulation automatique des deux autres lectures par Promise.all."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ts-unchecked-api-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Pourquoi as Profile ne protège-t-il pas de name:42 ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Elle convertit name en chaîne mais toUpperCase refuse les chiffres."
+            },
+            {
+              "id": "b",
+              "text": "Elle oblige le serveur externe à renvoyer une chaîne."
+            },
+            {
+              "id": "c",
+              "text": "L’assertion TypeScript ne valide pas le JSON à l’exécution."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quelle frontière rend le Profile exploitable ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Ajouter une assertion as Profile et déclarer au compilateur que la réponse externe est fiable."
+            },
+            {
+              "id": "b",
+              "text": "Déclarer name:any, tester seulement la réussite HTTP et appeler toUpperCase sans contrôler le type."
+            },
+            {
+              "id": "c",
+              "text": "Valider une valeur inconnue : objet attendu, name chaîne, rejet géré."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Que faire pour name numérique, absent ou une réponse null ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Conversion implicite en chaîne imposée par Profile."
+            },
+            {
+              "id": "b",
+              "text": "Erreur de validation contrôlée avant toUpperCase."
+            },
+            {
+              "id": "c",
+              "text": "Succès puisque le fichier TypeScript compile."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "react-mutated-list-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Que révèle Object.is(état précédent, valeur envoyée) = true ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "React a copié profondément le tableau avant comparaison."
+            },
+            {
+              "id": "b",
+              "text": "Le même tableau muté est envoyé au setter."
+            },
+            {
+              "id": "c",
+              "text": "Le nouvel élément a forcément une clé dupliquée."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quel ajout évite la mutation et utilise l’état précédent ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "setItems(previous => [...previous, \"nouveau\"])"
+            },
+            {
+              "id": "b",
+              "text": "setItems(previous => { previous.push(\"nouveau\"); return previous })"
+            },
+            {
+              "id": "c",
+              "text": "items.push(\"nouveau\"); setItems(items)"
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Quel contrôle faire avec plusieurs ajouts rapprochés ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Un rendu forcé masque les ajouts perdus sans changer la mise à jour."
+            },
+            {
+              "id": "b",
+              "text": "Tous apparaissent et les tableaux précédents restent intacts."
+            },
+            {
+              "id": "c",
+              "text": "Un seul apparaît et le tableau initial est modifié."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "react-stale-search-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "À 400 ms, pourquoi le champ react accompagne-t-il les résultats de r ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "React trie les réponses alphabétiquement par recherche."
+            },
+            {
+              "id": "b",
+              "text": "La réponse A tardive est appliquée sans vérifier la requête courante."
+            },
+            {
+              "id": "c",
+              "text": "La réponse B est invalide parce qu’elle arrive avant A."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quelle protection fonctionne même si l’annulation arrive trop tard ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Appliquer seulement les réponses dont l’identifiant ou l’effet est encore courant."
+            },
+            {
+              "id": "b",
+              "text": "Attendre un délai fixe avant chaque setResults."
+            },
+            {
+              "id": "c",
+              "text": "Retirer query des dépendances pour ne chercher qu’une fois."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Dans l’ordre B puis A du dossier, que doit-on voir après 400 ms ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Les résultats de react ; la réponse de r est ignorée."
+            },
+            {
+              "id": "b",
+              "text": "Les résultats de r ; la dernière réponse gagne."
+            },
+            {
+              "id": "c",
+              "text": "Les deux recherches mélangées sans avertissement."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "react-index-keys-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Pourquoi le brouillon change-t-il d’article après suppression d’Alpha ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Supprimer Alpha change nécessairement les ids métier de tous les articles."
+            },
+            {
+              "id": "b",
+              "text": "La clé d’index suit la position et peut réutiliser une ligne pour un autre article."
+            },
+            {
+              "id": "c",
+              "text": "useState local ne peut jamais appartenir à une ligne de liste."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quelle clé conserve l’identité des Row du dossier ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "key={index}"
+            },
+            {
+              "id": "b",
+              "text": "key={Math.random()}"
+            },
+            {
+              "id": "c",
+              "text": "key={item.id}"
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Après saisie dans Beta, suppression d’Alpha et réordonnancement, où reste le brouillon ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Sur l’article d’id a parce qu’il était premier."
+            },
+            {
+              "id": "b",
+              "text": "Sur la seconde position, quel que soit l’article."
+            },
+            {
+              "id": "c",
+              "text": "Sur l’article d’id b, quelle que soit sa position."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "backend-invalid-body-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Quel risque présente quantity transmis directement à reserve ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Le statut 201 valide rétroactivement la quantité."
+            },
+            {
+              "id": "b",
+              "text": "Le JSON empêche les valeurs hors de cet intervalle."
+            },
+            {
+              "id": "c",
+              "text": "Une donnée externe peut ne pas être un entier entre 1 et 5."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quelles entrées quantity peuvent atteindre reserve selon le contrat ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "0, 1 et 5 ; pas \"1\", 6, 1.5 ni un champ absent."
+            },
+            {
+              "id": "b",
+              "text": "1, 5 et \"1\" ; pas 0, 6, 1.5 ni un champ absent."
+            },
+            {
+              "id": "c",
+              "text": "1 et 5 ; pas \"1\", 0, 6, 1.5 ni un champ absent."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Que vérifier avec quantity:\"beaucoup\" ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Erreur client documentée et aucun appel à reserve."
+            },
+            {
+              "id": "b",
+              "text": "Refus affiché après réservation d’une quantité par défaut."
+            },
+            {
+              "id": "c",
+              "text": "Statut 201 et reserve appelé avec la chaîne."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "backend-payment-retry-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Que déduire de la réponse perdue du premier POST ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Le client peut changer le montant sans nouvelle intention."
+            },
+            {
+              "id": "b",
+              "text": "Aucun paiement n’existe sans statut reçu par le client."
+            },
+            {
+              "id": "c",
+              "text": "Le paiement peut exister ; l’absence d’accusé ne prouve pas l’échec."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quel mécanisme traite deux requêtes concurrentes pour la même intention ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Créer une clé pour chaque retry et vérifier en mémoire avant une insertion sans contrainte atomique."
+            },
+            {
+              "id": "b",
+              "text": "Clé réutilisée, résultat réservé atomiquement côté serveur et contenu vérifié."
+            },
+            {
+              "id": "c",
+              "text": "Réutiliser la clé au navigateur et désactiver le bouton, sans déduplication dans insertPayment."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Une clé utilisée pour amount=10 revient avec amount=20 : que faire ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Refuser cette réutilisation incompatible."
+            },
+            {
+              "id": "b",
+              "text": "Modifier silencieusement le paiement initial à 20."
+            },
+            {
+              "id": "c",
+              "text": "Créer un second paiement sous la même clé."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "backend-env-secret-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Pourquoi Service prêt sur 3000 est-il trompeur ici ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "DATABASE_URL absente est déduite à la première requête."
+            },
+            {
+              "id": "b",
+              "text": "La configuration obligatoire n’a pas été vérifiée avant disponibilité."
+            },
+            {
+              "id": "c",
+              "text": "Un serveur HTTP ne peut pas utiliser 3000 en production."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quel démarrage respecte le contrat sans exposer de secret ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Annoncer prêt puis utiliser une URL par défaut inconnue si elle manque."
+            },
+            {
+              "id": "b",
+              "text": "Valider présence et forme de DATABASE_URL ; refuser l’absence sans afficher sa valeur."
+            },
+            {
+              "id": "c",
+              "text": "Journaliser DATABASE_URL complète avant de construire la connexion."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Une DATABASE_URL présente et bien formée prouve-t-elle que la base répond ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Non ; sa joignabilité est une vérification distincte."
+            },
+            {
+              "id": "b",
+              "text": "Oui ; la forme prouve connexion et permissions."
+            },
+            {
+              "id": "c",
+              "text": "Oui ; écouter sur 3000 garantit l’accès à la base."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "data-left-join-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Pourquoi Bob disparaît-il malgré LEFT JOIN ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "LEFT JOIN n’inclut jamais les lignes sans correspondance."
+            },
+            {
+              "id": "b",
+              "text": "Le WHERE sur o.status élimine la ligne sans commande, dont le statut vaut NULL."
+            },
+            {
+              "id": "c",
+              "text": "COUNT(o.id) supprime automatiquement les clients sans commande."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quelle adaptation conserve tous les clients et compte les commandes confirmées ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Garder le WHERE et remplacer COUNT(o.id) par COUNT(*)."
+            },
+            {
+              "id": "b",
+              "text": "Mettre o.status = 'confirmed' dans ON et conserver COUNT(o.id)."
+            },
+            {
+              "id": "c",
+              "text": "Remplacer LEFT JOIN par INNER JOIN en gardant le WHERE."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Quels comptes attendre sans commande, avec une non confirmée et avec deux confirmées ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "0, 0 et 2, avec les trois clients présents."
+            },
+            {
+              "id": "b",
+              "text": "Client absent, client absent et 2."
+            },
+            {
+              "id": "c",
+              "text": "1, 1 et 2, avec les trois clients présents."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "data-transfer-atomicity-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Quel risque produit l’échec du second UPDATE en autocommit ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Les soldes seront restaurés automatiquement à la prochaine lecture."
+            },
+            {
+              "id": "b",
+              "text": "Le débit peut rester validé sans crédit correspondant."
+            },
+            {
+              "id": "c",
+              "text": "Le débit est toujours annulé automatiquement par l’échec du crédit."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quelle organisation rend les deux écritures solidaires dans la même base ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Deux UPDATE en autocommit séparés par une pause."
+            },
+            {
+              "id": "b",
+              "text": "Valider le débit puis ouvrir une transaction pour le crédit seul."
+            },
+            {
+              "id": "c",
+              "text": "Transaction avec contrôles des comptes et du solde, commit si tout réussit sinon rollback."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Si le crédit échoue dans la transaction corrigée, quel état vérifier ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Le débit conservé et un crédit implicitement réparé plus tard."
+            },
+            {
+              "id": "b",
+              "text": "Les deux soldes initiaux après rollback."
+            },
+            {
+              "id": "c",
+              "text": "Le total conservé malgré un débit sans crédit correspondant."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "data-firestore-retry-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Pourquoi une réservation validée peut-elle produire deux notifications ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Une transaction valide toujours deux réservations."
+            },
+            {
+              "id": "b",
+              "text": "Firestore relance le callback qui contient un effet externe."
+            },
+            {
+              "id": "c",
+              "text": "Les notifications sont annulées automatiquement à chaque conflit."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quelle approche sépare transaction et notification avec une livraison durable ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Envoyer la notification dans le callback avant les lectures."
+            },
+            {
+              "id": "b",
+              "text": "Désactiver le contrôle de conflit pour garantir un unique callback."
+            },
+            {
+              "id": "c",
+              "text": "Enregistrer un événement dans la transaction puis le livrer après commit avec déduplication."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Que contrôler si l’envoi est simplement déplacé après commit ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Les pertes et doublons possibles ; après commit ne signifie pas exactement une fois."
+            },
+            {
+              "id": "b",
+              "text": "Le commit est annulé automatiquement si l’envoi externe échoue ensuite."
+            },
+            {
+              "id": "c",
+              "text": "L’envoi est garanti exactement une fois sans stockage ni déduplication."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "security-object-owner-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Que démontre Alice obtenant la note privée de Bob ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "La session d’Alice est forcément celle de Bob."
+            },
+            {
+              "id": "b",
+              "text": "Connaître un id dans une URL accorde une permission."
+            },
+            {
+              "id": "c",
+              "text": "L’authentification existe mais l’autorisation sur la note manque."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Où et sur quelle identité contrôler cette lecture ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Côté serveur, accepter toute session sans examiner la note."
+            },
+            {
+              "id": "b",
+              "text": "Côté navigateur, comparer le propriétaire à un ownerId fourni librement."
+            },
+            {
+              "id": "c",
+              "text": "Côté serveur, comparer le propriétaire à l’identité authentifiée."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Quels cas vérifient la politique propriétaire ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Propriétaire et autre compte autorisés ; sans session refusé ; id absent exposant une autre note."
+            },
+            {
+              "id": "b",
+              "text": "Propriétaire autorisé ; autre compte et sans session refusés ; id absent sans fuite."
+            },
+            {
+              "id": "c",
+              "text": "Tous comptes autorisés si leur navigateur masque le bouton de lecture."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "security-sql-concatenation-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Pourquoi un nom avec apostrophe peut-il casser la recherche ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "La valeur concaténée peut modifier la structure SQL."
+            },
+            {
+              "id": "b",
+              "text": "Toute apostrophe est malveillante et doit être supprimée du nom."
+            },
+            {
+              "id": "c",
+              "text": "SQL interdit tout texte utilisateur dans une recherche."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quel changement sépare instruction et valeur ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Supprimer les espaces puis concaténer le nom."
+            },
+            {
+              "id": "b",
+              "text": "Requête fixe avec paramètre lié par le pilote SQL."
+            },
+            {
+              "id": "c",
+              "text": "Interdire les apostrophes puis garder la concaténation."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Quel comportement attendre d’une saisie ressemblant à du SQL ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Elle est sûre dès que le seul test avec Alice réussit."
+            },
+            {
+              "id": "b",
+              "text": "Elle est exécutée pour fournir une recherche avancée malgré le contrat littéral."
+            },
+            {
+              "id": "c",
+              "text": "Elle reste une valeur de recherche sans élargir les résultats ni exécuter d’instruction."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "security-html-comment-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Quel danger présente innerHTML avec le commentaire fourni ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "innerHTML affiche toujours les balises littéralement."
+            },
+            {
+              "id": "b",
+              "text": "Le HTML est interprété et le gestionnaire onerror peut s’exécuter."
+            },
+            {
+              "id": "c",
+              "text": "Une donnée stockée devient automatiquement fiable pour le navigateur."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quel rendu correspond à des commentaires exclusivement en texte brut ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "commentElement.textContent = storedComment"
+            },
+            {
+              "id": "b",
+              "text": "commentElement.innerHTML = storedComment.trim()"
+            },
+            {
+              "id": "c",
+              "text": "commentElement.innerHTML = storedComment"
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Quel résultat vérifier pour le texte contenant img et onerror ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Texte littéral, aucun événement exécuté, commentaires ordinaires lisibles."
+            },
+            {
+              "id": "b",
+              "text": "Image créée et alerte autorisée parce que le commentaire est stocké."
+            },
+            {
+              "id": "c",
+              "text": "Commentaire supprimé entièrement même si le contrat demande son affichage."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tests-empty-pass-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Pourquoi le test vert ne détecte-t-il pas discount(100, 10) = 100 ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Le runner remplace automatiquement 100 par 90."
+            },
+            {
+              "id": "b",
+              "text": "Le nom du test suffit à vérifier la formule."
+            },
+            {
+              "id": "c",
+              "text": "Il appelle la fonction sans assertion sur le résultat."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quelle assertion expose la régression du dossier ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "assert.equal(discount(100, 10), 100)"
+            },
+            {
+              "id": "b",
+              "text": "assert.equal(discount(100, 10), 90)"
+            },
+            {
+              "id": "c",
+              "text": "assert.equal(typeof discount(100, 10), 'number')"
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Quelle observation confirme l’utilité du nouveau test ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Succès uniquement après suppression de l’assertion."
+            },
+            {
+              "id": "b",
+              "text": "Échec sur la fonction fautive puis succès après correction."
+            },
+            {
+              "id": "c",
+              "text": "Succès sur la fonction fautive et après correction."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tests-expiry-boundary-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "À expiresAt=1000 et now=1000, quel écart existe ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Code et contrat acceptent tous deux la frontière."
+            },
+            {
+              "id": "b",
+              "text": "Le code refuse mais le contrat exige sa validité."
+            },
+            {
+              "id": "c",
+              "text": "Le code accepte mais le contrat déclare le jeton invalide."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quelle comparaison représente cette validité ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "now < expiresAt"
+            },
+            {
+              "id": "b",
+              "text": "now <= expiresAt"
+            },
+            {
+              "id": "c",
+              "text": "now >= expiresAt"
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Quels résultats attendre à 999, 1000 et 1001 pour expiresAt=1000 ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "true, true, false."
+            },
+            {
+              "id": "b",
+              "text": "true, false, false."
+            },
+            {
+              "id": "c",
+              "text": "false, true, true."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tests-mock-contract-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Pourquoi result.map fonctionne-t-il avec le faux mais pas en réel ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Le faux convertit automatiquement les objets réels en tableaux."
+            },
+            {
+              "id": "b",
+              "text": "Le fournisseur interdit la lecture des ids des articles."
+            },
+            {
+              "id": "c",
+              "text": "Le faux renvoie un tableau ; le fournisseur un objet contenant items."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quelle correction aligne adaptateur et faux sur le fournisseur ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Lire result.items et faire renvoyer { items: [...] } au faux."
+            },
+            {
+              "id": "b",
+              "text": "Ajouter une assertion de type tableau sur le réel sans changer sa lecture."
+            },
+            {
+              "id": "c",
+              "text": "Faire renvoyer un tableau vide au faux et conserver result.map."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Quel jeu distingue réussite normale et réponse malformée ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Tableau nu : seul test vert ; objet réel jamais vérifié."
+            },
+            {
+              "id": "b",
+              "text": "Objet items valide : ids attendus ; structure invalide : erreur contrôlée."
+            },
+            {
+              "id": "c",
+              "text": "Objet invalide : succès avec les ids inventés par le faux."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "architecture-rule-ui-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Quels montants les extraits produisent-ils pour price=100 ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Page : 90 ; export : 100."
+            },
+            {
+              "id": "b",
+              "text": "Page : 90 ; export : 90."
+            },
+            {
+              "id": "c",
+              "text": "Page : 100 ; export : 90."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quelle organisation évite la divergence du seuil entre page et export ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Une fonction métier commune de remise appelée par les deux."
+            },
+            {
+              "id": "b",
+              "text": "Remise dans la page seulement ; export indépendant du contrat."
+            },
+            {
+              "id": "c",
+              "text": "Deux copies de la formule avec des variables renommées."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Avec la règle commune, quels montants attendre à 99, 100 et 101 ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "99, 90 et 90.9 dans les deux consommateurs."
+            },
+            {
+              "id": "b",
+              "text": "89.1, 90 et 90.9 dans les deux consommateurs."
+            },
+            {
+              "id": "c",
+              "text": "99, 100 et 90.9 dans les deux consommateurs."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "architecture-invalid-state-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Quelle incohérence apparaît après await save ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "error et success valent true tandis que loading vaut false."
+            },
+            {
+              "id": "b",
+              "text": "Le succès interdit toute modification d’état de l’interface."
+            },
+            {
+              "id": "c",
+              "text": "loading et success valent simultanément true pour cette soumission."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quel modèle représente les états exclusifs de cette soumission ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Un état unique idle, saving, saved ou failed remplacé à chaque transition."
+            },
+            {
+              "id": "b",
+              "text": "Passer directement à saved au clic puis afficher une erreur secondaire si la sauvegarde échoue."
+            },
+            {
+              "id": "c",
+              "text": "Garder les booléens indépendants et rendre success prioritaire visuellement sans clôturer loading."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Si save rejette, quel état et affichage vérifier ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "failed remplace saving ; pas de succès ni de chargement actif."
+            },
+            {
+              "id": "b",
+              "text": "saved remplace saving puisque la requête a été envoyée."
+            },
+            {
+              "id": "c",
+              "text": "saving reste actif et success devient true."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "architecture-lost-write-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Pourquoi le titre redevient-il Ancien après le PUT de Bob ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Alice n’a pas envoyé de titre et seul Bob a une écriture valide."
+            },
+            {
+              "id": "b",
+              "text": "Modifier le texte annule nécessairement le titre dans toute base."
+            },
+            {
+              "id": "c",
+              "text": "Bob remplace toute la note depuis v7 sans contrôler la version courante."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quel mécanisme respecte l’exigence de signaler le conflit ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Comparer atomiquement côté serveur version attendue et version courante avant écriture."
+            },
+            {
+              "id": "b",
+              "text": "Renvoyer automatiquement le document complet de Bob en cas de différence de version sans résolution."
+            },
+            {
+              "id": "c",
+              "text": "Comparer la version lors d’une lecture au navigateur puis envoyer un PUT inconditionnel séparé."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Deux écritures issues de v7 arrivent : quel résultat attendre ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Première acceptée ; seconde en conflit sans écrasement silencieux."
+            },
+            {
+              "id": "b",
+              "text": "Seconde acceptée uniquement si elle réutilise v7 sans relire."
+            },
+            {
+              "id": "c",
+              "text": "Toutes deux acceptées ; dernière décide silencieusement du contenu."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "performance-lcp-lazy-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Quel délai met surtout en évidence la trace de hero.webp ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Découverte seulement après téléchargement à 1600 ms."
+            },
+            {
+              "id": "b",
+              "text": "Requête immédiate à 120 ms puis téléchargement de 1580 ms."
+            },
+            {
+              "id": "c",
+              "text": "Découverte à 120 ms mais requête seulement à 1200 ms."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quelle intervention cible directement ce délai ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Ajouter lazy à toutes les images, visibles ou hors écran."
+            },
+            {
+              "id": "b",
+              "text": "Précharger une image hors écran et conserver hero.webp en chargement lazy."
+            },
+            {
+              "id": "c",
+              "text": "Retirer lazy de hero.webp, garder ses dimensions et mesurer une priorité élevée ciblée."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Quel contrôle établit le bénéfice de la modification ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Poids de hero.webp uniquement, sans nouvelle mesure du LCP."
+            },
+            {
+              "id": "b",
+              "text": "Succès déclaré dès que toutes les images ont une priorité élevée."
+            },
+            {
+              "id": "c",
+              "text": "Traces comparables répétées : début de requête, LCP et effets sur les autres ressources."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "performance-eager-module-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Quel coût paie le visiteur qui n’exporte aucun PDF ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Aucun octet de heavy-pdf avant l’appel de onExport."
+            },
+            {
+              "id": "b",
+              "text": "Les 600 Ko compressés de heavy-pdf dans le chargement initial."
+            },
+            {
+              "id": "c",
+              "text": "600 Ko correspondant au PDF déjà exporté par ce visiteur."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quel changement reporte ce module vers son usage occasionnel ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Bouton supprimé mais heavy-pdf conservé au démarrage."
+            },
+            {
+              "id": "b",
+              "text": "Import statique conservé et buildPdf renommé lazyBuildPdf."
+            },
+            {
+              "id": "c",
+              "text": "Import dynamique à l’export avec état de chargement et erreur gérée."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Quel compromis et quel résultat vérifier après découpage ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Aucun téléchargement du module même pour un export utilisant sa bibliothèque."
+            },
+            {
+              "id": "b",
+              "text": "Module absent au départ, premier et second exports corrects, attente possible au premier."
+            },
+            {
+              "id": "c",
+              "text": "Temps initial seulement, sans vérifier exports ni erreurs."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "performance-nplusone-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Que représentent les 51 allers-retours pour 50 publications ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Un nombre fixe de requêtes indépendant de la taille de page."
+            },
+            {
+              "id": "b",
+              "text": "Une jointure unique renvoyant 51 lignes sans requête supplémentaire."
+            },
+            {
+              "id": "c",
+              "text": "Une lecture de page puis une lecture d’auteur par publication : N+1."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quelle lecture supprime ce motif en conservant une page limitée ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Les mêmes 50 lectures d’auteurs lancées ensemble sans regroupement."
+            },
+            {
+              "id": "b",
+              "text": "Publications paginées puis auteurs regroupés par ids uniques, ou jointure sur cette page."
+            },
+            {
+              "id": "c",
+              "text": "Toutes les publications et tous les auteurs sans limite à chaque ouverture."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Quels contrôles comparer pour 1 puis 50 lignes ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Plan d’une requête seulement, en acceptant de changer pagination et résultats."
+            },
+            {
+              "id": "b",
+              "text": "Nombre de requêtes, latence, résultats identiques et auteurs absents."
+            },
+            {
+              "id": "c",
+              "text": "Nombre de lignes affichées seulement, sans journal ni mesure de coût."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "engineering-staged-old-version-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Quelle version de fix.ts utilise ce git commit ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "v2 du répertoire de travail sans nouvel ajout."
+            },
+            {
+              "id": "b",
+              "text": "v1 préparée dans l’index par git add."
+            },
+            {
+              "id": "c",
+              "text": "Une fusion automatique de v1 et v2 par git commit."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Comment inclure seulement la correction v2 voulue au prochain commit ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Préparer aveuglément tous les fichiers même sans rapport avec la correction."
+            },
+            {
+              "id": "b",
+              "text": "Relire les différences et préparer les changements ciblés, éventuellement avec git add -p."
+            },
+            {
+              "id": "c",
+              "text": "Committer sans nouvel ajout en supposant l’index actualisé automatiquement."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Quel contrôle montre le contenu préparé avant commit ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "git diff seul en supposant qu’il montre toujours l’index."
+            },
+            {
+              "id": "b",
+              "text": "Le message du commit seul, considéré comme preuve de contenu."
+            },
+            {
+              "id": "c",
+              "text": "git diff --cached, puis inspection du commit et du statut local après."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "engineering-semantic-conflict-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Quelle règle la résolution retenue a-t-elle perdue ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Le refus des remises supérieures à 50 %."
+            },
+            {
+              "id": "b",
+              "text": "Les deux règles, car retirer les marqueurs retire tout contrôle."
+            },
+            {
+              "id": "c",
+              "text": "Le refus des prix nuls ou négatifs."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quel comportement résout le conflit selon ce contrat ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Refuser seulement discount > 50 car une validation suffit."
+            },
+            {
+              "id": "b",
+              "text": "Refuser seulement price <= 0 car cette branche est retenue."
+            },
+            {
+              "id": "c",
+              "text": "Refuser si price <= 0 ou discount > 50, en conservant les deux exigences."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Quel jeu vérifie les deux règles et un parcours accepté ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Prix nul, remise 60 %, leur combinaison, puis prix positif avec remise 10 %."
+            },
+            {
+              "id": "b",
+              "text": "Prix positif avec remise 10 % seulement."
+            },
+            {
+              "id": "c",
+              "text": "Recherche des marqueurs uniquement sans test de comportement."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "engineering-stack-origin-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "prompt": "Quel lieu et quelle entrée indiquent pile et input.json ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Exception initiale dans routeHandler ; name est vide."
+            },
+            {
+              "id": "b",
+              "text": "Exception dans formatName ; profile ne contient pas name."
+            },
+            {
+              "id": "c",
+              "text": "Exception dans buildResponse ; name est trop long."
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "prompt": "Quelle investigation guide une correction conforme au produit ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Modifier seulement le routeur car il est dernier dans la pile."
+            },
+            {
+              "id": "b",
+              "text": "Inventer toujours un nom sans consulter le contrat."
+            },
+            {
+              "id": "c",
+              "text": "Reproduire avec {id:'u-1'} puis vérifier si le contrat exige name ou autorise son absence."
+            }
+          ]
+        },
+        {
+          "id": "verification",
+          "prompt": "Que vérifier pour une entrée sans name et une entrée valide ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Absence : comportement documenté sans TypeError accidentel ; présence : formatage correct."
+            },
+            {
+              "id": "b",
+              "text": "Absence : même TypeError ; présence : suppression de name."
+            },
+            {
+              "id": "c",
+              "text": "Succès forcé pour les deux sans examiner le contrat."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

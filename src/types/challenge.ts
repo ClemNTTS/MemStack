@@ -1,4 +1,22 @@
+export type ChallengeQuestion = {
+  id: string
+  prompt: string
+  checkpointIndex: number
+  options: { id: string, text: string }[]
+}
+
+export type CheckedChallengeResult = {
+  feedback: string[]
+  graderVersion: 'challenge-checks-v1'
+  verdict: 'validated' | 'retry'
+  correctCount: number
+  totalCount: number
+  criterionResults: boolean[]
+  missedCheckpointIndices: number[]
+}
+
 export type Challenge = {
+  questions?: ChallengeQuestion[]
   id: string
   version: number
   title: string
@@ -21,7 +39,10 @@ export type ChallengeOutcome = '' | 'retry' | 'understood'
 
 export type ChallengeAttempt = {
   id: string
-  version: 1 | 2
+  version: 1 | 2 | 3
+  rubricVersion?: number
+  selections?: Record<string, string>
+  result?: CheckedChallengeResult
   challengeId: string
   challengeVersion: number
   answer: string
@@ -32,6 +53,7 @@ export type ChallengeAttempt = {
 }
 
 export type ChallengeAnalysis = {
+  criterionResults?: boolean[]
   missedCheckpointIndices?: number[]
   verdict?: 'validated' | 'retry'
   status: 'processing' | 'completed' | 'failed' | 'needs_review'

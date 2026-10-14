@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import evaluation from '../../shared/challengeEvaluationCases.json' with { type: 'json' }
-import { challenges, getChallengeVersion } from '../data/challenges.ts'
+import { challengeVersions, getChallengeVersion } from '../data/challenges.ts'
 import { validateChallengeForm } from './attemptModel.ts'
 
-test('qualitative evaluation cases cover each current dossier and fit the actual submission form', () => {
+test('historical qualitative evaluation cases retain all v2 dossiers and original answer contracts', () => {
+  const challenges = challengeVersions.filter(challenge => challenge.version === 2)
   assert.equal(evaluation.version, 1)
   assert.equal(evaluation.cases.length, challenges.length * 5)
   assert.equal(new Set(evaluation.cases.map(entry => entry.id)).size, evaluation.cases.length)

@@ -1,11 +1,10 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
-import { readChallengeAttempts, submitChallengeAttempt } from '../firebase/challenges'
-import { readChallengeAccess } from '../firebase/challengeAccess'
-import { challengeAiEnabled, readChallengeAnalyses } from '../firebase/challengeAnalyses'
+import { readChallengeAttempts, submitCheckedAttempt } from '../firebase/challenges'
+import { readChallengeAnalyses } from '../firebase/challengeAnalyses'
 import { useProgress } from '../progress/ProgressProvider'
 import type { ChallengeAnalysis, ChallengeAttempt } from '../types/challenge'
-import { validateChallengeForm } from './attemptModel'
+import { validateChallengeSelections } from './checkedAttempt'
 import { challenges } from '../data/challenges'
 import { catalogCourses } from '../data/catalog'
 import { getChallengeThemeProgress } from './themeAccess'
@@ -22,7 +21,7 @@ type ChallengeContextValue = {
   saving: boolean
   error: string
   retry: () => void
-  submitAttempt: (challengeId: string, observations: string, actions: string) => Promise<ChallengeAttempt | null>
+  submitAttempt: (challengeId: string, selections: Record<string, string>) => Promise<ChallengeAttempt | null>
 }
 
 const ChallengeContext = createContext<ChallengeContextValue | null>(null)
@@ -32,7 +31,7 @@ function AccountChallenges({ uid, children }: { uid: string, children: ReactNode
   const [attempts, setAttempts] = useState<ChallengeAttempt[]>([])
   const [analyses, setAnalyses] = useState<Record<string, ChallengeAnalysis>>({})
   const [analysesLoading, setAnalysesLoading] = useState(true)
-  const [analysesReady, setAnalysesReady] = useState(false)
+  const [, setAnalysesReady] = useState(false)
   const [analysesError, setAnalysesError] = useState('')
   const [analysesRevision, setAnalysesRevision] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -61,7 +60,8 @@ function AccountChallenges({ uid, children }: { uid: string, children: ReactNode
       setAnalysesLoading(false)
     }).catch(() => {
       if (!active) return
-      setAnalysesError('Impossible de retrouver les résultats IA. Vérifie ta connexion puis réessaie.')
+      setAnalyses({})
+      setAnalysesReady(true)
       setAnalysesLoading(false)
     })
     return () => { active = false }
@@ -76,10 +76,7 @@ function AccountChallenges({ uid, children }: { uid: string, children: ReactNode
     setLoading(true)
     setError('')
     if (!account.ready || !account.online) return
-    readChallengeAccess(uid).then(allowed => {
-      if (!allowed) throw new Error('Accès IA requis')
-      return readChallengeAttempts(uid)
-    }).then(next => {
+    readChallengeAttempts(uid).then(next => {
       if (generation.current !== operation || !navigator.onLine) return
       loaded.current = true
       setAttempts(next)
@@ -101,16 +98,16 @@ function AccountChallenges({ uid, children }: { uid: string, children: ReactNode
       .sort((left, right) => right.submittedAt.localeCompare(left.submittedAt)))
   }
 
-  async function submitAttempt(challengeId: string, observations: string, actions: string): Promise<ChallengeAttempt | null> {
-    if (!challengeAiEnabled || !canSave()) return null
+  async function submitAttempt(challengeId: string, selections: Record<string, string>): Promise<ChallengeAttempt | null> {
+    if (!canSave()) return null
     const challenge = challenges.find(entry => entry.id === challengeId)
     if (!challenge || !getChallengeThemeProgress(challenge, catalogCourses, account.progress.completedLessons).unlocked) {
       setError('Termine les leçons prérequises de ce défi et au moins deux leçons de sa thématique avant de commencer.')
       return null
     }
     let answer: string
-    try { answer = validateChallengeForm(challengeId, observations, actions).answer }
-    catch { setError('Complète les deux champs, avec 4 000 caractères maximum au total.'); return null }
+    try { answer = JSON.stringify(validateChallengeSelections(challengeId, selections)) }
+    catch { setError('Choisis une réponse pour chaque question.'); return null }
     const operation = generation.current
     inFlight.current = true
     setSaving(true)
@@ -119,7 +116,7 @@ function AccountChallenges({ uid, children }: { uid: string, children: ReactNode
       if (!pending.current || pending.current.challengeId !== challengeId || pending.current.answer !== answer) {
         pending.current = { id: crypto.randomUUID(), challengeId, answer }
       }
-      const attempt = await submitChallengeAttempt(uid, pending.current.id, challengeId, observations, actions)
+      const attempt = await submitCheckedAttempt(uid, pending.current.id, challengeId, selections)
       if (generation.current !== operation || !navigator.onLine) return null
       remember(attempt)
       pending.current = null
@@ -136,7 +133,7 @@ function AccountChallenges({ uid, children }: { uid: string, children: ReactNode
   }
 
   return <ChallengeContext.Provider value={{ attempts, analyses, analysesLoading,
-    analysesReady: analysesReady && account.ready && account.online && !loading && !error,
+    analysesReady: account.ready && account.online && !loading && !error,
     analysesError, refreshAnalyses: () => setAnalysesRevision(value => value + 1),
     loading, ready: loaded.current && !loading && account.ready && account.online, saving, error,
     retry: () => { if (!inFlight.current && navigator.onLine) setRetryCount(value => value + 1) }, submitAttempt }}>

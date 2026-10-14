@@ -1,0 +1,1013 @@
+{
+  "version": 1,
+  "challenges": [
+    {
+      "id": "docker-images-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "restart relance le conteneur existant ; construire v2 ne remplace pas son image de départ. Aucun code hôte n’est monté ici."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Il faut créer le nouveau conteneur depuis l’image corrigée ; un tag ou un redémarrage ne modifie pas l’ancien."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "La couche inscriptible disparaît avec le conteneur. Vérifier aussi l’image et le comportement du remplaçant."
+        }
+      ]
+    },
+    {
+      "id": "docker-volumes-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Réutiliser l’image ou le nom ne restaure pas les écritures de la couche supprimée."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Il faut réutiliser la même ressource persistante au chemin réellement utilisé par l’application."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Aucune copie des anciennes notes n’existe. Un volume persiste mais reste exposé aux suppressions et écrasements."
+        }
+      ]
+    },
+    {
+      "id": "docker-ports-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Chaque conteneur possède son contexte réseau. La loopback du worker ne mène pas à l’API."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Le navigateur utilise le port publié de l’hôte ; le worker joint le nom réseau résolu et le port interne."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "L’écoute dans le conteneur et la publication sur l’hôte ont des portées différentes. Le réseau partagé permet l’accès interne décrit."
+        }
+      ]
+    },
+    {
+      "id": "fund-shared-cart-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Le spread copie le tableau, pas les objets qu’il référence."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Un nouvel objet pour l’article modifié rompt le partage du prix ; copier seulement le tableau ne suffit pas."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Le brouillon reflète la modification sans affecter l’original. La validation explicite applique ensuite le changement voulu."
+        }
+      ]
+    },
+    {
+      "id": "fund-stock-invariant-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Soustraire une quantité négative augmente le stock. Le retrait exige un entier positif au plus égal au stock."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "La quantité doit être entière, strictement positive et ne pas dépasser le stock ; l’égalité est autorisée."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Le refus précède la modification et conserve le stock. La concurrence en base est exclue du dossier."
+        }
+      ]
+    },
+    {
+      "id": "systems-env-process-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Le code lit PORT une fois. Modifier un autre environnement n’actualise pas le processus existant."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Le lanceur doit transmettre la configuration au nouveau processus. Aucun rechargement n’est prévu ici."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Le résultat concerne le service et ses prochains lancements, pas uniquement la variable d’un terminal."
+        }
+      ]
+    },
+    {
+      "id": "http-stale-cache-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Le 304 autorise la réutilisation du corps en cache. Le validateur doit refléter le changement de représentation."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Un ETag différent doit conduire à fournir le nouveau corps au lieu d’un faux 304."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "La première réponse actualise le cache ; la revalidation suivante peut économiser le corps inchangé."
+        }
+      ]
+    },
+    {
+      "id": "web-fetch-error-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Recevoir une réponse HTTP ne signifie pas un succès métier. Le catch seul ne contrôle pas les statuts."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Le statut doit être évalué avant confirmation. Le contrat API et les erreurs réseau restent à traiter."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Le serveur a refusé la suppression. Tester également le succès 2xx et une panne réseau."
+        }
+      ]
+    },
+    {
+      "id": "web-keyboard-action-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Le div n’est pas intrinsèquement focusable et activable comme un bouton. Il s’agit ici d’une action."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Le bouton natif fournit sémantique et interactions clavier. Le type button évite une soumission involontaire."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Il faut vérifier focus, activation et nom, au-delà d’un test visuel ou souris."
+        }
+      ]
+    },
+    {
+      "id": "js-zero-default-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Le défaut sur toute valeur falsy est trop large puisque le contrat autorise zéro."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "?? préserve zéro et utilise le défaut uniquement pour les valeurs nullish."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Zéro et les préférences positives sont explicites ; seules les valeurs absentes prennent 20."
+        }
+      ]
+    },
+    {
+      "id": "js-serial-requests-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Les appels sont placés après les await : leur indépendance n’est pas utilisée pour démarrer ensemble."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Promise.all attend les succès du groupe ; Promise.race ne garantit pas les trois résultats."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Le contrat interdit le succès partiel. Promise.all ne garantit pas l’annulation des autres opérations."
+        }
+      ]
+    },
+    {
+      "id": "ts-unchecked-api-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "L’assertion informe le compilateur sans transformer ni vérifier la valeur reçue."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "La validation d’exécution établit le contrat avant utilisation et prévoit une erreur contrôlée."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Ces entrées ne satisfont pas le contrat. Tester aussi une réponse valide ; la compilation ne valide pas le réseau."
+        }
+      ]
+    },
+    {
+      "id": "react-mutated-list-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Le setter reçoit la référence existante. Aucun autre changement d’état ne masque le défaut de rendu ici."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "La mise à jour fonctionnelle crée un nouveau tableau sans modifier le précédent."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Le test porte sur le contenu final et l’absence de mutation ; forcer le rendu ne répare pas le modèle d’état."
+        }
+      ]
+    },
+    {
+      "id": "react-stale-search-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "A est valide pour r mais devenue obsolète. L’ordre d’arrivée ne doit pas choisir le résultat affiché."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Un identifiant ou un indicateur invalidé au nettoyage protège l’application du résultat obsolète."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Les résultats doivent correspondre à la recherche courante. Vérifier aussi le changement de requête et le démontage."
+        }
+      ]
+    },
+    {
+      "id": "react-index-keys-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Les positions changent après suppression ; une instance liée à une position peut conserver le mauvais état local."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Les ids a, b et c sont stables et uniques. Une clé aléatoire recrée les instances et perd leur état."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Le brouillon appartient à Beta/b. Faire varier la liste permet de vérifier cette identité."
+        }
+      ]
+    },
+    {
+      "id": "backend-invalid-body-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Le parsing JSON ne garantit ni type ni intervalle métier. La pièce fournit notamment une chaîne."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Le contrat exige le type numérique entier de 1 à 5. Une conversion implicite élargirait ce contrat."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "La validation précède l’effet métier. Permissions et disponibilité restent des contrôles distincts."
+        }
+      ]
+    },
+    {
+      "id": "backend-payment-retry-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "La trace confirme p1 créé avant perte de réponse. Répéter sans déduplication peut créer p2."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "La garantie vient de la déduplication atomique côté serveur, pas de la clé seule."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "La clé identifie la même intention et son contenu. Tester aussi retries identiques, concurrence et résultat unique."
+        }
+      ]
+    },
+    {
+      "id": "backend-env-secret-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Les routes dépendent d’une configuration manquante, qui doit être détectée au démarrage."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Le diagnostic peut nommer la variable, mais ne doit pas révéler son contenu."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Une configuration valide ne garantit pas le réseau ni la disponibilité. Tester les démarrages absent et valide sans divulgation."
+        }
+      ]
+    },
+    {
+      "id": "data-left-join-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "La jointure conserve Bob mais le WHERE ne conserve pas sa ligne sans commande."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Le filtre de correspondance dans ON préserve les clients sans commande confirmée ; COUNT(o.id) ne compte pas les lignes NULL."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Le comptage de l’id non nul donne les zéros attendus sans compter la ligne sans correspondance comme commande."
+        }
+      ]
+    },
+    {
+      "id": "data-transfer-atomicity-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Les écritures séparées ne constituent pas une unité atomique ; le total peut diminuer."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "La transaction doit couvrir les deux effets. Elle ne rendrait pas atomique un appel externe, exclu ici."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "L’échec annule toute l’unité. Tester aussi le succès et la conservation du total."
+        }
+      ]
+    },
+    {
+      "id": "data-firestore-retry-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Les retries répètent le callback sans annuler ses effets externes ; une seule validation peut correspondre à plusieurs exécutions."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Un événement validé avec les données peut être traité hors callback ; retries et déduplication restent à définir."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Le déplacement évite les répétitions du callback mais ne garantit pas la livraison durable ou unique."
+        }
+      ]
+    },
+    {
+      "id": "security-object-owner-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Identifier l’utilisateur ne prouve pas son droit sur l’objet ; la politique est propriétaire seulement."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Le contrôle serveur doit utiliser une identité de confiance et l’objet demandé, pas une permission déclarée par le client."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Le test porte sur l’accès serveur et l’absence de fuite. Masquer un contrôle n’empêche pas une requête directe."
+        }
+      ]
+    },
+    {
+      "id": "security-sql-concatenation-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "L’entrée est une donnée placée dans le texte de l’instruction, ce qui expose à erreurs et injections."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "La paramétrisation garde les valeurs hors de la structure SQL ; une validation de format peut compléter sans la remplacer."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Tester nom ordinaire, apostrophe et forme SQL confirme que toutes les entrées restent des valeurs."
+        }
+      ]
+    },
+    {
+      "id": "security-html-comment-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Stocker la saisie ne la rend pas fiable ; l’interprétation d’une balise avec événement expose à une exécution."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "textContent crée du texte sans interpréter les balises. trim ne neutralise pas l’interprétation HTML."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Le contrat demande du texte brut, pas de supprimer tout commentaire contenant des balises. Les protections dépendent du contexte de sortie."
+        }
+      ]
+    },
+    {
+      "id": "tests-empty-pass-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Sans exception ni assertion, le test peut rester vert sans contrôler le calcul."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Le contrat exige 90. Vérifier le type ou la valeur fautive ne détecte pas ce défaut."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Le contrôle avant/après montre que le test distingue le défaut. Compléter avec une remise nulle et un autre cas utile."
+        }
+      ]
+    },
+    {
+      "id": "tests-expiry-boundary-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "<= inclut l’égalité ; le contrat impose l’invalidité dès now >= expiresAt."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Le jeton n’est valide que strictement avant l’expiration."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Injecter ces instants teste la frontière sans attente réelle ; le seul cas à 500 ne couvre pas l’égalité."
+        }
+      ]
+    },
+    {
+      "id": "tests-mock-contract-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Le double ne représente pas la forme de la frontière réelle et masque l’incompatibilité."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Il faut suivre la structure documentée ; une assertion ne transforme pas l’objet reçu."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Le test de frontière représente le fournisseur et prévoit les erreurs. Une intégration contrôlée peut compléter les limites des doubles."
+        }
+      ]
+    },
+    {
+      "id": "architecture-rule-ui-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "La page utilise >= 100 ; l’export > 100 exclut le seuil inclus dans le contrat."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Le calcul commun porte la règle, sans obliger à fusionner les interfaces."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "La remise s’applique dès 100 inclus, pas avant. Ces cas couvrent le seuil et la cohérence entre consommateurs."
+        }
+      ]
+    },
+    {
+      "id": "architecture-invalid-state-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Le spread conserve loading:true puis ajoute success:true, incompatibles pour cette opération unique."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Un état unique évite chargement et succès simultanés. saved vient après confirmation et failed après échec."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "L’échec clôture le chargement et reste distinct du succès ; vérifier les deux issues."
+        }
+      ]
+    },
+    {
+      "id": "architecture-lost-write-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "La lecture obsolète de Bob contient l’ancien titre et son remplacement écrase silencieusement celui d’Alice."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "La comparaison doit être atomique au point d’écriture ; une lecture préalable seule laisse une course."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Le conflit permet une résolution explicite avec la version récente. Le dernier arrivé gagne ne satisfait pas le contrat."
+        }
+      ]
+    },
+    {
+      "id": "performance-lcp-lazy-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "La ressource est connue tôt mais chargée tard ; le lazy loading retarde ici l’élément LCP visible."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "L’image LCP visible ne doit pas être différée comme les images hors écran. La priorité est à cibler et mesurer."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Mesurer dans les mêmes conditions vérifie le bénéfice et les régressions ; prioriser tout ferait perdre le ciblage."
+        }
+      ]
+    },
+    {
+      "id": "performance-eager-module-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "L’import statique inclut la dépendance au chargement observé ; l’usage tardif de sa fonction ne le diffère pas."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "L’import dynamique charge au moment pertinent ; le bouton doit gérer l’attente et l’échec."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Le coût est reporté, pas supprimé quand on exporte. Mesurer ouverture et première action couvre le compromis."
+        }
+      ]
+    },
+    {
+      "id": "performance-nplusone-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Les lectures par ligne augmentent avec la page et répètent des auteurs partagés."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Le regroupement ou une jointure paginée réduit les lectures ; la concurrence seule ne supprime pas les requêtes N+1."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "La réduction doit conserver le contrat et se mesurer ; une jointure n’est pas toujours la plus rapide."
+        }
+      ]
+    },
+    {
+      "id": "engineering-staged-old-version-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Le commit utilise l’index ; la modification v2 après git add reste locale tant qu’elle n’est pas préparée."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "L’ajout actualise l’index ; une préparation ciblée évite les modifications sans rapport."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "git diff --cached montre l’index. Examiner le commit puis les changements restants confirme le contenu enregistré."
+        }
+      ]
+    },
+    {
+      "id": "engineering-semantic-conflict-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "La résolution garde price <= 0 mais pas discount > 50. Le contrat final exige les deux."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "Une résolution doit préserver le sens des deux changements, pas seulement retirer les marqueurs."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Chaque défaut doit être rejeté séparément et ensemble ; le cas valide doit rester accepté."
+        }
+      ]
+    },
+    {
+      "id": "engineering-stack-origin-diagnostic",
+      "challengeVersion": 3,
+      "rubricVersion": 2,
+      "questions": [
+        {
+          "id": "diagnosis",
+          "correctOptionIds": [
+            "b"
+          ],
+          "explanation": "Le premier cadre localise toUpperCase dans formatName et l’entrée manque name. Les autres cadres montrent la propagation."
+        },
+        {
+          "id": "action",
+          "correctOptionIds": [
+            "c"
+          ],
+          "explanation": "La reproduction isole le défaut ; le contrat détermine validation ou repli explicite. Un nom de repli exige l’accord du produit."
+        },
+        {
+          "id": "verification",
+          "correctOptionIds": [
+            "a"
+          ],
+          "explanation": "Couvrir le déclencheur sans casser le cas valide. La pile localise l’exception sans expliquer seule l’origine de la donnée invalide."
+        }
+      ]
+    }
+  ]
+}

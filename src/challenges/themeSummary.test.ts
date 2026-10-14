@@ -15,6 +15,8 @@ test('theme summary separates reading progress, acquired exams and precise misse
   assert.equal(result.examsValidated, 0)
   assert.deepEqual(result.notions, [{ challengeId: 'exam', checkpointIndex: 1, label: 'Clock' }])
   assert.equal(result.retriesWithoutNotions, 0)
+  assert.deepEqual(getThemeSummary('Tests', courses, [challenge], { one: 'date' }, [attempt('a')], { a: analysis({ promptVersion: 'challenge-feedback-v5' }) }), result)
+  assert.deepEqual(getThemeSummary('Tests', courses, [challenge], { one: 'date' }, [attempt('a')], { a: analysis({ promptVersion: 'challenge-feedback-v6' }) }), result)
 })
 
 test('acquired validation excludes later failures from points to consolidate', () => {

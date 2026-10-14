@@ -8,7 +8,7 @@
   },
   "scripts": {
     "prepare:catalog": "node scripts/prepare-catalog.mjs",
-    "build": "npm run prepare:catalog && node --check src/index.mjs && node --check src/analysis.mjs && node --check src/claim.mjs",
+    "build": "npm run prepare:catalog && node --check src/index.mjs && node --check src/analysis.mjs && node --check src/claim.mjs && node --check src/challengeChecks.mjs",
     "test": "node --test src/*.test.mjs"
   },
   "dependencies": {

@@ -16,7 +16,7 @@ before(async () => {
 after(async () => { if (app) await deleteApp(app) })
 const now = Date.parse('2026-10-07T12:00:00Z')
 const day = '2026-10-07'
-const dossier = { id: 'docker-images-diagnostic', version: 2, rubricVersion: 1, courseId: 'course', lessonIds: ['one'] }
+const dossier = { id: 'docker-images-diagnostic', version: 2, rubricVersion: 1, courseId: 'course', lessonIds: ['one'], checkpoints: ['Diagnostic', 'Action', 'Vérification'] }
 const courses = [{ id: 'course', theme: 'Tests', lessons: [{ id: 'one' }, { id: 'two' }, { id: 'three' }] }]
 const config = { enabled: true, invited: ['alice', 'bob'], model: 'version-pinned', hasKey: true, limits: { user: 5, global: 25, tokens: 400000 } }
 const args = (uid, attemptId, patch = {}) => ({ db, uid, attemptId, now, config, dossiers: [dossier], courses, timestamp: Timestamp.fromMillis(now), ...patch })

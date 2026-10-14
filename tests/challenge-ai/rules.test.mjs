@@ -167,7 +167,7 @@ test('clients cannot forge analysis results or read and change server quota coun
   }
 })
 
-test('AI option access is server-owned and revoked access denies attempts and analyses', async () => {
+test('AI option is server-owned, but losing it cannot block reading challenge history', async () => {
   const accessPath = 'users/alice/settings/challengeAccess'
   await assertSucceeds(getDoc(doc(db('alice'), accessPath)))
   await assertFails(getDoc(doc(db('bob'), accessPath)))
@@ -179,12 +179,29 @@ test('AI option access is server-owned and revoked access denies attempts and an
     await setDoc(doc(context.firestore(), 'users/alice/challengeAnalyses/attempt-1'), { status: 'completed' })
     await setDoc(doc(context.firestore(), accessPath), { aiEnabled: false })
   })
-  await assertFails(getDoc(doc(db('alice'), path)))
+  await assertSucceeds(getDoc(doc(db('alice'), path)))
   await assertFails(getDoc(doc(db('alice'), 'users/alice/challengeAnalyses/attempt-1')))
   await assertFails(updateDoc(doc(db('alice'), path), { outcome: 'understood' }))
   await assertFails(limitedSetDoc(doc(db('alice'), 'users/alice/challengeAttempts/attempt-2'), payload(2)))
   await env.withSecurityRulesDisabled(async context => { await deleteDoc(doc(context.firestore(), accessPath)) })
   await assertFails(limitedSetDoc(doc(db('alice'), 'users/alice/challengeAttempts/attempt-3'), payload(2)))
+})
+
+test('checked attempts are server-write-only and readable by their owner without AI access', async () => {
+  const checkedPath = 'users/alice/challengeAttempts/checked-1'
+  const checked = { version: 3, challengeId: 'docker-volumes-diagnostic', challengeVersion: 3, rubricVersion: 2,
+    selections: { cause: 'a', action: 'b', check: 'c' }, answer: '{}', outcome: '',
+    result: { graderVersion: 'challenge-checks-v1', verdict: 'validated', correctCount: 3, totalCount: 3, criterionResults: [true, true, true], missedCheckpointIndices: [] }, submittedAt: serverTimestamp() }
+  await assertFails(limitedSetDoc(doc(db('alice'), checkedPath), checked))
+  await env.withSecurityRulesDisabled(async context => {
+    await setDoc(doc(context.firestore(), checkedPath), checked)
+    await deleteDoc(doc(context.firestore(), 'users/alice/settings/challengeAccess'))
+  })
+  await assertSucceeds(getDoc(doc(db('alice'), checkedPath)))
+  await assertFails(getDoc(doc(db('bob'), checkedPath)))
+  await assertFails(getDoc(doc(db(null), checkedPath)))
+  await assertFails(updateDoc(doc(db('alice'), checkedPath), { 'result.verdict': 'validated' }))
+  await assertFails(deleteDoc(doc(db('alice'), checkedPath)))
 })
 
 test('reviews and content reports remain available without the AI option', async () => {

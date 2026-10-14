@@ -1,5 +1,6 @@
 import type { ChallengeAttempt, ChallengeOutcome } from '../types/challenge'
 import { challenges, getChallengeVersion } from '../data/challenges.ts'
+import { decodeCheckedAttempt } from './checkedAttempt.ts'
 
 export const challengeIds = new Set(challenges.map(challenge => challenge.id))
 
@@ -26,6 +27,7 @@ export function isChallengeOutcome(value: unknown): value is ChallengeOutcome {
 export function decodeChallengeAttempt(id: string, input: unknown): ChallengeAttempt | null {
   if (!/^[a-zA-Z0-9-]{1,128}$/.test(id) || !input || typeof input !== 'object' || Array.isArray(input)) return null
   const value = input as Record<string, unknown>
+  if (value.version === 3) return decodeCheckedAttempt(id, value)
   const keys = Object.keys(value).sort().join(',')
   const expected = value.version === 2 ? 'actions,answer,challengeId,challengeVersion,observations,outcome,submittedAt,version' : 'answer,challengeId,challengeVersion,outcome,submittedAt,version'
   if (keys !== expected || (value.version !== 1 && value.version !== 2) ||

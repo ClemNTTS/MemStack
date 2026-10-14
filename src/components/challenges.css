@@ -101,3 +101,40 @@
 .challenge-revision a, .challenge-replay-context a { display: inline-block; min-height: 44px; padding-block: .5rem; box-sizing: border-box; }
 .challenge-replay-context { position: relative; margin: 1rem; padding: 1rem; border-radius: 1rem; background: #f1eaf8; }
 .challenge-replay-context p { margin-top: 0; }
+.challenge-question {
+  border: 1px solid var(--ink, #292329);
+  border-radius: 12px;
+  padding: 1rem;
+  margin: 1.2rem 0;
+  min-width: 0;
+}
+
+.challenge-question legend {
+  font-weight: 650;
+  padding: 0 .4rem;
+}
+
+.challenge-response .challenge-option {
+  display: flex;
+  align-items: flex-start;
+  gap: .7rem;
+  padding: .7rem;
+  cursor: pointer;
+}
+
+.challenge-option input {
+  flex: 0 0 auto;
+  margin-top: .35rem;
+}
+
+.challenge-option:focus-within {
+  outline: 2px solid #65528a;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.challenge-question-result {
+  border-top: 1px solid #ddd3e3;
+  margin-top: 1rem;
+  padding-top: .8rem;
+}

@@ -13,7 +13,7 @@ export function revisionChallenge(lessonId: string, challengeId: string | null, 
 }
 
 export function targetedRevision(challenge: Challenge, analysis: ChallengeAnalysis | null) {
-  if (analysis?.status !== 'completed' || analysis.promptVersion !== 'challenge-feedback-v4' || analysis.verdict !== 'retry' || analysis.challengeVersion !== challenge.version || analysis.rubricVersion !== challenge.rubricVersion || !analysis.missedCheckpointIndices?.length) return null
+  if (analysis?.status !== 'completed' || !['challenge-feedback-v4', 'challenge-feedback-v5', 'challenge-feedback-v6', 'challenge-feedback-v7'].includes(analysis.promptVersion) || analysis.verdict !== 'retry' || analysis.challengeVersion !== challenge.version || analysis.rubricVersion !== challenge.rubricVersion || !analysis.missedCheckpointIndices?.length) return null
   const indices = analysis.missedCheckpointIndices
   if (indices.some(index => !Number.isInteger(index) || index < 0 || index >= challenge.checkpoints.length) || new Set(indices).size !== indices.length) return null
   const points = indices.map(index => ({ index, text: challenge.checkpoints[index] }))

@@ -73,7 +73,7 @@ service cloud.firestore {
           && data.outcome in ['', 'retry', 'understood']
         );
       }
-      allow read: if challengeAccess(uid);
+      allow read: if owner(uid);
       allow create: if challengeAccess(uid)
         && writeBudget(uid, 'attempts', attemptId)
         && attemptId.matches('^[a-zA-Z0-9-]{1,128}$')

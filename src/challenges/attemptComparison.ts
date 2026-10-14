@@ -12,11 +12,11 @@ export function compareChallengeAttempts(challenge: Challenge, selected: Challen
     && analysis.rubricVersion === challenge.rubricVersion && (analysis.verdict === 'validated' || analysis.verdict === 'retry')
   if (!valid(previous, before) || !valid(selected, after)) return { previous, status: 'unavailable' as const }
   const base = { previous, beforeVerdict: before!.verdict!, afterVerdict: after!.verdict! }
-  const reliable = (analysis: ChallengeAnalysis) => analysis.promptVersion === 'challenge-feedback-v4'
+  const reliable = (analysis: ChallengeAnalysis) => ['challenge-feedback-v4', 'challenge-feedback-v5', 'challenge-feedback-v6', 'challenge-feedback-v7'].includes(analysis.promptVersion)
     && Array.isArray(analysis.missedCheckpointIndices)
     && analysis.missedCheckpointIndices.every(index => Number.isInteger(index) && index >= 0 && index < challenge.checkpoints.length)
     && new Set(analysis.missedCheckpointIndices).size === analysis.missedCheckpointIndices.length
-    && (analysis.verdict === 'validated' ? analysis.missedCheckpointIndices.length === 0 : analysis.missedCheckpointIndices.length > 0)
+    && (analysis.promptVersion === 'challenge-feedback-v7' || (analysis.verdict === 'validated' ? analysis.missedCheckpointIndices.length === 0 : analysis.missedCheckpointIndices.length > 0))
   if (!reliable(before!) || !reliable(after!)) return { ...base, status: 'verdicts' as const }
   const beforePoints = before!.missedCheckpointIndices!
   const afterPoints = after!.missedCheckpointIndices!

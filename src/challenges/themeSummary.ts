@@ -20,8 +20,12 @@ export function getThemeSummary(
   }))
   const notions = exams.flatMap(({ challenge, summary }) => {
     if (summary.status !== 'retry' || !summary.attempt) return []
+    if (summary.attempt.version === 3) {
+      return (summary.attempt.result?.missedCheckpointIndices ?? []).filter(index => index >= 0 && index < challenge.checkpoints.length)
+        .map(index => ({ challengeId: challenge.id, checkpointIndex: index, label: challenge.checkpoints[index] }))
+    }
     const analysis = analyses[summary.attempt.id]
-    if (analysis.promptVersion !== 'challenge-feedback-v4') return []
+    if (!['challenge-feedback-v4', 'challenge-feedback-v5', 'challenge-feedback-v6', 'challenge-feedback-v7'].includes(analysis.promptVersion)) return []
     return [...new Set(analysis.missedCheckpointIndices ?? [])]
       .filter(index => Number.isInteger(index) && index >= 0 && index < challenge.checkpoints.length)
       .map(index => ({ challengeId: challenge.id, checkpointIndex: index, label: challenge.checkpoints[index] }))

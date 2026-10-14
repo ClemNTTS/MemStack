@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { claimAnalysis } from './claim.mjs'
 
-const dossier = { id: 'docker-images-diagnostic', version: 2, rubricVersion: 1, courseId: 'course', lessonIds: ['one'] }
+const dossier = { id: 'docker-images-diagnostic', version: 2, rubricVersion: 1, courseId: 'course', lessonIds: ['one'], checkpoints: ['Diagnostic', 'Action', 'Vérification'] }
 const attempt = { version: 2, challengeVersion: 2, challengeId: dossier.id, observations: 'Constat', actions: 'Action', answer: 'Constat\n\nAction', submittedAt: { toMillis: () => 1 } }
 const courses = [{ id: 'course', theme: 'Tests', lessons: [{ id: 'one' }, { id: 'two' }, { id: 'three' }] }]
 const config = { enabled: true, invited: ['alice'], model: 'model-2601', hasKey: true, limits: { user: 5, global: 25, tokens: 400000 } }
