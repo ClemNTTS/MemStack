@@ -24,8 +24,7 @@ function AccessGate() {
     <p>{!account.online ? 'Une connexion Internet est nécessaire pour apprendre et réviser. La reprise sera automatique au retour du réseau.'
       : !account.user ? 'Connecte-toi ou crée ton compte pour accéder aux leçons et retrouver ta progression.'
       : !account.user.emailVerified ? 'Confirme ton adresse email pour accéder à tes leçons.' : 'Les leçons seront disponibles une fois la synchronisation terminée.'}</p>
-    {account.authResolved && !account.user && account.online && <button className="lesson-choice" disabled={busy} onClick={login}>{busy ? 'Connexion…' : 'Se connecter avec Google'}</button>}
-    {account.authResolved && !account.user && account.online && <EmailAuthForm />}
+    {account.authResolved && !account.user && account.online && <EmailAuthForm googleBusy={busy} onGoogleLogin={login} />}
     {account.user && !account.user.emailVerified && account.online && <EmailVerification />}
     {!account.user && account.error && <p role="alert">{account.error}</p>}
   </main>
