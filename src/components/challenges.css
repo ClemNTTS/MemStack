@@ -125,6 +125,7 @@
 .challenge-option input {
   flex: 0 0 auto;
   margin-top: .35rem;
+  accent-color: #65528a;
 }
 
 .challenge-option:focus-within {
