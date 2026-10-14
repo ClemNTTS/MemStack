@@ -3,63 +3,101 @@
   "challenges": [
     {
       "id": "docker-images-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Quelle image reste à l’origine de memstack-web après les commandes ?",
+          "prompt": "Après la construction de v2 et le redémarrage, quelle image le conteneur `memstack-web` utilise-t-il encore ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Un mélange de v1 et du correctif de v2."
+              "text": "Il utilise v2, car Docker choisit la dernière image construite au redémarrage."
             },
             {
               "id": "b",
-              "text": "v2, la dernière image construite."
+              "text": "Il utilise une combinaison de v1 et des fichiers corrigés de v2."
             },
             {
               "id": "c",
-              "text": "v1, utilisée lors de sa création."
+              "text": "Il utilise v1, car cette image a servi à créer ce conteneur."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quelle intervention applique le correctif de v2 ?",
+          "prompt": "Comment appliquer le correctif contenu dans v2 à cette application ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Renommer l’ancien puis redémarrer ce même conteneur."
+              "text": "Je crée un nouveau conteneur depuis v2 en reprenant les ports, variables, volumes et réseau nécessaires."
             },
             {
               "id": "b",
-              "text": "Redémarrer l’ancien après avoir donné à v2 le tag v1."
+              "text": "Je change le nom du conteneur actuel puis le redémarre avec sa configuration habituelle."
             },
             {
               "id": "c",
-              "text": "Créer un remplaçant depuis v2 avec les ports, variables, volumes et réseau nécessaires."
+              "text": "Je donne à v2 le nom de v1 puis redémarre le conteneur actuel sans le remplacer."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Avant de supprimer memstack-web sans montage, quelle précaution protège ses données utiles ?",
+          "prompt": "Avant de supprimer le conteneur sans volume, comment protéger les données utiles qu’il a créées ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Conserver son nom pour retrouver ses données au prochain lancement."
+              "text": "Je conserve le nom du conteneur pour que le prochain retrouve automatiquement ses fichiers."
             },
             {
               "id": "b",
-              "text": "Repérer et copier les données utiles de sa couche inscriptible vers un stockage conservé."
+              "text": "Je repère ces fichiers et les copie dans un stockage qui sera conservé après la suppression."
             },
             {
               "id": "c",
-              "text": "Reconstruire v2 pour y inclure automatiquement ses écritures."
+              "text": "Je reconstruis v2 pour que Docker y ajoute automatiquement les fichiers du conteneur actuel."
+            }
+          ]
+        },
+        {
+          "id": "replacement-check",
+          "prompt": "Le conteneur de remplacement démarre. Quelle vérification montre que le correctif a été appliqué ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Je vérifie uniquement que le nouveau conteneur porte le même nom que l’ancien."
+            },
+            {
+              "id": "b",
+              "text": "Je vérifie uniquement que la construction de l’image v2 s’est terminée sans erreur."
+            },
+            {
+              "id": "c",
+              "text": "Je vérifie que le nouveau conteneur utilise v2 et que l’ancien bug ne se reproduit plus."
+            }
+          ]
+        },
+        {
+          "id": "restart-purpose",
+          "prompt": "Dans quel cas redémarrer le même conteneur peut-il être utile sans changer son image ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Il redémarre le conteneur existant avec la même image et la configuration existante, sans le remplacer."
+            },
+            {
+              "id": "b",
+              "text": "Une nouvelle image est construite et je veux remplacer les fichiers de départ du conteneur."
+            },
+            {
+              "id": "c",
+              "text": "Le conteneur a été supprimé et je veux récupérer les fichiers qu’il avait créés."
             }
           ]
         }
@@ -67,63 +105,101 @@
     },
     {
       "id": "docker-volumes-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Pourquoi le nouveau memstack-notes ne retrouve-t-il pas notes.json ?",
+          "prompt": "Pourquoi le nouveau conteneur ne retrouve-t-il pas les anciennes notes ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Docker attend avant de restaurer les notes de cette image."
+              "text": "Le nom du nouveau conteneur empêche Docker de lui donner accès aux anciennes notes."
             },
             {
               "id": "b",
-              "text": "Son nom doit changer pour accéder aux notes de l’ancienne instance."
+              "text": "Les notes étaient écrites dans le conteneur supprimé, et ne faisaient pas partie de son image."
             },
             {
               "id": "c",
-              "text": "Les notes étaient des écritures du conteneur supprimé, pas de son image."
+              "text": "La même image contient les anciennes notes, mais Docker attend un redémarrage pour les afficher."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quel montage conserve les prochaines notes lors des remplacements ?",
+          "prompt": "Quel montage conserve les prochaines notes lorsque l’application écrit dans `/app/data` ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Réutiliser memstack-notes-data monté sur /app/data à chaque remplacement."
+              "text": "Je crée un volume différent à chaque remplacement et le monte sur `/app/data`."
             },
             {
               "id": "b",
-              "text": "Créer un nouveau volume nommé à chaque remplacement sur /app/data."
+              "text": "Je réutilise le même volume, mais je le monte sur `/backup` au lieu de `/app/data`."
             },
             {
               "id": "c",
-              "text": "Réutiliser memstack-notes-data mais le monter seulement sur /backup."
+              "text": "Je monte `memstack-notes-data` sur `/app/data` et réutilise ce même volume au remplacement."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Que garantit le volume dans l’état décrit par incident.txt ?",
+          "prompt": "Que permet le nouveau volume dans la situation décrite par `incident.txt` ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Persistance future ; ni récupération des notes détruites ni sauvegarde indépendante."
+              "text": "Il conservera les prochaines notes, mais ne récupérera pas les notes perdues et ne remplace pas une sauvegarde."
             },
             {
               "id": "b",
-              "text": "Sauvegarde indépendante des notes même si le volume est supprimé."
+              "text": "Il récupérera les notes perdues dès que son nom correspondra au nom de l’ancien conteneur."
             },
             {
               "id": "c",
-              "text": "Récupération des anciennes notes dès que le nom du volume correspond au conteneur."
+              "text": "Il protégera les notes même si le volume et tous les fichiers qu’il contient sont supprimés."
+            }
+          ]
+        },
+        {
+          "id": "restart-data",
+          "prompt": "Si le conteneur initial avait seulement été redémarré, sans être supprimé, qu’en serait-il de ses notes ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Les notes auraient disparu, car chaque redémarrage efface les fichiers créés par l’application."
+            },
+            {
+              "id": "b",
+              "text": "Les notes auraient été ajoutées à l’image v1 et partagées avec tous les nouveaux conteneurs."
+            },
+            {
+              "id": "c",
+              "text": "Les notes seraient normalement restées dans ce même conteneur, car il n’a pas été remplacé."
+            }
+          ]
+        },
+        {
+          "id": "backup-reason",
+          "prompt": "Pourquoi prévoir une sauvegarde même après avoir installé un volume ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Le volume efface automatiquement les notes dès qu’un conteneur s’arrête."
+            },
+            {
+              "id": "b",
+              "text": "Une erreur peut encore effacer les notes du volume ; une copie indépendante permet de les restaurer."
+            },
+            {
+              "id": "c",
+              "text": "Le volume conserve uniquement les noms des notes, mais jamais leur contenu."
             }
           ]
         }
@@ -131,63 +207,101 @@
     },
     {
       "id": "docker-ports-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Pourquoi le worker échoue-t-il sur localhost:8080 ?",
+          "prompt": "Dans le code du worker, que désigne `localhost` dans `http://localhost:8080` ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "localhost désigne l’API mais la publication inverse les requêtes."
+              "text": "Cette adresse désigne le worker lui-même, et non le conteneur qui héberge l’API."
             },
             {
               "id": "b",
-              "text": "localhost désigne toujours l’hôte mais le port interne est bloqué."
+              "text": "Cette adresse désigne toujours la machine hôte, quel que soit le conteneur qui l’utilise."
             },
             {
               "id": "c",
-              "text": "localhost désigne le worker lui-même, pas le conteneur API."
+              "text": "Cette adresse désigne automatiquement le conteneur dont le port a été publié."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quel couple d’URLs correspond aux clients du dossier ?",
+          "prompt": "Quelles adresses conviennent au navigateur sur l’hôte et au worker sur le réseau partagé ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Hôte : http://127.0.0.1:8080 ; worker : http://memstack-api:3000."
+              "text": "Le navigateur utilise `http://127.0.0.1:3000` et le worker utilise `http://memstack-api:8080`."
             },
             {
               "id": "b",
-              "text": "Hôte : http://127.0.0.1:3000 ; worker : http://memstack-api:8080."
+              "text": "Le navigateur utilise `http://127.0.0.1:8080` et le worker utilise `http://memstack-api:3000`."
             },
             {
               "id": "c",
-              "text": "Hôte : http://memstack-api:3000 ; worker : http://localhost:8080."
+              "text": "Le navigateur utilise `http://memstack-api:3000` et le worker utilise `http://localhost:8080`."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Quelle portée vérifier pour 127.0.0.1:8080:3000 ?",
+          "prompt": "Que signifie la publication `127.0.0.1:8080:3000` pour l’accès depuis une autre machine ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "La publication bloque également l’accès du worker à memstack-api:3000."
+              "text": "Le port 8080 est ouvert sur toutes les adresses de l’hôte puisque l’API écoute sur `0.0.0.0`."
             },
             {
               "id": "b",
-              "text": "Le port publié est limité à la loopback de l’hôte, pas ouvert normalement aux autres machines."
+              "text": "Le port 8080 est fermé sur l’hôte, et seul le worker peut l’utiliser pour joindre l’API."
             },
             {
               "id": "c",
-              "text": "Le port publié est sur toutes les interfaces puisque l’API écoute sur 0.0.0.0."
+              "text": "Le port 8080 est publié sur l’adresse locale de l’hôte et n’est normalement pas accessible depuis une autre machine."
+            }
+          ]
+        },
+        {
+          "id": "internal-port",
+          "prompt": "Dans `8080:3000`, quel rôle joue le nombre 3000 ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "C’est le port utilisé par le navigateur sur la machine hôte pour joindre le service publié."
+            },
+            {
+              "id": "b",
+              "text": "C’est le port sur lequel l’API reçoit les connexions dans son propre conteneur."
+            },
+            {
+              "id": "c",
+              "text": "C’est le nombre maximal de requêtes que le réseau Docker peut transmettre à l’API."
+            }
+          ]
+        },
+        {
+          "id": "network-condition",
+          "prompt": "Avant d’utiliser `memstack-api:3000` depuis le worker, quelle condition du dossier faut-il conserver ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Les deux conteneurs doivent partager le réseau décrit, où le nom `memstack-api` permet de joindre l’API."
+            },
+            {
+              "id": "b",
+              "text": "Les deux conteneurs doivent utiliser la même image, même s’ils se trouvent sur des réseaux séparés."
+            },
+            {
+              "id": "c",
+              "text": "Le worker doit écouter lui aussi sur le port 3000 pour pouvoir envoyer une requête à l’API."
             }
           ]
         }
@@ -195,63 +309,101 @@
     },
     {
       "id": "fund-shared-cart-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Pourquoi cart[0].price vaut-il 20 après modification du brouillon ?",
+          "prompt": "Pourquoi modifier `draft[0].price` change-t-il aussi le prix du panier original ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Le spread réutilise le tableau mais copie profondément chaque article."
+              "text": "L’affichage copie le dernier prix connu dans tous les tableaux contenant un article."
             },
             {
               "id": "b",
-              "text": "console.log remplace le prix original par celui du dernier tableau créé."
+              "text": "Les deux variables désignent le même tableau, car `[...cart]` ne crée aucun tableau."
             },
             {
               "id": "c",
-              "text": "Les tableaux distincts référencent le même objet article."
+              "text": "Les tableaux sont différents, mais leur premier élément désigne encore le même objet article."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quel changement isole le prix du brouillon pour ces objets simples ?",
+          "prompt": "Comment modifier le prix dans le brouillon sans toucher à l’article original, pour ces objets simples ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Remplacer draft[0] par { ...draft[0], price: 20 }."
+              "text": "Je change `draft[0].price`, puis je copie le tableau après cette modification."
             },
             {
               "id": "b",
-              "text": "Muter draft[0].price puis recopier seulement le tableau."
+              "text": "Je remplace l’article du brouillon par un nouvel objet : `draft[0] = { ...draft[0], price: 20 }`."
             },
             {
               "id": "c",
-              "text": "Créer draft avec cart.slice() puis muter draft[0].price."
+              "text": "Je recrée le tableau avec `cart.slice()`, puis je change directement `draft[0].price`."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Quelle observation vérifie la séparation avant validation du client ?",
+          "prompt": "Avant la validation du client, quels prix montrent que le brouillon est bien séparé ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "cart[0].price = 20 et draft[0].price = 20."
+              "text": "Le panier original conserve le prix 10, tandis que le brouillon contient le prix 20."
             },
             {
               "id": "b",
-              "text": "cart[0].price = 10 et draft[0].price = 20."
+              "text": "Le panier original et le brouillon contiennent tous deux le nouveau prix 20."
             },
             {
               "id": "c",
-              "text": "cart[0].price = 10 et draft[0].price = 10."
+              "text": "Le panier original et le brouillon conservent tous deux l’ancien prix 10."
+            }
+          ]
+        },
+        {
+          "id": "cancel-draft",
+          "prompt": "Le client annule la modification après avoir changé le brouillon correctement. Que doit-il se passer ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Le prix 20 doit rester dans le panier, car une modification de brouillon vaut validation."
+            },
+            {
+              "id": "b",
+              "text": "Le panier doit garder le prix 10, car aucune modification n’a été validée."
+            },
+            {
+              "id": "c",
+              "text": "L’article doit être supprimé du panier pour annuler la modification de son prix."
+            }
+          ]
+        },
+        {
+          "id": "copy-scope",
+          "prompt": "Dans le code initial, qu’est-ce que `[...cart]` copie réellement ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Il crée un nouvel objet pour chaque article et pour tous les objets contenus dans ces articles."
+            },
+            {
+              "id": "b",
+              "text": "Il ne crée aucun tableau et renomme seulement la variable qui désigne le panier."
+            },
+            {
+              "id": "c",
+              "text": "Il crée un nouveau tableau, en gardant les mêmes objets articles comme éléments."
             }
           ]
         }
@@ -259,63 +411,101 @@
     },
     {
       "id": "fund-stock-invariant-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Quel défaut explique withdraw(3, -2) = 5 ?",
+          "prompt": "Pourquoi le retrait `withdraw(3, -2)` augmente-t-il le stock à 5 ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Le stock initial 3 est invalide car seuls les stocks pairs sont autorisés."
+              "text": "Le code soustrait une quantité négative sans vérifier qu’un retrait doit être strictement positif."
             },
             {
               "id": "b",
-              "text": "Toute soustraction JavaScript augmente un stock inférieur à la quantité."
+              "text": "JavaScript inverse automatiquement le signe du stock dès que la quantité est inférieure à 3."
             },
             {
               "id": "c",
-              "text": "La soustraction accepte une quantité négative sans vérifier le contrat."
+              "text": "Le stock initial de 3 est interdit, car cette fonction n’accepte que des stocks pairs."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Sur un stock 3, quelles quantités peuvent être retirées ?",
+          "prompt": "Avec un stock de 3, quelles quantités respectent la règle de retrait ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "1 et 3 ; pas 0, -2, 4 ni 1.5."
+              "text": "Je peux retirer 0, 1 ou 3 ; je dois refuser -2, 4 et 1,5."
             },
             {
               "id": "b",
-              "text": "0, 1 et 3 ; pas -2, 4 ni 1.5."
+              "text": "Je peux retirer 1, 1,5 ou 3 ; je dois refuser 0, -2 et 4."
             },
             {
               "id": "c",
-              "text": "1, 1.5 et 3 ; pas 0, -2 ni 4."
+              "text": "Je peux retirer 1 ou 3 ; je dois refuser 0, -2, 4 et 1,5."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Quel résultat attendre d’un retrait de 4 sur un stock 3 ?",
+          "prompt": "Quel résultat doit produire une demande de retrait de 4 avec un stock de 3 ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Refus et stock ramené à -1."
+              "text": "La demande est refusée, mais le stock passe tout de même à -1."
             },
             {
               "id": "b",
-              "text": "Refus et stock conservé à 3."
+              "text": "La demande est refusée et le stock reste à 3."
             },
             {
               "id": "c",
-              "text": "Retrait accepté et stock ramené à 0."
+              "text": "La demande est acceptée et le stock est limité à 0."
+            }
+          ]
+        },
+        {
+          "id": "validation-order",
+          "prompt": "À quel moment faut-il contrôler la quantité demandée ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Je contrôle la quantité avant de modifier le stock, puis j’applique seulement un retrait autorisé."
+            },
+            {
+              "id": "b",
+              "text": "Je modifie le stock, puis j’affiche un refus si le résultat ou la quantité sont invalides."
+            },
+            {
+              "id": "c",
+              "text": "Je modifie le stock, puis je ramène tout résultat négatif à zéro pour accepter la demande."
+            }
+          ]
+        },
+        {
+          "id": "concurrency-limit",
+          "prompt": "Si plusieurs clients retiraient du stock en même temps dans une base de données, quelle précaution supplémentaire deviendrait nécessaire ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Je pourrais supprimer les contrôles de quantité, car une base de données les réalise toujours automatiquement."
+            },
+            {
+              "id": "b",
+              "text": "Je pourrais vérifier le stock puis le modifier séparément, sans risque même si un autre client fait la même chose."
+            },
+            {
+              "id": "c",
+              "text": "Je devrais aussi protéger la lecture et la modification comme une seule opération, pour éviter des retraits incompatibles."
             }
           ]
         }
@@ -323,63 +513,101 @@
     },
     {
       "id": "systems-env-process-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Pourquoi le service répond-il encore sur 3000 à 09:11 ?",
+          "prompt": "Pourquoi le service répond-il encore sur le port 3000 après le changement dans un autre terminal ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "PORT=4000 s’applique uniquement aux navigateurs et jamais à Node."
+              "text": "Node ne peut jamais lire la variable `PORT`, même si elle est fournie au lancement."
             },
             {
               "id": "b",
-              "text": "Il a choisi son port au démarrage avec l’environnement reçu à 09:00."
+              "text": "Le service a choisi son port au démarrage et n’est pas reconfiguré par cet autre terminal."
             },
             {
               "id": "c",
-              "text": "Le terminal partage sa variable mais Node attend une requête pour changer de port."
+              "text": "Le service reçoit la nouvelle variable, mais attend une requête sur 4000 pour changer de port."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quelle opération fait démarrer ce service sur 4000 ?",
+          "prompt": "Comment faire démarrer le service sur le port 4000 ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Configurer PORT=4000 dans son lanceur puis redémarrer avec ce lanceur."
+              "text": "Je configure `PORT=4000` dans le mécanisme qui lance le service, puis je le redémarre avec cette configuration."
             },
             {
               "id": "b",
-              "text": "Définir PORT=4000 dans un terminal indépendant et garder le service actif."
+              "text": "Je configure `PORT=4000` dans un terminal indépendant, puis je laisse le service actuel continuer."
             },
             {
               "id": "c",
-              "text": "Modifier seulement le port dans l’URL du navigateur."
+              "text": "Je remplace 3000 par 4000 dans l’adresse du navigateur, puis je garde le service actuel."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Quel contrôle confirme une configuration durable ?",
+          "prompt": "Quelle vérification confirme que la configuration est conservée pour les prochains lancements ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Vérifier seulement qu’une requête sur 3000 fonctionne encore."
+              "text": "Je vérifie seulement que le service actuel répond encore sur le port 3000."
             },
             {
               "id": "b",
-              "text": "Vérifier écoute et réponse sur 4000, puis refaire un démarrage via le lanceur configuré."
+              "text": "J’affiche `PORT=4000` dans un terminal indépendant sans tester le service."
             },
             {
               "id": "c",
-              "text": "Afficher PORT=4000 dans un terminal indépendant puis considérer l’écoute corrigée."
+              "text": "Je vérifie la réponse sur 4000, puis je relance via le mécanisme configuré et vérifie de nouveau."
+            }
+          ]
+        },
+        {
+          "id": "environment-scope",
+          "prompt": "Un terminal transmet une variable à un nouveau processus qu’il lance. Que faut-il en retenir ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Le processus reçoit l’environnement au lancement ; les changements ultérieurs du terminal ne lui sont pas automatiquement transmis."
+            },
+            {
+              "id": "b",
+              "text": "Le processus consulte toujours les variables actuelles du terminal à chaque requête reçue."
+            },
+            {
+              "id": "c",
+              "text": "Le processus reçoit toutes les variables de tous les terminaux ouverts, sans tenir compte de son lancement."
+            }
+          ]
+        },
+        {
+          "id": "port-evidence",
+          "prompt": "Quelle observation prouve le mieux que le nouveau service utilise effectivement le port 4000 ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "La variable `PORT` vaut 4000 dans un fichier, même si aucun service n’est en fonctionnement."
+            },
+            {
+              "id": "b",
+              "text": "Le processus écoute sur 4000 et une requête à ce port reçoit la réponse attendue du service."
+            },
+            {
+              "id": "c",
+              "text": "Le navigateur affiche une adresse contenant 4000, même si la connexion est refusée."
             }
           ]
         }
@@ -387,63 +615,101 @@
     },
     {
       "id": "http-stale-cache-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Pourquoi le navigateur conserve-t-il v1 après le 304 ?",
+          "prompt": "Pourquoi le navigateur garde-t-il le contenu v1 après la réponse 304 ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "L’ETag inchangé affirme à tort que le corps en cache est actuel."
+              "text": "La réponse 304 contient v2, mais le navigateur refuse de lire ce nouveau contenu."
             },
             {
               "id": "b",
-              "text": "Le 304 contient v2 mais le navigateur ignore son corps."
+              "text": "L’en-tête `If-None-Match` demande au navigateur de conserver toutes les versions précédentes."
             },
             {
               "id": "c",
-              "text": "If-None-Match exige de conserver toutes les anciennes versions."
+              "text": "Le serveur garde le même ETag, un identifiant de version, et indique à tort que le contenu en cache est encore valable."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quelle modification corrige la revalidation de /guide ?",
+          "prompt": "Comment corriger la vérification du cache lors de la publication de v2 ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Garder page-1 à chaque publication et renvoyer 304 à toute revalidation."
+              "text": "Je conserve toujours le même ETag et renvoie 304 à chaque demande de vérification."
             },
             {
               "id": "b",
-              "text": "Supprimer v2 pour que navigateur et serveur utilisent l’ancien contenu."
+              "text": "Je change l’ETag avec le contenu et renvoie v2 lorsque l’ETag du navigateur correspond encore à v1."
             },
             {
               "id": "c",
-              "text": "Changer le validateur avec le contenu et renvoyer v2 si l’ancien ETag ne correspond plus."
+              "text": "Je supprime v2 du serveur pour que le navigateur puisse continuer à afficher sa version v1."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Quelle séquence attendre d’un client possédant d’abord l’ETag de v1 ?",
+          "prompt": "Après correction, que doivent montrer deux vérifications successives, sans nouvelle publication entre elles ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Ancien ETag : 304 ; nouvel ETag inchangé : 200 avec v1."
+              "text": "Avec l’ETag de v1 : 200 avec v2 et son ETag ; avec cet ETag de v2 : 304."
             },
             {
               "id": "b",
-              "text": "Ancien ETag : 200 avec v2 ; nouvel ETag inchangé : 403."
+              "text": "Avec l’ETag de v1 : 304 ; avec cet ETag conservé : 200 avec v1."
             },
             {
               "id": "c",
-              "text": "Ancien ETag : 200 avec v2 et nouvel ETag ; nouvel ETag inchangé : 304."
+              "text": "Avec l’ETag de v1 : 200 avec v2 et son ETag ; avec cet ETag de v2 : 403."
+            }
+          ]
+        },
+        {
+          "id": "not-modified-body",
+          "prompt": "Que reçoit le navigateur dans une réponse HTTP 304 ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Il reçoit obligatoirement le contenu complet de la dernière version de la page."
+            },
+            {
+              "id": "b",
+              "text": "Il reçoit une confirmation permettant de réutiliser son contenu en cache, sans nouveau corps de page."
+            },
+            {
+              "id": "c",
+              "text": "Il reçoit une erreur qui l’oblige à effacer toutes les pages conservées dans son cache."
+            }
+          ]
+        },
+        {
+          "id": "valid-cache",
+          "prompt": "Quand une réponse 304 est-elle normale pour cette page ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "La page a changé de v1 à v2, mais le serveur veut éviter de transmettre le nouveau contenu."
+            },
+            {
+              "id": "b",
+              "text": "Le navigateur n’a aucune version de la page, et le serveur veut lui envoyer la première."
+            },
+            {
+              "id": "c",
+              "text": "La version du navigateur correspond toujours à celle du serveur et son identifiant de version le confirme."
             }
           ]
         }
@@ -451,63 +717,101 @@
     },
     {
       "id": "web-fetch-error-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Pourquoi le code affiche-t-il Supprimé malgré le 403 ?",
+          "prompt": "Pourquoi le code affiche-t-il « Supprimé » alors que le serveur répond 403 ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Un DELETE résolu prouve la suppression quel que soit son statut."
+              "text": "Une requête DELETE terminée confirme toujours la suppression, quel que soit son statut HTTP."
             },
             {
               "id": "b",
-              "text": "fetch fournit la réponse 403 sans rejeter automatiquement sa promesse."
+              "text": "`fetch` fournit la réponse HTTP 403 sans déclencher automatiquement le bloc `catch`."
             },
             {
               "id": "c",
-              "text": "Le catch transforme automatiquement les refus HTTP en succès."
+              "text": "Le bloc `catch` transforme les refus du serveur en confirmations de suppression."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quel contrôle ajouter avant le message de succès ?",
+          "prompt": "Quel contrôle ajouter avant d’annoncer que la suppression a réussi ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Remplacer DELETE par GET et garder le message Supprimé."
+              "text": "Je remplace DELETE par GET et conserve le message de suppression après la réponse."
             },
             {
               "id": "b",
-              "text": "Lire response.ok ou le statut et traiter le refus HTTP."
+              "text": "J’attends de nouveau la même réponse pour transformer automatiquement le statut 403 en exception."
             },
             {
               "id": "c",
-              "text": "Attendre fetch une seconde fois pour convertir le 403 en exception."
+              "text": "Je vérifie `response.ok` ou le statut HTTP et traite le refus avant d’afficher un succès."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Pour le 403 fourni, quel comportement vérifier ?",
+          "prompt": "Pour le refus 403 du dossier, quel comportement de l’interface faut-il vérifier ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Afficher un refus et conserver l’élément dans l’interface."
+              "text": "L’interface explique le refus et conserve l’élément, puisque la suppression n’a pas été autorisée."
             },
             {
               "id": "b",
-              "text": "Afficher Échec réseau et retirer l’élément avant relecture."
+              "text": "L’interface annonce une panne réseau et retire quand même l’élément de la liste."
             },
             {
               "id": "c",
-              "text": "Afficher Supprimé et retirer seulement l’élément local."
+              "text": "L’interface annonce une suppression réussie, mais retire uniquement l’élément affiché localement."
+            }
+          ]
+        },
+        {
+          "id": "network-error",
+          "prompt": "Que permet de distinguer une réponse 403 d’une panne réseau empêchant toute réponse ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Dans les deux cas, `fetch` fournit toujours une réponse avec `response.ok` à false."
+            },
+            {
+              "id": "b",
+              "text": "Le statut 403 indique que la connexion n’a jamais atteint le serveur."
+            },
+            {
+              "id": "c",
+              "text": "Avec 403, le serveur a répondu et refusé ; avec une panne réseau, `fetch` peut rejeter sans fournir de réponse HTTP."
+            }
+          ]
+        },
+        {
+          "id": "test-cases",
+          "prompt": "Quel ensemble de tests couvre les trois issues importantes de cette suppression ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Je teste trois clics sur une suppression réussie, sans simuler de refus ni de panne."
+            },
+            {
+              "id": "b",
+              "text": "Je teste un succès prévu par l’API, un refus 403 et une panne réseau, avec le message et la liste attendus."
+            },
+            {
+              "id": "c",
+              "text": "Je teste seulement que le bouton envoie DELETE, sans vérifier la réponse ni l’état de la liste."
             }
           ]
         }
@@ -515,63 +819,101 @@
     },
     {
       "id": "web-keyboard-action-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Quel élément explique l’absence d’arrêt de Tab sur Enregistrer ?",
+          "prompt": "Pourquoi la touche Tab ne permet-elle pas d’atteindre « Enregistrer » dans le code fourni ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Le div cliquable n’a pas le comportement clavier natif d’un bouton."
+              "text": "La présence de `onclick` désactive la navigation au clavier pour toute la page."
             },
             {
               "id": "b",
-              "text": "Une sauvegarde doit être exclusivement utilisable à la souris."
+              "text": "Une action de sauvegarde ne peut pas être utilisée au clavier, seulement à la souris."
             },
             {
               "id": "c",
-              "text": "Tout onclick désactive la navigation clavier de la page."
+              "text": "Le `div` cliquable n’a pas automatiquement le comportement clavier d’un véritable bouton HTML."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quel remplacement convient directement à cette action ?",
+          "prompt": "Quel remplacement correspond à cette action de sauvegarde ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Un button type=button avec l’action, son nom accessible et un focus visible."
+              "text": "J’utilise un `button` de type `button`, relié à la sauvegarde, avec un libellé compréhensible et un focus visible."
             },
             {
               "id": "b",
-              "text": "Le div cliquable avec role=button et aria-label, mais sans tabulation ni gestion des touches."
+              "text": "Je garde le `div` et ajoute seulement `role=\"button\"`, sans gérer la navigation ni les touches du clavier."
             },
             {
               "id": "c",
-              "text": "Un lien href=/ avec le même libellé et un focus visible, qui navigue sans appeler la sauvegarde."
+              "text": "J’utilise un lien vers l’accueil, avec un focus visible, sans appeler la sauvegarde."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Quel essai vérifie le contrôle corrigé ?",
+          "prompt": "Quel essai vérifie le bouton corrigé sans utiliser la souris ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Deux clics souris ; deux sauvegardes ; aucune lecture du nom annoncé."
+              "text": "Je vérifie que le texte « Enregistrer » apparaît dans le code HTML, sans essayer les touches."
             },
             {
               "id": "b",
-              "text": "Présence du texte dans le DOM ; aucun essai de focus ou activation."
+              "text": "Je teste le focus avec Tab, puis Entrée et Espace : une seule sauvegarde doit être lancée à chaque activation. Avec un lecteur d’écran, je vérifie aussi le nom annoncé du bouton."
             },
             {
               "id": "c",
-              "text": "Tab, Entrée et Espace ; nom annoncé ; une seule sauvegarde par activation."
+              "text": "Je clique deux fois sur le bouton et vérifie deux sauvegardes, sans tester la navigation au clavier."
+            }
+          ]
+        },
+        {
+          "id": "focus-purpose",
+          "prompt": "Pourquoi conserver un indicateur visible quand le bouton reçoit le focus au clavier ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Il montre à l’utilisateur quel contrôle recevra la prochaine activation au clavier."
+            },
+            {
+              "id": "b",
+              "text": "Il garantit que les données sont déjà sauvegardées avant d’appuyer sur Entrée."
+            },
+            {
+              "id": "c",
+              "text": "Il indique que le bouton est réservé aux utilisateurs qui possèdent une souris."
+            }
+          ]
+        },
+        {
+          "id": "button-vs-link",
+          "prompt": "Pourquoi choisir un bouton plutôt qu’un lien dans ce dossier ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Un lien ne peut jamais recevoir le focus ou être utilisé au clavier."
+            },
+            {
+              "id": "b",
+              "text": "Un bouton est nécessaire pour toutes les navigations entre les pages du site."
+            },
+            {
+              "id": "c",
+              "text": "« Enregistrer » déclenche une action sur les données, alors qu’un lien sert à rejoindre une ressource."
             }
           ]
         }
@@ -579,63 +921,101 @@
     },
     {
       "id": "js-zero-default-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Pourquoi getLimit(0) renvoie-t-il 20 ?",
+          "prompt": "Pourquoi `getLimit(0)` renvoie-t-il 20 avec l’expression `preference || 20` ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "|| remplace uniquement null et 0 est identique à null."
+              "text": "L’opérateur `||` traite zéro comme une valeur fausse et choisit donc la valeur de remplacement 20."
             },
             {
               "id": "b",
-              "text": "|| traite 0 comme falsy et choisit la valeur de droite."
+              "text": "L’opérateur `||` traite seulement `null` comme absent et transforme d’abord zéro en `null`."
             },
             {
               "id": "c",
-              "text": "JavaScript convertit tout nombre en undefined."
+              "text": "JavaScript remplace automatiquement tous les nombres reçus par la valeur `undefined`."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quelle expression applique 20 seulement pour null ou undefined ?",
+          "prompt": "Quelle expression garde zéro et utilise 20 seulement pour `null` ou `undefined` ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "preference ?? 20"
+              "text": "J’utilise `preference || 20`, car cet opérateur conserve les préférences égales à zéro."
             },
             {
               "id": "b",
-              "text": "preference || 20"
+              "text": "J’utilise `preference ?? 20`, car cet opérateur remplace seulement les valeurs absentes prévues ici."
             },
             {
               "id": "c",
-              "text": "preference ? preference : 20"
+              "text": "J’utilise `preference ? preference : 20`, car ce test conserve toutes les valeurs numériques."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Quels résultats attendre pour 0, 7, null et undefined ?",
+          "prompt": "Quels résultats attend-on, dans l’ordre, pour 0, 7, `null` et `undefined` ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "0, 7, 20, 20."
+              "text": "La limite devient 20 pour zéro, reste à 7, puis devient 20 pour les deux valeurs absentes."
             },
             {
               "id": "b",
-              "text": "0, 20, 0, 0."
+              "text": "La limite reste à zéro, devient 20 pour 7, puis devient zéro pour les deux valeurs absentes."
             },
             {
               "id": "c",
-              "text": "20, 7, 20, 20."
+              "text": "La limite reste à zéro, reste à 7, puis devient 20 pour les deux valeurs absentes."
+            }
+          ]
+        },
+        {
+          "id": "zero-meaning",
+          "prompt": "Quelle intention de l’utilisateur serait perdue si l’on remplaçait zéro par 20 ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "L’utilisateur veut afficher vingt éléments, mais le code essaierait d’en afficher davantage."
+            },
+            {
+              "id": "b",
+              "text": "L’utilisateur veut masquer la liste, mais le code lui applique une limite de vingt éléments."
+            },
+            {
+              "id": "c",
+              "text": "L’utilisateur n’a pas choisi de limite, mais le code conserverait une préférence existante."
+            }
+          ]
+        },
+        {
+          "id": "explicit-absence",
+          "prompt": "Quelle condition explicite respecte aussi la règle, sans utiliser `??` ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Je remplace la préférence par 20 seulement si elle vaut `null` ou `undefined`."
+            },
+            {
+              "id": "b",
+              "text": "Je remplace la préférence par 20 dès qu’elle est inférieure ou égale à zéro."
+            },
+            {
+              "id": "c",
+              "text": "Je remplace la préférence par 20 dès qu’un test `if` la considère comme fausse."
             }
           ]
         }
@@ -643,63 +1023,101 @@
     },
     {
       "id": "js-serial-requests-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Quel détail explique les neuf secondes de la trace ?",
+          "prompt": "Pourquoi les trois lectures prennent-elles environ neuf secondes dans la trace fournie ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Des promesses indépendantes sont obligatoirement séquentielles."
+              "text": "Des requêtes indépendantes doivent toujours se terminer l’une après l’autre en JavaScript."
             },
             {
               "id": "b",
-              "text": "Les trois lectures concurrentes sont ralenties par render."
+              "text": "Chaque appel démarre après la fin du précédent, car il est placé après son `await`."
             },
             {
               "id": "c",
-              "text": "Chaque lecture démarre après résolution du await précédent."
+              "text": "Les trois appels démarrent ensemble, mais l’affichage ajoute trois secondes à chacun."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quel schéma respecte l’affichage seulement si les trois lectures réussissent ?",
+          "prompt": "Comment charger ces données tout en affichant l’ensemble seulement si les trois lectures réussissent ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Démarrer les appels et afficher dès que Promise.race résout."
+              "text": "Je démarre les trois appels puis affiche dès que `Promise.race` fournit le premier résultat."
             },
             {
               "id": "b",
-              "text": "Garder les await successifs et afficher chaque résultat immédiatement."
+              "text": "Je conserve les trois attentes successives et affiche chaque résultat dès qu’il arrive."
             },
             {
               "id": "c",
-              "text": "Démarrer les appels dans Promise.all, afficher après résolution et traiter le rejet."
+              "text": "Je démarre les trois appels ensemble avec `Promise.all`, attends leur réussite et gère l’échec du groupe."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Si alerts échoue et les deux autres lectures réussissent, que vérifier ?",
+          "prompt": "Si la lecture des alertes échoue et les deux autres réussissent, que faut-il vérifier ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Pas d’affichage de l’ensemble comme succès ; erreur du groupe gérée."
+              "text": "La page n’affiche pas l’ensemble comme réussi et présente une erreur gérée pour le chargement."
             },
             {
               "id": "b",
-              "text": "Succès partiel avec alerts vide malgré le contrat fourni."
+              "text": "La page annonce une réussite en remplaçant les alertes manquantes par une liste vide."
             },
             {
               "id": "c",
-              "text": "Annulation automatique des deux autres lectures par Promise.all."
+              "text": "Les deux autres requêtes sont automatiquement annulées par `Promise.all`."
+            }
+          ]
+        },
+        {
+          "id": "concurrent-duration",
+          "prompt": "Si les trois lectures démarrent ensemble et prennent chacune environ trois secondes, quelle durée est plausible ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Le chargement dure obligatoirement neuf secondes puisque trois résultats sont nécessaires."
+            },
+            {
+              "id": "b",
+              "text": "Le chargement dure exactement zéro seconde puisque les appels se font en même temps."
+            },
+            {
+              "id": "c",
+              "text": "Le chargement peut approcher trois secondes, sans garantie exacte liée au réseau ou au service."
+            }
+          ]
+        },
+        {
+          "id": "independence-condition",
+          "prompt": "Quelle information du dossier autorise à démarrer les trois lectures ensemble ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Les trois fonctions ont des noms différents, ce qui garantit qu’elles ne partagent aucune donnée."
+            },
+            {
+              "id": "b",
+              "text": "Aucune lecture n’a besoin du résultat d’une autre pour construire sa propre requête."
+            },
+            {
+              "id": "c",
+              "text": "Les trois lectures prennent le même temps, ce qui supprime toutes les dépendances possibles."
             }
           ]
         }
@@ -707,63 +1125,101 @@
     },
     {
       "id": "ts-unchecked-api-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Pourquoi as Profile ne protège-t-il pas de name:42 ?",
+          "prompt": "Pourquoi `as Profile` n’empêche-t-il pas l’erreur lorsque le serveur renvoie `name: 42` ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Elle convertit name en chaîne mais toUpperCase refuse les chiffres."
+              "text": "Cette déclaration transforme 42 en texte, mais la méthode refuse les textes contenant des chiffres."
             },
             {
               "id": "b",
-              "text": "Elle oblige le serveur externe à renvoyer une chaîne."
+              "text": "Cette déclaration impose au serveur externe de ne renvoyer que des noms sous forme de texte."
             },
             {
               "id": "c",
-              "text": "L’assertion TypeScript ne valide pas le JSON à l’exécution."
+              "text": "Cette déclaration renseigne TypeScript, mais ne vérifie ni ne transforme les données reçues pendant l’exécution."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quelle frontière rend le Profile exploitable ?",
+          "prompt": "Comment rendre la réponse externe sûre à utiliser comme un profil ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Ajouter une assertion as Profile et déclarer au compilateur que la réponse externe est fiable."
+              "text": "Je vérifie qu’elle a la structure attendue et que `name` est du texte, puis je gère les données invalides avant utilisation."
             },
             {
               "id": "b",
-              "text": "Déclarer name:any, tester seulement la réussite HTTP et appeler toUpperCase sans contrôler le type."
+              "text": "J’ajoute une seconde déclaration `as Profile` pour confirmer au compilateur que le serveur est fiable."
             },
             {
               "id": "c",
-              "text": "Valider une valeur inconnue : objet attendu, name chaîne, rejet géré."
+              "text": "Je déclare `name` avec le type `any` et vérifie seulement que le serveur a répondu sans erreur HTTP."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Que faire pour name numérique, absent ou une réponse null ?",
+          "prompt": "Que doit faire le programme si `name` est un nombre, est absent, ou si la réponse vaut `null` ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Conversion implicite en chaîne imposée par Profile."
+              "text": "Il doit laisser TypeScript convertir implicitement ces réponses en un profil contenant du texte."
             },
             {
               "id": "b",
-              "text": "Erreur de validation contrôlée avant toUpperCase."
+              "text": "Il doit gérer une erreur de validation avant d’appeler `toUpperCase` sur la donnée."
             },
             {
               "id": "c",
-              "text": "Succès puisque le fichier TypeScript compile."
+              "text": "Il doit accepter la réponse dès que le fichier TypeScript compile sans erreur."
+            }
+          ]
+        },
+        {
+          "id": "valid-profile",
+          "prompt": "Après validation, quelle réponse respecte le contrat `Profile = { name: string }` ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "La réponse `{ \"name\": 42 }` respecte le contrat, car elle possède bien un champ `name`."
+            },
+            {
+              "id": "b",
+              "text": "La réponse `{ \"displayName\": \"Mémo\" }` respecte le contrat, car elle contient un nom sous forme de texte."
+            },
+            {
+              "id": "c",
+              "text": "La réponse `{ \"name\": \"Mémo\" }` respecte le contrat, car le champ attendu contient du texte."
+            }
+          ]
+        },
+        {
+          "id": "unknown-purpose",
+          "prompt": "Pourquoi traiter d’abord la réponse comme une valeur inconnue avant de valider sa structure ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Cela oblige à contrôler les données avant de les utiliser comme un profil, au lieu de supposer que le serveur respecte le type."
+            },
+            {
+              "id": "b",
+              "text": "Cela transforme automatiquement toutes les propriétés de la réponse en chaînes de caractères."
+            },
+            {
+              "id": "c",
+              "text": "Cela évite tout contrôle de la réponse puisque le compilateur connaît déjà les données du serveur."
             }
           ]
         }
@@ -771,63 +1227,101 @@
     },
     {
       "id": "react-mutated-list-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Que révèle Object.is(état précédent, valeur envoyée) = true ?",
+          "prompt": "Pourquoi React peut-il ne pas afficher immédiatement le nouvel élément ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "React a copié profondément le tableau avant comparaison."
+              "text": "Le code crée un nouveau tableau, mais React attend une autre interaction."
             },
             {
               "id": "b",
-              "text": "Le même tableau muté est envoyé au setter."
+              "text": "Le code ajoute un élément, mais il faut aussi modifier une autre variable d’état pour que React le prenne en compte."
             },
             {
               "id": "c",
-              "text": "Le nouvel élément a forcément une clé dupliquée."
+              "text": "Le code modifie le tableau existant et transmet ce même tableau à React."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quel ajout évite la mutation et utilise l’état précédent ?",
+          "prompt": "Comment ajouter un élément sans modifier le tableau déjà conservé dans l’état ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "setItems(previous => [...previous, \"nouveau\"])"
+              "text": "Créer un nouveau tableau contenant les anciens éléments et le nouvel élément."
             },
             {
               "id": "b",
-              "text": "setItems(previous => { previous.push(\"nouveau\"); return previous })"
+              "text": "Modifier le tableau existant puis transmettre une seconde fois ce même tableau."
             },
             {
               "id": "c",
-              "text": "items.push(\"nouveau\"); setItems(items)"
+              "text": "Vider le tableau existant avant de lui ajouter uniquement le nouvel élément."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Quel contrôle faire avec plusieurs ajouts rapprochés ?",
+          "prompt": "Quel résultat attendre après trois ajouts successifs depuis une liste vide ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Un rendu forcé masque les ajouts perdus sans changer la mise à jour."
+              "text": "La liste affiche le dernier élément ajouté, car chaque ajout remplace la liste."
             },
             {
               "id": "b",
-              "text": "Tous apparaissent et les tableaux précédents restent intacts."
+              "text": "La liste affiche les trois éléments ajoutés, sans perdre les précédents."
             },
             {
               "id": "c",
-              "text": "Un seul apparaît et le tableau initial est modifié."
+              "text": "La liste reste vide jusqu’à ce qu’un autre composant change son propre état."
+            }
+          ]
+        },
+        {
+          "id": "mechanism",
+          "prompt": "Pourquoi utiliser la forme `setItems(previous => ...)` pour des ajouts rapprochés ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Chaque ajout peut modifier directement le tableau `previous` sans créer de copie."
+            },
+            {
+              "id": "b",
+              "text": "Chaque ajout peut partir de l’état précédent fourni par React."
+            },
+            {
+              "id": "c",
+              "text": "Chaque ajout peut s’exécuter immédiatement sans attendre que React le traite."
+            }
+          ]
+        },
+        {
+          "id": "boundary",
+          "prompt": "Quelle opération laisse intact le tableau initial ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Ajouter l’élément dans le tableau initial, puis copier le résultat."
+            },
+            {
+              "id": "b",
+              "text": "Donner un autre nom au tableau initial, puis ajouter l’élément par ce nom."
+            },
+            {
+              "id": "c",
+              "text": "Copier le tableau, puis ajouter l’élément uniquement dans la copie."
             }
           ]
         }
@@ -835,63 +1329,101 @@
     },
     {
       "id": "react-stale-search-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "À 400 ms, pourquoi le champ react accompagne-t-il les résultats de r ?",
+          "prompt": "Pourquoi les résultats de r remplacent-ils ceux de react ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "React trie les réponses alphabétiquement par recherche."
+              "text": "La réponse ancienne est appliquée sans vérifier si sa recherche est encore courante."
             },
             {
               "id": "b",
-              "text": "La réponse A tardive est appliquée sans vérifier la requête courante."
+              "text": "La réponse ancienne est appliquée parce que la première recherche reste prioritaire tant que la page est ouverte."
             },
             {
               "id": "c",
-              "text": "La réponse B est invalide parce qu’elle arrive avant A."
+              "text": "La réponse ancienne est appliquée parce que la dernière requête a échoué."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quelle protection fonctionne même si l’annulation arrive trop tard ?",
+          "prompt": "Comment empêcher une réponse ancienne de remplacer les résultats courants ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Appliquer seulement les réponses dont l’identifiant ou l’effet est encore courant."
+              "text": "Avant d’appliquer une réponse, attendre un délai identique pour toutes les requêtes."
             },
             {
               "id": "b",
-              "text": "Attendre un délai fixe avant chaque setResults."
+              "text": "Avant d’appliquer une réponse, effacer le champ de recherche saisi par l’utilisateur."
             },
             {
               "id": "c",
-              "text": "Retirer query des dépendances pour ne chercher qu’une fois."
+              "text": "Avant d’appliquer une réponse, vérifier qu’elle correspond à la recherche encore active."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Dans l’ordre B puis A du dossier, que doit-on voir après 400 ms ?",
+          "prompt": "Quel test reproduit directement le problème de ce dossier ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Les résultats de react ; la réponse de r est ignorée."
+              "text": "Faire arriver la réponse de r avant celle de react et vérifier seulement la première."
             },
             {
               "id": "b",
-              "text": "Les résultats de r ; la dernière réponse gagne."
+              "text": "Faire partir une seule recherche react et vérifier que des résultats apparaissent."
             },
             {
               "id": "c",
-              "text": "Les deux recherches mélangées sans avertissement."
+              "text": "Faire arriver la réponse de react avant celle de r et conserver les résultats de react."
+            }
+          ]
+        },
+        {
+          "id": "mechanism",
+          "prompt": "Réduire les recherches avec un délai de saisie garantit-il le bon ordre des réponses ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Oui, le délai de saisie oblige le réseau à répondre dans l’ordre des départs."
+            },
+            {
+              "id": "b",
+              "text": "Non, deux requêtes déjà parties peuvent encore répondre dans un ordre différent."
+            },
+            {
+              "id": "c",
+              "text": "Oui, le délai de saisie annule automatiquement toutes les requêtes déjà parties."
+            }
+          ]
+        },
+        {
+          "id": "boundary",
+          "prompt": "Que doit faire le nettoyage de l’effet quand la recherche change ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Rendre la réponse de l’ancienne recherche inapplicable à l’écran courant."
+            },
+            {
+              "id": "b",
+              "text": "Rendre la réponse de l’ancienne recherche prioritaire sur la nouvelle réponse."
+            },
+            {
+              "id": "c",
+              "text": "Rendre toutes les recherches futures impossibles jusqu’au rechargement de la page."
             }
           ]
         }
@@ -899,63 +1431,101 @@
     },
     {
       "id": "react-index-keys-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Pourquoi le brouillon change-t-il d’article après suppression d’Alpha ?",
+          "prompt": "Pourquoi le brouillon peut-il se retrouver sur un autre article ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Supprimer Alpha change nécessairement les ids métier de tous les articles."
+              "text": "Une clé fondée sur la position empêche React de conserver tout état local."
             },
             {
               "id": "b",
-              "text": "La clé d’index suit la position et peut réutiliser une ligne pour un autre article."
+              "text": "Une clé fondée sur la position peut désigner un autre article après la suppression."
             },
             {
               "id": "c",
-              "text": "useState local ne peut jamais appartenir à une ligne de liste."
+              "text": "Une clé fondée sur la position modifie l’identifiant enregistré dans chaque article."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quelle clé conserve l’identité des Row du dossier ?",
+          "prompt": "Quelle clé convient aux articles de ce dossier ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "key={index}"
+              "text": "Un nombre aléatoire recalculé pour chaque article à chaque rendu."
             },
             {
               "id": "b",
-              "text": "key={Math.random()}"
+              "text": "La position actuelle de chaque article dans la liste affichée."
             },
             {
               "id": "c",
-              "text": "key={item.id}"
+              "text": "L’identifiant stable et unique de chaque article, comme `item.id`."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Après saisie dans Beta, suppression d’Alpha et réordonnancement, où reste le brouillon ?",
+          "prompt": "Comment vérifier que le brouillon reste associé à Beta ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Sur l’article d’id a parce qu’il était premier."
+              "text": "Saisir dans Beta, supprimer Alpha puis réordonner la liste et retrouver le texte dans Beta."
             },
             {
               "id": "b",
-              "text": "Sur la seconde position, quel que soit l’article."
+              "text": "Saisir dans Beta, supprimer Alpha puis vérifier seulement le nombre de lignes restantes."
             },
             {
               "id": "c",
-              "text": "Sur l’article d’id b, quelle que soit sa position."
+              "text": "Saisir dans Beta, recharger la page puis vérifier que tous les brouillons ont été effacés."
+            }
+          ]
+        },
+        {
+          "id": "mechanism",
+          "prompt": "Quel risque présente une clé aléatoire créée à chaque rendu ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "React peut conserver la ligne mais remplacer définitivement son identifiant métier."
+            },
+            {
+              "id": "b",
+              "text": "React peut conserver automatiquement les brouillons de toutes les lignes supprimées."
+            },
+            {
+              "id": "c",
+              "text": "React peut recréer la ligne et perdre le brouillon conservé dans son état local."
+            }
+          ]
+        },
+        {
+          "id": "boundary",
+          "prompt": "Dans quel autre cas une clé fondée sur la position peut-elle convenir ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Dans cette liste modifiable, dès lors que tous les articles ont un nom différent."
+            },
+            {
+              "id": "b",
+              "text": "Dans une liste réellement fixe, sans réordonnancement ni état local à associer aux articles."
+            },
+            {
+              "id": "c",
+              "text": "Dans cette liste modifiable, dès lors que la suppression concerne la première ligne."
             }
           ]
         }
@@ -963,63 +1533,101 @@
     },
     {
       "id": "backend-invalid-body-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Quel risque présente quantity transmis directement à reserve ?",
+          "prompt": "Pourquoi la valeur `\"beaucoup\"` ne doit-elle pas être transmise à la fonction `reserve` ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Le statut 201 valide rétroactivement la quantité."
+              "text": "Le contrat demande un nombre entier de 1 à 5, alors que cette valeur dépasse forcément 5."
             },
             {
               "id": "b",
-              "text": "Le JSON empêche les valeurs hors de cet intervalle."
+              "text": "Le contrat demande un nombre entier de 1 à 5, alors que toute donnée JSON est interdite."
             },
             {
               "id": "c",
-              "text": "Une donnée externe peut ne pas être un entier entre 1 et 5."
+              "text": "Le contrat demande un nombre entier de 1 à 5, alors que cette valeur est du texte."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quelles entrées quantity peuvent atteindre reserve selon le contrat ?",
+          "prompt": "Où faut-il vérifier la quantité reçue ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "0, 1 et 5 ; pas \"1\", 6, 1.5 ni un champ absent."
+              "text": "Dans le serveur, après avoir réservé les places et envoyé la réponse."
             },
             {
               "id": "b",
-              "text": "1, 5 et \"1\" ; pas 0, 6, 1.5 ni un champ absent."
+              "text": "Dans le serveur, avant d’appeler la fonction qui réserve les places."
             },
             {
               "id": "c",
-              "text": "1 et 5 ; pas \"1\", 0, 6, 1.5 ni un champ absent."
+              "text": "Dans le navigateur uniquement, avant d’envoyer la demande au serveur."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Que vérifier avec quantity:\"beaucoup\" ?",
+          "prompt": "Quel comportement vérifier pour une quantité invalide ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Erreur client documentée et aucun appel à reserve."
+              "text": "Le serveur renvoie une erreur client et ne lance aucune réservation."
             },
             {
               "id": "b",
-              "text": "Refus affiché après réservation d’une quantité par défaut."
+              "text": "Le serveur lance une réservation et indique l’erreur uniquement dans ses journaux."
             },
             {
               "id": "c",
-              "text": "Statut 201 et reserve appelé avec la chaîne."
+              "text": "Le serveur renvoie un succès et laisse le navigateur corriger la réservation."
+            }
+          ]
+        },
+        {
+          "id": "mechanism",
+          "prompt": "Quelle paire de valeurs doit être acceptée selon le contrat ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Les nombres 1 et 5, qui correspondent aux deux bornes autorisées."
+            },
+            {
+              "id": "b",
+              "text": "Les nombres 0 et 6, qui correspondent aux deux valeurs proches des bornes."
+            },
+            {
+              "id": "c",
+              "text": "Les nombres 1,5 et 4,5, qui restent à l’intérieur de l’intervalle."
+            }
+          ]
+        },
+        {
+          "id": "boundary",
+          "prompt": "Que garantit une déclaration TypeScript `quantity: number` face au JSON reçu ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Elle convertit toute chaîne reçue en un nombre entier compris entre 1 et 5."
+            },
+            {
+              "id": "b",
+              "text": "Elle refuse automatiquement la requête HTTP si le champ quantity est absent."
+            },
+            {
+              "id": "c",
+              "text": "Elle décrit un type pour le code, mais ne vérifie pas la valeur reçue à l’exécution."
             }
           ]
         }
@@ -1027,63 +1635,101 @@
     },
     {
       "id": "backend-payment-retry-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Que déduire de la réponse perdue du premier POST ?",
+          "prompt": "Que signifie l’absence de réponse après le premier paiement ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Le client peut changer le montant sans nouvelle intention."
+              "text": "Le client ignore le résultat, donc le serveur a forcément annulé le paiement."
             },
             {
               "id": "b",
-              "text": "Aucun paiement n’existe sans statut reçu par le client."
+              "text": "Le client ignore le résultat, mais le serveur peut déjà avoir créé le paiement."
             },
             {
               "id": "c",
-              "text": "Le paiement peut exister ; l’absence d’accusé ne prouve pas l’échec."
+              "text": "Le client ignore le résultat, donc le serveur a forcément créé deux paiements."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quel mécanisme traite deux requêtes concurrentes pour la même intention ?",
+          "prompt": "Comment protéger la répétition de la même demande de paiement ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Créer une clé pour chaque retry et vérifier en mémoire avant une insertion sans contrainte atomique."
+              "text": "Réutiliser la même clé de demande et faire garantir un seul résultat par le serveur."
             },
             {
               "id": "b",
-              "text": "Clé réutilisée, résultat réservé atomiquement côté serveur et contenu vérifié."
+              "text": "Créer une nouvelle clé de demande à chaque essai pour éviter de retrouver l’ancien."
             },
             {
               "id": "c",
-              "text": "Réutiliser la clé au navigateur et désactiver le bouton, sans déduplication dans insertPayment."
+              "text": "Réutiliser la même clé de demande et laisser le serveur l’ignorer lors de l’insertion."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Une clé utilisée pour amount=10 revient avec amount=20 : que faire ?",
+          "prompt": "Quel résultat attendre de deux demandes identiques envoyées en même temps ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Refuser cette réutilisation incompatible."
+              "text": "Deux paiements sont créés et le client choisit ensuite celui à conserver."
             },
             {
               "id": "b",
-              "text": "Modifier silencieusement le paiement initial à 20."
+              "text": "Aucun paiement n’est créé, car deux demandes simultanées sont toujours invalides."
             },
             {
               "id": "c",
-              "text": "Créer un second paiement sous la même clé."
+              "text": "Un seul paiement est créé et les deux demandes retrouvent le même résultat."
+            }
+          ]
+        },
+        {
+          "id": "mechanism",
+          "prompt": "Que faire si une clé déjà utilisée pour 10 est réutilisée pour 20 ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Créer un deuxième paiement, car la clé suffit à autoriser tout nouveau montant."
+            },
+            {
+              "id": "b",
+              "text": "Refuser cette réutilisation, car elle ne correspond plus au même contenu de demande."
+            },
+            {
+              "id": "c",
+              "text": "Modifier silencieusement le premier paiement pour remplacer son montant par 20."
+            }
+          ]
+        },
+        {
+          "id": "boundary",
+          "prompt": "Pourquoi une simple vérification avant insertion peut-elle laisser passer un doublon ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Deux demandes simultanées peuvent vérifier l’absence du paiement avant toute insertion."
+            },
+            {
+              "id": "b",
+              "text": "Deux demandes simultanées sont automatiquement exécutées une après l’autre par HTTP."
+            },
+            {
+              "id": "c",
+              "text": "Deux demandes simultanées portent toujours des montants différents dans la base."
             }
           ]
         }
@@ -1091,63 +1737,101 @@
     },
     {
       "id": "backend-env-secret-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Pourquoi Service prêt sur 3000 est-il trompeur ici ?",
+          "prompt": "Pourquoi le message Service prêt est-il trompeur ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "DATABASE_URL absente est déduite à la première requête."
+              "text": "Le serveur accepte des requêtes sans avoir vérifié sa configuration obligatoire."
             },
             {
               "id": "b",
-              "text": "La configuration obligatoire n’a pas été vérifiée avant disponibilité."
+              "text": "Le serveur écoute déjà sur un port, donc les erreurs viennent forcément des demandes reçues."
             },
             {
               "id": "c",
-              "text": "Un serveur HTTP ne peut pas utiliser 3000 en production."
+              "text": "Le serveur annonce sa disponibilité, donc la variable absente peut être ignorée jusqu’à la première réservation."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quel démarrage respecte le contrat sans exposer de secret ?",
+          "prompt": "Comment traiter l’absence de `DATABASE_URL` au démarrage ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Annoncer prêt puis utiliser une URL par défaut inconnue si elle manque."
+              "text": "Démarrer normalement et attendre que chaque requête échoue pour prévenir l’utilisateur."
             },
             {
               "id": "b",
-              "text": "Valider présence et forme de DATABASE_URL ; refuser l’absence sans afficher sa valeur."
+              "text": "Ouvrir l’écoute et considérer la variable comme facultative puisqu’elle sera utilisée plus tard."
             },
             {
               "id": "c",
-              "text": "Journaliser DATABASE_URL complète avant de construire la connexion."
+              "text": "Vérifier la configuration avant l’écoute et arrêter le démarrage si elle manque."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Une DATABASE_URL présente et bien formée prouve-t-elle que la base répond ?",
+          "prompt": "Quelle vérification couvre le comportement attendu au démarrage ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Non ; sa joignabilité est une vérification distincte."
+              "text": "Tester seulement une configuration valide, car l’absence sera détectée par les utilisateurs."
             },
             {
               "id": "b",
-              "text": "Oui ; la forme prouve connexion et permissions."
+              "text": "Tester une configuration absente et une valide, avec un échec contrôlé dans le premier cas."
             },
             {
               "id": "c",
-              "text": "Oui ; écouter sur 3000 garantit l’accès à la base."
+              "text": "Tester une configuration absente et vérifier uniquement que le port accepte une connexion."
+            }
+          ]
+        },
+        {
+          "id": "mechanism",
+          "prompt": "Quel message de journal aide au diagnostic sans révéler de secret ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "La variable `DATABASE_URL` obligatoire est absente."
+            },
+            {
+              "id": "b",
+              "text": "Je journalise toute la valeur de `DATABASE_URL`, y compris le mot de passe."
+            },
+            {
+              "id": "c",
+              "text": "Je signale que `DATABASE_URL` est absente, puis affiche toutes les autres variables disponibles."
+            }
+          ]
+        },
+        {
+          "id": "boundary",
+          "prompt": "Une URL de base présente et bien formée prouve-t-elle que la base répond ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Oui, la présence de l’URL établit automatiquement une connexion réseau."
+            },
+            {
+              "id": "b",
+              "text": "Non, la disponibilité de la base doit être vérifiée séparément."
+            },
+            {
+              "id": "c",
+              "text": "Oui, une URL bien formée prouve que les identifiants sont acceptés."
             }
           ]
         }
@@ -1155,63 +1839,101 @@
     },
     {
       "id": "data-left-join-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Pourquoi Bob disparaît-il malgré LEFT JOIN ?",
+          "prompt": "Pourquoi Bob disparaît-il malgré la jointure qui devrait conserver tous les clients ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "LEFT JOIN n’inclut jamais les lignes sans correspondance."
+              "text": "La jointure ne peut conserver Bob que s’il possède au moins une commande, quel que soit son statut."
             },
             {
               "id": "b",
-              "text": "Le WHERE sur o.status élimine la ligne sans commande, dont le statut vaut NULL."
+              "text": "Le comptage des commandes supprime automatiquement les clients dont le total vaut zéro."
             },
             {
               "id": "c",
-              "text": "COUNT(o.id) supprime automatiquement les clients sans commande."
+              "text": "Le filtre `WHERE` rejette sa ligne, car elle n’a pas de commande confirmée associée."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quelle adaptation conserve tous les clients et compte les commandes confirmées ?",
+          "prompt": "Quelle modification permet de conserver Bob dans le rapport ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Garder le WHERE et remplacer COUNT(o.id) par COUNT(*)."
+              "text": "Mettre la condition sur le statut dans la jointure, puis compter les identifiants de commande."
             },
             {
               "id": "b",
-              "text": "Mettre o.status = 'confirmed' dans ON et conserver COUNT(o.id)."
+              "text": "Garder le filtre `WHERE` sur le statut, puis compter toutes les lignes du résultat."
             },
             {
               "id": "c",
-              "text": "Remplacer LEFT JOIN par INNER JOIN en gardant le WHERE."
+              "text": "Remplacer la jointure par une jointure interne, puis compter les identifiants de client."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Quels comptes attendre sans commande, avec une non confirmée et avec deux confirmées ?",
+          "prompt": "Quels comptes attendre pour un client sans commande, un avec une commande non confirmée et un avec deux confirmées ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "0, 0 et 2, avec les trois clients présents."
+              "text": "Les trois comptes doivent être respectivement 1, 1 et 2."
             },
             {
               "id": "b",
-              "text": "Client absent, client absent et 2."
+              "text": "Les trois comptes doivent être respectivement 0, 0 et 2."
             },
             {
               "id": "c",
-              "text": "1, 1 et 2, avec les trois clients présents."
+              "text": "Les trois comptes doivent être respectivement 0, 1 et 2."
+            }
+          ]
+        },
+        {
+          "id": "mechanism",
+          "prompt": "Pourquoi compter `o.id` plutôt que toutes les lignes avec `COUNT(*)` ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "`COUNT(o.id)` retire Bob du rapport avant de commencer le comptage."
+            },
+            {
+              "id": "b",
+              "text": "`COUNT(o.id)` transforme automatiquement les commandes non confirmées en confirmées."
+            },
+            {
+              "id": "c",
+              "text": "`COUNT(o.id)` ignore la valeur absente de commande sur la ligne conservée pour Bob."
+            }
+          ]
+        },
+        {
+          "id": "boundary",
+          "prompt": "Que doit produire le rapport pour un client dont toutes les commandes sont annulées ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Il doit conserver le client et lui attribuer zéro commande confirmée."
+            },
+            {
+              "id": "b",
+              "text": "Il doit retirer le client, car ses commandes ne sont pas confirmées."
+            },
+            {
+              "id": "c",
+              "text": "Il doit conserver le client et compter toutes ses commandes annulées."
             }
           ]
         }
@@ -1219,63 +1941,101 @@
     },
     {
       "id": "data-transfer-atomicity-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Quel risque produit l’échec du second UPDATE en autocommit ?",
+          "prompt": "Pourquoi le total passe-t-il de 70 à 60 dans l’incident ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Les soldes seront restaurés automatiquement à la prochaine lecture."
+              "text": "Le débit a été annulé et l’interruption a validé deux fois le crédit correspondant."
             },
             {
               "id": "b",
-              "text": "Le débit peut rester validé sans crédit correspondant."
+              "text": "Le débit a été validé seul et l’interruption a empêché le crédit correspondant."
             },
             {
               "id": "c",
-              "text": "Le débit est toujours annulé automatiquement par l’échec du crédit."
+              "text": "Le débit et le crédit ont été validés ensemble, mais les deux comptes sont inchangés."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quelle organisation rend les deux écritures solidaires dans la même base ?",
+          "prompt": "Comment garder les deux changements ensemble ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Deux UPDATE en autocommit séparés par une pause."
+              "text": "Valider le débit avant de préparer la transaction contenant uniquement le crédit."
             },
             {
               "id": "b",
-              "text": "Valider le débit puis ouvrir une transaction pour le crédit seul."
+              "text": "Envoyer les deux écritures dans des transactions indépendantes puis ignorer les erreurs."
             },
             {
               "id": "c",
-              "text": "Transaction avec contrôles des comptes et du solde, commit si tout réussit sinon rollback."
+              "text": "Les placer dans une transaction et ne valider que si les deux réussissent."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Si le crédit échoue dans la transaction corrigée, quel état vérifier ?",
+          "prompt": "Que doivent devenir les soldes si le second changement échoue dans la transaction corrigée ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Le débit conservé et un crédit implicitement réparé plus tard."
+              "text": "Ils doivent revenir à leurs valeurs initiales : 50 pour a et 20 pour b."
             },
             {
               "id": "b",
-              "text": "Les deux soldes initiaux après rollback."
+              "text": "Ils doivent conserver le débit seul : 40 pour a et 20 pour b."
             },
             {
               "id": "c",
-              "text": "Le total conservé malgré un débit sans crédit correspondant."
+              "text": "Ils doivent conserver le crédit seul : 50 pour a et 30 pour b."
+            }
+          ]
+        },
+        {
+          "id": "mechanism",
+          "prompt": "Quels soldes attendre après un transfert réussi de 10 de a vers b ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Le compte a vaut 40 et le compte b vaut 20 ; le total devient 60."
+            },
+            {
+              "id": "b",
+              "text": "Le compte a vaut 40 et le compte b vaut 30 ; le total reste 70."
+            },
+            {
+              "id": "c",
+              "text": "Le compte a vaut 50 et le compte b vaut 30 ; le total devient 80."
+            }
+          ]
+        },
+        {
+          "id": "boundary",
+          "prompt": "Une transaction SQL annule-t-elle aussi un paiement envoyé à un service externe ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Oui, elle annule toute action réseau effectuée pendant l’exécution du programme."
+            },
+            {
+              "id": "b",
+              "text": "Oui, elle annule toute action externe dès qu’elle utilise le même montant."
+            },
+            {
+              "id": "c",
+              "text": "Non, elle ne garantit l’annulation que pour les écritures de sa propre transaction."
             }
           ]
         }
@@ -1283,63 +2043,101 @@
     },
     {
       "id": "data-firestore-retry-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Pourquoi une réservation validée peut-elle produire deux notifications ?",
+          "prompt": "Pourquoi une seule réservation validée peut-elle produire deux notifications ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Une transaction valide toujours deux réservations."
+              "text": "Firestore peut relancer la fonction de transaction, qui envoie à chaque fois la notification."
             },
             {
               "id": "b",
-              "text": "Firestore relance le callback qui contient un effet externe."
+              "text": "Firestore peut valider deux réservations tout en affichant un compteur inchangé."
             },
             {
               "id": "c",
-              "text": "Les notifications sont annulées automatiquement à chaque conflit."
+              "text": "Firestore peut doubler tout message externe, même si le programme n’en envoie qu’un."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quelle approche sépare transaction et notification avec une livraison durable ?",
+          "prompt": "Comment éviter l’envoi répété par la fonction de transaction ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Envoyer la notification dans le callback avant les lectures."
+              "text": "Envoyer la notification au début de cette fonction avant de lire le compteur."
             },
             {
               "id": "b",
-              "text": "Désactiver le contrôle de conflit pour garantir un unique callback."
+              "text": "Garder cette fonction sans envoi externe et traiter la notification après confirmation."
             },
             {
               "id": "c",
-              "text": "Enregistrer un événement dans la transaction puis le livrer après commit avec déduplication."
+              "text": "Envoyer la notification deux fois dans cette fonction pour prévoir un éventuel conflit."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Que contrôler si l’envoi est simplement déplacé après commit ?",
+          "prompt": "Quel test contrôle directement la protection contre le conflit décrit ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Les pertes et doublons possibles ; après commit ne signifie pas exactement une fois."
+              "text": "Envoyer une réservation sans concurrence et vérifier uniquement la présence d’une notification."
             },
             {
               "id": "b",
-              "text": "Le commit est annulé automatiquement si l’envoi externe échoue ensuite."
+              "text": "Provoquer une écriture concurrente et vérifier uniquement que la page reste ouverte."
             },
             {
               "id": "c",
-              "text": "L’envoi est garanti exactement une fois sans stockage ni déduplication."
+              "text": "Provoquer une écriture concurrente et vérifier une seule réservation validée sans envoi dans la fonction relancée."
+            }
+          ]
+        },
+        {
+          "id": "mechanism",
+          "prompt": "Envoyer simplement la notification après confirmation garantit-il sa livraison ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Oui, la confirmation oblige Firestore à envoyer tout message externe restant."
+            },
+            {
+              "id": "b",
+              "text": "Oui, une notification après confirmation ne peut plus rencontrer de panne réseau."
+            },
+            {
+              "id": "c",
+              "text": "Non, une panne après la confirmation peut empêcher l’envoi de la notification."
+            }
+          ]
+        },
+        {
+          "id": "boundary",
+          "prompt": "À quoi sert un événement à livrer enregistré avec la réservation ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Un traitement peut retrouver l’envoi après une panne et identifier les événements déjà livrés."
+            },
+            {
+              "id": "b",
+              "text": "Un traitement peut envoyer avant la validation et supprimer automatiquement tout envoi erroné."
+            },
+            {
+              "id": "c",
+              "text": "Un traitement peut supprimer l’événement avant l’envoi pour empêcher toute répétition."
             }
           ]
         }
@@ -1347,63 +2145,101 @@
     },
     {
       "id": "security-object-owner-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Que démontre Alice obtenant la note privée de Bob ?",
+          "prompt": "Quel contrôle manque dans la route qui renvoie la note de Bob à Alice ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "La session d’Alice est forcément celle de Bob."
+              "text": "Le serveur ne vérifie pas qu’Alice connaît le nom complet de Bob."
             },
             {
               "id": "b",
-              "text": "Connaître un id dans une URL accorde une permission."
+              "text": "Le serveur ne vérifie pas qu’Alice a ouvert la note depuis le menu de l’application."
             },
             {
               "id": "c",
-              "text": "L’authentification existe mais l’autorisation sur la note manque."
+              "text": "Le serveur ne vérifie pas qu’Alice a le droit de lire cette note précise."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Où et sur quelle identité contrôler cette lecture ?",
+          "prompt": "Comment appliquer la règle réservant la note à son propriétaire ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Côté serveur, accepter toute session sans examiner la note."
+              "text": "Comparer côté navigateur le propriétaire de la note à l’utilisateur après avoir reçu tout son contenu."
             },
             {
               "id": "b",
-              "text": "Côté navigateur, comparer le propriétaire à un ownerId fourni librement."
+              "text": "Comparer côté serveur le propriétaire de la note à l’utilisateur authentifié avant de renvoyer son contenu."
             },
             {
               "id": "c",
-              "text": "Côté serveur, comparer le propriétaire à l’identité authentifiée."
+              "text": "Comparer côté serveur le propriétaire de la note au nom fourni librement dans la demande."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Quels cas vérifient la politique propriétaire ?",
+          "prompt": "Quels accès vérifier pour la note privée de Bob ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Propriétaire et autre compte autorisés ; sans session refusé ; id absent exposant une autre note."
+              "text": "Bob peut la lire ; Alice et une personne sans session ne peuvent pas en obtenir le contenu."
             },
             {
               "id": "b",
-              "text": "Propriétaire autorisé ; autre compte et sans session refusés ; id absent sans fuite."
+              "text": "Bob et Alice peuvent la lire ; seule une personne sans session ne peut pas obtenir le contenu."
             },
             {
               "id": "c",
-              "text": "Tous comptes autorisés si leur navigateur masque le bouton de lecture."
+              "text": "Bob peut la lire ; Alice peut la lire si elle connaît l’identifiant exact de la note."
+            }
+          ]
+        },
+        {
+          "id": "mechanism",
+          "prompt": "Cacher le lien vers la note de Bob dans l’interface suffit-il ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Oui, le serveur refuse automatiquement toute URL absente du menu visible."
+            },
+            {
+              "id": "b",
+              "text": "Non, Alice peut encore appeler directement la route avec l’identifiant de la note."
+            },
+            {
+              "id": "c",
+              "text": "Oui, le navigateur interdit de modifier un identifiant dans une adresse."
+            }
+          ]
+        },
+        {
+          "id": "boundary",
+          "prompt": "Sur quelle identité le serveur doit-il fonder la décision d’accès ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "L’identité indiquée dans un champ `ownerId` ajouté librement par le navigateur."
+            },
+            {
+              "id": "b",
+              "text": "L’identité du propriétaire demandée dans l’URL, même si la session est celle d’Alice."
+            },
+            {
+              "id": "c",
+              "text": "L’identité issue de la session authentifiée, que la demande ne peut pas remplacer librement."
             }
           ]
         }
@@ -1411,63 +2247,101 @@
     },
     {
       "id": "security-sql-concatenation-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Pourquoi un nom avec apostrophe peut-il casser la recherche ?",
+          "prompt": "Pourquoi une apostrophe dans la saisie peut-elle casser la recherche ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "La valeur concaténée peut modifier la structure SQL."
+              "text": "La saisie est envoyée séparément du SQL et le pilote interdit toutes les apostrophes."
             },
             {
               "id": "b",
-              "text": "Toute apostrophe est malveillante et doit être supprimée du nom."
+              "text": "La saisie est insérée dans le texte SQL et peut modifier la structure de la requête."
             },
             {
               "id": "c",
-              "text": "SQL interdit tout texte utilisateur dans une recherche."
+              "text": "La saisie échoue uniquement parce que le nom recherché ne figure pas dans la table."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quel changement sépare instruction et valeur ?",
+          "prompt": "Comment conserver la saisie comme une simple valeur ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Supprimer les espaces puis concaténer le nom."
+              "text": "Garder une requête fixe et transmettre la saisie séparément comme paramètre du pilote."
             },
             {
               "id": "b",
-              "text": "Requête fixe avec paramètre lié par le pilote SQL."
+              "text": "Garder la concaténation et supprimer uniquement les espaces présents dans la saisie."
             },
             {
               "id": "c",
-              "text": "Interdire les apostrophes puis garder la concaténation."
+              "text": "Garder la concaténation et autoriser seulement les utilisateurs déjà connectés."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Quel comportement attendre d’une saisie ressemblant à du SQL ?",
+          "prompt": "Quel comportement attendre pour une saisie qui ressemble à une instruction SQL ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Elle est sûre dès que le seul test avec Alice réussit."
+              "text": "Elle est exécutée comme une instruction si l’utilisateur est connecté au site."
             },
             {
               "id": "b",
-              "text": "Elle est exécutée pour fournir une recherche avancée malgré le contrat littéral."
+              "text": "Elle est exécutée comme une instruction, puis les résultats supplémentaires sont masqués."
             },
             {
               "id": "c",
-              "text": "Elle reste une valeur de recherche sans élargir les résultats ni exécuter d’instruction."
+              "text": "Elle est recherchée comme du texte et ne transforme pas la recherche en instruction différente."
+            }
+          ]
+        },
+        {
+          "id": "mechanism",
+          "prompt": "Faut-il refuser tous les noms contenant une apostrophe ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Non, les paramètres permettent de rechercher ces noms comme des valeurs ordinaires."
+            },
+            {
+              "id": "b",
+              "text": "Oui, une apostrophe doit toujours être interprétée comme une instruction SQL."
+            },
+            {
+              "id": "c",
+              "text": "Oui, les paramètres ne peuvent transmettre que des nombres sans ponctuation."
+            }
+          ]
+        },
+        {
+          "id": "boundary",
+          "prompt": "Utiliser un ORM, une bibliothèque d’accès aux données, suffit-il à éviter le problème ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Oui, même si le programme construit encore le texte SQL avec la saisie."
+            },
+            {
+              "id": "b",
+              "text": "Seulement si la recherche utilise réellement des paramètres au lieu de concaténer la saisie."
+            },
+            {
+              "id": "c",
+              "text": "Oui, même si la bibliothèque exécute directement toute instruction reçue du navigateur."
             }
           ]
         }
@@ -1475,63 +2349,101 @@
     },
     {
       "id": "security-html-comment-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Quel danger présente innerHTML avec le commentaire fourni ?",
+          "prompt": "Pourquoi le commentaire peut-il déclencher du code dans le navigateur ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "innerHTML affiche toujours les balises littéralement."
+              "text": "`innerHTML` interprète la saisie comme du HTML, y compris son gestionnaire d’événement."
             },
             {
               "id": "b",
-              "text": "Le HTML est interprété et le gestionnaire onerror peut s’exécuter."
+              "text": "`innerHTML` affiche la saisie comme du texte, mais le stockage exécute ensuite ce texte."
             },
             {
               "id": "c",
-              "text": "Une donnée stockée devient automatiquement fiable pour le navigateur."
+              "text": "`innerHTML` est sans risque ici, car le commentaire a déjà été enregistré en base."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quel rendu correspond à des commentaires exclusivement en texte brut ?",
+          "prompt": "Quel rendu convient à ce produit qui demande seulement du texte brut ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "commentElement.textContent = storedComment"
+              "text": "Utiliser `innerHTML`, qui interprète le commentaire comme du HTML."
             },
             {
               "id": "b",
-              "text": "commentElement.innerHTML = storedComment.trim()"
+              "text": "Utiliser `innerHTML` après avoir retiré uniquement les balises script."
             },
             {
               "id": "c",
-              "text": "commentElement.innerHTML = storedComment"
+              "text": "Utiliser `textContent`, qui affiche le commentaire comme du texte."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Quel résultat vérifier pour le texte contenant img et onerror ?",
+          "prompt": "Que doit montrer le test avec le commentaire contenant la balise img ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Texte littéral, aucun événement exécuté, commentaires ordinaires lisibles."
+              "text": "La balise crée une image et son gestionnaire d’événement peut afficher une alerte."
             },
             {
               "id": "b",
-              "text": "Image créée et alerte autorisée parce que le commentaire est stocké."
+              "text": "La balise apparaît comme du texte et son gestionnaire d’événement ne s’exécute pas."
             },
             {
               "id": "c",
-              "text": "Commentaire supprimé entièrement même si le contrat demande son affichage."
+              "text": "La balise est exécutée une fois, puis retirée pour garder la page lisible."
+            }
+          ]
+        },
+        {
+          "id": "mechanism",
+          "prompt": "Un commentaire stocké en base devient-il automatiquement fiable ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Oui, la base retire automatiquement tous les éléments HTML actifs."
+            },
+            {
+              "id": "b",
+              "text": "Oui, un texte enregistré ne peut plus provoquer d’exécution dans le navigateur."
+            },
+            {
+              "id": "c",
+              "text": "Non, son origine utilisateur reste non fiable lorsqu’il est affiché plus tard."
+            }
+          ]
+        },
+        {
+          "id": "boundary",
+          "prompt": "Pourquoi retirer seulement les balises script ne suffit-il pas ici ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Un gestionnaire d’événement sur une image peut aussi déclencher du code."
+            },
+            {
+              "id": "b",
+              "text": "Une image contenant un événement est automatiquement supprimée par `innerHTML`."
+            },
+            {
+              "id": "c",
+              "text": "Une image contenant un événement est toujours affichée comme du texte par `innerHTML`."
             }
           ]
         }
@@ -1539,63 +2451,101 @@
     },
     {
       "id": "tests-empty-pass-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Pourquoi le test vert ne détecte-t-il pas discount(100, 10) = 100 ?",
+          "prompt": "Pourquoi le test réussit-il alors que le calcul renvoie 100 euros au lieu de 90 ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Le runner remplace automatiquement 100 par 90."
+              "text": "Le lanceur de tests corrige lui-même la valeur renvoyée avant de terminer."
             },
             {
               "id": "b",
-              "text": "Le nom du test suffit à vérifier la formule."
+              "text": "Le test appelle la fonction, mais ne compare jamais son résultat au montant attendu."
             },
             {
               "id": "c",
-              "text": "Il appelle la fonction sans assertion sur le résultat."
+              "text": "Le titre du test suffit à vérifier que la remise est bien calculée."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quelle assertion expose la régression du dossier ?",
+          "prompt": "Que faut-il comparer pour que le test détecte la remise mal calculée ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "assert.equal(discount(100, 10), 100)"
+              "text": "Je vérifie que le montant obtenu est de 90 euros pour une remise de 10 %."
             },
             {
               "id": "b",
-              "text": "assert.equal(discount(100, 10), 90)"
+              "text": "Je vérifie que le montant reste à 100 euros, comme dans la version fautive."
             },
             {
               "id": "c",
-              "text": "assert.equal(typeof discount(100, 10), 'number')"
+              "text": "Je vérifie seulement que le résultat est un nombre, sans vérifier son montant."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Quelle observation confirme l’utilité du nouveau test ?",
+          "prompt": "Quel résultat montre que le nouveau test protège cette correction ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Succès uniquement après suppression de l’assertion."
+              "text": "Le test réussit uniquement quand je retire la comparaison du résultat attendu."
             },
             {
               "id": "b",
-              "text": "Échec sur la fonction fautive puis succès après correction."
+              "text": "Le test réussit avec les deux calculs, même celui qui oublie la remise."
             },
             {
               "id": "c",
-              "text": "Succès sur la fonction fautive et après correction."
+              "text": "Le test échoue avec le calcul fautif, puis réussit avec le calcul corrigé."
+            }
+          ]
+        },
+        {
+          "id": "exception-limit",
+          "prompt": "Que peut tout de même détecter le test actuel, même sans comparaison du résultat ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Il peut garantir que toute remise respecte le montant attendu."
+            },
+            {
+              "id": "b",
+              "text": "Il peut vérifier toutes les valeurs de remise à partir de ce seul appel."
+            },
+            {
+              "id": "c",
+              "text": "Il peut échouer si l’appel de la fonction provoque une exception non attendue."
+            }
+          ]
+        },
+        {
+          "id": "zero-discount",
+          "prompt": "Quel résultat attendre pour un prix de 100 euros avec une remise de 0 % ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Le montant doit rester de 100 euros : aucune remise ne s’applique."
+            },
+            {
+              "id": "b",
+              "text": "Le montant doit devenir 90 euros : toute remise enlève 10 euros."
+            },
+            {
+              "id": "c",
+              "text": "Le montant doit devenir 0 euro : une remise nulle annule le prix."
             }
           ]
         }
@@ -1603,63 +2553,101 @@
     },
     {
       "id": "tests-expiry-boundary-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "À expiresAt=1000 et now=1000, quel écart existe ?",
+          "prompt": "Le jeton expire à 1000. À l’instant 1000, quelle différence y a-t-il entre le code et le contrat ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Code et contrat acceptent tous deux la frontière."
+              "text": "Le code accepte le jeton à cet instant, alors que le contrat demande de le refuser."
             },
             {
               "id": "b",
-              "text": "Le code refuse mais le contrat exige sa validité."
+              "text": "Le code et le contrat considèrent tous les deux le jeton comme valide à cet instant."
             },
             {
               "id": "c",
-              "text": "Le code accepte mais le contrat déclare le jeton invalide."
+              "text": "Le code refuse le jeton à cet instant, alors que le contrat demande de l’accepter."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quelle comparaison représente cette validité ?",
+          "prompt": "Quelle condition respecte la validité demandée pour le jeton ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "now < expiresAt"
+              "text": "Je considère le jeton valide avant ou à son expiration : `now <= expiresAt`."
             },
             {
               "id": "b",
-              "text": "now <= expiresAt"
+              "text": "Je considère le jeton valide à partir de son expiration : `now >= expiresAt`."
             },
             {
               "id": "c",
-              "text": "now >= expiresAt"
+              "text": "Je considère le jeton valide seulement avant son expiration : `now < expiresAt`."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Quels résultats attendre à 999, 1000 et 1001 pour expiresAt=1000 ?",
+          "prompt": "Le jeton expire à 1000. Que doit renvoyer la fonction aux instants 999, 1000 et 1001 ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "true, true, false."
+              "text": "Le jeton est valide à 999 et à 1000, puis invalide à 1001."
             },
             {
               "id": "b",
-              "text": "true, false, false."
+              "text": "Le jeton est valide à 999, puis invalide à 1000 et à 1001."
             },
             {
               "id": "c",
-              "text": "false, true, true."
+              "text": "Le jeton est invalide à 999, puis valide à 1000 et à 1001."
+            }
+          ]
+        },
+        {
+          "id": "fixed-time",
+          "prompt": "Comment tester précisément l’instant d’expiration sans attendre le temps réel ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Je passe explicitement la valeur 1000 comme heure courante à la fonction testée."
+            },
+            {
+              "id": "b",
+              "text": "Je fais une pause approximative et vérifie le jeton quand le système reprend."
+            },
+            {
+              "id": "c",
+              "text": "Je répète le test à des heures différentes jusqu’à obtenir un résultat favorable."
+            }
+          ]
+        },
+        {
+          "id": "missing-boundary",
+          "prompt": "Pourquoi le test existant avec une heure courante de 500 ne détecte-t-il pas le défaut ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Il teste déjà exactement l’expiration fixée à 1000."
+            },
+            {
+              "id": "b",
+              "text": "Il teste un instant après l’expiration, refusé par les deux comparaisons."
+            },
+            {
+              "id": "c",
+              "text": "Il teste un instant avant l’expiration, accepté par les deux comparaisons."
             }
           ]
         }
@@ -1667,63 +2655,101 @@
     },
     {
       "id": "tests-mock-contract-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Pourquoi result.map fonctionne-t-il avec le faux mais pas en réel ?",
+          "prompt": "Pourquoi la lecture avec `result.map` fonctionne-t-elle dans le test, mais échoue-t-elle avec la vraie réponse ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Le faux convertit automatiquement les objets réels en tableaux."
+              "text": "Le faux service transforme aussi les réponses du fournisseur réel en tableaux."
             },
             {
               "id": "b",
-              "text": "Le fournisseur interdit la lecture des ids des articles."
+              "text": "Le fournisseur refuse que le programme lise les identifiants des articles."
             },
             {
               "id": "c",
-              "text": "Le faux renvoie un tableau ; le fournisseur un objet contenant items."
+              "text": "Le faux renvoie un tableau directement ; le fournisseur place ce tableau dans `items`."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quelle correction aligne adaptateur et faux sur le fournisseur ?",
+          "prompt": "Comment rendre la lecture du code et la réponse du faux conformes au fournisseur ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Lire result.items et faire renvoyer { items: [...] } au faux."
+              "text": "Je déclare que la réponse réelle est un tableau, sans changer la façon de la lire."
             },
             {
               "id": "b",
-              "text": "Ajouter une assertion de type tableau sur le réel sans changer sa lecture."
+              "text": "Je lis le tableau dans `result.items` et fais renvoyer cette même structure au faux."
             },
             {
               "id": "c",
-              "text": "Faire renvoyer un tableau vide au faux et conserver result.map."
+              "text": "Je fais renvoyer un tableau vide au faux et continue à utiliser `result.map`."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Quel jeu distingue réussite normale et réponse malformée ?",
+          "prompt": "Quels cas permettent de vérifier une réponse correcte et une réponse de mauvaise structure ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Tableau nu : seul test vert ; objet réel jamais vérifié."
+              "text": "Je vérifie les identifiants d’une réponse valide et une erreur maîtrisée pour une structure invalide."
             },
             {
               "id": "b",
-              "text": "Objet items valide : ids attendus ; structure invalide : erreur contrôlée."
+              "text": "Je teste seulement le tableau du faux, sans essayer la structure du fournisseur."
             },
             {
               "id": "c",
-              "text": "Objet invalide : succès avec les ids inventés par le faux."
+              "text": "Je fais inventer des identifiants au faux pour que toute structure soit acceptée."
+            }
+          ]
+        },
+        {
+          "id": "representative-empty",
+          "prompt": "Pour représenter une réponse valide sans article, quelle donnée devrait fournir le faux service ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "Il renvoie directement un tableau vide, sans le champ `items`."
+            },
+            {
+              "id": "b",
+              "text": "Il renvoie un objet dont le champ `items` contient un tableau vide."
+            },
+            {
+              "id": "c",
+              "text": "Il renvoie un objet sans champ `items`, pour représenter une liste vide."
+            }
+          ]
+        },
+        {
+          "id": "double-purpose",
+          "prompt": "Après correction, à quoi le faux service peut-il encore servir ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Il peut garantir que le fournisseur réel ne changera jamais sa réponse."
+            },
+            {
+              "id": "b",
+              "text": "Il peut remplacer toute vérification de la compatibilité avec le fournisseur."
+            },
+            {
+              "id": "c",
+              "text": "Il peut simuler des réponses et des pannes pour tester l’adaptateur de façon contrôlée."
             }
           ]
         }
@@ -1731,63 +2757,101 @@
     },
     {
       "id": "architecture-rule-ui-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Quels montants les extraits produisent-ils pour price=100 ?",
+          "prompt": "Pour un prix de 100 euros, quels montants calculent la page et l’export actuels ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Page : 90 ; export : 100."
+              "text": "La page et l’export calculent tous les deux un montant de 90 euros."
             },
             {
               "id": "b",
-              "text": "Page : 90 ; export : 90."
+              "text": "La page calcule 90 euros, mais l’export conserve un montant de 100 euros."
             },
             {
               "id": "c",
-              "text": "Page : 100 ; export : 90."
+              "text": "La page conserve 100 euros, mais l’export calcule un montant de 90 euros."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quelle organisation évite la divergence du seuil entre page et export ?",
+          "prompt": "Comment éviter que la page et l’export appliquent des règles de remise différentes ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Une fonction métier commune de remise appelée par les deux."
+              "text": "Je conserve le calcul dans la page et dispense l’export de respecter la règle de remise."
             },
             {
               "id": "b",
-              "text": "Remise dans la page seulement ; export indépendant du contrat."
+              "text": "Je garde deux copies du calcul et change leurs noms pour éviter toute divergence."
             },
             {
               "id": "c",
-              "text": "Deux copies de la formule avec des variables renommées."
+              "text": "Je place le calcul de remise dans une fonction commune utilisée par la page et l’export."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Avec la règle commune, quels montants attendre à 99, 100 et 101 ?",
+          "prompt": "Pour des prix de 99, 100 et 101 euros, quels montants la règle commune doit-elle produire ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "99, 90 et 90.9 dans les deux consommateurs."
+              "text": "Les deux affichent 99 euros, 90 euros et 90,90 euros pour ces trois prix."
             },
             {
               "id": "b",
-              "text": "89.1, 90 et 90.9 dans les deux consommateurs."
+              "text": "Les deux affichent 89,10 euros, 90 euros et 90,90 euros pour ces trois prix."
             },
             {
               "id": "c",
-              "text": "99, 100 et 90.9 dans les deux consommateurs."
+              "text": "Les deux affichent 99 euros, 100 euros et 90,90 euros pour ces trois prix."
+            }
+          ]
+        },
+        {
+          "id": "shared-rule-layout",
+          "prompt": "Partager le calcul de remise oblige-t-il à donner la même présentation à la page et à l’export ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Non, chacun peut garder sa présentation tout en utilisant le même calcul."
+            },
+            {
+              "id": "b",
+              "text": "Oui, les deux doivent utiliser les mêmes éléments visuels pour partager le calcul."
+            },
+            {
+              "id": "c",
+              "text": "Non, mais l’export doit supprimer la remise pour rester indépendant de la page."
+            }
+          ]
+        },
+        {
+          "id": "text-only-fix",
+          "prompt": "On change seulement le texte de la page pour annoncer la remise. Quel défaut reste présent ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "L’export applique désormais automatiquement la remise grâce au texte de la page."
+            },
+            {
+              "id": "b",
+              "text": "L’export utilise toujours sa comparaison qui exclut le prix de 100 euros."
+            },
+            {
+              "id": "c",
+              "text": "La page et l’export perdent automatiquement toute remise dès que le texte change."
             }
           ]
         }
@@ -1795,63 +2859,101 @@
     },
     {
       "id": "architecture-invalid-state-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Quelle incohérence apparaît après await save ?",
+          "prompt": "Après la sauvegarde réussie, quelle contradiction apparaît dans l’état de l’écran ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "error et success valent true tandis que loading vaut false."
+              "text": "L’écran indique un chargement et un succès en même temps pour la même sauvegarde."
             },
             {
               "id": "b",
-              "text": "Le succès interdit toute modification d’état de l’interface."
+              "text": "L’écran indique une erreur et un succès en même temps, sans chargement actif."
             },
             {
               "id": "c",
-              "text": "loading et success valent simultanément true pour cette soumission."
+              "text": "L’écran ne peut plus changer d’état après une sauvegarde réussie."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quel modèle représente les états exclusifs de cette soumission ?",
+          "prompt": "Comment représenter les différentes étapes d’une seule sauvegarde ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Un état unique idle, saving, saved ou failed remplacé à chaque transition."
+              "text": "J’annonce la réussite dès le clic, puis ajoute une erreur si la sauvegarde échoue."
             },
             {
               "id": "b",
-              "text": "Passer directement à saved au clic puis afficher une erreur secondaire si la sauvegarde échoue."
+              "text": "J’utilise un seul état : au repos, sauvegarde en cours, sauvegarde réussie ou sauvegarde échouée."
             },
             {
               "id": "c",
-              "text": "Garder les booléens indépendants et rendre success prioritaire visuellement sans clôturer loading."
+              "text": "Je garde le chargement actif et masque simplement son affichage quand le succès apparaît."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Si save rejette, quel état et affichage vérifier ?",
+          "prompt": "Si la sauvegarde échoue, quel état l’écran doit-il afficher ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "failed remplace saving ; pas de succès ni de chargement actif."
+              "text": "L’état réussi remplace la sauvegarde en cours, puisque la demande a bien été envoyée."
             },
             {
               "id": "b",
-              "text": "saved remplace saving puisque la requête a été envoyée."
+              "text": "La sauvegarde reste en cours et l’écran affiche aussi un succès malgré l’échec."
             },
             {
               "id": "c",
-              "text": "saving reste actif et success devient true."
+              "text": "L’état échoué remplace la sauvegarde en cours ; aucun succès ni chargement ne reste affiché."
+            }
+          ]
+        },
+        {
+          "id": "acknowledgement",
+          "prompt": "À quel moment passer à l’état « sauvegarde réussie » ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Dès le clic sur le bouton, avant d’appeler la sauvegarde."
+            },
+            {
+              "id": "b",
+              "text": "Quand la sauvegarde a effectivement confirmé sa réussite."
+            },
+            {
+              "id": "c",
+              "text": "Dès que la demande part, même si elle peut encore échouer."
+            }
+          ]
+        },
+        {
+          "id": "single-operation",
+          "prompt": "Pourquoi succès et chargement sont-ils incompatibles dans ce dossier ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Ils décrivent la même sauvegarde unique : elle ne peut pas être terminée et encore en cours."
+            },
+            {
+              "id": "b",
+              "text": "Une application ne peut jamais effectuer deux opérations différentes en même temps."
+            },
+            {
+              "id": "c",
+              "text": "Le langage interdit d’attribuer la valeur true à deux booléens du même objet."
             }
           ]
         }
@@ -1859,63 +2961,101 @@
     },
     {
       "id": "architecture-lost-write-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Pourquoi le titre redevient-il Ancien après le PUT de Bob ?",
+          "prompt": "Pourquoi l’écriture de Bob rétablit-elle le titre « Ancien » ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Alice n’a pas envoyé de titre et seul Bob a une écriture valide."
+              "text": "Alice n’a pas envoyé de titre ; seule la demande de Bob modifie ce champ."
             },
             {
               "id": "b",
-              "text": "Modifier le texte annule nécessairement le titre dans toute base."
+              "text": "Toute modification du texte d’une note efface forcément son titre dans la base."
             },
             {
               "id": "c",
-              "text": "Bob remplace toute la note depuis v7 sans contrôler la version courante."
+              "text": "Bob remplace la note avec sa copie ancienne, sans vérifier qu’Alice l’a modifiée depuis."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quel mécanisme respecte l’exigence de signaler le conflit ?",
+          "prompt": "Quel contrôle permet au serveur de signaler un conflit avant de remplacer la note ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Comparer atomiquement côté serveur version attendue et version courante avant écriture."
+              "text": "Le serveur vérifie la version attendue et écrit seulement si elle correspond encore, en une opération indivisible."
             },
             {
               "id": "b",
-              "text": "Renvoyer automatiquement le document complet de Bob en cas de différence de version sans résolution."
+              "text": "En cas de version différente, le serveur réécrit automatiquement la copie entière de Bob."
             },
             {
               "id": "c",
-              "text": "Comparer la version lors d’une lecture au navigateur puis envoyer un PUT inconditionnel séparé."
+              "text": "Le navigateur vérifie la version, puis le serveur accepte l’écriture sans nouvelle condition."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Deux écritures issues de v7 arrivent : quel résultat attendre ?",
+          "prompt": "Deux écritures partent de la version 7. Que doit-il se passer après la première écriture réussie ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Première acceptée ; seconde en conflit sans écrasement silencieux."
+              "text": "La seconde est acceptée seulement parce qu’elle conserve le numéro de version 7."
             },
             {
               "id": "b",
-              "text": "Seconde acceptée uniquement si elle réutilise v7 sans relire."
+              "text": "La première est acceptée ; la seconde signale un conflit et ne remplace pas la note."
             },
             {
               "id": "c",
-              "text": "Toutes deux acceptées ; dernière décide silencieusement du contenu."
+              "text": "Les deux sont acceptées ; la dernière remplace le contenu sans prévenir les auteurs."
+            }
+          ]
+        },
+        {
+          "id": "conflict-resolution",
+          "prompt": "Après le conflit signalé à Bob, quelle suite préserve les changements sans décider à sa place ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Le système efface le titre d’Alice puis confirme automatiquement l’enregistrement de Bob."
+            },
+            {
+              "id": "b",
+              "text": "Le système renvoie sans modification la même copie ancienne jusqu’à ce qu’elle soit acceptée."
+            },
+            {
+              "id": "c",
+              "text": "Le système présente la note récente et permet à Bob de résoudre la différence avant une nouvelle écriture."
+            }
+          ]
+        },
+        {
+          "id": "atomic-check",
+          "prompt": "Pourquoi une vérification séparée dans le navigateur ne suffit-elle pas ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Une autre écriture peut arriver entre la lecture du navigateur et son remplacement de la note."
+            },
+            {
+              "id": "b",
+              "text": "Le navigateur ne peut lire aucune version d’un document partagé."
+            },
+            {
+              "id": "c",
+              "text": "Le numéro de version change forcément à chaque lecture, même sans modification."
             }
           ]
         }
@@ -1923,63 +3063,101 @@
     },
     {
       "id": "performance-lcp-lazy-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Quel délai met surtout en évidence la trace de hero.webp ?",
+          "prompt": "Quel délai la trace montre-t-elle pour le chargement de l’image principale ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Découverte seulement après téléchargement à 1600 ms."
+              "text": "L’image est découverte à 1600 ms, une fois son téléchargement terminé."
             },
             {
               "id": "b",
-              "text": "Requête immédiate à 120 ms puis téléchargement de 1580 ms."
+              "text": "L’image est découverte à 120 ms, mais sa requête ne commence qu’à 1200 ms."
             },
             {
               "id": "c",
-              "text": "Découverte à 120 ms mais requête seulement à 1200 ms."
+              "text": "La requête commence à 120 ms et son téléchargement dure ensuite 1580 ms."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quelle intervention cible directement ce délai ?",
+          "prompt": "Quel changement vise le délai de départ de cette image immédiatement visible ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Ajouter lazy à toutes les images, visibles ou hors écran."
+              "text": "Je charge l’image principale immédiatement et mesure l’intérêt d’une priorité élevée ciblée."
             },
             {
               "id": "b",
-              "text": "Précharger une image hors écran et conserver hero.webp en chargement lazy."
+              "text": "Je diffère le chargement de toutes les images, y compris celles immédiatement visibles."
             },
             {
               "id": "c",
-              "text": "Retirer lazy de hero.webp, garder ses dimensions et mesurer une priorité élevée ciblée."
+              "text": "Je précharge une image hors écran et conserve le chargement différé de l’image principale."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Quel contrôle établit le bénéfice de la modification ?",
+          "prompt": "Comment vérifier que le changement améliore le LCP, le délai d’apparition de l’élément principal ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Poids de hero.webp uniquement, sans nouvelle mesure du LCP."
+              "text": "Je compare seulement la taille du fichier, sans mesurer à nouveau son apparition à l’écran."
             },
             {
               "id": "b",
-              "text": "Succès déclaré dès que toutes les images ont une priorité élevée."
+              "text": "Je conclus à un gain dès que toutes les images ont reçu une priorité élevée."
             },
             {
               "id": "c",
-              "text": "Traces comparables répétées : début de requête, LCP et effets sur les autres ressources."
+              "text": "Je répète des mesures comparables du départ de requête, du LCP et des autres ressources."
+            }
+          ]
+        },
+        {
+          "id": "trace-duration",
+          "prompt": "Dans la trace fournie, combien de temps dure le téléchargement de l’image une fois la requête commencée ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Il dure 400 ms, entre le départ à 1200 ms et la fin à 1600 ms."
+            },
+            {
+              "id": "b",
+              "text": "Il dure 1080 ms, entre la découverte à 120 ms et le départ à 1200 ms."
+            },
+            {
+              "id": "c",
+              "text": "Il dure 1700 ms, depuis le début de la navigation jusqu’au LCP."
+            }
+          ]
+        },
+        {
+          "id": "offscreen-images",
+          "prompt": "Que faire du chargement différé pour les images situées plus bas, hors écran à l’ouverture ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Je leur donne toutes une priorité élevée pour qu’elles passent avant l’image principale."
+            },
+            {
+              "id": "b",
+              "text": "Je peux conserver leur chargement différé, car elles ne sont pas encore visibles."
+            },
+            {
+              "id": "c",
+              "text": "Je les retire de la page pour réserver tout le réseau à l’image principale."
             }
           ]
         }
@@ -1987,63 +3165,101 @@
     },
     {
       "id": "performance-eager-module-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Quel coût paie le visiteur qui n’exporte aucun PDF ?",
+          "prompt": "Que télécharge le visiteur dès l’ouverture, même s’il ne crée aucun PDF ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Aucun octet de heavy-pdf avant l’appel de onExport."
+              "text": "La bibliothèque PDF ne télécharge aucun octet avant que le visiteur clique sur Exporter."
             },
             {
               "id": "b",
-              "text": "Les 600 Ko compressés de heavy-pdf dans le chargement initial."
+              "text": "Les 600 Ko téléchargés sont le document PDF que ce visiteur a déjà exporté."
             },
             {
               "id": "c",
-              "text": "600 Ko correspondant au PDF déjà exporté par ce visiteur."
+              "text": "Le visiteur télécharge les 600 Ko de la bibliothèque PDF dès l’ouverture de la page."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quel changement reporte ce module vers son usage occasionnel ?",
+          "prompt": "Comment reporter le chargement de la bibliothèque jusqu’à une utilisation de l’export ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Bouton supprimé mais heavy-pdf conservé au démarrage."
+              "text": "Je retire le bouton d’export, mais laisse la bibliothèque chargée au démarrage."
             },
             {
               "id": "b",
-              "text": "Import statique conservé et buildPdf renommé lazyBuildPdf."
+              "text": "Je charge la bibliothèque au moment de l’export et affiche l’attente ou un éventuel échec."
             },
             {
               "id": "c",
-              "text": "Import dynamique à l’export avec état de chargement et erreur gérée."
+              "text": "Je renomme la fonction d’export, mais conserve son import au démarrage de la page."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Quel compromis et quel résultat vérifier après découpage ?",
+          "prompt": "Après ce changement, que faut-il vérifier à l’ouverture puis lors des exports ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Aucun téléchargement du module même pour un export utilisant sa bibliothèque."
+              "text": "À l’ouverture, je vérifie que la bibliothèque n’est pas téléchargée. Je teste ensuite un premier export, avec une attente possible, puis un deuxième export."
             },
             {
               "id": "b",
-              "text": "Module absent au départ, premier et second exports corrects, attente possible au premier."
+              "text": "Je vérifie que la bibliothèque n’est jamais téléchargée, même lorsqu’elle produit le PDF."
             },
             {
               "id": "c",
-              "text": "Temps initial seulement, sans vérifier exports ni erreurs."
+              "text": "Je vérifie seulement l’ouverture de la page, sans essayer l’export ni son traitement d’erreur."
+            }
+          ]
+        },
+        {
+          "id": "initial-weight",
+          "prompt": "D’après les chiffres du dossier, quelle part du JavaScript initial ne vient pas de la bibliothèque PDF ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Il reste 600 Ko : on soustrait le code de la page à la bibliothèque."
+            },
+            {
+              "id": "b",
+              "text": "Il reste 820 Ko : le poids de la bibliothèque n’est pas inclus dans ce total."
+            },
+            {
+              "id": "c",
+              "text": "Il reste 220 Ko : on soustrait les 600 Ko PDF des 820 Ko initiaux."
+            }
+          ]
+        },
+        {
+          "id": "import-failure",
+          "prompt": "Si le téléchargement du module PDF échoue au clic, que doit montrer le bouton ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Il annonce un export réussi dès le clic, même si la bibliothèque est indisponible."
+            },
+            {
+              "id": "b",
+              "text": "Il annonce l’échec du chargement et permet une nouvelle tentative, sans annoncer un PDF créé."
+            },
+            {
+              "id": "c",
+              "text": "Il reste indéfiniment en attente, sans indiquer que le téléchargement a échoué."
             }
           ]
         }
@@ -2051,63 +3267,101 @@
     },
     {
       "id": "performance-nplusone-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Que représentent les 51 allers-retours pour 50 publications ?",
+          "prompt": "Pourquoi la page de 50 publications déclenche-t-elle 51 accès à la base ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Un nombre fixe de requêtes indépendant de la taille de page."
+              "text": "Une requête lit les publications, puis une requête lit l’auteur de chacune : c’est le motif N+1."
             },
             {
               "id": "b",
-              "text": "Une jointure unique renvoyant 51 lignes sans requête supplémentaire."
+              "text": "Le nombre de requêtes reste identique, quel que soit le nombre de publications."
             },
             {
               "id": "c",
-              "text": "Une lecture de page puis une lecture d’auteur par publication : N+1."
+              "text": "Une seule requête de jointure renvoie 51 lignes, sans autre accès à la base."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quelle lecture supprime ce motif en conservant une page limitée ?",
+          "prompt": "Comment réduire ces accès sans charger toutes les publications de la base ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Les mêmes 50 lectures d’auteurs lancées ensemble sans regroupement."
+              "text": "Je lance ensemble les mêmes 50 requêtes d’auteurs, sans regrouper les lectures."
             },
             {
               "id": "b",
-              "text": "Publications paginées puis auteurs regroupés par ids uniques, ou jointure sur cette page."
+              "text": "Je charge toutes les publications et tous les auteurs à chaque ouverture de page."
             },
             {
               "id": "c",
-              "text": "Toutes les publications et tous les auteurs sans limite à chaque ouverture."
+              "text": "Je garde la page limitée et lis ses auteurs en groupe, ou avec une jointure."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Quels contrôles comparer pour 1 puis 50 lignes ?",
+          "prompt": "Quels éléments comparer sur une page de 1 publication puis de 50 publications ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Plan d’une requête seulement, en acceptant de changer pagination et résultats."
+              "text": "Je vérifie une requête isolée, même si la pagination et les résultats ont changé."
             },
             {
               "id": "b",
-              "text": "Nombre de requêtes, latence, résultats identiques et auteurs absents."
+              "text": "Je compare les requêtes, le temps de réponse, les résultats et le cas d’un auteur absent."
             },
             {
               "id": "c",
-              "text": "Nombre de lignes affichées seulement, sans journal ni mesure de coût."
+              "text": "Je compte seulement les lignes affichées, sans mesurer les accès à la base."
+            }
+          ]
+        },
+        {
+          "id": "repeated-author",
+          "prompt": "Plusieurs publications ont le même auteur. Quel travail inutile effectue la boucle actuelle ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Elle supprime les publications qui partagent un identifiant d’auteur."
+            },
+            {
+              "id": "b",
+              "text": "Elle relit plusieurs fois le même auteur, une fois pour chaque publication concernée."
+            },
+            {
+              "id": "c",
+              "text": "Elle rassemble automatiquement ces publications dans une seule requête d’auteur."
+            }
+          ]
+        },
+        {
+          "id": "parallel-limit",
+          "prompt": "Lancer les 50 lectures d’auteurs en parallèle supprime-t-il le motif N+1 ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Oui, les 50 lectures deviennent automatiquement une seule requête SQL."
+            },
+            {
+              "id": "b",
+              "text": "Non, car le programme doit alors charger toutes les publications sans pagination."
+            },
+            {
+              "id": "c",
+              "text": "Non, les 51 accès restent présents, même si l’attente peut parfois diminuer."
             }
           ]
         }
@@ -2115,63 +3369,101 @@
     },
     {
       "id": "engineering-staged-old-version-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Quelle version de fix.ts utilise ce git commit ?",
+          "prompt": "Quelle version de `fix.ts` la commande `git commit` enregistre-t-elle dans cette séquence ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "v2 du répertoire de travail sans nouvel ajout."
+              "text": "Le commit prend la version v2 du fichier local, sans avoir besoin d’un nouvel ajout."
             },
             {
               "id": "b",
-              "text": "v1 préparée dans l’index par git add."
+              "text": "Le commit prend la version v1 préparée par `git add`, appelée contenu de l’index."
             },
             {
               "id": "c",
-              "text": "Une fusion automatique de v1 et v2 par git commit."
+              "text": "Le commit mélange automatiquement les versions v1 et v2 du fichier."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Comment inclure seulement la correction v2 voulue au prochain commit ?",
+          "prompt": "Comment préparer uniquement la correction v2 voulue pour le prochain commit ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Préparer aveuglément tous les fichiers même sans rapport avec la correction."
+              "text": "Je relis les différences et prépare seulement les changements voulus, par exemple avec `git add -p`."
             },
             {
               "id": "b",
-              "text": "Relire les différences et préparer les changements ciblés, éventuellement avec git add -p."
+              "text": "Je prépare tous les fichiers sans les relire, même ceux sans rapport avec cette correction."
             },
             {
               "id": "c",
-              "text": "Committer sans nouvel ajout en supposant l’index actualisé automatiquement."
+              "text": "Je crée le commit sans nouvel ajout, car Git actualise automatiquement le contenu préparé."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Quel contrôle montre le contenu préparé avant commit ?",
+          "prompt": "Comment vérifier le contenu préparé avant le commit, puis celui réellement enregistré ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "git diff seul en supposant qu’il montre toujours l’index."
+              "text": "Je consulte seulement `git diff`, en supposant qu’il montre toujours le contenu préparé."
             },
             {
               "id": "b",
-              "text": "Le message du commit seul, considéré comme preuve de contenu."
+              "text": "Je lis seulement le message du commit, car il prouve quels changements sont préparés."
             },
             {
               "id": "c",
-              "text": "git diff --cached, puis inspection du commit et du statut local après."
+              "text": "Je lis `git diff --cached`, puis le commit créé et les modifications restées locales."
+            }
+          ]
+        },
+        {
+          "id": "working-copy",
+          "prompt": "Après le commit décrit, que devient la correction v2 encore présente dans le fichier local ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Elle disparaît automatiquement, car le commit remet le fichier à v1."
+            },
+            {
+              "id": "b",
+              "text": "Elle est ajoutée rétroactivement au commit dès que Git lit le fichier."
+            },
+            {
+              "id": "c",
+              "text": "Elle reste une modification locale non incluse dans ce commit."
+            }
+          ]
+        },
+        {
+          "id": "shared-correction",
+          "prompt": "Le commit v1 a déjà été partagé. Comment ajouter simplement la correction v2 sans réécrire cet historique ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Je prépare v2 et crée un nouveau commit de correction à la suite du précédent."
+            },
+            {
+              "id": "b",
+              "text": "Je modifie seulement le message du commit v1, sans enregistrer le nouveau contenu."
+            },
+            {
+              "id": "c",
+              "text": "Je demande aux collègues d’ignorer v1, sans créer de commit avec la correction."
             }
           ]
         }
@@ -2179,63 +3471,101 @@
     },
     {
       "id": "engineering-semantic-conflict-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Quelle règle la résolution retenue a-t-elle perdue ?",
+          "prompt": "Quelle exigence la résolution actuelle du conflit a-t-elle supprimée ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Le refus des remises supérieures à 50 %."
+              "text": "La résolution ne refuse plus aucun prix ni aucune remise."
             },
             {
               "id": "b",
-              "text": "Les deux règles, car retirer les marqueurs retire tout contrôle."
+              "text": "La résolution ne refuse plus les prix nuls ou négatifs."
             },
             {
               "id": "c",
-              "text": "Le refus des prix nuls ou négatifs."
+              "text": "La résolution ne refuse plus les remises qui dépassent 50 %."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quel comportement résout le conflit selon ce contrat ?",
+          "prompt": "Quel comportement respecte les deux exigences du contrat final ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Refuser seulement discount > 50 car une validation suffit."
+              "text": "Je refuse seulement les remises au-dessus de 50 %, en abandonnant la condition sur le prix."
             },
             {
               "id": "b",
-              "text": "Refuser seulement price <= 0 car cette branche est retenue."
+              "text": "Je refuse les prix nuls ou négatifs et les remises au-dessus de 50 %, comme demandé."
             },
             {
               "id": "c",
-              "text": "Refuser si price <= 0 ou discount > 50, en conservant les deux exigences."
+              "text": "Je refuse seulement les prix nuls ou négatifs, en abandonnant la limite de remise."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Quel jeu vérifie les deux règles et un parcours accepté ?",
+          "prompt": "Quels cas permettent de vérifier les deux refus et une entrée qui doit rester acceptée ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Prix nul, remise 60 %, leur combinaison, puis prix positif avec remise 10 %."
+              "text": "Je teste un prix nul, une remise de 60 %, les deux ensemble et un prix positif avec 10 % de remise."
             },
             {
               "id": "b",
-              "text": "Prix positif avec remise 10 % seulement."
+              "text": "Je teste seulement un prix positif avec une remise de 10 %, sans essayer les refus."
             },
             {
               "id": "c",
-              "text": "Recherche des marqueurs uniquement sans test de comportement."
+              "text": "Je cherche seulement les marqueurs de conflit, sans tester le comportement obtenu."
+            }
+          ]
+        },
+        {
+          "id": "markers-limit",
+          "prompt": "Que prouve l’absence de marqueurs de conflit après cette résolution ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Elle prouve que les exigences des deux branches sont toutes conservées."
+            },
+            {
+              "id": "b",
+              "text": "Elle prouve que les marqueurs ont été retirés, sans garantir le comportement obtenu."
+            },
+            {
+              "id": "c",
+              "text": "Elle prouve que les tests des deux branches ont tous été exécutés avec succès."
+            }
+          ]
+        },
+        {
+          "id": "limit-inclusive",
+          "prompt": "Avec un prix de 100 euros et une remise exactement égale à 50 %, que demande le contrat fourni ?",
+          "checkpointIndex": 2,
+          "options": [
+            {
+              "id": "a",
+              "text": "L’entrée est refusée : toute remise égale à 50 % dépasse la limite autorisée."
+            },
+            {
+              "id": "b",
+              "text": "L’entrée est refusée : le prix doit être supérieur à 100 euros pour toute remise."
+            },
+            {
+              "id": "c",
+              "text": "L’entrée est acceptée : le prix est positif et la remise ne dépasse pas 50 %."
             }
           ]
         }
@@ -2243,63 +3573,101 @@
     },
     {
       "id": "engineering-stack-origin-diagnostic",
-      "challengeVersion": 3,
-      "rubricVersion": 2,
+      "challengeVersion": 4,
+      "rubricVersion": 3,
       "questions": [
         {
           "id": "diagnosis",
-          "prompt": "Quel lieu et quelle entrée indiquent pile et input.json ?",
+          "prompt": "Quel lieu d’erreur et quelle donnée manquante indiquent la pile d’appels et le profil fourni ?",
           "checkpointIndex": 0,
           "options": [
             {
               "id": "a",
-              "text": "Exception initiale dans routeHandler ; name est vide."
+              "text": "L’exception apparaît dans `formatName`, parce que le profil n’a pas de champ `name`."
             },
             {
               "id": "b",
-              "text": "Exception dans formatName ; profile ne contient pas name."
+              "text": "L’exception commence dans `routeHandler`, parce que le nom du profil est vide."
             },
             {
               "id": "c",
-              "text": "Exception dans buildResponse ; name est trop long."
+              "text": "L’exception apparaît dans `buildResponse`, parce que le nom du profil est trop long."
             }
           ]
         },
         {
           "id": "action",
-          "prompt": "Quelle investigation guide une correction conforme au produit ?",
+          "prompt": "Comment chercher une correction compatible avec les exigences du produit ?",
           "checkpointIndex": 1,
           "options": [
             {
               "id": "a",
-              "text": "Modifier seulement le routeur car il est dernier dans la pile."
+              "text": "Je modifie seulement le routeur, puisqu’il apparaît en dernier dans la pile d’appels."
             },
             {
               "id": "b",
-              "text": "Inventer toujours un nom sans consulter le contrat."
+              "text": "Je remplace systématiquement le nom absent par un nom inventé, sans vérifier les exigences."
             },
             {
               "id": "c",
-              "text": "Reproduire avec {id:'u-1'} puis vérifier si le contrat exige name ou autorise son absence."
+              "text": "Je reproduis avec le profil fourni, puis vérifie si le produit exige un nom ou autorise son absence."
             }
           ]
         },
         {
           "id": "verification",
-          "prompt": "Que vérifier pour une entrée sans name et une entrée valide ?",
+          "prompt": "Que vérifier pour un profil sans nom et un profil avec un nom valide ?",
           "checkpointIndex": 2,
           "options": [
             {
               "id": "a",
-              "text": "Absence : comportement documenté sans TypeError accidentel ; présence : formatage correct."
+              "text": "Sans nom, je conserve l’erreur accidentelle ; avec un nom, je retire ce champ avant le formatage."
             },
             {
               "id": "b",
-              "text": "Absence : même TypeError ; présence : suppression de name."
+              "text": "Sans nom, j’attends un traitement prévu par le produit ; avec un nom, j’attends le formatage correct."
             },
             {
               "id": "c",
-              "text": "Succès forcé pour les deux sans examiner le contrat."
+              "text": "Je force un succès pour les deux profils, sans vérifier le comportement attendu par le produit."
+            }
+          ]
+        },
+        {
+          "id": "missing-vs-empty",
+          "prompt": "Quelle différence faut-il conserver entre l’entrée fournie et un profil avec `name: \"\"` ?",
+          "checkpointIndex": 0,
+          "options": [
+            {
+              "id": "a",
+              "text": "Le profil fourni n’a pas de champ name ; name: \"\" contient bien ce champ avec un texte vide."
+            },
+            {
+              "id": "b",
+              "text": "Les deux contiennent le même champ name avec la même valeur texte."
+            },
+            {
+              "id": "c",
+              "text": "Le profil fourni contient un nom vide, alors que name: \"\" supprime le champ."
+            }
+          ]
+        },
+        {
+          "id": "stack-evidence-limit",
+          "prompt": "La pile suffit-elle à expliquer pourquoi le champ name manque ?",
+          "checkpointIndex": 1,
+          "options": [
+            {
+              "id": "a",
+              "text": "Oui, elle prouve que le routeur a volontairement supprimé le nom."
+            },
+            {
+              "id": "b",
+              "text": "Oui, elle prouve que la base de données refuse tous les noms de profils."
+            },
+            {
+              "id": "c",
+              "text": "Non, elle localise l’erreur ; il faut encore suivre les données et leur contrat pour trouver l’origine."
             }
           ]
         }

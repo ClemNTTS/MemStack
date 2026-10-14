@@ -16,6 +16,8 @@ const dossiers = JSON.parse(readFileSync(new URL('../catalog/challengeDossiers.j
 const courses = JSON.parse(readFileSync(new URL('../catalog/curriculum.json', import.meta.url), 'utf8')).courses
 const challengeQuestions = JSON.parse(readFileSync(new URL('../catalog/challengeQuestions.json', import.meta.url), 'utf8')).challenges
 const challengeAnswerKeys = JSON.parse(readFileSync(new URL('../catalog/challengeAnswerKeys.json', import.meta.url), 'utf8')).challenges
+challengeQuestions.push(...JSON.parse(readFileSync(new URL('../catalog/challengeQuestions.v3.json', import.meta.url), 'utf8')).challenges)
+challengeAnswerKeys.push(...JSON.parse(readFileSync(new URL('../catalog/challengeAnswerKeys.v3.json', import.meta.url), 'utf8')).challenges)
 const key = defineSecret('MISTRAL_API_KEY')
 const enabled = defineBoolean('CHALLENGE_AI_ENABLED', { default: false })
 const appCheck = defineBoolean('CHALLENGE_AI_REQUIRE_APP_CHECK', { default: true })

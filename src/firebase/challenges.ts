@@ -13,6 +13,7 @@ let checkedEmulatorConnected = false
 export async function submitCheckedAttempt(uid: string, id: string, challengeId: string, choices: Record<string, string>): Promise<ChallengeAttempt> {
   requireAccount(uid)
   const selections = validateChallengeSelections(challengeId, choices)
+  const challengeVersion = challenges.find(challenge => challenge.id === challengeId)!.version
   const functions = getFunctions(getApp(), 'europe-west9')
   if (import.meta.env.VITE_FIREBASE_EMULATORS === 'true' && ['localhost', '127.0.0.1'].includes(location.hostname) && !checkedEmulatorConnected) {
     connectFunctionsEmulator(functions, 'localhost', 5001)
@@ -20,12 +21,12 @@ export async function submitCheckedAttempt(uid: string, id: string, challengeId:
   }
   let error: unknown
   try {
-    await httpsCallable(functions, 'submitDeterministicChallenge')({ attemptId: id, challengeId, challengeVersion: 3, selections })
+    await httpsCallable(functions, 'submitDeterministicChallenge')({ attemptId: id, challengeId, challengeVersion, selections })
   } catch (failure) { error = failure }
   requireAccount(uid)
   // Read from the server even after a lost acknowledgement; never reveal a local verdict.
   const saved = await readAttempt(uid, id)
-  if (!saved || saved.version !== 3 || !matchesAttemptSubmission(saved, challengeId, 3, JSON.stringify(selections))) {
+  if (!saved || saved.version !== 3 || !matchesAttemptSubmission(saved, challengeId, challengeVersion, JSON.stringify(selections))) {
     throw error ?? new Error('Le résultat n’a pas été confirmé par le serveur.')
   }
   return saved

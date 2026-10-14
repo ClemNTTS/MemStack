@@ -12,6 +12,25 @@ before(async () => {
   app = initializeApp({ projectId: 'demo-memstack-checked' }, 'checked-tests')
   db = getFirestore(app)
 })
+
+test('five-question transaction stores a four-out-of-five success and a three-out-of-five retry', async () => {
+  const uid = `checked-five-${Date.now()}`
+  await db.doc(`users/${uid}/lessons/one`).set({ completedAt: 'date' })
+  const challenge = { id: 'exam', challengeVersion: 4, rubricVersion: 3,
+    questions: ['q1', 'q2', 'q3', 'q4', 'q5'].map((id, index) => ({ id, checkpointIndex: index % 3, options: [{ id: 'a' }, { id: 'b' }] })) }
+  const key = { id: 'exam', challengeVersion: 4, rubricVersion: 3, questions: challenge.questions.map(question => ({ id: question.id, correctOptionIds: ['b'], explanation: 'Correction de référence.' })) }
+  const args = { db, uid, questions: [challenge], answerKeys: [key], dossiers: [{ id: 'exam', version: 2, courseId: 'course', lessonIds: ['one'] }],
+    courses: [{ id: 'course', theme: 'Tests', lessons: [{ id: 'one' }] }], now: Date.now(), timestamp: Timestamp.now() }
+  for (const [attemptId, selections, verdict] of [
+    ['four', { q1: 'b', q2: 'b', q3: 'b', q4: 'b', q5: 'a' }, 'validated'],
+    ['three', { q1: 'b', q2: 'b', q3: 'b', q4: 'a', q5: 'a' }, 'retry']]) {
+    const saved = await submitCheckedChallenge({ ...args, data: { attemptId, challengeId: 'exam', challengeVersion: 4, selections } })
+    assert.equal(saved.challengeVersion, 4)
+    assert.equal(saved.result.totalCount, 5)
+    assert.equal(saved.result.verdict, verdict)
+    assert.equal((await db.doc(`users/${uid}/challengeAttempts/${attemptId}`).get()).data().result.verdict, verdict)
+  }
+})
 after(async () => { if (app) await deleteApp(app) })
 
 test('real transaction persists one immutable checked result without an AI invitation or quota', async () => {

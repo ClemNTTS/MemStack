@@ -112,8 +112,9 @@ test('two-field responses are trimmed, bounded, and preserve their immutable agg
 
 test('historical corrections stay available alongside versioned dossiers', () => {
   for (const current of challenges) {
-    assert.equal(current.version, 3)
-    assert.equal(current.questions?.length, 3)
+    assert.equal(current.version, 4)
+    assert.ok((current.questions?.length ?? 0) >= 5)
+    assert.equal(getChallengeVersion(current.id, 3)?.questions?.length, 3, 'Le questionnaire publié v3 reste inchangé')
     assert.ok(getChallengeVersion(current.id, 2), 'Le dossier v2 reste disponible')
     assert.ok(current.files.length >= 2)
     assert.ok(current.acceptableAlternatives.length > 0)

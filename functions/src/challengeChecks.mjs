@@ -7,10 +7,10 @@ const exactKeys = (value, keys) => value && typeof value === 'object' && !Array.
 export function validateCheckedSubmission(data, catalog) {
   if (!exactKeys(data, ['attemptId', 'challengeId', 'challengeVersion', 'selections'])
     || typeof data.attemptId !== 'string' || !/^[a-zA-Z0-9-]{1,128}$/.test(data.attemptId)
-    || typeof data.challengeId !== 'string' || data.challengeVersion !== 3) {
+    || typeof data.challengeId !== 'string' || !Number.isInteger(data.challengeVersion) || data.challengeVersion < 3) {
     throw new AnalysisError('invalid-argument', 'Tentative structurée invalide.')
   }
-  const challenge = catalog.find(entry => entry.id === data.challengeId && entry.challengeVersion === 3)
+  const challenge = catalog.find(entry => entry.id === data.challengeId && entry.challengeVersion === data.challengeVersion)
   if (!challenge || !exactKeys(data.selections, challenge.questions.map(question => question.id))) {
     throw new AnalysisError('invalid-argument', 'Réponds à toutes les questions de ce défi.')
   }
@@ -45,7 +45,7 @@ export function gradeChallengeSelections(challenge, key, selections) {
 
 export async function submitCheckedChallenge({ db, uid, data, questions, answerKeys, dossiers, courses, now, timestamp }) {
   const { challenge, selections } = validateCheckedSubmission(data, questions)
-  const result = gradeChallengeSelections(challenge, answerKeys.find(key => key.id === challenge.id), selections)
+  const result = gradeChallengeSelections(challenge, answerKeys.find(key => key.id === challenge.id && key.challengeVersion === challenge.challengeVersion), selections)
   const answer = JSON.stringify(selections)
   const ref = db.doc(`users/${uid}/challengeAttempts/${data.attemptId}`)
   return db.runTransaction(async transaction => {
@@ -55,7 +55,7 @@ export async function submitCheckedChallenge({ db, uid, data, questions, answerK
     const saved = await transaction.get(ref)
     if (saved.exists) {
       const previous = saved.data()
-      if (previous.version !== 3 || previous.challengeId !== challenge.id || previous.challengeVersion !== 3
+      if (previous.version !== 3 || previous.challengeId !== challenge.id || previous.challengeVersion !== challenge.challengeVersion
         || previous.rubricVersion !== challenge.rubricVersion || previous.answer !== answer) {
         throw new AnalysisError('already-exists', 'Cet identifiant appartient à une autre tentative.')
       }
@@ -82,7 +82,7 @@ export async function submitCheckedChallenge({ db, uid, data, questions, answerK
     }
     const count = active ? budget.count + 1 : 1
     if (count > 20) throw new AnalysisError('resource-exhausted', 'Limite de 20 tentatives par heure atteinte.')
-    const attempt = { version: 3, challengeId: challenge.id, challengeVersion: 3, rubricVersion: challenge.rubricVersion,
+    const attempt = { version: 3, challengeId: challenge.id, challengeVersion: challenge.challengeVersion, rubricVersion: challenge.rubricVersion,
       selections, answer, outcome: '', result, submittedAt: timestamp }
     transaction.set(budgetRef, { count, windowStartedAt: active ? budget.windowStartedAt : timestamp, documentId: data.attemptId })
     transaction.create(ref, attempt)

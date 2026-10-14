@@ -8,7 +8,7 @@ export default function ChallengeQuestions({ questions, choices, disabled, onCho
   onChoose: (questionId: string, optionId: string) => void
 }) {
   return <>{questions.map((question, index) => <fieldset key={question.id} className="challenge-question" disabled={disabled}>
-    <legend>{index + 1}. {question.prompt}</legend>
+    <legend>{index + 1}. <InlineLessonText text={question.prompt} /></legend>
     {question.options.map(option => <label key={option.id} className="challenge-option">
       <input type="radio" name={question.id} value={option.id} required checked={choices[question.id] === option.id} onChange={() => onChoose(question.id, option.id)} />
       <span><InlineLessonText text={option.text} /></span>

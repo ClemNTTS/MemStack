@@ -21,11 +21,12 @@ test('all 36 current dossiers have private deterministic keys and complete indep
   for (const dossier of dossiers) {
     const challenge = questions.find(entry => entry.id === dossier.id)
     const key = keys.find(entry => entry.id === dossier.id)
-    assert.equal(challenge.challengeVersion, 3)
-    assert.equal(challenge.rubricVersion, 2)
-    assert.equal(challenge.questions.length, 3)
-    assert.equal(new Set(challenge.questions.map(question => question.id)).size, 3)
-    assert.deepEqual(challenge.questions.map(question => question.checkpointIndex).sort(), [0, 1, 2])
+    assert.equal(challenge.challengeVersion, 4)
+    assert.equal(challenge.rubricVersion, 3)
+    assert.ok(challenge.questions.length >= 5)
+    assert.equal(new Set(challenge.questions.map(question => question.id)).size, challenge.questions.length)
+    assert.deepEqual([...new Set(challenge.questions.map(question => question.checkpointIndex))].sort(), [0, 1, 2])
+    assert.ok(challenge.questions.every(question => [0, 1, 2].includes(question.checkpointIndex)))
     for (const question of challenge.questions) {
       assert.ok(question.prompt.length > 15, `${dossier.id}: question spécifique requise`)
       assert.ok(!Object.hasOwn(question, 'explanation'))
@@ -45,5 +46,34 @@ test('all 36 current dossiers have private deterministic keys and complete indep
       if (kind === 'weak') assert.ok(result.correctCount <= 1, `${dossier.id}: erreurs faibles insuffisantes`)
       else assert.equal(result.correctCount, result.totalCount, `${dossier.id}: étudiant fort`)
     }
+  }
+})
+
+test('all five-question combinations obey the strict threshold and archived clients keep their original keys', () => {
+  const current = read('challengeQuestions').challenges
+  const archived = read('challengeQuestions.v3').challenges
+  const keys = [...read('challengeAnswerKeys').challenges, ...read('challengeAnswerKeys.v3').challenges]
+  const catalog = [...current, ...archived]
+  let combinations = 0
+  for (const challenge of current) {
+    const key = keys.find(entry => entry.id === challenge.id && entry.challengeVersion === challenge.challengeVersion)
+    const visit = (index, selections) => {
+      if (index === challenge.questions.length) {
+        const correct = challenge.questions.filter(question => key.questions.find(entry => entry.id === question.id).correctOptionIds.includes(selections[question.id])).length
+        const result = gradeChallengeSelections(challenge, key, selections)
+        assert.equal(result.verdict, correct >= 4 ? 'validated' : 'retry', challenge.id)
+        combinations++
+        return
+      }
+      const question = challenge.questions[index]
+      for (const option of question.options) visit(index + 1, { ...selections, [question.id]: option.id })
+    }
+    visit(0, {})
+  }
+  assert.equal(combinations, 8748)
+  for (const student of read('challengeStrongStudentCases.v3').cases) {
+    const { challenge, selections } = validateCheckedSubmission({ attemptId: 'archived', challengeId: student.challengeId, challengeVersion: 3, selections: student.selections }, catalog)
+    assert.equal(challenge.questions.length, 3)
+    assert.equal(gradeChallengeSelections(challenge, keys.find(entry => entry.id === challenge.id && entry.challengeVersion === 3), selections).verdict, 'validated')
   }
 })

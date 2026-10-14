@@ -1,8 +1,8 @@
-import { challenges } from '../data/challenges.ts'
+import { challenges, getChallengeVersion } from '../data/challenges.ts'
 import type { ChallengeAttempt, CheckedChallengeResult } from '../types/challenge'
 
-export function validateChallengeSelections(challengeId: string, selections: Record<string, string>) {
-  const challenge = challenges.find(entry => entry.id === challengeId)
+export function validateChallengeSelections(challengeId: string, selections: Record<string, string>, challengeVersion?: number) {
+  const challenge = challengeVersion === undefined ? challenges.find(entry => entry.id === challengeId) : getChallengeVersion(challengeId, challengeVersion)
   const questions = challenge?.questions
   if (!questions?.length || !selections || typeof selections !== 'object' || Array.isArray(selections)
     || Object.keys(selections).length !== questions.length) throw new Error('Réponds à toutes les questions.')
@@ -15,13 +15,13 @@ export function validateChallengeSelections(challengeId: string, selections: Rec
 
 export function decodeCheckedAttempt(id: string, value: Record<string, unknown>): ChallengeAttempt | null {
   if (Object.keys(value).sort().join(',') !== 'answer,challengeId,challengeVersion,outcome,result,rubricVersion,selections,submittedAt,version'
-    || value.version !== 3 || value.challengeVersion !== 3 || value.outcome !== '' || typeof value.challengeId !== 'string'
+    || value.version !== 3 || !Number.isInteger(value.challengeVersion) || (value.challengeVersion as number) < 3 || value.outcome !== '' || typeof value.challengeId !== 'string'
     || typeof value.submittedAt !== 'string' || typeof value.answer !== 'string') return null
-  const challenge = challenges.find(entry => entry.id === value.challengeId)
+  const challenge = getChallengeVersion(value.challengeId, value.challengeVersion as number)
   if (!challenge || value.rubricVersion !== challenge.rubricVersion) return null
   try {
     if (new Date(value.submittedAt).toISOString() !== value.submittedAt) return null
-    const selections = validateChallengeSelections(challenge.id, value.selections as Record<string, string>)
+    const selections = validateChallengeSelections(challenge.id, value.selections as Record<string, string>, challenge.version)
     if (value.answer !== JSON.stringify(selections)) return null
     const result = value.result as CheckedChallengeResult
     if (!result || typeof result !== 'object' || Array.isArray(result)
@@ -35,7 +35,7 @@ export function decodeCheckedAttempt(id: string, value: Record<string, unknown>)
       || result.verdict !== (result.correctCount * 100 > result.totalCount * 70 ? 'validated' : 'retry')) return null
     const missed = [...new Set(challenge.questions!.filter((_, index) => !result.criterionResults[index]).map(question => question.checkpointIndex))]
     if (JSON.stringify(result.missedCheckpointIndices) !== JSON.stringify(missed)) return null
-    return { id, version: 3, challengeId: challenge.id, challengeVersion: 3, rubricVersion: challenge.rubricVersion,
+    return { id, version: 3, challengeId: challenge.id, challengeVersion: challenge.version, rubricVersion: challenge.rubricVersion,
       selections, answer: value.answer, submittedAt: value.submittedAt, outcome: '', result: { ...result,
         criterionResults: [...result.criterionResults], missedCheckpointIndices: [...missed] } }
   } catch { return null }

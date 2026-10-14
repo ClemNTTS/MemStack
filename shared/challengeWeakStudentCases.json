@@ -1,328 +1,399 @@
 {
-  "version": 1,
   "cases": [
     {
       "challengeId": "docker-images-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "c",
-        "action": "b",
-        "verification": "a"
+        "diagnosis": "a",
+        "action": "c",
+        "verification": "a",
+        "replacement-check": "b",
+        "restart-purpose": "b"
       }
     },
     {
       "challengeId": "docker-volumes-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
         "diagnosis": "c",
-        "action": "b",
-        "verification": "c"
+        "action": "c",
+        "verification": "c",
+        "restart-data": "a",
+        "backup-reason": "c"
       }
     },
     {
       "challengeId": "docker-ports-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "c",
+        "diagnosis": "b",
         "action": "c",
-        "verification": "a"
+        "verification": "c",
+        "internal-port": "c",
+        "network-condition": "b"
       }
     },
     {
       "challengeId": "fund-shared-cart-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "c",
-        "action": "b",
-        "verification": "c"
+        "diagnosis": "b",
+        "action": "a",
+        "verification": "c",
+        "cancel-draft": "a",
+        "copy-scope": "b"
       }
     },
     {
       "challengeId": "fund-stock-invariant-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "c",
-        "action": "c",
-        "verification": "a"
+        "diagnosis": "b",
+        "action": "b",
+        "verification": "a",
+        "validation-order": "c",
+        "concurrency-limit": "c"
       }
     },
     {
       "challengeId": "systems-env-process-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
         "diagnosis": "b",
         "action": "b",
-        "verification": "c"
+        "verification": "b",
+        "environment-scope": "b",
+        "port-evidence": "c"
       }
     },
     {
       "challengeId": "http-stale-cache-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
         "diagnosis": "a",
-        "action": "b",
-        "verification": "a"
+        "action": "c",
+        "verification": "b",
+        "not-modified-body": "c",
+        "valid-cache": "a"
       }
     },
     {
       "challengeId": "web-fetch-error-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "b",
+        "diagnosis": "c",
         "action": "a",
-        "verification": "c"
+        "verification": "a",
+        "network-error": "a",
+        "test-cases": "c"
       }
     },
     {
       "challengeId": "web-keyboard-action-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
         "diagnosis": "a",
         "action": "c",
-        "verification": "a"
+        "verification": "a",
+        "focus-purpose": "a",
+        "button-vs-link": "a"
       }
     },
     {
       "challengeId": "js-zero-default-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "b",
-        "action": "b",
-        "verification": "c"
+        "diagnosis": "c",
+        "action": "a",
+        "verification": "b",
+        "zero-meaning": "a",
+        "explicit-absence": "c"
       }
     },
     {
       "challengeId": "js-serial-requests-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "c",
+        "diagnosis": "b",
         "action": "b",
-        "verification": "b"
+        "verification": "b",
+        "concurrent-duration": "b",
+        "independence-condition": "a"
       }
     },
     {
       "challengeId": "ts-unchecked-api-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "c",
+        "diagnosis": "b",
         "action": "a",
-        "verification": "c"
+        "verification": "c",
+        "valid-profile": "a",
+        "unknown-purpose": "c"
       }
     },
     {
       "challengeId": "react-mutated-list-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "b",
+        "diagnosis": "a",
         "action": "c",
-        "verification": "a"
+        "verification": "a",
+        "mechanism": "c",
+        "boundary": "a"
       }
     },
     {
       "challengeId": "react-stale-search-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "b",
-        "action": "b",
-        "verification": "c"
+        "diagnosis": "c",
+        "action": "a",
+        "verification": "b",
+        "mechanism": "b",
+        "boundary": "c"
       }
     },
     {
       "challengeId": "react-index-keys-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "b",
+        "diagnosis": "a",
         "action": "b",
-        "verification": "a"
+        "verification": "b",
+        "mechanism": "b",
+        "boundary": "b"
       }
     },
     {
       "challengeId": "backend-invalid-body-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "c",
+        "diagnosis": "b",
         "action": "a",
-        "verification": "c"
+        "verification": "c",
+        "mechanism": "b",
+        "boundary": "b"
       }
     },
     {
       "challengeId": "backend-payment-retry-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "c",
-        "action": "c",
-        "verification": "b"
+        "diagnosis": "a",
+        "action": "a",
+        "verification": "a",
+        "mechanism": "c",
+        "boundary": "b"
       }
     },
     {
       "challengeId": "backend-env-secret-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "b",
+        "diagnosis": "c",
         "action": "a",
-        "verification": "c"
+        "verification": "b",
+        "mechanism": "b",
+        "boundary": "c"
       }
     },
     {
       "challengeId": "data-left-join-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "b",
+        "diagnosis": "a",
         "action": "c",
-        "verification": "b"
+        "verification": "a",
+        "mechanism": "b",
+        "boundary": "b"
       }
     },
     {
       "challengeId": "data-transfer-atomicity-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "b",
+        "diagnosis": "c",
         "action": "a",
-        "verification": "c"
+        "verification": "c",
+        "mechanism": "a",
+        "boundary": "c"
       }
     },
     {
       "challengeId": "data-firestore-retry-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "b",
-        "action": "b",
-        "verification": "b"
+        "diagnosis": "a",
+        "action": "c",
+        "verification": "a",
+        "mechanism": "b",
+        "boundary": "b"
       }
     },
     {
       "challengeId": "security-object-owner-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "c",
+        "diagnosis": "b",
         "action": "a",
-        "verification": "c"
+        "verification": "c",
+        "mechanism": "a",
+        "boundary": "b"
       }
     },
     {
       "challengeId": "security-sql-concatenation-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
         "diagnosis": "a",
         "action": "c",
-        "verification": "a"
+        "verification": "c",
+        "mechanism": "c",
+        "boundary": "a"
       }
     },
     {
       "challengeId": "security-html-comment-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "b",
-        "action": "b",
-        "verification": "c"
+        "diagnosis": "c",
+        "action": "a",
+        "verification": "c",
+        "mechanism": "c",
+        "boundary": "c"
       }
     },
     {
       "challengeId": "tests-empty-pass-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "c",
+        "diagnosis": "a",
         "action": "c",
-        "verification": "a"
+        "verification": "a",
+        "exception-limit": "b",
+        "zero-discount": "b"
       }
     },
     {
       "challengeId": "tests-expiry-boundary-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "c",
-        "action": "b",
-        "verification": "c"
+        "diagnosis": "a",
+        "action": "a",
+        "verification": "c",
+        "fixed-time": "b",
+        "missing-boundary": "b"
       }
     },
     {
       "challengeId": "tests-mock-contract-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "c",
-        "action": "c",
-        "verification": "a"
+        "diagnosis": "a",
+        "action": "b",
+        "verification": "b",
+        "representative-empty": "c",
+        "double-purpose": "a"
       }
     },
     {
       "challengeId": "architecture-rule-ui-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "a",
-        "action": "b",
-        "verification": "c"
+        "diagnosis": "c",
+        "action": "a",
+        "verification": "c",
+        "shared-rule-layout": "b",
+        "text-only-fix": "c"
       }
     },
     {
       "challengeId": "architecture-invalid-state-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "c",
+        "diagnosis": "b",
         "action": "c",
-        "verification": "b"
+        "verification": "a",
+        "acknowledgement": "b",
+        "single-operation": "b"
       }
     },
     {
       "challengeId": "architecture-lost-write-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "c",
+        "diagnosis": "b",
         "action": "b",
-        "verification": "c"
+        "verification": "c",
+        "conflict-resolution": "a",
+        "atomic-check": "a"
       }
     },
     {
       "challengeId": "performance-lcp-lazy-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "c",
-        "action": "b",
-        "verification": "a"
+        "diagnosis": "a",
+        "action": "c",
+        "verification": "a",
+        "trace-duration": "c",
+        "offscreen-images": "a"
       }
     },
     {
       "challengeId": "performance-eager-module-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
         "diagnosis": "b",
-        "action": "a",
-        "verification": "c"
+        "action": "b",
+        "verification": "c",
+        "initial-weight": "a",
+        "import-failure": "c"
       }
     },
     {
       "challengeId": "performance-nplusone-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "c",
-        "action": "c",
-        "verification": "a"
+        "diagnosis": "b",
+        "action": "b",
+        "verification": "b",
+        "repeated-author": "c",
+        "parallel-limit": "a"
       }
     },
     {
       "challengeId": "engineering-staged-old-version-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "b",
-        "action": "a",
-        "verification": "b"
+        "diagnosis": "c",
+        "action": "b",
+        "verification": "b",
+        "working-copy": "a",
+        "shared-correction": "c"
       }
     },
     {
       "challengeId": "engineering-semantic-conflict-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
         "diagnosis": "a",
-        "action": "b",
-        "verification": "b"
+        "action": "c",
+        "verification": "b",
+        "markers-limit": "c",
+        "limit-inclusive": "c"
       }
     },
     {
       "challengeId": "engineering-stack-origin-diagnostic",
-      "challengeVersion": 3,
+      "challengeVersion": 4,
       "selections": {
-        "diagnosis": "b",
+        "diagnosis": "a",
         "action": "a",
-        "verification": "c"
+        "verification": "c",
+        "missing-vs-empty": "b",
+        "stack-evidence-limit": "b"
       }
     }
   ]

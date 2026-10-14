@@ -6,7 +6,7 @@ import { useChallenges } from '../challenges/ChallengeProvider'
 import { getChallengeThemeProgress } from '../challenges/themeAccess'
 import { useProgress } from '../progress/ProgressProvider'
 import { PageHeading } from './CatalogShared'
-import LessonText from './LessonText'
+import LessonText, { InlineLessonText } from './LessonText'
 import ChallengeQuestions from './ChallengeQuestions'
 import WorkshopBackground from './WorkshopBackground'
 import ContentReportButton from './ContentReportButton'
@@ -107,7 +107,7 @@ export default function ChallengeView({ challengeId }: { challengeId: string }) 
       {selected.version === 3 && selected.result ? <>
         <p role="status"><strong>{selected.result.verdict === 'validated' ? 'Défi validé.' : 'Défi à retravailler.'}</strong> {selected.result.correctCount}/{selected.result.totalCount} bonnes réponses · correction automatique.</p>
         {reference?.questions?.map((question, index) => <section key={question.id} className="challenge-question-result">
-          <h3>{index + 1}. {question.prompt}</h3>
+          <h3>{index + 1}. <InlineLessonText text={question.prompt} /></h3>
           <p><strong>{selected.result!.criterionResults[index] ? 'Réponse correcte' : 'Réponse incorrecte'}</strong></p>
           <LessonText text={question.options.find(option => option.id === selected.selections?.[question.id])?.text ?? 'Réponse indisponible'} />
           <LessonText text={selected.result!.feedback[index]} />

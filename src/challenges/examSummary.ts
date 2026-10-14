@@ -13,8 +13,8 @@ export function getChallengeExamSummary(
   const matching = attempts.filter(attempt => attempt.challengeId === challenge.id)
     .sort((left, right) => right.submittedAt.localeCompare(left.submittedAt) || right.id.localeCompare(left.id))
   if (!matching.length) return { status: 'unattempted' }
-  if (challenge.version === 3) {
-    const checked = matching.filter(attempt => attempt.version === 3 && attempt.challengeVersion === 3
+  if (challenge.version >= 3) {
+    const checked = matching.filter(attempt => attempt.version === 3 && attempt.challengeVersion === challenge.version
       && attempt.rubricVersion === challenge.rubricVersion && attempt.result?.graderVersion === 'challenge-checks-v1')
     const success = checked.find(attempt => attempt.result?.verdict === 'validated')
     if (success) return { status: 'validated', attempt: success }

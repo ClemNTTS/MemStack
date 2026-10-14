@@ -1,0 +1,329 @@
+{
+  "cases": [
+    {
+      "challengeVersion": 3,
+      "challengeId": "docker-images-diagnostic",
+      "selections": {
+        "diagnosis": "c",
+        "verification": "b",
+        "action": "c"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "docker-volumes-diagnostic",
+      "selections": {
+        "diagnosis": "c",
+        "verification": "a",
+        "action": "a"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "docker-ports-diagnostic",
+      "selections": {
+        "diagnosis": "c",
+        "verification": "b",
+        "action": "a"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "fund-shared-cart-diagnostic",
+      "selections": {
+        "diagnosis": "c",
+        "verification": "b",
+        "action": "a"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "fund-stock-invariant-diagnostic",
+      "selections": {
+        "diagnosis": "c",
+        "verification": "b",
+        "action": "a"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "systems-env-process-diagnostic",
+      "selections": {
+        "diagnosis": "b",
+        "verification": "b",
+        "action": "a"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "http-stale-cache-diagnostic",
+      "selections": {
+        "diagnosis": "a",
+        "verification": "c",
+        "action": "c"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "web-fetch-error-diagnostic",
+      "selections": {
+        "diagnosis": "b",
+        "verification": "a",
+        "action": "b"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "web-keyboard-action-diagnostic",
+      "selections": {
+        "diagnosis": "a",
+        "verification": "c",
+        "action": "a"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "js-zero-default-diagnostic",
+      "selections": {
+        "diagnosis": "b",
+        "verification": "a",
+        "action": "a"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "js-serial-requests-diagnostic",
+      "selections": {
+        "diagnosis": "c",
+        "verification": "a",
+        "action": "c"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "ts-unchecked-api-diagnostic",
+      "selections": {
+        "diagnosis": "c",
+        "verification": "b",
+        "action": "c"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "react-mutated-list-diagnostic",
+      "selections": {
+        "diagnosis": "b",
+        "verification": "b",
+        "action": "a"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "react-stale-search-diagnostic",
+      "selections": {
+        "diagnosis": "b",
+        "verification": "a",
+        "action": "a"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "react-index-keys-diagnostic",
+      "selections": {
+        "diagnosis": "b",
+        "verification": "c",
+        "action": "c"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "backend-invalid-body-diagnostic",
+      "selections": {
+        "diagnosis": "c",
+        "verification": "a",
+        "action": "c"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "backend-payment-retry-diagnostic",
+      "selections": {
+        "diagnosis": "c",
+        "verification": "a",
+        "action": "b"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "backend-env-secret-diagnostic",
+      "selections": {
+        "diagnosis": "b",
+        "verification": "a",
+        "action": "b"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "data-left-join-diagnostic",
+      "selections": {
+        "diagnosis": "b",
+        "verification": "a",
+        "action": "b"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "data-transfer-atomicity-diagnostic",
+      "selections": {
+        "diagnosis": "b",
+        "verification": "b",
+        "action": "c"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "data-firestore-retry-diagnostic",
+      "selections": {
+        "diagnosis": "b",
+        "verification": "a",
+        "action": "c"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "security-object-owner-diagnostic",
+      "selections": {
+        "diagnosis": "c",
+        "verification": "b",
+        "action": "c"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "security-sql-concatenation-diagnostic",
+      "selections": {
+        "diagnosis": "a",
+        "verification": "c",
+        "action": "b"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "security-html-comment-diagnostic",
+      "selections": {
+        "diagnosis": "b",
+        "verification": "a",
+        "action": "a"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "tests-empty-pass-diagnostic",
+      "selections": {
+        "diagnosis": "c",
+        "verification": "b",
+        "action": "b"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "tests-expiry-boundary-diagnostic",
+      "selections": {
+        "diagnosis": "c",
+        "verification": "b",
+        "action": "a"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "tests-mock-contract-diagnostic",
+      "selections": {
+        "diagnosis": "c",
+        "verification": "b",
+        "action": "a"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "architecture-rule-ui-diagnostic",
+      "selections": {
+        "diagnosis": "a",
+        "verification": "a",
+        "action": "a"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "architecture-invalid-state-diagnostic",
+      "selections": {
+        "diagnosis": "c",
+        "verification": "a",
+        "action": "a"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "architecture-lost-write-diagnostic",
+      "selections": {
+        "diagnosis": "c",
+        "verification": "a",
+        "action": "a"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "performance-lcp-lazy-diagnostic",
+      "selections": {
+        "diagnosis": "c",
+        "verification": "c",
+        "action": "c"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "performance-eager-module-diagnostic",
+      "selections": {
+        "diagnosis": "b",
+        "verification": "b",
+        "action": "c"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "performance-nplusone-diagnostic",
+      "selections": {
+        "diagnosis": "c",
+        "verification": "b",
+        "action": "b"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "engineering-staged-old-version-diagnostic",
+      "selections": {
+        "diagnosis": "b",
+        "verification": "c",
+        "action": "b"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "engineering-semantic-conflict-diagnostic",
+      "selections": {
+        "diagnosis": "a",
+        "verification": "a",
+        "action": "c"
+      }
+    },
+    {
+      "challengeVersion": 3,
+      "challengeId": "engineering-stack-origin-diagnostic",
+      "selections": {
+        "diagnosis": "b",
+        "verification": "a",
+        "action": "c"
+      }
+    }
+  ],
+  "version": 1
+}

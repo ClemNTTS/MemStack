@@ -25,6 +25,21 @@ test('forged verdicts, identities, versions, extra questions and multiple choice
   }
 })
 
+test('five-question grading accepts four correct answers and rejects three, independently of checkpoint grouping', () => {
+  const expanded = { ...challenge, challengeVersion: 4, rubricVersion: 3,
+    questions: Array.from({ length: 5 }, (_, index) => ({ id: `q${index}`, checkpointIndex: index % 3, options: [{ id: 'yes' }, { id: 'no' }] })) }
+  const expandedKey = { id: 'exam', challengeVersion: 4, rubricVersion: 3,
+    questions: expanded.questions.map(question => ({ id: question.id, correctOptionIds: ['yes'] })) }
+  for (const [acquired, verdict] of [[4, 'validated'], [3, 'retry']]) {
+    const choices = Object.fromEntries(expanded.questions.map((question, index) => [question.id, index < acquired ? 'yes' : 'no']))
+    const result = gradeChallengeSelections(expanded, expandedKey, choices)
+    assert.equal(result.verdict, verdict)
+    assert.equal(result.correctCount, acquired)
+    assert.equal(result.totalCount, 5)
+  }
+  assert.throws(() => gradeChallengeSelections(expanded, key, {}), /indisponible/)
+})
+
 function fakeDb() {
   const state = new Map([['users/alice/lessons/one', { completedAt: 'date' }], ['users/alice/lessons/two', { completedAt: 'date' }]])
   let queue = Promise.resolve()
