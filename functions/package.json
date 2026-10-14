@@ -8,12 +8,13 @@
   },
   "scripts": {
     "prepare:catalog": "node scripts/prepare-catalog.mjs",
-    "build": "npm run prepare:catalog && node --check src/index.mjs && node --check src/analysis.mjs && node --check src/claim.mjs && node --check src/challengeChecks.mjs",
+    "build": "npm run prepare:catalog && node --check src/index.mjs && node --check src/analysis.mjs && node --check src/claim.mjs && node --check src/challengeChecks.mjs && node --check src/subscription.mjs && node --check src/learningAccess.mjs && node --check src/learningImport.mjs",
     "test": "node --test src/*.test.mjs"
   },
   "dependencies": {
     "firebase-admin": "^14.5.0",
-    "firebase-functions": "^7.4.0"
+    "firebase-functions": "^7.4.0",
+    "stripe": "^23.0.0"
   },
   "overrides": {
     "gaxios": {

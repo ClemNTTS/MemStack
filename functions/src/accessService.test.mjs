@@ -1,6 +1,12 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { getAccessStatus, updateMemberAccess, isInvited, validateMemberAccessRequest } from './accessService.mjs'
+import { getAccessStatus, updateMemberAccess, isInvited, validateMemberAccessRequest, requireMember } from './accessService.mjs'
+
+test('learner endpoints accept verified email accounts and reject anonymous or unverified identities', () => {
+  const email={uid:'member',token:{email_verified:true,firebase:{sign_in_provider:'password'}}}
+  assert.equal(requireMember(email),'member')
+  for(const candidate of [null,{...email,token:{...email.token,email_verified:false}},{...email,token:{firebase:{sign_in_provider:'anonymous'}}}]) assert.throws(()=>requireMember(candidate))
+})
 
 const auth = { uid: 'admin', token: { memstackAdmin: true, firebase: { sign_in_provider: 'google.com' } } }
 const config = { enabled: true, invited: ['admin'], limits: { user: 5, global: 25, tokens: 400000 } }

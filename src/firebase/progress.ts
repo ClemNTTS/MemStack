@@ -3,6 +3,7 @@ import type { LearningProgress } from '../types/progress'
 import { decodeProgress } from '../progress/storage'
 import { mergeProgress, reviewEventId } from '../progress/merge'
 import { getFirebaseServices } from './client'
+import { getFunctions, httpsCallable } from 'firebase/functions'
 
 const syncedEvents = new Map<string, Set<string>>()
 
@@ -60,4 +61,23 @@ export async function writeCloudProgress(uid: string, next: LearningProgress): P
     })
     known.add(id)
   }
+}
+
+export async function importProgressOnServer(uid: string, progress: LearningProgress) {
+  const { auth } = getFirebaseServices()
+  if (auth.currentUser?.uid !== uid) throw new Error('Compte modifié.')
+  const previous = await readCloudProgress(uid)
+  const invoke = httpsCallable(getFunctions(auth.app,'europe-west9'),'importLearningProgress')
+  async function send(data: { lessons: { id:string,completedAt:string }[],cards:LearningProgress['cards'][string][],events:LearningProgress['history'] }) {
+    if (auth.currentUser?.uid !== uid) throw new Error('Compte modifié.')
+    await invoke(data)
+  }
+  for (const [id,completedAt] of Object.entries(progress.completedLessons)) {
+    if (!Object.hasOwn(previous.completedLessons,id)) await send({ lessons:[{ id,completedAt }],cards:[],events:[] })
+  }
+  for (const card of Object.values(progress.cards)) {
+    if (!previous.cards[card.cardId] || Date.parse(card.lastReviewedAt) > Date.parse(previous.cards[card.cardId].lastReviewedAt)) await send({ lessons:[],cards:[card],events:[] })
+  }
+  const known = new Set(previous.history.map(reviewEventId))
+  for (const event of progress.history) if (!known.has(reviewEventId(event))) await send({ lessons:[],cards:[],events:[event] })
 }

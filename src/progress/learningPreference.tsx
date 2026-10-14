@@ -13,7 +13,7 @@ type LearningPreference = LearningPreferences & {
   error: string
 }
 
-const LearningPreferenceContext = createContext<LearningPreference | null>(null)
+export const LearningPreferenceContext = createContext<LearningPreference | null>(null)
 const courseIds = new Set(catalogCourses.map(course => course.id))
 
 function preferenceKey(uid: string) { return `memstack.learning-preference.v1.${uid}` }

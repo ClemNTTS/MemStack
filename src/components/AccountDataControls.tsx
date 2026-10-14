@@ -17,12 +17,14 @@ function localAccountData(uid: string) {
 export default function AccountDataControls() {
   const { user, online } = useProgress()
   const [confirmation, setConfirmation] = useState('')
+  const [password,setPassword] = useState('')
+  const passwordAccount = user?.providerData.some(provider=>provider.providerId==='password')
   const [busy, setBusy] = useState('')
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
   const currentUid = useRef(user?.uid)
   currentUid.current = user?.uid
-  useEffect(() => { setConfirmation(''); setMessage(''); setError(''); setBusy('') }, [user?.uid])
+  useEffect(() => { setConfirmation(''); setPassword(''); setMessage(''); setError(''); setBusy('') }, [user?.uid])
   async function exportData() {
     if (!user || busy || !online) return
     const uid = user.uid
@@ -45,21 +47,22 @@ export default function AccountDataControls() {
     const uid = user.uid
     setBusy('delete'); setError(''); setMessage('')
     try {
-      await deleteOwnAccount(uid)
+      await deleteOwnAccount(uid,password)
       for (const key of Object.keys(localAccountData(uid))) localStorage.removeItem(key)
     } catch { if (currentUid.current === uid) setError('La suppression n’est pas confirmée. Si elle a commencé, l’accès reste bloqué ; reconnecte-toi puis réessaie ou contacte l’administrateur.') }
-    finally { if (currentUid.current === uid) setBusy('') }
+    finally { setPassword(''); if (currentUid.current === uid) setBusy('') }
   }
   return <section className="overview-panel" aria-labelledby="account-data-title">
     <h2 id="account-data-title">Tes données et ton compte</h2>
-    <p>Télécharge ta progression, tes préférences, tes tentatives, les analyses IA, les signalements et les brouillons de cet appareil. Les brouillons d’autres appareils restent sur ces appareils.</p>
+    <p>Télécharge ta progression, tes préférences, tes tentatives et leurs retours, tes signalements et les brouillons de cet appareil. Les brouillons d’autres appareils restent sur ces appareils.</p>
     <button className="catalog-button secondary" type="button" disabled={Boolean(busy) || !online} onClick={() => { void exportData() }}>{busy === 'export' ? 'Export en cours…' : 'Exporter mes données'}</button>
     <details><summary>Supprimer mon compte</summary>
       <p>Cette suppression est définitive : progression, préférences, tentatives, analyses et signalements seront effacés, ainsi que ton compte MemStack. Ton compte Google reste intact. Exporte tes données avant de continuer.</p>
       <p className="dashboard-note">Un marqueur technique de suppression et des compteurs globaux sans identité sont conservés pour empêcher les écritures tardives et préserver les limites du service. Les journaux d’accès sont anonymisés pour ce compte.</p>
       <label htmlFor="delete-account-confirmation">Écris SUPPRIMER pour confirmer</label>
       <input id="delete-account-confirmation" value={confirmation} disabled={Boolean(busy)} onChange={event => setConfirmation(event.target.value)} autoComplete="off" />
-      <p>Tu devras confirmer ton identité avec Google. Ne ferme pas la page pendant la suppression.</p>
+      {passwordAccount && <label>Ton mot de passe<input type="password" value={password} maxLength={128} autoComplete="current-password" disabled={Boolean(busy)} onChange={event=>setPassword(event.target.value)} /></label>}
+      <p>{passwordAccount ? 'Ton mot de passe permettra de confirmer ton identité.' : 'Tu devras confirmer ton identité avec Google.'} Ne ferme pas la page pendant la suppression.</p>
       <button className="catalog-button secondary" type="button" disabled={confirmation !== 'SUPPRIMER' || Boolean(busy) || !online} onClick={() => { void deleteData() }}>{busy === 'delete' ? 'Suppression en cours…' : 'Confirmer la suppression définitive'}</button>
     </details>
     {message && <p role="status">{message}</p>}{error && <p className="inline-error" role="alert">{error}</p>}

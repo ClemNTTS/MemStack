@@ -3,6 +3,8 @@ service cloud.firestore {
   match /databases/{database}/documents {
     function owner(uid) {
       return request.auth != null && request.auth.uid == uid
+        && (request.auth.token.firebase.sign_in_provider == 'google.com'
+          || (request.auth.token.firebase.sign_in_provider == 'password' && request.auth.token.email_verified == true))
         && !exists(/databases/$(database)/documents/_accountLifecycle/$(uid));
     }
     function challengeAccess(uid) {
@@ -13,9 +15,24 @@ service cloud.firestore {
       allow read: if owner(uid);
       // Only administrators can grant or revoke access to the AI option.
     }
+    match /users/{uid}/settings/subscription {
+      allow read: if owner(uid);
+      // Signed server notifications own subscriptions; clients cannot grant premium.
+    }
+    match /users/{uid}/settings/premiumAccess {
+      allow read: if owner(uid);
+      // Permanent owner/test grants are administered only by trusted server credentials.
+    }
     function isoDate(value) {
       return value is string && value.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}[.][0-9]{3}Z$');
     }
+    function serverLearning() {
+      return exists(/databases/$(database)/documents/_configuration/learningAccess)
+        && get(/databases/$(database)/documents/_configuration/learningAccess).data.enabled == true;
+    }
+    match /users/{uid}/learningReceipts/{requestId} { allow read: if owner(uid); }
+    match /users/{uid}/learningUsage/{day} { allow read: if owner(uid); }
+    match /users/{uid}/learningImports/{importId} { allow read: if owner(uid); }
     function writeBudget(uid, kind, documentId) {
       let budget = getAfter(/databases/$(database)/documents/users/$(uid)/writeBudgets/$(kind)).data;
       return budget.documentId == documentId;
@@ -154,13 +171,13 @@ service cloud.firestore {
     }
     match /users/{uid}/lessons/{lessonId} {
       allow read: if owner(uid);
-      allow create, update: if owner(uid)
+      allow create, update: if owner(uid) && !serverLearning()
         && request.resource.data.keys().hasOnly(['completedAt'])
         && isoDate(request.resource.data.completedAt);
     }
     match /users/{uid}/cards/{cardId} {
       allow read: if owner(uid);
-      allow create, update: if owner(uid)
+      allow create, update: if owner(uid) && !serverLearning()
         && request.resource.data.keys().hasOnly(['cardId', 'intervalDays', 'lastReviewedAt', 'dueAt'])
         && request.resource.data.cardId == cardId
         && request.resource.data.intervalDays is int
@@ -169,7 +186,7 @@ service cloud.firestore {
     }
     match /users/{uid}/reviews/{eventId} {
       allow read: if owner(uid);
-      allow create: if owner(uid)
+      allow create: if owner(uid) && !serverLearning()
         && request.resource.data.keys().hasOnly(['cardId', 'rating', 'reviewedAt', 'kind'])
         && request.resource.data.cardId is string && request.resource.data.cardId.size() <= 128
         && request.resource.data.rating in ['recalled', 'forgotten']

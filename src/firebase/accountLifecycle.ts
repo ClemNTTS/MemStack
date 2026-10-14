@@ -1,5 +1,5 @@
 import { getApp } from 'firebase/app'
-import { GoogleAuthProvider, reauthenticateWithPopup, signOut } from 'firebase/auth'
+import { GoogleAuthProvider, EmailAuthProvider, reauthenticateWithPopup, reauthenticateWithCredential, signOut } from 'firebase/auth'
 import { connectFunctionsEmulator, getFunctions, httpsCallable } from 'firebase/functions'
 import { getFirebaseServices } from './client'
 
@@ -24,9 +24,13 @@ export async function exportOwnAccount(uid: string) {
   if (!result.data || typeof result.data !== 'object' || !('version' in result.data) || result.data.version !== 1) throw new Error('Export invalide')
   return result.data
 }
-export async function deleteOwnAccount(uid: string) {
+export async function deleteOwnAccount(uid: string, password?: string) {
   const auth = ownAccount(uid)
-  await reauthenticateWithPopup(auth.currentUser!, new GoogleAuthProvider())
+  const user=auth.currentUser!
+  if (user.providerData.some(provider=>provider.providerId==='password')) {
+    if (!password || !user.email) throw new Error('Mot de passe requis.')
+    await reauthenticateWithCredential(user,EmailAuthProvider.credential(user.email,password))
+  } else await reauthenticateWithPopup(user, new GoogleAuthProvider())
   ownAccount(uid)
   const result = await httpsCallable<{ confirmation: string }, { deleted: boolean }>(functions(), 'deleteAccountData', { timeout: 540000 })({ confirmation: 'SUPPRIMER' })
   if (result.data?.deleted !== true) throw new Error('Suppression non confirmée')

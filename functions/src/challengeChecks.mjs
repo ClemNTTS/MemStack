@@ -1,4 +1,5 @@
 import { AnalysisError } from './analysis.mjs'
+import { hasPremium, hasPermanentPremium } from './subscription.mjs'
 
 export const GRADER_VERSION = 'challenge-checks-v1'
 const exactKeys = (value, keys) => value && typeof value === 'object' && !Array.isArray(value)
@@ -51,6 +52,10 @@ export async function submitCheckedChallenge({ db, uid, data, questions, answerK
   return db.runTransaction(async transaction => {
     if ((await transaction.get(db.doc(`_accountLifecycle/${uid}`))).exists) {
       throw new AnalysisError('failed-precondition', 'Ce compte est en cours de suppression.')
+    }
+    if ((await transaction.get(db.doc('_configuration/learningAccess'))).data()?.enabled === true) {
+      const [paid, access] = await Promise.all([transaction.get(db.doc(`users/${uid}/settings/subscription`)), transaction.get(db.doc(`users/${uid}/settings/premiumAccess`))])
+      if (!hasPremium(paid.data(),now) && !hasPermanentPremium(access.data())) throw new AnalysisError('permission-denied','Les défis font partie de Premium.')
     }
     const saved = await transaction.get(ref)
     if (saved.exists) {

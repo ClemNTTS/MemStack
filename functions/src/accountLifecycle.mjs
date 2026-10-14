@@ -20,17 +20,18 @@ export async function reserveAccountExport(db, uid, now = Date.now()) {
 }
 
 export function requireOwnAccount(request, deleting = false, now = Date.now()) {
-  if (!request.auth) throw new HttpsError('unauthenticated', 'Connexion Google requise.')
-  if (request.auth.token.firebase?.sign_in_provider !== 'google.com') throw new HttpsError('permission-denied', 'Connexion Google requise.')
+  if (!request.auth) throw new HttpsError('unauthenticated', 'Connexion requise.')
+  const provider = request.auth.token.firebase?.sign_in_provider
+  if (provider !== 'google.com' && !(provider === 'password' && request.auth.token.email_verified === true)) throw new HttpsError('permission-denied', 'Un compte vérifié est requis.')
   if (!request.app) throw new HttpsError('failed-precondition', 'Attestation de l’application requise.')
   const expected = deleting ? ['confirmation'] : []
   if (!request.data || typeof request.data !== 'object' || Array.isArray(request.data)
     || Object.keys(request.data).some(key => !expected.includes(key))) throw new HttpsError('invalid-argument', 'Paramètres invalides.')
   if (deleting) {
     const token = request.auth.token
-    if (token.firebase?.sign_in_provider !== 'google.com' || !Number.isFinite(token.auth_time)
+    if (!Number.isFinite(token.auth_time)
       || token.auth_time * 1000 > now || now - token.auth_time * 1000 > 300000) {
-      throw new HttpsError('failed-precondition', 'Reconnecte-toi avec Google avant la suppression.')
+      throw new HttpsError('failed-precondition', 'Confirme ton identité avant la suppression.')
     }
     if (request.data.confirmation !== 'SUPPRIMER') throw new HttpsError('invalid-argument', 'Confirmation requise.')
   }
@@ -67,14 +68,13 @@ export async function exportAccountTree(db, uid) {
 }
 
 async function ownAudits(db, uid) {
-  const collection = db.collection('_challengeAccessAudit')
-  const results = await Promise.all(['actorUid', 'targetUid'].map(field => collection.where(field, '==', uid).get()))
+  const results = await Promise.all(['_challengeAccessAudit','_maintenanceAudit'].flatMap(name => ['actorUid','targetUid'].map(field => db.collection(name).where(field,'==',uid).get())))
   const entries = new Map()
-  for (const result of results) for (const doc of result.docs) entries.set(doc.id, doc)
+  for (const result of results) for (const doc of result.docs) entries.set(doc.ref.path ?? doc.id, doc)
   return [...entries.values()]
 }
 
-export function createAccountLifecycle({ db, auth }) {
+export function createAccountLifecycle({ db, auth, beforeDelete }) {
   return {
     exportAccountData: async request => {
       const uid = requireOwnAccount(request)
@@ -95,6 +95,7 @@ export function createAccountLifecycle({ db, auth }) {
       const marker = db.doc(`_accountLifecycle/${uid}`)
       // Persistent minimal marker closes client, worker and in-flight analysis races.
       await marker.set({ status: 'deleting' })
+      if (beforeDelete) await beforeDelete(uid)
       for (const entry of await ownAudits(db, uid)) {
         const data = entry.data()
         const patch = {}

@@ -30,6 +30,17 @@ test('five-question transaction stores a four-out-of-five success and a three-ou
     assert.equal(saved.result.verdict, verdict)
     assert.equal((await db.doc(`users/${uid}/challengeAttempts/${attemptId}`).get()).data().result.verdict, verdict)
   }
+  await db.doc('_configuration/learningAccess').set({ enabled:true })
+  try {
+    const data = { attemptId:'premium-check',challengeId:'exam',challengeVersion:4,selections:{q1:'b',q2:'b',q3:'b',q4:'b',q5:'b'} }
+    await assert.rejects(submitCheckedChallenge({...args,data}),{code:'permission-denied'})
+    assert.equal((await db.doc(`users/${uid}/challengeAttempts/premium-check`).get()).exists,false)
+    await db.doc(`users/${uid}/settings/premiumAccess`).set({version:1,permanent:true})
+    assert.equal((await submitCheckedChallenge({...args,data})).result.verdict,'validated')
+    await db.doc(`users/${uid}/settings/premiumAccess`).delete()
+    await db.doc(`users/${uid}/settings/subscription`).set({version:1,source:'stripe',status:'active',premiumUntil:new Date(args.now-1).toISOString()})
+    await assert.rejects(submitCheckedChallenge({...args,data:{...data,attemptId:'expired-check'}}),{code:'permission-denied'})
+  } finally { await db.doc('_configuration/learningAccess').delete() }
 })
 after(async () => { if (app) await deleteApp(app) })
 

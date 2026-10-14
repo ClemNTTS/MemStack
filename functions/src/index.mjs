@@ -2,13 +2,17 @@ import { readFileSync } from 'node:fs'
 import { initializeApp } from 'firebase-admin/app'
 import { getAuth } from 'firebase-admin/auth'
 import { getFirestore, Timestamp } from 'firebase-admin/firestore'
-import { onCall, HttpsError } from 'firebase-functions/v2/https'
+import { onCall, onRequest, HttpsError } from 'firebase-functions/v2/https'
+import Stripe from 'stripe'
+import { submitLearningAction } from './learningAccess.mjs'
+import { importLearningBatch } from './learningImport.mjs'
+import { createSubscriptionCheckout, hasPermanentPremium, publicSubscriptionStatus, processSubscriptionEvent, resolveSubscriptionPrices, closeAccountBilling } from './subscription.mjs'
 import { defineBoolean, defineInt, defineSecret, defineString } from 'firebase-functions/params'
 import { AnalysisError, callMistral, publicAnalysis, validateAttemptId } from './analysis.mjs'
 import { claimAnalysis } from './claim.mjs'
 import { submitCheckedChallenge } from './challengeChecks.mjs'
 import { createAccountLifecycle } from './accountLifecycle.mjs'
-import { getAccessStatus, requireGoogle, updateMemberAccess, validateMemberAccessRequest } from './accessService.mjs'
+import { getAccessStatus, requireGoogle, requireMember, updateMemberAccess, validateMemberAccessRequest } from './accessService.mjs'
 
 initializeApp()
 const db = getFirestore()
@@ -29,12 +33,84 @@ const globalLimit = defineInt('CHALLENGE_AI_GLOBAL_DAILY_LIMIT', { default: 25 }
 const tokenLimit = defineInt('CHALLENGE_AI_GLOBAL_RESERVED_TOKENS', { default: 400000 })
 
 const callableOptions = { region: 'europe-west9', enforceAppCheck: true, maxInstances: 2, cors: true }
-const lifecycle = createAccountLifecycle({ db, auth: getAuth() })
+const learningCatalog = JSON.parse(readFileSync(new URL('../catalog/learning.json', import.meta.url), 'utf8'))
+export const commitLearningAction = onCall(callableOptions, request => accessCall(async () => {
+  const uid = requireMember(request.auth)
+  return submitLearningAction({ db, uid, data: request.data, catalog: learningCatalog })
+}))
+export const importLearningProgress = onCall(callableOptions, request => accessCall(async () => {
+  const uid = requireMember(request.auth)
+  return importLearningBatch({ db,uid,data:request.data,catalog:learningCatalog })
+}))
+const subscriptionConfig = JSON.parse(readFileSync(new URL('../config/subscription.json', import.meta.url), 'utf8'))
+const stripeKey = defineSecret('STRIPE_SECRET_KEY')
+const stripeWebhookKey = defineSecret('STRIPE_WEBHOOK_SECRET')
+const subscriptionsEnabled = defineBoolean('SUBSCRIPTIONS_ENABLED', { default: false })
+const subscriptionsLive = defineBoolean('SUBSCRIPTIONS_LIVE_MODE', { default: false })
+const subscriptionPriceIds = defineString('SUBSCRIPTION_PRICE_IDS', { default: subscriptionConfig.priceCandidates.join(',') })
+let stripeRuntime
+async function billingRuntime() {
+  if (!subscriptionsEnabled.value()) throw new HttpsError('failed-precondition', 'Les abonnements ne sont pas encore ouverts.')
+  const liveMode = subscriptionsLive.value()
+  if (!stripeRuntime || stripeRuntime.liveMode !== liveMode || Date.now() - stripeRuntime.loadedAt > 300000) {
+    const stripe = new Stripe(stripeKey.value(), { apiVersion: subscriptionConfig.apiVersion, maxNetworkRetries: 1, timeout: 15000 })
+    const prices = await resolveSubscriptionPrices(stripe, subscriptionPriceIds.value().split(',').map(value => value.trim()), liveMode)
+    stripeRuntime = { stripe, liveMode, loadedAt: Date.now(), config: { ...subscriptionConfig, enabled: true, liveMode, prices } }
+  }
+  return stripeRuntime
+}
+
+export const getSubscriptionStatus = onCall(callableOptions, request => accessCall(async () => {
+  const uid = requireMember(request.auth)
+  if (!request.data || Object.keys(request.data).length) throw new HttpsError('invalid-argument', 'Paramètres invalides.')
+  if ((await db.doc(`_accountLifecycle/${uid}`).get()).exists) throw new HttpsError('failed-precondition', 'Suppression de compte en cours.')
+  const [entitlement, access, billing] = await Promise.all(['subscription','premiumAccess','billing'].map(name => db.doc(name === 'billing' ? `users/${uid}/billing/stripe` : `users/${uid}/settings/${name}`).get()))
+  return publicSubscriptionStatus({entitlement:entitlement.data(),access:access.data(),billing:billing.data(),enabled:subscriptionsEnabled.value(),liveMode:subscriptionsLive.value()})
+}))
+
+export const createPremiumCheckout = onCall({ ...callableOptions, secrets: [stripeKey] }, request => accessCall(async () => {
+  const uid = requireMember(request.auth)
+  if (!subscriptionsLive.value() && !hasPermanentPremium((await db.doc(`users/${uid}/settings/premiumAccess`).get()).data())) throw new HttpsError('permission-denied','La qualification Stripe est réservée aux comptes de test autorisés.')
+  const { stripe, config } = await billingRuntime()
+  return createSubscriptionCheckout({ db, stripe, uid, data: request.data, config })
+}))
+
+export const createPremiumPortal = onCall({ ...callableOptions, secrets: [stripeKey] }, request => accessCall(async () => {
+  const uid = requireMember(request.auth)
+  if (!subscriptionsLive.value() && !hasPermanentPremium((await db.doc(`users/${uid}/settings/premiumAccess`).get()).data())) throw new HttpsError('permission-denied','La qualification Stripe est réservée aux comptes de test autorisés.')
+  if (!request.data || Object.keys(request.data).length) throw new HttpsError('invalid-argument', 'Paramètres invalides.')
+  if ((await db.doc(`_accountLifecycle/${uid}`).get()).exists) throw new HttpsError('failed-precondition', 'Suppression de compte en cours.')
+  const { stripe, liveMode } = await billingRuntime()
+  const state = (await db.doc(`users/${uid}/billing/stripe`).get()).data()
+  if (!state?.customerId || state.liveMode !== liveMode) throw new HttpsError('failed-precondition', 'Aucun abonnement à gérer.')
+  const session = await stripe.billingPortal.sessions.create({ customer: state.customerId, return_url: 'https://memstack.fr/#/profile' })
+  return { url: session.url }
+}))
+
+export const stripeSubscriptionWebhook = onRequest({ region: 'europe-west9', maxInstances: 2, timeoutSeconds: 60,
+  secrets: [stripeKey, stripeWebhookKey] }, async (request, response) => {
+  if (request.method !== 'POST') { response.status(405).send('Method not allowed'); return }
+  if (!subscriptionsEnabled.value()) { response.status(503).send('Billing disabled'); return }
+  const stripe = new Stripe(stripeKey.value(), { apiVersion: subscriptionConfig.apiVersion, maxNetworkRetries: 1, timeout: 15000 })
+  let event
+  try { event = stripe.webhooks.constructEvent(request.rawBody, request.headers['stripe-signature'], stripeWebhookKey.value()) }
+  catch { response.status(400).send('Invalid signature'); return }
+  try {
+    const { config } = await billingRuntime()
+    await processSubscriptionEvent({ db, stripe, event, config })
+    response.status(200).send('Received')
+  } catch { response.status(503).send('Retry later') }
+})
+const lifecycle = createAccountLifecycle({ db, auth: getAuth(), beforeDelete: async uid => {
+  if (!(await db.doc(`users/${uid}/billing/stripe`).get()).exists) return
+  const stripe = new Stripe(stripeKey.value(),{apiVersion:subscriptionConfig.apiVersion,maxNetworkRetries:1,timeout:15000})
+  await closeAccountBilling({db,stripe,uid,liveMode:subscriptionsLive.value()})
+} })
 export const exportAccountData = onCall({ ...callableOptions, timeoutSeconds: 540, concurrency: 1 }, lifecycle.exportAccountData)
-export const deleteAccountData = onCall({ ...callableOptions, timeoutSeconds: 540, concurrency: 1 }, lifecycle.deleteAccountData)
+export const deleteAccountData = onCall({ ...callableOptions, secrets:[stripeKey], timeoutSeconds: 540, concurrency: 1 }, lifecycle.deleteAccountData)
 
 export const submitDeterministicChallenge = onCall(callableOptions, request => accessCall(async () => {
-  const uid = requireGoogle(request.auth)
+  const uid = requireMember(request.auth)
   const now = Date.now()
   const attempt = await submitCheckedChallenge({ db, uid, data: request.data, questions: challengeQuestions,
     answerKeys: challengeAnswerKeys, dossiers, courses, now, timestamp: Timestamp.fromMillis(now) })

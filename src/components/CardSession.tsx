@@ -12,7 +12,7 @@ import ContentReportButton from './ContentReportButton'
 type CardSessionProps = {
   cards: SessionCard[]
   progress: Record<string, CardProgress>
-  onRate: (result: CardResult, kind: ReviewKind) => boolean
+  onRate: (result: CardResult, kind: ReviewKind) => boolean | Promise<boolean>
   progressLabel: string
   nextLessonLabel: string
   onContinueReviews?: () => void
@@ -29,14 +29,20 @@ function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel, 
   const [results, setResults] = useState<CardResult[]>([])
   const ratedIds = useRef(new Set<string>())
   const [isRevealed, setIsRevealed] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const savingRef = useRef(false)
   const currentItem = cards[results.length]
   const currentCard = currentItem?.card
 
-  function rateCard(rating: CardRating) {
-    if (!currentCard || !isRevealed || ratedIds.current.has(currentCard.id)) return
+  async function rateCard(rating: CardRating) {
+    if (!currentCard || !isRevealed || savingRef.current || ratedIds.current.has(currentCard.id)) return
 
     const result = { cardId: currentCard.id, rating, reviewedAt: new Date().toISOString() }
-    if (!onRate(result, currentItem.kind)) return
+    savingRef.current = true
+    setSaving(true)
+    let saved = false
+    try { saved = await onRate(result, currentItem.kind) } finally { savingRef.current = false; setSaving(false) }
+    if (!saved) return
     ratedIds.current.add(currentCard.id)
     setResults((previous) => [...previous, result])
     setIsRevealed(false)
@@ -82,13 +88,13 @@ function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel, 
       <article className="card-stage" key={currentCard.id}>
         <h2 className="card-question">{currentCard.question}</h2>
         <div className="card-deck">
-          <button className="memo-rating" type="button" disabled={!isRevealed} aria-label={ratingLabels.forgotten} title={ratingLabels.forgotten} onClick={() => rateCard('forgotten')}>
+          <button className="memo-rating" type="button" disabled={!isRevealed || saving} aria-label={ratingLabels.forgotten} title={ratingLabels.forgotten} onClick={() => { void rateCard('forgotten') }}>
             <Memo expression="forgotten" />
             <span aria-hidden="true" className="rating-symbol">← ×</span>
             <span className="rating-mobile-label" aria-hidden="true">À retrouver</span>
           </button>
           <FlashCard card={currentCard} isRevealed={isRevealed} onFlip={() => setIsRevealed((previous) => !previous)} onRate={rateCard} />
-          <button className="memo-rating" type="button" disabled={!isRevealed} aria-label={ratingLabels.recalled} title={ratingLabels.recalled} onClick={() => rateCard('recalled')}>
+          <button className="memo-rating" type="button" disabled={!isRevealed || saving} aria-label={ratingLabels.recalled} title={ratingLabels.recalled} onClick={() => { void rateCard('recalled') }}>
             <Memo expression="recalled" />
             <span aria-hidden="true" className="rating-symbol">✓ →</span>
             <span className="rating-mobile-label" aria-hidden="true">Retrouvée</span>

@@ -34,11 +34,14 @@ jobs:
           export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
           java -version
           npx --yes firebase-tools@15.32.1 emulators:exec --only firestore --project demo-memstack-challenge-ai "npm --prefix tests/challenge-ai run test:rules"
+          npx --yes firebase-tools@15.32.1 emulators:exec --only auth --project demo-memstack "npm --prefix tests/challenge-ai run test:auth"
         env:
           CI: true
       - run: npm run build -- --base=/
         env:
           VITE_CHALLENGE_AI_ENABLED: ${{ vars.CHALLENGE_AI_ENABLED || 'false' }}
+          VITE_SUBSCRIPTIONS_ENABLED: ${{ vars.SUBSCRIPTIONS_ENABLED || 'false' }}
+          VITE_SERVER_LEARNING_ENABLED: ${{ vars.SERVER_LEARNING_ENABLED || 'false' }}
           VITE_FIREBASE_APPCHECK_SITE_KEY: ${{ vars.FIREBASE_APPCHECK_SITE_KEY }}
           VITE_FIREBASE_APPCHECK_PROVIDER: enterprise
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5

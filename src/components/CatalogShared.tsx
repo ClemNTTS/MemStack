@@ -2,6 +2,7 @@ import curriculum from '../../docs/content/curriculum.json'
 import { catalogCourses, catalogLessons, catalogCards } from '../data/catalog'
 import type { LearningProgress } from '../types/progress'
 import type { Course } from '../types/course'
+import { learningRewards } from '../progress/gamification'
 
 export const themes = curriculum.themes
 export function courseMetadata(id: string) { return curriculum.courses.find(course => course.id === id) }
@@ -20,12 +21,19 @@ export function learningStats(progress: LearningProgress) {
 }
 export function badgesFor(progress: LearningProgress) {
   const stats = learningStats(progress)
+  const rewards = learningRewards(progress)
   const originalDocker = ['docker-images-containers', 'docker-volumes-persistence', 'docker-ports-networks']
   return [
     { symbol: '✦', title: 'Premier déclic', description: 'Terminer ta première leçon.', unlocked: stats.completed > 0 },
     { symbol: '↺', title: 'Mémoire en mouvement', description: 'Répondre à ta première carte de révision.', unlocked: progress.history.some(event => event.kind === 'review') },
     { symbol: '◇', title: 'Cap sur Docker', description: 'Terminer les trois premières leçons Docker.', unlocked: originalDocker.every(id => Object.hasOwn(progress.completedLessons, id)) },
     { symbol: '◎', title: 'Un chemin parcouru', description: 'Terminer toutes les leçons d’un parcours.', unlocked: catalogCourses.some(course => completedCount(course, progress) === course.lessonIds.length) },
+    { symbol: '✧', title: 'Le rendez-vous est pris', description: 'Apprendre ou pratiquer trois jours de suite.', unlocked: rewards.longestStreak >= 3 },
+    { symbol: '☀', title: 'Une semaine ensemble', description: 'Apprendre ou pratiquer sept jours de suite.', unlocked: rewards.longestStreak >= 7 },
+    { symbol: '✺', title: 'Mémo ne te lâche plus', description: 'Apprendre ou pratiquer trente jours de suite.', unlocked: rewards.longestStreak >= 30 },
+    { symbol: '▤', title: 'La curiosité grandit', description: 'Terminer dix leçons.', unlocked: stats.completed >= 10 },
+    { symbol: '↟', title: 'Les idées prennent racine', description: 'Pratiquer vingt-cinq cartes, comptées une fois par carte et par jour.', unlocked: rewards.practices >= 25 },
+    { symbol: '★', title: 'Un atelier bien vivant', description: 'Atteindre le niveau cinq.', unlocked: rewards.level >= 5 },
   ]
 }
 export function CourseProgress({ course, progress }: { course: Course, progress: LearningProgress }) {

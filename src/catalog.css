@@ -52,6 +52,7 @@
 .active-indicator { color: #6e4b8f; font-size: .75rem; font-weight: 700; white-space: nowrap; }
 .catalog-button { cursor: pointer; border: 1px solid transparent; border-radius: .8rem; padding: .95rem 1.25rem; font: inherit; font-size: .875rem; font-weight: 650; color: #fffaf6; background: #30273f; }
 .catalog-button:hover { background: #514064; }
+.dashboard a.catalog-button:not(.secondary), .dashboard a.catalog-button:not(.secondary):hover { color: #fffaf6; text-decoration: none; }
 .catalog-button.secondary, .dashboard a.dashboard-cta.secondary { border: 1px solid #d6cbdf; color: #654980; background: #f5effa; }
 .course-intro { display: grid; grid-template-columns: 1fr auto; gap: 2rem; border: 1px solid #d6cbdf; border-radius: 1.25rem; padding: 1.5rem 1.75rem; background: #fffdf780; }
 .course-intro .course-overview { margin-bottom: 0; }

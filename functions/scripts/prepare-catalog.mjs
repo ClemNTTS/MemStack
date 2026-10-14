@@ -1,6 +1,8 @@
-import { copyFile, mkdir } from 'node:fs/promises'
+import { copyFile, mkdir, writeFile } from 'node:fs/promises'
+import { catalogLessons } from '../../src/data/catalog/index.ts'
 
 await mkdir(new URL('../catalog/', import.meta.url), { recursive: true })
+await writeFile(new URL('../catalog/learning.json', import.meta.url), JSON.stringify(catalogLessons.map(lesson => ({ id: lesson.id, cardIds: lesson.cardIds }))))
 await copyFile(new URL('../../shared/challengeDossiers.json', import.meta.url), new URL('../catalog/challengeDossiers.json', import.meta.url))
 await copyFile(new URL('../../docs/content/curriculum.json', import.meta.url), new URL('../catalog/curriculum.json', import.meta.url))
 await copyFile(new URL('../../shared/challengeQuestions.json', import.meta.url), new URL('../catalog/challengeQuestions.json', import.meta.url))

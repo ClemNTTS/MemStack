@@ -19,7 +19,53 @@ async function grantAccess() {
 }
 beforeEach(async () => { await env.clearFirestore(); await grantAccess() })
 after(async () => env?.cleanup())
-const db = uid => uid ? env.authenticatedContext(uid).firestore() : env.unauthenticatedContext().firestore()
+const db = uid => uid ? env.authenticatedContext(uid,{firebase:{sign_in_provider:'google.com'},email_verified:true}).firestore() : env.unauthenticatedContext().firestore()
+
+test('email accounts require verification and cannot access another members data', async () => {
+  const emailDb=verified => env.authenticatedContext('alice',{firebase:{sign_in_provider:'password'},email_verified:verified}).firestore()
+  await assertSucceeds(getDoc(doc(emailDb(true),'users/alice/settings/challengeAccess')))
+  await assertFails(getDoc(doc(emailDb(false),'users/alice/settings/challengeAccess')))
+  await assertFails(getDoc(doc(emailDb(true),'users/bob/settings/challengeAccess')))
+  await assertFails(setDoc(doc(emailDb(false),'users/alice/lessons/forged'),{completedAt:'2026-10-15T10:00:00.000Z'}))
+})
+
+test('active server quotas close all direct progression writes, including forged premium and counters', async () => {
+  await env.withSecurityRulesDisabled(async context => {
+    await setDoc(doc(context.firestore(),'_configuration/learningAccess'),{enabled:true})
+    await setDoc(doc(context.firestore(),'users/alice/settings/premiumAccess'),{version:1,permanent:true})
+  })
+  await assertFails(setDoc(doc(db('alice'),'users/alice/lessons/forged'),{completedAt:'2026-10-14T10:00:00.000Z'}))
+  await assertFails(setDoc(doc(db('alice'),'users/alice/cards/forged'),{cardId:'forged',intervalDays:1,lastReviewedAt:'2026-10-14T10:00:00.000Z',dueAt:'2026-10-15T10:00:00.000Z'}))
+  await assertFails(setDoc(doc(db('alice'),'users/alice/reviews/forged'),{cardId:'forged',rating:'recalled',kind:'review',reviewedAt:'2026-10-14T10:00:00.000Z'}))
+  for(const path of ['users/alice/learningUsage/2026-10-14','users/alice/learningReceipts/forged','users/alice/learningImports/forged','_configuration/learningAccess']) await assertFails(setDoc(doc(db('alice'),path),{enabled:false,lessons:0,reviews:0}))
+})
+
+test('permanent premium cannot be granted or modified by a learner or another account', async () => {
+  await env.withSecurityRulesDisabled(async context => {
+    await setDoc(doc(context.firestore(), 'users/alice/settings/premiumAccess'), { version: 1, permanent: true })
+  })
+  await assertSucceeds(getDoc(doc(db('alice'), 'users/alice/settings/premiumAccess')))
+  await assertFails(getDoc(doc(db('bob'), 'users/alice/settings/premiumAccess')))
+  await assertFails(setDoc(doc(db('bob'), 'users/bob/settings/premiumAccess'), { version: 1, permanent: true }))
+  await assertFails(updateDoc(doc(db('alice'), 'users/alice/settings/premiumAccess'), { permanent: false }))
+  await assertFails(deleteDoc(doc(db('alice'), 'users/alice/settings/premiumAccess')))
+})
+
+test('subscription entitlement is owner readable and server writable only, billing identities remain private', async () => {
+  await env.withSecurityRulesDisabled(async context => {
+    await setDoc(doc(context.firestore(), 'users/alice/settings/subscription'), { version: 1, status: 'premium', premiumUntil: '2027-10-14T00:00:00.000Z' })
+    await setDoc(doc(context.firestore(), 'users/alice/billing/stripe'), { customerId: 'cus_alice' })
+  })
+  await assertSucceeds(getDoc(doc(db('alice'), 'users/alice/settings/subscription')))
+  for (const uid of ['bob', null]) await assertFails(getDoc(doc(db(uid), 'users/alice/settings/subscription')))
+  await assertFails(updateDoc(doc(db('alice'), 'users/alice/settings/subscription'), { premiumUntil: '2099-10-14T00:00:00.000Z' }))
+  await assertFails(deleteDoc(doc(db('alice'), 'users/alice/settings/subscription')))
+  await assertFails(setDoc(doc(db('bob'), 'users/bob/settings/subscription'), { status: 'premium' }))
+  for (const path of ['users/alice/billing/stripe', '_stripeCustomers/cus_alice', '_stripeEvents/evt_alice']) {
+    await assertFails(getDoc(doc(db('alice'), path)))
+    await assertFails(setDoc(doc(db('alice'), path), { uid: 'alice' }))
+  }
+})
 
 async function limitedSetDoc(ref, data) {
   const kind = ref.path.includes('/challengeAttempts/') ? 'attempts' : ref.path.includes('/contentReports/') ? 'reports' : null

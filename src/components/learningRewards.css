@@ -1,0 +1,25 @@
+.learning-rewards { display: flex; align-items: center; gap: 1.8rem; margin: 1.5rem 0; padding: 2rem; border: 1px solid #d6c2e7; border-radius: 26px; background: linear-gradient(110deg, #f1e8fa, #fffaf1); }
+.reward-copy { flex: 1; min-width: 0; }
+.reward-copy h2 { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem; margin: .4rem 0 1rem; font-size: 1.8rem !important; color: #513b6b; }
+.reward-copy h2 > span { padding: .35rem .6rem; border-radius: 20px; background: #e5d4f2; font-size: .8rem; font-weight: 600; }
+.reward-copy progress { display: block; appearance: none; width: 100%; height: .65rem; accent-color: #77579c; border: 0; border-radius: 20px; background: #e4d7ee; overflow: hidden; }
+.reward-copy progress::-webkit-progress-bar { background: #e4d7ee; border-radius: 20px; }
+.reward-copy progress::-webkit-progress-value { background: #77579c; border-radius: 20px; }
+.reward-copy progress::-moz-progress-bar { background: #77579c; border-radius: 20px; }
+.reward-copy p { color: #786e82; font-size: .85rem; line-height: 1.6; }
+.reward-copy .reward-next-level { font-size: .75rem; margin-top: .5rem; }
+.reward-explanation { font-size: .8rem; color: #65528a; }
+.reward-explanation summary { cursor: pointer; }
+.reward-streak { text-align: center; border-left: 1px solid #d6c2e7; padding-left: 1.8rem; min-width: 130px; color: #65528a; }
+.reward-streak > strong { display: block; font-size: 3rem; line-height: 1; }
+.reward-streak strong > span { display: block; margin-top: .6rem; font-size: .8rem; font-weight: 500; }
+.reward-streak p { font-size: .8rem; line-height: 1.6; margin: 1.2rem 0 0; color: #786e82; }
+.reward-memo { position: relative; padding: 1rem; }
+.reward-memo .memo { width: 100px; height: auto; animation: memo-reward-arrive .8s ease-out both; }
+.reward-memo > span { position: absolute; color: #9b7abd; font-size: 1.5rem; animation: memo-reward-spark 1.2s ease-out both; pointer-events: none; }
+.reward-memo > span:nth-child(2) { top: 0; left: 0; }
+.reward-memo > span:nth-child(3) { right: 0; bottom: 0; animation-delay: .15s; }
+@keyframes memo-reward-arrive { 0% { transform: translateY(8px) rotate(-7deg); } 45% { transform: translateY(-6px) rotate(5deg); } 75% { transform: translateY(2px) rotate(-2deg); } 100% { transform: translateY(0) rotate(0); } }
+@keyframes memo-reward-spark { from { opacity: 0; transform: scale(.3) rotate(-20deg); } 60% { opacity: 1; transform: scale(1.15) rotate(10deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
+@media (max-width: 700px) { .learning-rewards { flex-wrap: wrap; gap: 1rem; padding: 1.2rem; } .reward-memo { padding: .5rem; } .reward-memo .memo { width: 64px; } .reward-streak { width: 100%; display: flex; align-items: center; justify-content: space-between; border-left: 0; border-top: 1px solid #d6c2e7; padding: 1rem 0 0; text-align: left; } .reward-streak > strong { font-size: 2rem; } .reward-streak p { margin: 0; text-align: right; } }
+@media (prefers-reduced-motion: reduce) { .reward-memo .memo, .reward-memo > span { animation: none; } }

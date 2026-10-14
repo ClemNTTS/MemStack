@@ -1,0 +1,7 @@
+.premium-reminder { display: flex; align-items: center; gap: 1.25rem; text-align: left; padding: 1.5rem; margin: 1.5rem 0; border: 1px solid #d9c9ed; border-radius: 1.2rem; background: #f1e9f8; }
+.premium-reminder > .memo { width: 80px; height: auto; flex-shrink: 0; }
+.premium-reminder > div { min-width: 0; }
+.premium-reminder h2 { font-size: 1.25rem; margin: .3rem 0; }
+.premium-reminder p:not(.lesson-category) { color: #756584; line-height: 1.6; font-size: .9rem; }
+.premium-reminder .catalog-button { display: inline-flex; align-items: center; gap: 1rem; text-decoration: none; }
+@media (max-width: 600px) { .premium-reminder { align-items: flex-start; padding: 1.1rem; gap: .75rem; } .premium-reminder > .memo { width: 48px; } }

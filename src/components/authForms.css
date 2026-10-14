@@ -1,0 +1,16 @@
+.email-auth { width: min(100%, 440px); margin: 1.5rem auto; text-align: left; }
+.auth-divider { text-align: center; color: #746381; }
+.auth-tabs { display: flex; gap: .5rem; margin-bottom: 1rem; }
+.auth-tabs button { flex: 1; padding: .7rem; border: 1px solid #d9c5ee; border-radius: 12px; background: #fffaf6; color: #554066; cursor: pointer; }
+.auth-tabs button[aria-pressed="true"] { background: #eee4f7; font-weight: 700; }
+.email-auth form, .email-auth label, .auth-actions { display: grid; gap: .7rem; }
+.email-auth form { gap: 1rem; }
+.email-auth input { width: 100%; box-sizing: border-box; padding: .8rem 1rem; border: 1px solid #ccb5e6; border-radius: 12px; background: #fffdf9; color: #30223c; font: inherit; }
+.email-auth input:focus-visible { outline: 3px solid #b598d6; outline-offset: 2px; }
+.email-auth label > span { font-size: .85rem; color: #746381; }
+.auth-link { background: transparent; border: 0; color: #69428b; padding: .65rem 0; font: inherit; text-decoration: underline; cursor: pointer; }
+.email-auth button:disabled { cursor: wait; opacity: .65; }
+.email-auth .catalog-button { border: 1px solid transparent; border-radius: 12px; padding: .85rem 1rem; background: #514064; color: #fffaf6; font: inherit; font-weight: 650; cursor: pointer; }
+.email-auth .catalog-button:hover { background: #654980; }
+.email-auth .catalog-button.secondary { background: #f5effa; border-color: #d6cbdf; color: #654980; }
+.email-auth button:focus-visible { outline: 3px solid #9a7ac4; outline-offset: 3px; }

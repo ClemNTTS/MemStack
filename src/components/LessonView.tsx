@@ -14,7 +14,7 @@ import './lesson-enhancements.css'
 
 type LessonViewProps = {
   lesson: Lesson
-  onComplete: () => void
+  onComplete: () => void | Promise<void>
   onMessage: () => void
   progressLabel: string
   completionLabel?: string
@@ -24,6 +24,8 @@ type LessonViewProps = {
 
 function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLabel = 'Terminer la leçon', onShowSummary, draftKey }: LessonViewProps) {
   const sound = useMessageSound()
+  const [saving, setSaving] = useState(false)
+  const savingRef = useRef(false)
   const endRef = useRef<HTMLDivElement>(null)
   const imageDialogRef = useRef<HTMLDialogElement>(null)
   const [expandedImage, setExpandedImage] = useState<Extract<LessonStep, { type: 'image' }> | null>(null)
@@ -86,15 +88,17 @@ function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLa
     ))
   }
 
-  function continueLesson() {
-    if (!canContinue) return
+  async function continueLesson() {
+    if (!canContinue || savingRef.current) return
 
     if (nextStepId) {
       sound.play()
       onMessage()
       setHistory((previous) => [...previous, { id: nextStepId }])
     } else {
-      onComplete()
+      savingRef.current = true
+      setSaving(true)
+      try { await onComplete() } finally { savingRef.current = false; setSaving(false) }
     }
   }
 
@@ -166,7 +170,7 @@ function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLa
       </div>
 
       <div className="lesson-controls">{canContinue && (
-        <button className="lesson-next" type="button" onClick={continueLesson}>
+        <button className="lesson-next" type="button" disabled={saving} onClick={() => { void continueLesson() }}>
           {nextStepId ? 'Continuer' : completionLabel}
         </button>
       )}</div>

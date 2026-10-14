@@ -6,6 +6,13 @@ export function requireGoogle(auth, admin = false) {
   return auth.uid
 }
 
+export function requireMember(auth) {
+  if (auth?.token?.firebase?.sign_in_provider === 'google.com') return requireGoogle(auth)
+  if (!auth || auth.token?.firebase?.sign_in_provider !== 'password') throw new AnalysisError('unauthenticated','Connexion requise.')
+  if (auth.token.email_verified !== true) throw new AnalysisError('permission-denied','Vérifie ton adresse email avant de continuer.')
+  return auth.uid
+}
+
 export function isInvited(access, uid, invited) {
   return Object.hasOwn(access ?? {}, 'betaInvited') ? access.betaInvited === true : invited.includes(uid)
 }
