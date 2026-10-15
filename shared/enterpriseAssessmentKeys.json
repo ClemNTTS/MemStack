@@ -62,7 +62,7 @@
     "ent-challenge-first-draft": {
       "ent-challenge-first-draft-question-1": "La politique fournie fixe 30 jours à compter de la réception. Les 60 jours figurent seulement dans le brouillon : le style assuré de ce texte ne remplace pas la règle applicable.",
       "ent-challenge-first-draft-question-2": "La prise en charge des frais est liée à un produit endommagé dans cette politique fictive. Retirer cette condition transformerait une règle limitée en gratuité générale.",
-      "ent-challenge-first-draft-question-3": "La configuration indique que l'assistant ne peut pas accéder au paiement. Sans confirmation du système concerné, sa phrase ne prouve aucune opération.",
+      "ent-challenge-first-draft-question-3": "La configuration indique que l'assistant IA ne peut pas accéder au paiement. Sans confirmation du système concerné, sa phrase ne prouve aucune opération.",
       "ent-challenge-first-draft-question-4": "Aucune pièce ne permet de retrouver RET-2026-14. Une référence qui a une forme crédible doit être vérifiée avant de servir de preuve ; il ne faut pas la remplacer par une autre invention.",
       "ent-challenge-first-draft-question-5": "Le document demande une photo du dommage avant l'examen du dossier. Il ne prévoit ni remboursement automatique ni délai de 60 jours."
     },
@@ -112,7 +112,7 @@
       "ent-challenge-final-decision-question-1": "Le seuil fixé était zéro promesse non autorisée avant un usage client et deux ont été observées. La majorité des cas réussis et le gain de temps ne suffisent donc pas à autoriser ce lancement.",
       "ent-challenge-final-decision-question-2": "Le dossier propose une correction des escalades puis un nouveau passage de tous les tests. Cacher les erreurs ou élargir le déploiement empêcherait une décision fondée sur les limites observées.",
       "ent-challenge-final-decision-question-3": "L'offre comprend l'entretien des acquis par les cartes et l'accès à de nouvelles leçons. Elle n'attribue pas automatiquement la maîtrise de situations futures simplement parce que le programme initial est terminé.",
-      "ent-challenge-final-decision-question-4": "Une permission nouvelle change les actions possibles et peut modifier le risque. Le périmètre et les tests doivent être revus, même si le nom de l'assistant reste identique.",
+      "ent-challenge-final-decision-question-4": "Une permission nouvelle change les actions possibles et peut modifier le risque. Le périmètre et les tests doivent être revus, même si le nom de l'assistant IA reste identique.",
       "ent-challenge-final-decision-question-5": "Le classement de l'organisation présente une régularité d'apprentissage. Il ne constitue ni une mesure de performance professionnelle ni une autorisation de contourner les validations."
     }
   }

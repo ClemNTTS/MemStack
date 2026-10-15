@@ -14,6 +14,7 @@ export type EnterpriseLesson = {
   estimatedMinutes: number
   objective: string
   steps: EnterpriseStep[]
+  documents?: { stepId: string; title: string; src: string; text: string }[]
   cards: EnterpriseCard[]
   sources: string[]
   continuous?: boolean

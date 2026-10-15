@@ -8,7 +8,7 @@ type Props = { connected?: boolean, embedded?: boolean }
 
 const chapters = [
   { title: 'Comprendre avant de déléguer', missions: 'Missions 1–2', outcome: 'Reconnaître ce que l’IA peut faire, et ce qu’elle invente parfois.', example: 'Une synthèse convaincante contient une référence introuvable. Que vérifier ?' },
-  { title: 'Protéger les informations', missions: 'Missions 3–5', outcome: 'Choisir les informations utiles, autorisées et nécessaires.', example: 'Un export clients est prêt à être envoyé à un assistant. Quels éléments retirer ?' },
+  { title: 'Protéger les informations', missions: 'Missions 3–5', outcome: 'Choisir les informations utiles, autorisées et nécessaires.', example: 'Un export clients est prêt à être envoyé à un assistant IA. Quels éléments retirer ?' },
   { title: 'Donner une demande et un contexte utiles', missions: 'Missions 6–8', outcome: 'Donner un objectif, du contexte et des critères de réussite à sa demande.', example: 'Préparer une réponse client qui respecte les règles et le ton de l’entreprise.' },
   { title: 'Vérifier ce qui sera utilisé', missions: 'Missions 9–11', outcome: 'Contrôler les faits, les calculs, les sources et les exceptions.', example: 'Une réponse oublie une condition importante. Comment la repérer avant l’envoi ?' },
   { title: 'Choisir un usage proportionné', missions: 'Missions 12–13', outcome: 'Comparer utilité, coûts et impacts sans automatiser à tout prix.', example: 'Faut-il de l’IA, une recherche documentaire ou une règle simple ?' },
