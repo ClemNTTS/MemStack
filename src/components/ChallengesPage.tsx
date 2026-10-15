@@ -11,7 +11,6 @@ import { PageHeading, themes } from './CatalogShared'
 import WorkshopBackground from './WorkshopBackground'
 import './challenges.css'
 import './themeSummary.css'
-import AiAccessPanel from './AiAccessPanel'
 import { matchesExamStatus } from '../challenges/statusFilter'
 
 const statusLabels = {
@@ -56,17 +55,16 @@ function ChallengesPage() {
       <p className="dashboard-note">{theme === 'all' ? 'Toutes les thématiques' : theme} · priorité aux défis à retravailler, puis jamais tentés, parmi les défis dont les prérequis sont terminés. La recherche ne change pas cette suggestion.</p>
       {next ? <><p><strong>{next.challenge.title}</strong> · {statusLabels[next.summary!.status]}</p><a className="dashboard-cta" href={appHref(`/challenges/${next.challenge.id}`)}>{next.summary?.status === 'retry' ? 'Retravailler ce défi' : 'Essayer ce défi'} →</a></> : <p>Aucun défi à retravailler ou jamais tenté disponible dans cette sélection. Consulte les résultats ci-dessous ou termine les prérequis d’un défi.</p>}
     </section>}
-    <AiAccessPanel />
     {loading && <p role="status">Chargement de tes tentatives…</p>}
     {error && <div className="inline-error" role="alert"><p>{error}</p><button className="catalog-button secondary" type="button" onClick={retry}>Réessayer</button></div>}
     {resultsReady && <section className="exam-overview" aria-labelledby="exam-overview-title">
       <h2 id="exam-overview-title">Ton bilan des examens</h2>
       <button className="catalog-button secondary" type="button" onClick={retry}>Actualiser le bilan</button>
-      <p className="dashboard-note">Tout le catalogue · un défi compte une seule fois. Une validation IA sur la version actuelle reste acquise.</p>
+      <p className="dashboard-note">Tout le catalogue · un défi compte une seule fois. Une réussite corrigée par le serveur sur la version actuelle reste acquise.</p>
       <dl className="exam-counts">
         {(['validated', 'retry', 'unattempted'] as const).map(status => <div key={status}><dt>{statusLabels[status]}</dt><dd>{count(exams, status)} <span>/ {exams.length}</span></dd></div>)}
       </dl>
-      <p className="exam-other-statuses">{count(exams, 'pending')} en attente · {count(exams, 'unavailable')} analyses indisponibles · {count(exams, 'historical')} historiques sans verdict actuel</p>
+      <p className="exam-other-statuses">{count(exams, 'pending')} en attente · {count(exams, 'unavailable')} résultats indisponibles · {count(exams, 'historical')} historiques sans verdict actuel</p>
       <p className="dashboard-note">Ces trois états ne constituent ni une réussite ni un échec. Un historique sans verdict actuel demande une nouvelle tentative pour obtenir une validation de la version actuelle. Les défis verrouillés sont inclus dans le bilan.</p>
       <details className="exam-theme-details">
         <summary>Voir la synthèse par thématique</summary>
@@ -77,7 +75,7 @@ function ChallengesPage() {
             <h3>{entry.title}</h3>
             <dl className="theme-learning-counts">
               <div><dt>Leçons terminées</dt><dd>{synthesis.lessonsCompleted} / {synthesis.lessonsTotal}</dd></div>
-              <div><dt>Examens validés par l’IA</dt><dd>{synthesis.examsValidated} / {synthesis.examsTotal}</dd></div>
+              <div><dt>Défis validés</dt><dd>{synthesis.examsValidated} / {synthesis.examsTotal}</dd></div>
               <div><dt>Points à consolider</dt><dd>{synthesis.notions.length}</dd></div>
             </dl>
             <p className="dashboard-note">Les leçons terminées indiquent ta progression de lecture. Les examens et points à consolider reposent sur les réponses vérifiées par le serveur.</p>

@@ -10,7 +10,7 @@ import LessonText, { InlineLessonText } from './LessonText'
 import ChallengeQuestions from './ChallengeQuestions'
 import WorkshopBackground from './WorkshopBackground'
 import ContentReportButton from './ContentReportButton'
-import { challengeReportContext } from '../reports/contentReport'
+import { analysisReportContext, challengeReportContext } from '../reports/contentReport'
 import { loadSelectionDraft, saveSelectionDraft, selectionDraftKey } from '../challenges/selectionDraft'
 import './challenges.css'
 
@@ -81,7 +81,7 @@ export default function ChallengeView({ challengeId }: { challengeId: string }) 
   return <main className="dashboard challenge-page">
     <WorkshopBackground stage="rest" beat={0} />
     <a className="text-link breadcrumb" href={appHref('/challenges')}>← Tous les défis</a>
-    <PageHeading eyebrow={`${catalogCourses.find(course => course.id === challenge.courseId)?.title} · Diagnostic`} title={challenge.title} description="Lis le scénario et choisis les réponses adaptées. Le serveur corrige les choix ; l’IA et l’autoévaluation ne décident pas de ta réussite." />
+    <PageHeading eyebrow={`${catalogCourses.find(course => course.id === challenge.courseId)?.title} · Diagnostic`} title={challenge.title} description="Lis le scénario et choisis les réponses adaptées. Retrouve ensuite ton résultat et la correction expliquée, vérifiés par le serveur." />
     <ContentReportButton key={challenge.id} context={challengeReportContext(challenge)} />
     <section className="challenge-prerequisites"><p>Les notions utiles :</p><ul>{challenge.lessonIds.map(id => <li key={id}><a href={appHref(`/lessons/${id}`)}>{catalogLessons.find(lesson => lesson.id === id)?.title ?? id} · relire</a></li>)}</ul></section>
     {loading && <p role="status">Chargement de tes tentatives…</p>}
@@ -115,7 +115,7 @@ export default function ChallengeView({ challengeId }: { challengeId: string }) 
       </> : <>
         <p>Cette tentative appartient à l’ancien format. Elle reste consultable et ne valide pas ce nouveau défi.</p>
         {selected.version === 2 ? <><h3>Ce que je constate</h3><LessonText text={selected.observations!} /><h3>Ce que je ferais</h3><LessonText text={selected.actions!} /></> : <LessonText text={selected.answer} />}
-        {analyses[selected.id]?.status === 'completed' && <details><summary>Ancien retour IA, conservé dans l’historique</summary><LessonText text={analyses[selected.id].message} /></details>}
+        {analyses[selected.id]?.status === 'completed' && <details><summary>Archive : ancien retour IA</summary><p className="dashboard-note">Ce retour appartient à l’ancien format et ne compte pas dans la validation du défi actuel.</p><LessonText text={analyses[selected.id].message} /><ContentReportButton key={`${user?.uid}/${selected.id}`} context={analysisReportContext(displayed!, selected, analyses[selected.id])} /></details>}
       </>}
       <h3>La correction expliquée</h3><LessonText text={reference?.correction ?? 'Correction historique indisponible.'} />
       <h3>Les notions à revoir</h3><ul>{reference?.checkpoints.map(point => <li key={point}><LessonText text={point} /></li>)}</ul>

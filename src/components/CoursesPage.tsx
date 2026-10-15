@@ -6,6 +6,7 @@ import { useLearningPreference } from '../progress/learningPreference'
 import { planLearning } from '../review/catalogPlan'
 import { CourseProgress, PageHeading, courseMetadata, prerequisitesLabel, themes } from './CatalogShared'
 import WorkshopBackground from './WorkshopBackground'
+import CourseJourney from './CourseJourney'
 
 function CoursesPage({ courseId }: { courseId?: string }) {
   const { progress } = useProgress()
@@ -42,17 +43,19 @@ function CoursesPage({ courseId }: { courseId?: string }) {
           </li>
         })}
       </ol>
-      {selected.id === 'docker-basics' && <section className="overview-panel retention-note"><p className="lesson-category">Passer à la pratique</p><h2>Du concept au diagnostic.</h2><p>Retrouve les images, les volumes et les réseaux dans trois situations à résoudre. Tu peux les essayer librement et conserver tes tentatives séparément de tes cartes.</p><a className="text-link" href={appHref('/challenges')}>Ouvrir les défis Docker →</a></section>}
+      {selected.id === 'docker-basics' && <section className="overview-panel retention-note"><p className="lesson-category">Passer à la pratique · Premium</p><h2>Du concept au diagnostic.</h2><p>Retrouve les images, les volumes et les réseaux dans des situations à résoudre. Les défis vérifient tes réponses et conservent tes tentatives séparément de tes cartes.</p><a className="text-link" href={appHref('/challenges')}>Découvrir les défis →</a></section>}
     </main>
   }
   const filtered = catalogCourses.filter(course => (theme === 'all' || course.theme === theme) && `${course.title} ${course.theme}`.toLocaleLowerCase('fr-FR').includes(search.toLocaleLowerCase('fr-FR')))
   return <main className="dashboard">
     <WorkshopBackground stage="rest" beat={0} />
-    <PageHeading eyebrow={`${themes.length} thèmes · ${catalogCourses.length} parcours`} title="Trace ton prochain chemin." description="Choisis ce que tu veux comprendre. Mémo t’accompagne au rythme qui te convient." />
+    <CourseJourney progress={progress} activeCourseId={activeCourseId} saving={saving} activationError={saveError || error} onActivate={activate} />
+    <details className="journey-catalog"><summary>Explorer tous les parcours <span>{catalogCourses.length} parcours · accès libre au catalogue</span></summary>
     <div className="catalog-filters"><label>Rechercher un parcours<input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Docker, React, sécurité…" /></label><label>Thème<select value={theme} onChange={event => setTheme(event.target.value)}><option value="all">Tous les thèmes</option>{themes.map(theme => <option key={theme.id} value={theme.title}>{theme.title}</option>)}</select></label></div>
     <p className="results-count" role="status">{filtered.length} parcours · {catalogLessons.length} leçons dans le catalogue</p>
     {filtered.length === 0 && <section className="overview-panel"><h2>Aucun chemin trouvé.</h2><p>Essaie un autre mot ou change de thème.</p><button className="catalog-button secondary" onClick={() => { setSearch(''); setTheme('all') }}>Effacer les filtres</button></section>}
     <div className="catalog-grid">{filtered.map(course => <article className="catalog-course" data-active={course.id === activeCourseId} key={course.id}><div className="path-card-top"><span className="dashboard-chip">{course.theme}</span>{course.id === activeCourseId && <span className="active-indicator">● Actif</span>}</div><h2><a href={appHref(`/courses/${course.id}`)}>{course.title}</a></h2><p>Pour commencer : {courseMetadata(course.id)?.lessons[0].objective}</p><CourseProgress course={course} progress={progress} /><a className="text-link" href={appHref(`/courses/${course.id}`)}>Voir le parcours →</a></article>)}</div>
+    </details>
   </main>
 }
 

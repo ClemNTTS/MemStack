@@ -121,3 +121,6 @@ Le prompt `challenge-feedback-v4` ajoute `missedCheckpointIndices` : une liste d
 Les nouveaux retours v4 permettent une révision ciblée, une comparaison des points entre deux tentatives du même dossier et une synthèse des points à consolider par thématique. La comparaison distingue les points corrigés, encore manqués et nouveaux. Les résultats v3 gardent leur verdict et leur texte mais ne produisent pas de diagnostic précis inventé. Aucun ancien résultat n’est réanalysé automatiquement. La consultation et les comparaisons font uniquement des lectures ; les quotas existants restent inchangés.
 
 Ces changements ont été vérifiés localement avec 134 tests applicatifs, 15 tests Functions et les builds frontend/Functions. Le service v4 est déployé le 9 octobre 2026 ; la publication frontend accompagne cette livraison. Les examens réels historiques enregistrés utilisent v3 et ne sont pas réanalysés automatiquement.
+# Retrait de l’option dans l’interface — 15 octobre 2026
+
+Les défis actuels utilisent uniquement leur correction déterministe serveur. Le panneau d’option IA et le composant de demande d’analyse ont été supprimés. Les analyses historiques restent consultables dans une archive en lecture seule ; elles ne valident pas les questionnaires actuels. Aucun appel Mistral ni changement de configuration fournisseur n’est nécessaire pour cette mise à jour.

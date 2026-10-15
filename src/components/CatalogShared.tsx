@@ -3,6 +3,7 @@ import { catalogCourses, catalogLessons, catalogCards } from '../data/catalog'
 import type { LearningProgress } from '../types/progress'
 import type { Course } from '../types/course'
 import { learningRewards } from '../progress/gamification'
+import { getChapterBadges } from '../journey/model'
 
 export const themes = curriculum.themes
 export function courseMetadata(id: string) { return curriculum.courses.find(course => course.id === id) }
@@ -43,6 +44,7 @@ export function badgesFor(progress: LearningProgress) {
     { symbol: '✶', title: 'La mémoire au long cours', description: 'Pratiquer 5 000 cartes, comptées une fois par carte et par jour.', unlocked: rewards.practices >= 5000 },
     { symbol: '♜', title: 'Mémo voit grand', description: 'Atteindre le niveau 10.', unlocked: rewards.level >= 10 },
     { symbol: '✷', title: 'Une passion qui dure', description: 'Atteindre le niveau 20.', unlocked: rewards.level >= 20 },
+    ...getChapterBadges(progress),
   ]
 }
 export function CourseProgress({ course, progress }: { course: Course, progress: LearningProgress }) {

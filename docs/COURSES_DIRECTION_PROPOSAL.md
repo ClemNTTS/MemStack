@@ -20,7 +20,7 @@ Chaque chapitre reçoit un objectif et un badge de fin. Distinguer « leçons te
 
 ## Liberté conservée
 
-Replier le catalogue existant dans « Explorer tous les parcours ». L’étudiant peut changer de direction ; une recommandation explique « conseillé après… » et ne devient pas une nouvelle interdiction d’accès. L’objectif et le parcours actif sont sauvegardés par compte après accusé serveur. Le nouvel objectif doit avoir un schéma et une migration explicites avant d’être ajouté aux préférences synchronisées.
+Replier le catalogue existant dans « Explorer tous les parcours ». L’étudiant peut changer de direction ; une recommandation explique les prérequis et ne devient pas une interdiction d’accès. Le parcours actif est sauvegardé par compte après accusé serveur. Le cap reste local à la page ; sa synchronisation future nécessiterait un schéma et une migration explicites.
 
 ## Ordre de réalisation
 
@@ -28,4 +28,4 @@ Replier le catalogue existant dans « Explorer tous les parcours ». L’étudia
 2. Structurer et vérifier les prérequis du curriculum dans un graphe de confiance.
 3. Ajouter la carte de chapitres et les bifurcations d’objectif, puis les badges correspondants.
 
-Cette proposition ne modifie pas encore la page Parcours : le choix de la direction pédagogique et des objectifs est à valider avant implémentation.
+Implémenté le 15 octobre 2026 : trois caps, un chemin ordonné selon les prérequis des 30 parcours, cinq chapitres, des missions adaptées à la progression et aux quotas, cinq badges de chapitre et deux nouveaux Mémo. Le catalogue reste accessible. Les badges exigent toutes les leçons du chapitre, tous caps confondus ; aucun XP supplémentaire ni verrou pédagogique. Le cap reste local à la page ; le parcours actif conserve sa sauvegarde serveur avec accusé.

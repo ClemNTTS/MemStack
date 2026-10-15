@@ -52,3 +52,18 @@ test('unattempted ignores other challenges and orphan analyses', () => {
 test('inherited analysis entries cannot count as server verdicts', () => {
   assert.equal(getChallengeExamSummary(challenge, [attempt('a')], Object.create({ a: analysis() })).status, 'pending')
 })
+
+test('current challenges use checked answers regardless of archived AI feedback', () => {
+  const current = { id: 'exam', version: 4, rubricVersion: 3 }
+  const checked = attempt('checked', '2026-10-15', {
+    version: 3, challengeVersion: 4, rubricVersion: 3,
+    result: { graderVersion: 'challenge-checks-v1', verdict: 'retry', correctCount: 2, totalCount: 5, criterionResults: [true, true, false, false, false], missedCheckpointIndices: [2, 3, 4], feedback: ['a', 'b', 'c', 'd', 'e'] },
+  })
+  assert.equal(getChallengeExamSummary(current, [checked], {
+    checked: analysis({ challengeVersion: 4, verdict: 'validated' }),
+  }).status, 'retry')
+  const historical = attempt('historical')
+  assert.equal(getChallengeExamSummary(current, [historical], {
+    historical: analysis({ verdict: 'validated' }),
+  }).status, 'historical')
+})
