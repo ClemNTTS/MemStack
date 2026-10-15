@@ -90,8 +90,8 @@ function ChallengesPage() {
         })}</div>
       </details>
     </section>}
-    <div className="catalog-filters"><label>Rechercher un défi<input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Docker, React, sécurité…" /></label><label>Thématique<select value={theme} onChange={event => setTheme(event.target.value)}><option value="all">Toutes les thématiques</option>{themes.map(entry => <option key={entry.id} value={entry.title}>{entry.title}</option>)}</select></label></div>
-    <label>État d’examen<select value={statusFilter} disabled={!resultsReady} onChange={event => setStatusFilter(event.target.value)}><option value="all">Tous les états</option>{Object.entries(statusLabels).map(([status, label]) => <option key={status} value={status}>{label}</option>)}</select></label>
+    <div className="catalog-filters challenge-catalog-filters"><label>Rechercher un défi<input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Docker, React, sécurité…" /></label><label>Thématique<select value={theme} onChange={event => setTheme(event.target.value)}><option value="all">Toutes les thématiques</option>{themes.map(entry => <option key={entry.id} value={entry.title}>{entry.title}</option>)}</select></label>
+    <label>État d’examen<select value={statusFilter} disabled={!resultsReady} onChange={event => setStatusFilter(event.target.value)}><option value="all">Tous les états</option>{Object.entries(statusLabels).map(([status, label]) => <option key={status} value={status}>{label}</option>)}</select></label></div>
     <p className="dashboard-note">Le filtre d’état ne change pas la prochaine tentative proposée.</p>
     <p className="results-count" role="status">{filtered.length} défis affichés · {challenges.length} dans le catalogue</p>
     {filtered.length === 0 && resultsReady && <section className="overview-panel"><h2>Aucun défi trouvé.</h2><p>Essaie un autre mot ou change de thématique ou d’état.</p><button className="catalog-button secondary" onClick={() => { setSearch(''); setTheme('all'); setStatusFilter('all') }}>Effacer les filtres</button></section>}

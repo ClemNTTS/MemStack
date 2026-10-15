@@ -192,3 +192,9 @@ La relecture propriétaire des tentatives ne dépend plus de l’option IA ; l�
 ## Classement mondial
 
 Le hub personnel affiche le niveau, la série quotidienne, le classement et un accès rapide aux révisions. Le classement reste dans les Firebase Functions existantes ; ses données de confiance sont écrites avec les activités pédagogiques serveur. Voir [WORLD_RANKING.md](WORLD_RANKING.md) pour les pseudos publics, la confidentialité, les règles de dates et le coût borné des lectures.
+
+## Administration actuelle
+
+La route `/admin` remplace l’ancien formulaire d’invitations IA ; `/admin/ai` reste un alias pour les anciens liens. Elle renvoie vers les comptes Firebase et les abonnements Stripe, dont les consoles gardent leurs propres permissions. Le callable `getAdminStatus`, dans le backend Firebase existant, exige App Check et vérifie le claim Google administrateur ainsi que le rôle actuel, l’état du compte et son marqueur de suppression. Le menu et la page n’utilisent plus les quotas ou invitations de l’ancienne IA pour vérifier ce rôle. Aucun nouveau droit n’est attribué par cette interface.
+
+La proposition pédagogique de refonte des parcours est décrite dans [COURSES_DIRECTION_PROPOSAL.md](COURSES_DIRECTION_PROPOSAL.md) ; elle n’est pas encore implémentée.

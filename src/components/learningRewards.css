@@ -14,11 +14,11 @@
 .reward-streak > strong { display: block; font-size: 3rem; line-height: 1; }
 .reward-streak strong > span { display: block; margin-top: .6rem; font-size: .8rem; font-weight: 500; }
 .reward-streak p { font-size: .8rem; line-height: 1.6; margin: 1.2rem 0 0; color: #786e82; }
-.reward-memo { position: relative; padding: 1rem; }
+.reward-memo { display: grid; grid-template-columns: auto auto auto; align-items: center; gap: .5rem; padding: .5rem 0; flex-shrink: 0; }
 .reward-memo .memo { width: 100px; height: auto; animation: memo-reward-arrive .8s ease-out both; }
-.reward-memo > span { position: absolute; color: #9b7abd; font-size: 1.5rem; animation: memo-reward-spark 1.2s ease-out both; pointer-events: none; }
-.reward-memo > span:nth-child(2) { top: 0; left: 0; }
-.reward-memo > span:nth-child(3) { right: 0; bottom: 0; animation-delay: .15s; }
+.reward-memo > span { color: #9b7abd; font-size: 1rem; line-height: 1; animation: memo-reward-spark 1.2s ease-out both; pointer-events: none; }
+.reward-memo > span:first-child { align-self: start; }
+.reward-memo > span:last-child { align-self: end; animation-delay: .15s; }
 @keyframes memo-reward-arrive { 0% { transform: translateY(8px) rotate(-7deg); } 45% { transform: translateY(-6px) rotate(5deg); } 75% { transform: translateY(2px) rotate(-2deg); } 100% { transform: translateY(0) rotate(0); } }
 @keyframes memo-reward-spark { from { opacity: 0; transform: scale(.3) rotate(-20deg); } 60% { opacity: 1; transform: scale(1.15) rotate(10deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
 @media (max-width: 700px) { .learning-rewards { flex-wrap: wrap; gap: 1rem; padding: 1.2rem; } .reward-memo { padding: .5rem; } .reward-memo .memo { width: 64px; } .reward-streak { width: 100%; display: flex; align-items: center; justify-content: space-between; border-left: 0; border-top: 1px solid #d6c2e7; padding: 1rem 0 0; text-align: left; } .reward-streak > strong { font-size: 2rem; } .reward-streak p { margin: 0; text-align: right; } }

@@ -34,6 +34,8 @@
 .dashboard .text-link { display: inline-flex; align-items: center; gap: .8rem; color: #684b83; font-size: .875rem; font-weight: 650; }
 .text-link.breadcrumb { margin-top: 1rem; }
 .catalog-filters { display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; }
+.catalog-filters.challenge-catalog-filters { grid-template-columns: minmax(0,2fr) minmax(0,1fr) minmax(0,1fr); }
+@media (max-width: 760px) { .catalog-filters.challenge-catalog-filters { grid-template-columns: 1fr; } }
 .catalog-filters label { display: grid; gap: .6rem; color: #625470; font-size: .8rem; font-weight: 600; }
 .catalog-filters input, .catalog-filters select { min-width: 0; width: 100%; box-sizing: border-box; border: 1px solid #d6cbdf; border-radius: .8rem; padding: .85rem 1rem; font: inherit; font-size: .9rem; color: #30273f; background: #fffdf9; }
 .catalog-filters input:focus-visible, .catalog-filters select:focus-visible, .catalog-button:focus-visible { outline: 3px solid #9a7ac4; outline-offset: 3px; }

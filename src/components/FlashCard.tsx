@@ -1,22 +1,27 @@
 import { useRef, useState } from 'react'
-import type { PointerEvent } from 'react'
+import type { CSSProperties, PointerEvent } from 'react'
 import type { Card, CardRating } from '../types/card'
 import { getSwipeRating } from './cardGesture'
+import './flashCardMotion.css'
 
 type FlashCardProps = {
   card: Card
   isRevealed: boolean
   onFlip: () => void
   onRate: (rating: CardRating) => void
+  isSaving?: boolean
+  departingRating?: CardRating | null
 }
 
-function FlashCard({ card, isRevealed, onFlip, onRate }: FlashCardProps) {
+function FlashCard({ card, isRevealed, onFlip, onRate, isSaving = false, departingRating = null }: FlashCardProps) {
   const start = useRef<{ x: number, y: number, pointerId: number } | null>(null)
   const suppressClick = useRef(false)
   const [offset, setOffset] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+  const direction = Math.abs(offset) > 14 ? (offset < 0 ? 'forgotten' : 'recalled') : undefined
 
   function startDrag(event: PointerEvent<HTMLButtonElement>) {
-    if (!event.isPrimary || event.button !== 0) return
+    if (isSaving || !event.isPrimary || event.button !== 0) return
     start.current = { x: event.clientX, y: event.clientY, pointerId: event.pointerId }
     suppressClick.current = false
     event.currentTarget.setPointerCapture(event.pointerId)
@@ -26,6 +31,7 @@ function FlashCard({ card, isRevealed, onFlip, onRate }: FlashCardProps) {
     const origin = start.current
     if (!origin || origin.pointerId !== event.pointerId) return
     start.current = null
+    setIsDragging(false)
     setOffset(0)
     const dx = event.clientX - origin.x
     const dy = event.clientY - origin.y
@@ -36,14 +42,16 @@ function FlashCard({ card, isRevealed, onFlip, onRate }: FlashCardProps) {
 
   return (
     <button
-      className="flash-card"
+      className={`flash-card${isDragging ? ' flash-card--dragging' : ''}${departingRating ? ' flash-card--departing' : ''}`}
       type="button"
       aria-label={isRevealed ? 'Masquer la réponse' : 'Révéler la réponse'}
       aria-pressed={isRevealed}
       aria-describedby="card-instructions"
-      style={{ transform: `translateX(${offset}px)` }}
+      aria-disabled={isSaving}
+      data-direction={departingRating ?? direction}
+      style={{ '--card-drag-x': `${offset}px`, '--card-drag-angle': `${offset / 22}deg`, '--card-drag-lift': `${-Math.abs(offset) / 18}px`, '--card-intent-opacity': Math.min(1, Math.abs(offset) / 60) } as CSSProperties}
       onClick={() => {
-        if (!suppressClick.current) onFlip()
+        if (!suppressClick.current && !isSaving) onFlip()
         suppressClick.current = false
       }}
       onPointerDown={startDrag}
@@ -52,20 +60,25 @@ function FlashCard({ card, isRevealed, onFlip, onRate }: FlashCardProps) {
         if (!origin || origin.pointerId !== event.pointerId) return
         const dx = event.clientX - origin.x
         const dy = event.clientY - origin.y
-        if (isRevealed && Math.abs(dx) > Math.abs(dy)) setOffset(Math.max(-80, Math.min(80, dx)))
+        if (isRevealed && !isSaving && Math.abs(dx) > Math.abs(dy)) {
+          setIsDragging(true)
+          setOffset(Math.max(-120, Math.min(120, dx * 0.8)))
+        }
       }}
       onPointerUp={finishDrag}
       onPointerCancel={() => {
         start.current = null
+        setIsDragging(false)
         suppressClick.current = true
         setOffset(0)
       }}
       onLostPointerCapture={() => {
         start.current = null
+        setIsDragging(false)
         setOffset(0)
       }}
       onKeyDown={(event) => {
-        if (!isRevealed || event.repeat) return
+        if (!isRevealed || isSaving || event.repeat) return
         if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
           event.preventDefault()
           onRate(event.key === 'ArrowLeft' ? 'forgotten' : 'recalled')
@@ -84,6 +97,7 @@ function FlashCard({ card, isRevealed, onFlip, onRate }: FlashCardProps) {
           <span className="flash-card-action" aria-hidden="true">{'\u00a0'}</span>
         </span>
       </span>
+      <span className="flash-card-intent" aria-hidden="true">{(departingRating ?? direction) === 'forgotten' ? '← À retrouver' : 'Retrouvée ✓'}</span>
       <span className="sr-only" aria-live="polite">{isRevealed ? card.answer : ''}</span>
     </button>
   )

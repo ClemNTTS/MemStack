@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { UserRound, Crown, Flag, LogOut, ChevronDown, ShieldCheck } from 'lucide-react'
 import { useProgress } from '../progress/ProgressProvider'
 import { useSubscription } from '../progress/subscription'
-import { readAiAccessStatus } from '../firebase/aiAccess'
+import { readAdminStatus } from '../firebase/admin'
 import './lesson-enhancements.css'
 
 function AccountBar() {
@@ -17,7 +17,7 @@ function AccountBar() {
     setAdminUid('')
     if (account.user && account.ready && account.online) {
       const uid = account.user.uid
-      readAiAccessStatus(uid).then(value => { if (active && value.admin) setAdminUid(uid) }).catch(() => {})
+      readAdminStatus(uid).then(value => { if (active && value.admin) setAdminUid(uid) }).catch(() => {})
     }
     return () => { active = false }
   }, [account.user?.uid, account.ready, account.online])
@@ -53,7 +53,7 @@ function AccountBar() {
           <a href={appHref('/profile')} onClick={close}><UserRound size={18} aria-hidden="true" /><span>Mon compte et ma progression</span></a>
           <a href={appHref('/premium')} onClick={close}><Crown size={18} aria-hidden="true" /><span>{subscription.status?.premium ? 'Mon abonnement Premium' : 'Découvrir Premium'}<small>{subscription.status?.premium ? 'Gérer ma formule' : 'Défis et apprentissage illimité'}</small></span></a>
           {account.ready && <a href={appHref('/reports')} onClick={close}><Flag size={18} aria-hidden="true" /><span>Mes signalements</span></a>}
-          {adminUid === account.user?.uid && <a href={appHref('/admin/ai')} onClick={close}><ShieldCheck size={18} aria-hidden="true" /><span>Administration</span></a>}
+          {adminUid === account.user?.uid && <a href={appHref('/admin')} onClick={close}><ShieldCheck size={18} aria-hidden="true" /><span>Administration</span></a>}
         </nav>
         <div className="account-menu-sync"><p role="status"><span aria-hidden="true">{account.error ? '○' : '●'}</span> {account.status}</p>
           {account.error && <div className="account-error"><p role="alert">{account.error}</p><button className="sound-toggle" type="button" disabled={!account.online} onClick={account.retry}>Réessayer</button></div>}

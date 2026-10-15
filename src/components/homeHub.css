@@ -26,6 +26,8 @@
   .hub-heading .lesson-category { font-size: .65rem; }
   .home-hub .learning-rewards { grid-template-columns: auto 1fr auto; gap: .6rem; }
   .home-hub .reward-memo { grid-row: auto; padding: 0; }
+  .home-hub .reward-memo { gap: .25rem; }
+  .home-hub .reward-memo > span { font-size: .65rem; }
   .home-hub .reward-memo .memo { width: 48px; }
   .home-hub .reward-copy > .lesson-category { display: none; }
   .home-hub .reward-copy h2 { font-size: 1.3rem !important; gap: .35rem; margin: 0 0 .5rem; }
@@ -45,3 +47,4 @@
   .hub-review-link { font-size: .9rem; }
   .hub-profile-link { font-size: .75rem; }
 }
+@media (max-width: 400px) { .home-hub .reward-copy h2 > span { display: none; } }

@@ -13,6 +13,13 @@ export function requireMember(auth) {
   return auth.uid
 }
 
+export async function currentAdminStatus({ db, auth, lookup }) {
+  const uid = requireMember(auth)
+  if (auth.token.firebase.sign_in_provider !== 'google.com' || auth.token.memstackAdmin !== true) return { admin: false }
+  const [marker, account] = await Promise.all([db.doc(`_accountLifecycle/${uid}`).get(),lookup(uid)])
+  return { admin: !marker.exists && !account.disabled && account.customClaims?.memstackAdmin === true }
+}
+
 export function isInvited(access, uid, invited) {
   return Object.hasOwn(access ?? {}, 'betaInvited') ? access.betaInvited === true : invited.includes(uid)
 }

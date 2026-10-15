@@ -1,0 +1,81 @@
+.card-deck .flash-card {
+  position: relative;
+  z-index: 1;
+  transform: translate3d(var(--card-drag-x, 0px), var(--card-drag-lift, 0px), 0) rotate(var(--card-drag-angle, 0deg));
+  transform-origin: 50% 85%;
+  transition: transform 380ms cubic-bezier(.2, 1.45, .4, 1), opacity 220ms ease;
+  animation: flash-card-arrive 340ms cubic-bezier(.2, .8, .3, 1) both;
+}
+
+.card-deck .flash-card--dragging {
+  transition: none;
+  cursor: grabbing;
+}
+
+.card-deck .flash-card-face {
+  border-color: #cdb8e7;
+  box-shadow: 0 8px 24px #5537770a, 0 2px 4px #55377708;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.card-deck .flash-card[data-direction] .flash-card-face {
+  border-color: #9c72c6;
+  box-shadow: 0 16px 36px #7951a522, 0 3px 8px #5537770d;
+}
+
+.flash-card-intent {
+  position: absolute;
+  top: .875rem;
+  right: .875rem;
+  padding: .4rem .7rem;
+  border: 1px solid #bea1db;
+  border-radius: 999px;
+  background: #f1e7fc;
+  color: #654084;
+  font-size: .8rem;
+  font-weight: 750;
+  opacity: var(--card-intent-opacity, 0);
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.flash-card[data-direction='forgotten'] .flash-card-intent {
+  right: auto;
+  left: .875rem;
+}
+
+.card-deck .flash-card--departing {
+  --card-exit-x: 95px;
+  --card-exit-angle: 7deg;
+  animation: flash-card-depart 280ms cubic-bezier(.4, 0, .8, .4) both;
+  pointer-events: none;
+}
+
+.card-deck .flash-card--departing[data-direction='forgotten'] {
+  --card-exit-x: -95px;
+  --card-exit-angle: -7deg;
+}
+
+.flash-card--departing .flash-card-intent { opacity: 1; }
+.card-save-status { min-height: 1.4em; margin: .6rem 0 0; color: #76558f; font-size: .8rem; }
+
+@keyframes flash-card-arrive {
+  from { opacity: 0; translate: 0 10px; scale: .975; }
+  to { opacity: 1; translate: 0 0; scale: 1; }
+}
+
+@keyframes flash-card-depart {
+  to { opacity: 0; transform: translate3d(var(--card-exit-x), -14px, 0) rotate(var(--card-exit-angle)) scale(.95); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-deck .flash-card,
+  .card-deck .flash-card-inner,
+  .card-deck .flash-card-face,
+  .card-deck .flash-card-intent {
+    animation: none;
+    transition: none;
+  }
+
+  .card-deck .flash-card { transform: none; }
+}

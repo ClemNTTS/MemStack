@@ -13,7 +13,7 @@ import { AnalysisError, callMistral, publicAnalysis, validateAttemptId } from '.
 import { claimAnalysis } from './claim.mjs'
 import { submitCheckedChallenge } from './challengeChecks.mjs'
 import { createAccountLifecycle } from './accountLifecycle.mjs'
-import { getAccessStatus, requireGoogle, requireMember, updateMemberAccess, validateMemberAccessRequest } from './accessService.mjs'
+import { getAccessStatus, requireGoogle, requireMember, updateMemberAccess, validateMemberAccessRequest, currentAdminStatus } from './accessService.mjs'
 
 initializeApp()
 const db = getFirestore()
@@ -34,6 +34,10 @@ const globalLimit = defineInt('CHALLENGE_AI_GLOBAL_DAILY_LIMIT', { default: 25 }
 const tokenLimit = defineInt('CHALLENGE_AI_GLOBAL_RESERVED_TOKENS', { default: 400000 })
 
 const callableOptions = { region: 'europe-west9', enforceAppCheck: true, maxInstances: 2, cors: true }
+export const getAdminStatus = onCall(callableOptions, request => accessCall(async () => {
+  if (!request.data || typeof request.data !== 'object' || Array.isArray(request.data) || Object.keys(request.data).length) throw new HttpsError('invalid-argument','Paramètres invalides.')
+  return currentAdminStatus({db,auth:request.auth,lookup:uid=>getAuth().getUser(uid)})
+}))
 export const getWorldRanking = onCall(callableOptions, request => accessCall(async () => {
   const uid = requireMember(request.auth)
   if (!request.data || Object.keys(request.data).length) throw new HttpsError('invalid-argument','Paramètres invalides.')
