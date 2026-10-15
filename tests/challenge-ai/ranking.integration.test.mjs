@@ -2,6 +2,7 @@ import test, { before, after } from 'node:test'
 import assert from 'node:assert/strict'
 import {createRequire} from 'node:module'
 import {ensureRankingMember,readWorldRanking,recordRankingActivity,updateRankingAlias,removeRankingMember} from '../../functions/src/worldRanking.mjs'
+import {importLearningBatch} from '../../functions/src/learningImport.mjs'
 const require = createRequire(new URL('../../functions/package.json',import.meta.url))
 const {initializeApp,deleteApp} = require('firebase-admin/app')
 const {getFirestore} = require('firebase-admin/firestore')
@@ -46,4 +47,13 @@ test('alias changes are acknowledged, rate limited, blocked during deletion and 
   await removeRankingMember(db,uid)
   assert.equal((await db.doc(`_worldRanking/${uid}`).get()).exists,false)
   assert.equal((await db.doc(`_worldRankingDays/2026-10-15/members/${uid}`).get()).exists,false)
+})
+
+test('the first historical import cannot manufacture a global streak',async()=>{
+  const uid='ranking-import'
+  await importLearningBatch({db,uid,now,catalog:[{id:'lesson-one',cardIds:['card-one']}],data:{lessons:[{id:'lesson-one',completedAt:new Date(now).toISOString()}],cards:[],events:[]}})
+  assert.equal((await db.doc(`users/${uid}/lessons/lesson-one`).get()).exists,true)
+  assert.equal((await readWorldRanking(db,uid,now)).self.streak,0)
+  await activity(uid)
+  assert.equal((await readWorldRanking(db,uid,now)).self.streak,1)
 })

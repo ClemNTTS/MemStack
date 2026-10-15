@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto'
 import { AnalysisError } from './analysis.mjs'
 import { hasPremium, hasPermanentPremium } from './subscription.mjs'
 import { learningDay, readDailyLearningUsage } from './learningAccess.mjs'
+import { ensureRankingMember } from './worldRanking.mjs'
 
 const exact = (value, keys) => value && typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === keys.length && keys.every(key => Object.hasOwn(value,key))
 const validDate = (value, now) => typeof value === 'string' && Number.isFinite(Date.parse(value)) && new Date(value).toISOString() === value && Date.parse(value) <= now
@@ -17,6 +18,8 @@ export async function importLearningBatch({ db, uid, data, catalog, now = Date.n
   for (const event of data.events) if (!exact(event,['cardId','rating','reviewedAt','kind']) || !byCard.has(event.cardId) || !['recalled','forgotten'].includes(event.rating) || !['new','review'].includes(event.kind) || !validDate(event.reviewedAt,now)) throw new AnalysisError('invalid-argument','Historique importé invalide.')
   const eventId = event => encodeURIComponent(`${event.cardId}_${event.reviewedAt}_${event.kind}_${event.rating}`)
   if (new Set(data.lessons.map(value => value.id)).size !== data.lessons.length || new Set(data.cards.map(value => value.cardId)).size !== data.cards.length || new Set(data.events.map(eventId)).size !== data.events.length) throw new AnalysisError('invalid-argument','Import dupliqué.')
+  // Register before importing so supplied historical dates never seed a new global streak.
+  await ensureRankingMember(db,uid,now)
   const importId = createHash('sha256').update(JSON.stringify(data)).digest('hex')
   const receiptRef = db.doc(`users/${uid}/learningImports/${importId}`)
   return db.runTransaction(async transaction => {
