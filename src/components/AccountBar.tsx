@@ -1,6 +1,6 @@
 import { appHref } from '../navigation/browser'
 import { useEffect, useRef, useState } from 'react'
-import { UserRound, Crown, Flag, LogOut, ChevronDown, ShieldCheck } from 'lucide-react'
+import { BookOpen, UserRound, Crown, Flag, LogOut, ChevronDown, ShieldCheck } from 'lucide-react'
 import { useProgress } from '../progress/ProgressProvider'
 import { useSubscription } from '../progress/subscription'
 import { readAdminStatus } from '../firebase/admin'
@@ -50,6 +50,7 @@ function AccountBar() {
       <div className="account-menu-panel">
         <div className="account-menu-identity"><span className="account-avatar" aria-hidden="true">{name.charAt(0).toUpperCase()}</span><div><strong>{name}</strong><span className="account-plan">{subscription.loading ? 'Abonnement en cours de vérification…' : subscription.status?.premium ? 'Membre Premium' : subscription.status ? 'Formule gratuite' : 'Abonnement à vérifier'}</span></div></div>
         <nav className="account-menu-links" aria-label="Mon compte">
+          <a href={appHref('/discover')} onClick={close}><BookOpen size={18} aria-hidden="true" /><span>Découvrir MemStack<small>La méthode et les formules</small></span></a>
           <a href={appHref('/profile')} onClick={close}><UserRound size={18} aria-hidden="true" /><span>Mon compte et ma progression</span></a>
           <a href={appHref('/premium')} onClick={close}><Crown size={18} aria-hidden="true" /><span>{subscription.status?.premium ? 'Mon abonnement Premium' : 'Découvrir Premium'}<small>{subscription.status?.premium ? 'Gérer ma formule' : 'Défis et apprentissage illimité'}</small></span></a>
           {account.ready && <a href={appHref('/reports')} onClick={close}><Flag size={18} aria-hidden="true" /><span>Mes signalements</span></a>}

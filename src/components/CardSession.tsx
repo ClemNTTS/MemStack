@@ -36,7 +36,7 @@ function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel, 
   const currentCard = currentItem?.card
 
   async function rateCard(rating: CardRating) {
-    if (!currentCard || !isRevealed || savingRef.current || ratedIds.current.has(currentCard.id)) return
+    if (!currentCard || !isRevealed || savingRef.current || ratedIds.current.has(currentCard.id)) return false
 
     const result = { cardId: currentCard.id, rating, reviewedAt: new Date().toISOString() }
     savingRef.current = true
@@ -44,7 +44,7 @@ function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel, 
     let saved = false
     try {
       saved = await onRate(result, currentItem.kind)
-      if (!saved) return
+      if (!saved) return false
       ratedIds.current.add(currentCard.id)
       setDepartingRating(rating)
       if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -52,6 +52,7 @@ function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel, 
       }
       setResults((previous) => [...previous, result])
       setIsRevealed(false)
+      return true
     } finally {
       savingRef.current = false
       setSaving(false)

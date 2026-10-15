@@ -9,6 +9,7 @@ import LibraryPage from './LibraryPage'
 import ProfilePage from './ProfilePage'
 import PremiumPage from './PremiumPage'
 import WorldRanking from './WorldRanking'
+import LandingPage from './LandingPage'
 import ReportsPage from '../reports/ReportsPage'
 import AdminPage from './AdminPage'
 import LessonReplay from './LessonReplay'
@@ -45,7 +46,7 @@ export function Pages({ initialRoute }: { initialRoute?: string } = {}) {
   const immersive = Boolean(lesson) || path === '/today' || path === '/reviews'
   const previousRoute = useRef(route)
   useEffect(() => {
-    const title = lesson?.title ?? (path === '/reports' ? 'Mes signalements' : (path === '/admin' || path === '/admin/ai') ? 'Administration' : path === '/challenges' ? 'Défis' : challengeId ? challenges.find(challenge => challenge.id === challengeId)?.title : path === '/courses' ? 'Parcours' : courseId ? catalogCourses.find(course => course.id === courseId)?.title : path === '/library' ? 'Bibliothèque' : path === '/ranking' ? 'Classement mondial' : path === '/premium' ? 'Premium' : path === '/profile' ? 'Mon compte' : path === '/reviews' ? 'Révisions' : path === '/' || path === '/today' ? 'Aujourd’hui' : 'Page introuvable')
+    const title = lesson?.title ?? (path === '/discover' ? 'Découvrir MemStack' : path === '/reports' ? 'Mes signalements' : (path === '/admin' || path === '/admin/ai') ? 'Administration' : path === '/challenges' ? 'Défis' : challengeId ? challenges.find(challenge => challenge.id === challengeId)?.title : path === '/courses' ? 'Parcours' : courseId ? catalogCourses.find(course => course.id === courseId)?.title : path === '/library' ? 'Bibliothèque' : path === '/ranking' ? 'Classement mondial' : path === '/premium' ? 'Premium' : path === '/profile' ? 'Mon compte' : path === '/reviews' ? 'Révisions' : path === '/' || path === '/today' ? 'Aujourd’hui' : 'Page introuvable')
     document.title = `${title ?? 'Page introuvable'} · MemStack`
     if (previousRoute.current !== route) {
       document.querySelector('.account-menu')?.removeAttribute('open')
@@ -86,6 +87,7 @@ export function Pages({ initialRoute }: { initialRoute?: string } = {}) {
   ]
   let page
   if (path === '/') page = <Dashboard />
+  else if (path === '/discover') page = <LandingPage connected embedded />
   else if (path === '/courses' || courseId !== undefined) page = <CoursesPage key={courseId ?? 'all'} courseId={courseId} />
   else if (path === '/library') page = <LibraryPage />
   else if (path === '/profile') page = <ProfilePage />
@@ -100,7 +102,7 @@ export function Pages({ initialRoute }: { initialRoute?: string } = {}) {
   return <div className="learning-app" data-immersive={immersive} onClick={navigate}>
     <a className="skip-link" href="#main-content">Aller au contenu</a>
     <header className="site-header">
-      <a className="brand" href={appHref('/')} aria-label="MemStack, accueil">memstack<span> / l’atelier</span></a>
+      <a className="brand" href={appHref('/discover')} aria-label="Découvrir MemStack">memstack<span> / l’atelier</span></a>
       {immersive && <a className="mobile-session-exit" href={appHref(lesson ? '/library' : '/')}><span aria-hidden="true">←</span> Quitter la session</a>}
       <nav aria-label="Navigation principale">{links.map((link) => <a key={link.href} href={appHref(link.href)} aria-current={link.current ? 'page' : undefined}><link.icon className="navigation-icon" aria-hidden="true" strokeWidth={1.7} /><span>{link.label}</span></a>)}</nav>
       <a className="header-premium" href={appHref('/premium')} aria-current={path === '/premium' ? 'page' : undefined}>Premium <span aria-hidden="true">✦</span></a>

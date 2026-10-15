@@ -8,7 +8,7 @@ type FlashCardProps = {
   card: Card
   isRevealed: boolean
   onFlip: () => void
-  onRate: (rating: CardRating) => void
+  onRate: (rating: CardRating) => boolean | Promise<boolean>
   isSaving?: boolean
   departingRating?: CardRating | null
 }
@@ -16,28 +16,42 @@ type FlashCardProps = {
 function FlashCard({ card, isRevealed, onFlip, onRate, isSaving = false, departingRating = null }: FlashCardProps) {
   const start = useRef<{ x: number, y: number, pointerId: number } | null>(null)
   const suppressClick = useRef(false)
+  const swipePending = useRef(false)
   const [offset, setOffset] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
   const direction = Math.abs(offset) > 14 ? (offset < 0 ? 'forgotten' : 'recalled') : undefined
 
   function startDrag(event: PointerEvent<HTMLButtonElement>) {
-    if (isSaving || !event.isPrimary || event.button !== 0) return
+    if (isSaving || swipePending.current || !event.isPrimary || event.button !== 0) return
     start.current = { x: event.clientX, y: event.clientY, pointerId: event.pointerId }
     suppressClick.current = false
     event.currentTarget.setPointerCapture(event.pointerId)
   }
 
-  function finishDrag(event: PointerEvent<HTMLButtonElement>) {
+  async function finishDrag(event: PointerEvent<HTMLButtonElement>) {
     const origin = start.current
     if (!origin || origin.pointerId !== event.pointerId) return
     start.current = null
     setIsDragging(false)
-    setOffset(0)
     const dx = event.clientX - origin.x
     const dy = event.clientY - origin.y
     suppressClick.current = Math.hypot(dx, dy) > 8
     const rating = getSwipeRating(dx, dy)
-    if (isRevealed && rating) onRate(rating)
+    if (!isRevealed || !rating || isSaving || swipePending.current) {
+      setOffset(0)
+      return
+    }
+    // Keep the release pose until the server confirms the rating. A failed save
+    // springs back; a confirmed save exits from these same coordinates.
+    setOffset(Math.max(-120, Math.min(120, dx * 0.8)))
+    swipePending.current = true
+    try {
+      if (!await onRate(rating)) setOffset(0)
+    } catch {
+      setOffset(0)
+    } finally {
+      swipePending.current = false
+    }
   }
 
   return (
@@ -73,6 +87,8 @@ function FlashCard({ card, isRevealed, onFlip, onRate, isSaving = false, departi
         setOffset(0)
       }}
       onLostPointerCapture={() => {
+        // Normal pointerup releases capture too; finishDrag owns that pose.
+        if (!start.current) return
         start.current = null
         setIsDragging(false)
         setOffset(0)

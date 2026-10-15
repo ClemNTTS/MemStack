@@ -3,6 +3,7 @@ import { useProgress } from '../progress/ProgressProvider'
 import Memo from './Memo'
 import EmailAuthForm from './EmailAuthForm'
 import EmailVerification from './EmailVerification'
+import { appHref } from '../navigation/browser'
 
 function AccessGate() {
   const account = useProgress()
@@ -18,6 +19,7 @@ function AccessGate() {
     : !account.user.emailVerified ? 'Une dernière étape pour ton compte.' : account.error ? 'La progression est indisponible.' : 'On retrouve ta progression…'
 
   return <main className="app-shell access-gate">
+    {!account.user && <a className="access-presentation-link" href={appHref('/discover')}>← Découvrir MemStack</a>}
     <p className="lesson-category">MemStack / Ton atelier personnel</p>
     <Memo expression={account.online ? 'recalled' : 'unsure'} />
     <h1>{title}</h1>

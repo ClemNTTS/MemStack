@@ -65,7 +65,8 @@
 }
 
 @keyframes flash-card-depart {
-  to { opacity: 0; transform: translate3d(var(--card-exit-x), -14px, 0) rotate(var(--card-exit-angle)) scale(.95); }
+  from { opacity: 1; transform: translate3d(var(--card-drag-x, 0px), var(--card-drag-lift, 0px), 0) rotate(var(--card-drag-angle, 0deg)); }
+  to { opacity: 0; transform: translate3d(calc(var(--card-drag-x, 0px) + var(--card-exit-x)), calc(var(--card-drag-lift, 0px) - 14px), 0) rotate(calc(var(--card-drag-angle, 0deg) + var(--card-exit-angle))) scale(.95); }
 }
 
 @media (prefers-reduced-motion: reduce) {
