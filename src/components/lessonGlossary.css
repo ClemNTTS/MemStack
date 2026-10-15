@@ -1,0 +1,47 @@
+button.lesson-glossary-term {
+  display: inline;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: #71459a;
+  font: inherit;
+  line-height: inherit;
+  text-align: inherit;
+  text-decoration: underline dotted #a282bb;
+  text-underline-offset: 4px;
+  cursor: help;
+  vertical-align: baseline;
+}
+button.lesson-glossary-term:hover, button.lesson-glossary-term[aria-expanded='true'] { color: #52306f; background: #eadcf8; }
+button.lesson-glossary-term:focus-visible { outline: 2px solid #885ab0; outline-offset: 3px; }
+.lesson-glossary-tooltip {
+  position: fixed;
+  z-index: 100;
+  box-sizing: border-box;
+  display: grid;
+  gap: 8px;
+  width: min(330px, calc(100vw - 40px));
+  max-height: calc(100dvh - 24px);
+  overflow-y: auto;
+  padding: 16px 18px;
+  border: 1px solid #cbb0e1;
+  border-radius: 16px;
+  background: #fffcf8;
+  box-shadow: 0 10px 32px #44265d25;
+  color: #483651;
+  font: 400 .9rem/1.65 system-ui, sans-serif;
+  white-space: normal;
+  transform-origin: top center;
+  animation: glossary-pop 180ms cubic-bezier(.2, .8, .3, 1.15) both;
+}
+.lesson-glossary-tooltip strong { color: #71459a; }
+@keyframes glossary-pop {
+  from { opacity: 0; transform: translateY(-4px) scale(.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lesson-glossary-tooltip { animation: none; }
+}

@@ -4,11 +4,41 @@ import test from 'node:test'
 import type { EnterpriseCurriculum } from '../types/enterpriseContent.ts'
 
 const curriculum = JSON.parse(readFileSync(new URL('../../shared/enterpriseCurriculum.json', import.meta.url), 'utf8')) as EnterpriseCurriculum
+const practices = JSON.parse(readFileSync(new URL('./enterprisePractices.json', import.meta.url), 'utf8')) as Record<string, {
+  scenario: string; task: string; starter: string; checklist: string[]; example: string; explanation: string
+}>
 const assessmentKeys = JSON.parse(readFileSync(new URL('../../shared/enterpriseAssessmentKeys.json', import.meta.url), 'utf8')) as {
   version: number
   challenges: Record<string, Record<string, string>>
   explanations: Record<string, Record<string, string>>
 }
+
+test('enterprise exercise documents are visible at a real step and match the downloadable file', () => {
+  for (const lesson of curriculum.lessons) {
+    for (const document of lesson.documents ?? []) {
+      assert.ok(lesson.steps.some(step => step.id === document.stepId && step.type === 'message'), lesson.id)
+      assert.match(document.src, /^\/enterprise\/documents\/[a-z0-9-]+\.txt$/)
+      const downloaded = readFileSync(new URL(`../../public${document.src}`, import.meta.url), 'utf8')
+      assert.equal(downloaded.replace(/\r\n/g, '\n').trim(), document.text)
+    }
+  }
+})
+
+test('every enterprise practice has its case, task and commented comparison before the lesson questions', () => {
+  const guidedPracticeLessons = curriculum.lessons.filter(lesson => lesson.id !== 'ent-plausible-not-proven')
+  assert.deepEqual(Object.keys(practices).sort(), guidedPracticeLessons.map(lesson => lesson.id).sort())
+  for (const lesson of curriculum.lessons) {
+    const practiceSteps = lesson.steps.filter(step => step.type === 'message' && step.text.startsWith('Pratique ·'))
+    assert.equal(practiceSteps.length, 1, lesson.id)
+    const practiceIndex = lesson.steps.indexOf(practiceSteps[0])
+    assert.ok(lesson.steps.slice(practiceIndex + 1).some(step => step.type === 'question'), lesson.id)
+    if (lesson.id === 'ent-plausible-not-proven') continue // Dedicated interactive claim-check exercise.
+    const activity = practices[lesson.id]
+    for (const field of ['scenario', 'task', 'starter', 'example', 'explanation'] as const) assert.ok(activity[field].trim(), `${lesson.id}: ${field}`)
+    assert.ok(activity.checklist.length >= 2 && activity.checklist.length <= 4, lesson.id)
+    assert.equal(new Set(activity.checklist).size, activity.checklist.length, lesson.id)
+  }
+})
 
 test('enterprise has a complete ordered 20-mission programme and separate continuing practice', () => {
   const guided = curriculum.lessons.filter((lesson) => !lesson.continuous)
@@ -41,7 +71,8 @@ test('each enterprise mission teaches, diagnoses twice with feedback and include
     assert.ok(lesson.steps.length >= 4 && lesson.steps.length <= 8, lesson.id)
     const messages = lesson.steps.filter((step) => step.type === 'message')
     assert.ok(messages.length >= 3, lesson.id)
-    assert.ok(messages.every((step) => step.text.length >= 200), lesson.id)
+    assert.ok(messages.filter(step => !step.text.startsWith('Pratique ·')).every(step => step.text.length >= 200), lesson.id)
+    assert.ok(messages.filter(step => step.text.startsWith('Pratique ·')).every(step => step.text.length >= 80), lesson.id)
     const questions = lesson.steps.filter((step) => step.type === 'question')
     assert.equal(questions.length, 2, lesson.id)
     for (const question of questions) {

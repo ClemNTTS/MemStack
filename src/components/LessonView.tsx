@@ -7,6 +7,7 @@ import type { Lesson, LessonStep } from '../types/lesson'
 import ChatBubble from './ChatBubble'
 import LessonText, { InlineLessonText } from './LessonText'
 import { useMessageSound } from '../lesson/useMessageSound'
+import { useLessonScroll } from '../lesson/useLessonScroll'
 import { catalogCards } from '../data/catalog'
 import { lessonReportContext } from '../reports/contentReport'
 import ContentReportButton from './ContentReportButton'
@@ -26,7 +27,6 @@ function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLa
   const sound = useMessageSound()
   const [saving, setSaving] = useState(false)
   const savingRef = useRef(false)
-  const endRef = useRef<HTMLDivElement>(null)
   const imageDialogRef = useRef<HTMLDialogElement>(null)
   const [expandedImage, setExpandedImage] = useState<Extract<LessonStep, { type: 'image' }> | null>(null)
   const stepsById = useMemo(() => indexLessonSteps(lesson), [lesson])
@@ -47,6 +47,7 @@ function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLa
     ? selectedChoice?.nextStepId
     : currentStep.nextStepId
   const canContinue = currentStep.type !== 'question' || Boolean(selectedChoice)
+  const { contentRef, endRef } = useLessonScroll(`${history.length}:${currentVisit.selectedChoiceId ?? ''}`, history.length > 1 || Boolean(currentVisit.selectedChoiceId))
 
   useEffect(() => {
     if (!draftKey) return
@@ -60,22 +61,6 @@ function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLa
   useEffect(() => {
     if (expandedImage && !imageDialogRef.current?.open) imageDialogRef.current?.showModal()
   }, [expandedImage])
-
-  useEffect(() => {
-    if (history.length === 1 && !currentVisit.selectedChoiceId) return
-    const conversation = endRef.current?.parentElement
-    if (conversation) {
-      const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'
-      if (window.getComputedStyle(conversation).overflowY === 'visible') {
-        endRef.current?.scrollIntoView({ block: 'nearest', behavior })
-        return
-      }
-      conversation.scrollTo({
-        top: conversation.scrollHeight,
-        behavior,
-      })
-    }
-  }, [history.length, currentVisit.selectedChoiceId])
 
   function selectChoice(choiceId: string) {
     if (currentVisit.selectedChoiceId) return
@@ -122,7 +107,7 @@ function LessonView({ lesson, onComplete, onMessage, progressLabel, completionLa
       </header>
 
       <div className="lesson-conversation">
-        <div className="lesson-content" role="region" tabIndex={0} aria-label="Historique de la discussion avec Mémo">
+        <div ref={contentRef} className="lesson-content" role="region" tabIndex={0} aria-label="Historique de la discussion avec Mémo">
           {history.map((visit, index) => {
             const step = stepsById.get(visit.id)!
             const isCurrent = index === history.length - 1
