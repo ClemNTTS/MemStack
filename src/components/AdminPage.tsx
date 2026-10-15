@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { readAdminStatus } from '../firebase/admin'
 import { useProgress } from '../progress/ProgressProvider'
 import { appHref } from '../navigation/browser'
+import EnterpriseAdminPanel from '../enterprise/EnterpriseAdminPanel'
 
 export default function AdminPage() {
   const { user, online } = useProgress()
@@ -23,7 +24,7 @@ export default function AdminPage() {
     {allowed && <><section className="overview-panel"><h2>Les défis suivent désormais le Premium.</h2><p>Les anciennes invitations à l’analyse IA ne sont plus utilisées. L’accès aux défis dépend de l’abonnement ou d’un accès Premium permanent.</p></section><div className="dashboard-columns" style={{marginTop:'1.5rem'}}>
       <section className="overview-panel"><p className="lesson-category">Comptes</p><h2>Retrouver un membre</h2><p>Consulte les comptes Google et email, leur état et leurs méthodes de connexion dans Firebase.</p><a className="catalog-button secondary" href="https://console.firebase.google.com/project/memstack-9f581/authentication/users" target="_blank" rel="noopener noreferrer">Ouvrir les comptes Firebase ↗</a></section>
       <section className="overview-panel"><p className="lesson-category">Abonnements</p><h2>Suivre les paiements</h2><p>Consulte les abonnements, les factures et les résiliations dans Stripe.</p><a className="catalog-button secondary" href="https://dashboard.stripe.com/acct_1UQSaJLmonrrwnNT/subscriptions" target="_blank" rel="noopener noreferrer">Ouvrir Stripe ↗</a></section>
-    </div><p className="dashboard-note">Ces consoles demandent leurs propres droits d’administration.</p></>}
+    </div><p className="dashboard-note">Ces consoles demandent leurs propres droits d’administration.</p><EnterpriseAdminPanel key={user?.uid} /></>}
     <p><a className="text-link" href={appHref('/')}>Retour à mon atelier →</a></p>
   </main>
 }

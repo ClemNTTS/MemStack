@@ -15,6 +15,13 @@ service cloud.firestore {
       allow read: if owner(uid);
       // Only administrators can grant or revoke access to the AI option.
     }
+    match /users/{uid}/enterpriseMemberships/{organizationId} {
+      allow read: if owner(uid);
+      // Memberships and organization progress are server-only. All reads pass through
+      // an authenticated callable that checks current organization and membership state.
+    }
+    match /organizations/{organizationId}/{document=**} { allow read, write: if false; }
+    match /_enterpriseInvitations/{invitationId} { allow read, write: if false; }
     match /users/{uid}/settings/subscription {
       allow read: if owner(uid);
       // Signed server notifications own subscriptions; clients cannot grant premium.

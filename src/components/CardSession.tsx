@@ -18,6 +18,7 @@ type CardSessionProps = {
   onContinueReviews?: () => void
   onContinueLearningCards?: () => void
   onChooseLesson?: () => void
+  environment?: { homeHref: string; label: string }
 }
 
 const ratingLabels: Record<CardRating, string> = {
@@ -25,7 +26,7 @@ const ratingLabels: Record<CardRating, string> = {
   recalled: 'Oui, je l’avais retrouvée',
 }
 
-function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel, onContinueReviews, onContinueLearningCards, onChooseLesson }: CardSessionProps) {
+function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel, onContinueReviews, onContinueLearningCards, onChooseLesson, environment }: CardSessionProps) {
   const [results, setResults] = useState<CardResult[]>([])
   const ratedIds = useRef(new Set<string>())
   const [isRevealed, setIsRevealed] = useState(false)
@@ -84,9 +85,9 @@ function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel, 
           {onChooseLesson
             ? <button className="catalog-button secondary" type="button" onClick={onChooseLesson}>Choisir la prochaine leçon</button>
             : <a href={appHref('/today')}>Choisir ma session</a>}
-          <a href={appHref('/courses')}>Explorer les parcours</a>
+          {environment ? <a href={environment.homeHref}>Retrouver {environment.label}</a> : <><a href={appHref('/courses')}>Explorer les parcours</a>
           <a href={appHref('/library')}>Relire mes leçons</a>
-          <a href={appHref('/')}>Retour à l’accueil</a>
+          <a href={appHref('/')}>Retour à l’accueil</a></>}
         </nav>
       </section>
     )
@@ -114,7 +115,7 @@ function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel, 
         </div>
         <p className="card-save-status" role="status">{departingRating ? 'Carte enregistrée' : saving ? 'Enregistrement de ta réponse…' : '\u00a0'}</p>
         <p className="card-rating-prompt" aria-hidden="true">{isRevealed ? 'Avais-tu retrouvé la réponse ? À gauche : non. À droite : oui.' : 'Retrouve la réponse avant de retourner la carte.'}</p>
-        <ContentReportButton context={cardReportContext(currentCard, catalogLessons)} />
+        {!environment && <ContentReportButton context={cardReportContext(currentCard, catalogLessons)} />}
         <p id="card-instructions" className="sr-only">
           {isRevealed ? 'Avais-tu retrouvé la réponse ? À gauche : non. À droite : oui. Glisse la carte ou choisis Mémo.' : 'Clique sur la carte pour révéler la réponse.'}
         </p>
