@@ -32,6 +32,20 @@ Les preuves opérationnelles sont dans `.npm-cache/enterprise-cloud-proof.json` 
 
 ## Limites et suite
 
-Aucun paiement réel, tarif LIVE, changement de plafond budgétaire ou déploiement frontend n’a été effectué. La recette navigateur avec un utilisateur connecté sur localhost reste à compléter : la session Google n’a pas pu être établie dans le navigateur de qualification. Le contrôle automatique a refusé l’inspection de l’interface de production, incompatible avec le périmètre local de cette recette ; aucun contournement de cette restriction n’a été effectué.
+### Recette utilisateur connecté, complétée le même jour
 
-Avant ouverture commerciale : terminer la recette utilisateur connecté, préparer les paramètres et ressources Stripe LIVE dédiés, puis publier le frontend compatible. Le présent document prouve le déploiement et les échanges TEST du webhook/worker, pas l’ouverture commerciale de l’offre.
+Après connexion Google effectuée par le propriétaire sur localhost, le compte de qualification autorisé a créé « Qualification UI — TEST » via `createEnterpriseOrganization`, lu sa facturation et ouvert Checkout via `createEnterpriseCheckout`. App Check et l’authentification sont restés actifs. Le serveur a bien proposé une seule place à 10 € TTC, sans accès pédagogique avant paiement.
+
+La session créée par le callable conserve les URL fixes de production. Pour effectuer cette recette entièrement sur localhost, cette session ouverte a été expirée puis remplacée, avec les outils serveur de qualification, par une session Stripe TEST équivalente pour la même organisation et le même client, avec retour local. Cette adaptation est limitée au script de qualification ignoré ; les URL du code de production n’ont pas été modifiées. La recette ne prétend donc pas inspecter le retour dans l’interface de production.
+
+Le paiement fictif a été confirmé par le webhook réel. Le navigateur connecté a alors ouvert le chemin : progression initiale nulle, uniquement le contenu Entreprise. Une mauvaise réponse affiche une explication et désactive « Continuer » ; après correction, la première mission est enregistrée avec accusé serveur et débloque trois cartes. Le premier rappel d’une carte passe à la suivante après enregistrement. Une relecture serveur confirme une mission et une carte dans le sous-arbre de l’organisation. Le hub affiche 50 XP, un jour de série et deux cartes restantes. Les documents personnels de facturation, d’abonnement et de Premium permanent ont été comparés à leur état initial : ils sont inchangés.
+
+Un défaut visuel détecté dans cette session a été corrigé : le header Entreprise utilise aussi la classe commune du header, pour appliquer correctement les styles du menu Compte et de ses liens. Build réussi, puis contrôle visuel dans le navigateur réel.
+
+L’organisation de qualification a ensuite été suspendue, son adhésion de test retirée et son entitlement fermé. Le worker a annulé son abonnement TEST : statut Stripe `canceled`, entitlement `inactive`, révision 2 acquittée. Après actualisation, le navigateur refuse l’accès à l’organisation. La progression de qualification est conservée dans cette organisation désactivée, sans modifier les données Développement du compte.
+
+![Parcours Entreprise connecté après une mission et une carte](screenshots/enterprise/ui-authenticated.png)
+
+Aucun paiement réel, tarif LIVE, changement de plafond budgétaire ou déploiement frontend n’a été effectué. La recette connectée sur localhost est désormais complétée selon le périmètre décrit ci-dessus. L’interface de production n’a pas été inspectée ; sa publication et le retour réel vers cette interface restent distincts de la recette locale.
+
+Avant ouverture commerciale : préparer les paramètres et ressources Stripe LIVE dédiés, publier le frontend compatible et vérifier son retour de paiement. Le présent document prouve le déploiement et les échanges TEST du webhook/worker, ainsi que la recette connectée locale, pas l’ouverture commerciale de l’offre.
