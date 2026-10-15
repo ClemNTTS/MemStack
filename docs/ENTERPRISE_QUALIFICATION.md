@@ -1,5 +1,7 @@
 # Qualification Entreprise — 15 octobre 2026
 
+État actualisé : le backend a ensuite été déployé en mode Stripe TEST avec l’autorisation du propriétaire. Le paiement fictif, le webhook, le worker Eventarc et l’annulation ont été vérifiés sur l’infrastructure réelle ; voir [le compte rendu de déploiement](ENTERPRISE_DEPLOYMENT_20261015.md). Le reste de ce document conserve les preuves et limites de la qualification préalable au déploiement.
+
 ## Périmètre livré
 
 Deux environnements pour une même identité : Développement et Entreprise. Chaque organisation a sa progression, ses cartes, ses situations, ses pseudos, ses niveaux, ses badges et son classement. L’offre publique présente un abonnement continu à 10 € TTC par membre actif et par mois, responsables compris, avec invitations exclues tant qu’elles ne sont pas acceptées.

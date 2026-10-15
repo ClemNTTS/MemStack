@@ -10,6 +10,8 @@ L’achat Entreprise ne donne pas de Premium développeur. Les Premium personnel
 
 ## État de configuration
 
+État du 15 octobre après autorisation du propriétaire : backend déployé avec `ENTERPRISE_SUBSCRIPTIONS_ENABLED=true` et `ENTERPRISE_SUBSCRIPTIONS_LIVE_MODE=false`, ressources Stripe TEST dédiées et paiement réservé aux comptes de qualification autorisés. Le tableau ci-dessous décrit les valeurs par défaut et la préparation initiale ; voir [la recette du déploiement](ENTERPRISE_DEPLOYMENT_20261015.md) pour les résultats effectifs. Le LIVE reste fermé.
+
 L’implémentation est désactivée par défaut. Ces paramètres Functions sont distincts de ceux du Premium grand public :
 
 | Paramètre | Défaut | Valeur nécessaire à la qualification |
