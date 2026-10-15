@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "test": "node --test provider-contract.test.mjs client-server-contract.test.mjs",
-    "test:rules": "node --test rules.test.mjs claim.integration.test.mjs accountLifecycle.integration.test.mjs checked.integration.test.mjs learning.integration.test.mjs ranking.integration.test.mjs",
+    "test:rules": "node --test rules.test.mjs claim.integration.test.mjs accountLifecycle.integration.test.mjs checked.integration.test.mjs learning.integration.test.mjs ranking.integration.test.mjs enterprise.integration.test.mjs",
     "test:auth": "node --test --test-force-exit auth.integration.test.mjs"
   },
   "devDependencies": {

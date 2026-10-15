@@ -10,6 +10,7 @@ import ProfilePage from './ProfilePage'
 import PremiumPage from './PremiumPage'
 import WorldRanking from './WorldRanking'
 import LandingPage from './LandingPage'
+import EnterpriseOfferPage from './EnterpriseOfferPage'
 import ReportsPage from '../reports/ReportsPage'
 import AdminPage from './AdminPage'
 import LessonReplay from './LessonReplay'
@@ -46,7 +47,7 @@ export function Pages({ initialRoute }: { initialRoute?: string } = {}) {
   const immersive = Boolean(lesson) || path === '/today' || path === '/reviews'
   const previousRoute = useRef(route)
   useEffect(() => {
-    const title = lesson?.title ?? (path === '/discover' ? 'Découvrir MemStack' : path === '/reports' ? 'Mes signalements' : (path === '/admin' || path === '/admin/ai') ? 'Administration' : path === '/challenges' ? 'Défis' : challengeId ? challenges.find(challenge => challenge.id === challengeId)?.title : path === '/courses' ? 'Parcours' : courseId ? catalogCourses.find(course => course.id === courseId)?.title : path === '/library' ? 'Bibliothèque' : path === '/ranking' ? 'Classement mondial' : path === '/premium' ? 'Premium' : path === '/profile' ? 'Mon compte' : path === '/reviews' ? 'Révisions' : path === '/' || path === '/today' ? 'Aujourd’hui' : 'Page introuvable')
+    const title = lesson?.title ?? (path === '/business' ? 'MemStack Entreprise' : path === '/discover' ? 'Découvrir MemStack' : path === '/reports' ? 'Mes signalements' : (path === '/admin' || path === '/admin/ai') ? 'Administration' : path === '/challenges' ? 'Défis' : challengeId ? challenges.find(challenge => challenge.id === challengeId)?.title : path === '/courses' ? 'Parcours' : courseId ? catalogCourses.find(course => course.id === courseId)?.title : path === '/library' ? 'Bibliothèque' : path === '/ranking' ? 'Classement mondial' : path === '/premium' ? 'Premium' : path === '/profile' ? 'Mon compte' : path === '/reviews' ? 'Révisions' : path === '/' || path === '/today' ? 'Aujourd’hui' : 'Page introuvable')
     document.title = `${title ?? 'Page introuvable'} · MemStack`
     if (previousRoute.current !== route) {
       document.querySelector('.account-menu')?.removeAttribute('open')
@@ -74,6 +75,7 @@ export function Pages({ initialRoute }: { initialRoute?: string } = {}) {
     event.preventDefault()
     if (nextRoute === route) return
     window.history.pushState(null, '', appHref(nextRoute))
+    window.dispatchEvent(new Event('memstack:navigate'))
     setRoute(nextRoute)
     setNavigation(value => value + 1)
     window.scrollTo(0, 0)
@@ -88,6 +90,7 @@ export function Pages({ initialRoute }: { initialRoute?: string } = {}) {
   let page
   if (path === '/') page = <Dashboard />
   else if (path === '/discover') page = <LandingPage connected embedded />
+  else if (path === '/business') page = <EnterpriseOfferPage connected embedded />
   else if (path === '/courses' || courseId !== undefined) page = <CoursesPage key={courseId ?? 'all'} courseId={courseId} />
   else if (path === '/library') page = <LibraryPage />
   else if (path === '/profile') page = <ProfilePage />

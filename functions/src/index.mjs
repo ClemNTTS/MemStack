@@ -3,6 +3,7 @@ import { initializeApp } from 'firebase-admin/app'
 import { getAuth } from 'firebase-admin/auth'
 import { getFirestore, Timestamp } from 'firebase-admin/firestore'
 import { onCall, onRequest, HttpsError } from 'firebase-functions/v2/https'
+import { onDocumentWritten } from 'firebase-functions/v2/firestore'
 import Stripe from 'stripe'
 import { submitLearningAction } from './learningAccess.mjs'
 import { importLearningBatch } from './learningImport.mjs'
@@ -14,6 +15,8 @@ import { claimAnalysis } from './claim.mjs'
 import { submitCheckedChallenge } from './challengeChecks.mjs'
 import { createAccountLifecycle } from './accountLifecycle.mjs'
 import { getAccessStatus, requireGoogle, requireMember, updateMemberAccess, validateMemberAccessRequest, currentAdminStatus } from './accessService.mjs'
+import { getEnterpriseWorkspace as enterpriseWorkspace, manageEnterpriseOrganization as enterpriseManage, joinEnterpriseOrganization as enterpriseJoin, commitEnterpriseLearningAction as enterpriseCommit, deleteEnterpriseData } from './enterprise.mjs'
+import { enterpriseCommercialTerms,createEnterpriseOrganization as enterpriseCreate,createEnterpriseCheckout as enterpriseCheckout,getEnterpriseBilling as enterpriseBilling,createEnterprisePortal as enterprisePortal,drainEnterpriseSeatSync,processEnterpriseSubscriptionEvent } from './enterpriseBilling.mjs'
 
 initializeApp()
 const db = getFirestore()
@@ -34,6 +37,13 @@ const globalLimit = defineInt('CHALLENGE_AI_GLOBAL_DAILY_LIMIT', { default: 25 }
 const tokenLimit = defineInt('CHALLENGE_AI_GLOBAL_RESERVED_TOKENS', { default: 400000 })
 
 const callableOptions = { region: 'europe-west9', enforceAppCheck: true, maxInstances: 2, cors: true }
+const enterpriseCatalog = JSON.parse(readFileSync(new URL('../catalog/enterpriseCurriculum.json', import.meta.url),'utf8'))
+const enterpriseKeys = JSON.parse(readFileSync(new URL('../catalog/enterpriseAssessmentKeys.json', import.meta.url),'utf8'))
+const enterpriseContext = request => ({db,auth:request.auth,lookup:uid=>getAuth().getUser(uid),data:request.data})
+export const getEnterpriseWorkspace = onCall(callableOptions,request=>accessCall(()=>enterpriseWorkspace(enterpriseContext(request))))
+export const manageEnterpriseOrganization = onCall(callableOptions,request=>accessCall(()=>enterpriseManage(enterpriseContext(request))))
+export const joinEnterpriseOrganization = onCall(callableOptions,request=>accessCall(()=>enterpriseJoin(enterpriseContext(request))))
+export const commitEnterpriseLearningAction = onCall(callableOptions,request=>accessCall(()=>enterpriseCommit({...enterpriseContext(request),catalog:enterpriseCatalog,keys:enterpriseKeys})))
 export const getAdminStatus = onCall(callableOptions, request => accessCall(async () => {
   if (!request.data || typeof request.data !== 'object' || Array.isArray(request.data) || Object.keys(request.data).length) throw new HttpsError('invalid-argument','Paramètres invalides.')
   return currentAdminStatus({db,auth:request.auth,lookup:uid=>getAuth().getUser(uid)})
@@ -58,6 +68,32 @@ export const importLearningProgress = onCall(callableOptions, request => accessC
 const subscriptionConfig = JSON.parse(readFileSync(new URL('../config/subscription.json', import.meta.url), 'utf8'))
 const stripeKey = defineSecret('STRIPE_SECRET_KEY')
 const stripeWebhookKey = defineSecret('STRIPE_WEBHOOK_SECRET')
+const enterpriseSubscriptionsEnabled=defineBoolean('ENTERPRISE_SUBSCRIPTIONS_ENABLED',{default:false})
+const enterpriseSubscriptionsLive=defineBoolean('ENTERPRISE_SUBSCRIPTIONS_LIVE_MODE',{default:false})
+const enterprisePriceId=defineString('ENTERPRISE_SUBSCRIPTION_PRICE_ID',{default:''})
+const enterprisePortalId=defineString('ENTERPRISE_PORTAL_CONFIGURATION_ID',{default:''})
+const enterpriseBillingConfig=()=>({...enterpriseCommercialTerms,enabled:enterpriseSubscriptionsEnabled.value(),liveMode:enterpriseSubscriptionsLive.value(),priceId:enterprisePriceId.value(),portalConfigurationId:enterprisePortalId.value()})
+const enterpriseStripe=()=>new Stripe(stripeKey.value(),{apiVersion:subscriptionConfig.apiVersion,maxNetworkRetries:1,timeout:15000})
+async function requireEnterpriseTestAccount(request) {
+  const uid=requireMember(request.auth)
+  if(!enterpriseSubscriptionsLive.value() && !hasPermanentPremium((await db.doc(`users/${uid}/settings/premiumAccess`).get()).data())) throw new HttpsError('permission-denied','La qualification Stripe Entreprise est réservée aux comptes de test autorisés.')
+}
+export const createEnterpriseOrganization=onCall(callableOptions,request=>accessCall(async()=>{await requireEnterpriseTestAccount(request);return enterpriseCreate({...enterpriseContext(request),config:enterpriseBillingConfig()})}))
+export const getEnterpriseBilling=onCall(callableOptions,request=>accessCall(()=>enterpriseBilling({...enterpriseContext(request),config:enterpriseBillingConfig()})))
+export const createEnterpriseCheckout=onCall({...callableOptions,secrets:[stripeKey]},request=>accessCall(async()=>{await requireEnterpriseTestAccount(request);return enterpriseCheckout({...enterpriseContext(request),stripe:enterpriseStripe(),config:enterpriseBillingConfig()})}))
+export const createEnterprisePortal=onCall({...callableOptions,secrets:[stripeKey]},request=>accessCall(async()=>{await requireEnterpriseTestAccount(request);return enterprisePortal({...enterpriseContext(request),stripe:enterpriseStripe(),config:enterpriseBillingConfig()})}))
+export const retryEnterpriseBillingSync=onCall({...callableOptions,secrets:[stripeKey]},request=>accessCall(async()=>{
+  await requireEnterpriseTestAccount(request)
+  await enterpriseBilling({...enterpriseContext(request),config:enterpriseBillingConfig()})
+  return drainEnterpriseSeatSync({db,stripe:enterpriseStripe(),organizationId:request.data.organizationId,config:enterpriseBillingConfig(),manual:true})
+}))
+export const syncEnterpriseMemberQuantity=onDocumentWritten({document:'_enterpriseSeatSync/{organizationId}',region:'europe-west9',maxInstances:2,retry:true,secrets:[stripeKey],timeoutSeconds:120},async event=>{
+  if(!enterpriseSubscriptionsEnabled.value() || !event.data?.after.exists) return
+  const before=event.data.before.data(),after=event.data.after.data()
+  if(before?.revision===after.revision && before?.syncedRevision===after.syncedRevision) return
+  if(after.revision<=(after.syncedRevision??0)) return
+  await drainEnterpriseSeatSync({db,stripe:enterpriseStripe(),organizationId:event.params.organizationId,config:enterpriseBillingConfig()})
+})
 const subscriptionsEnabled = defineBoolean('SUBSCRIPTIONS_ENABLED', { default: false })
 const subscriptionsLive = defineBoolean('SUBSCRIPTIONS_LIVE_MODE', { default: false })
 const subscriptionPriceIds = defineString('SUBSCRIPTION_PRICE_IDS', { default: subscriptionConfig.priceCandidates.join(',') })
@@ -103,14 +139,21 @@ export const createPremiumPortal = onCall({ ...callableOptions, secrets: [stripe
 export const stripeSubscriptionWebhook = onRequest({ region: 'europe-west9', maxInstances: 2, timeoutSeconds: 60,
   secrets: [stripeKey, stripeWebhookKey] }, async (request, response) => {
   if (request.method !== 'POST') { response.status(405).send('Method not allowed'); return }
-  if (!subscriptionsEnabled.value()) { response.status(503).send('Billing disabled'); return }
+  if (!subscriptionsEnabled.value() && !enterpriseSubscriptionsEnabled.value()) { response.status(503).send('Billing disabled'); return }
   const stripe = new Stripe(stripeKey.value(), { apiVersion: subscriptionConfig.apiVersion, maxNetworkRetries: 1, timeout: 15000 })
   let event
   try { event = stripe.webhooks.constructEvent(request.rawBody, request.headers['stripe-signature'], stripeWebhookKey.value()) }
   catch { response.status(400).send('Invalid signature'); return }
   try {
-    const { config } = await billingRuntime()
-    await processSubscriptionEvent({ db, stripe, event, config })
+    let enterpriseHandled=false
+    if(enterpriseSubscriptionsEnabled.value() && event.livemode===enterpriseSubscriptionsLive.value()) {
+      const result=await processEnterpriseSubscriptionEvent({db,stripe,event,config:enterpriseBillingConfig()})
+      enterpriseHandled=result.scope==='enterprise' || result.ignored!==true
+    }
+    if(!enterpriseHandled && subscriptionsEnabled.value() && event.livemode===subscriptionsLive.value()) {
+      const { config } = await billingRuntime()
+      await processSubscriptionEvent({ db, stripe, event, config })
+    }
     response.status(200).send('Received')
   } catch { response.status(503).send('Retry later') }
 })
@@ -120,6 +163,7 @@ const lifecycle = createAccountLifecycle({ db, auth: getAuth(), beforeDelete: as
     await closeAccountBilling({db,stripe,uid,liveMode:subscriptionsLive.value()})
   }
   await removeRankingMember(db,uid)
+  await deleteEnterpriseData(db,uid,(await getAuth().getUser(uid)).email)
 } })
 export const exportAccountData = onCall({ ...callableOptions, timeoutSeconds: 540, concurrency: 1 }, lifecycle.exportAccountData)
 export const deleteAccountData = onCall({ ...callableOptions, secrets:[stripeKey], timeoutSeconds: 540, concurrency: 1 }, lifecycle.deleteAccountData)

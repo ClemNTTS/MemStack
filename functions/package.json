@@ -8,7 +8,7 @@
   },
   "scripts": {
     "prepare:catalog": "node scripts/prepare-catalog.mjs",
-    "build": "npm run prepare:catalog && node --check src/index.mjs && node --check src/analysis.mjs && node --check src/claim.mjs && node --check src/challengeChecks.mjs && node --check src/subscription.mjs && node --check src/learningAccess.mjs && node --check src/learningImport.mjs && node --check src/worldRanking.mjs",
+    "build": "npm run prepare:catalog && node --check src/index.mjs && node --check src/analysis.mjs && node --check src/claim.mjs && node --check src/challengeChecks.mjs && node --check src/subscription.mjs && node --check src/learningAccess.mjs && node --check src/learningImport.mjs && node --check src/worldRanking.mjs && node --check src/enterprise.mjs && node --check src/enterpriseBilling.mjs",
     "test": "node --test src/*.test.mjs"
   },
   "dependencies": {

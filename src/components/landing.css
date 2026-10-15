@@ -1,6 +1,7 @@
 .memstack-presentation { background:#f5f2eb; color:#30253f; font-family:inherit; }
 .landing-nav,.landing-main,.landing-footer { max-width:1180px; margin:auto; padding-left:32px; padding-right:32px; }
 .landing-nav { display:flex; justify-content:space-between; align-items:center; min-height:90px; gap:20px; }
+.landing-audiences { display:flex; gap:12px; flex-wrap:wrap; padding:18px 0 0; }.landing-audiences a { display:inline-flex; align-items:center; gap:10px; padding:12px 17px; border:1px solid #d9c4e9; border-radius:15px; color:#72518c; text-decoration:none; font-size:.82rem; }.landing-audiences a[aria-current=page] { background:#eee2f7; font-weight:750; }
 .landing-brand { font-size:1.5rem; font-weight:900; letter-spacing:-.06em; color:#574067; text-decoration:none; }
 .landing-brand span { font-size:.8rem; font-weight:400; letter-spacing:0; }
 .landing-login,.landing-secondary { display:inline-flex; align-items:center; gap:12px; color:#674785; font-weight:700; text-decoration:none; }
