@@ -4,7 +4,7 @@
 
 Le propriétaire a confirmé Managed Payments le 14 octobre 2026. Les tarifs existants sont `price_1UQTETLmonrrwnNTK3CpcVhP` et `price_1UQTD2LmonrrwnNTjeY9Ojdk`. Le serveur retrouve automatiquement le tarif à 150 centimes/mois et celui à 990 centimes/an, en EUR. Il exige des prix récurrents avec taxes incluses (`tax_behavior: inclusive`) pour respecter les prix TTC affichés. Le document Stripe fourni impose `2026-02-25.preview` ; cette version est explicite dans `functions/config/subscription.json`.
 
-L’intégration est désactivée par défaut. Les produits réels existants sont conservés ; leurs équivalents de test et la destination webhook de test ont été configurés. Aucun paiement réel n’a été effectué. `VITE_SUBSCRIPTIONS_ENABLED=false` maintient les paiements fermés. Les services de paiement de test et les quotas serveur ont été déployés le 15 octobre 2026 ; le frontend publié utilise `VITE_SERVER_LEARNING_ENABLED=true` et `_configuration/learningAccess.enabled=true`. Le classement mondial reste à réaliser.
+L’intégration est désactivée par défaut. Les produits réels existants sont conservés ; leurs équivalents de test et la destination webhook de test ont été configurés. Aucun paiement réel n’a été effectué. `VITE_SUBSCRIPTIONS_ENABLED=false` maintient les paiements fermés. Les services de paiement de test et les quotas serveur ont été déployés le 15 octobre 2026 ; le frontend publié utilise `VITE_SERVER_LEARNING_ENABLED=true` et `_configuration/learningAccess.enabled=true`. Le classement mondial des séries est déployé ; voir [WORLD_RANKING.md](WORLD_RANKING.md).
 
 ## Droits et quotas serveur
 
