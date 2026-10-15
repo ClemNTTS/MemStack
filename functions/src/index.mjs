@@ -6,6 +6,7 @@ import { onCall, onRequest, HttpsError } from 'firebase-functions/v2/https'
 import Stripe from 'stripe'
 import { submitLearningAction } from './learningAccess.mjs'
 import { importLearningBatch } from './learningImport.mjs'
+import { readWorldRanking, updateRankingAlias, removeRankingMember } from './worldRanking.mjs'
 import { createSubscriptionCheckout, hasPermanentPremium, publicSubscriptionStatus, processSubscriptionEvent, resolveSubscriptionPrices, closeAccountBilling } from './subscription.mjs'
 import { defineBoolean, defineInt, defineSecret, defineString } from 'firebase-functions/params'
 import { AnalysisError, callMistral, publicAnalysis, validateAttemptId } from './analysis.mjs'
@@ -33,6 +34,14 @@ const globalLimit = defineInt('CHALLENGE_AI_GLOBAL_DAILY_LIMIT', { default: 25 }
 const tokenLimit = defineInt('CHALLENGE_AI_GLOBAL_RESERVED_TOKENS', { default: 400000 })
 
 const callableOptions = { region: 'europe-west9', enforceAppCheck: true, maxInstances: 2, cors: true }
+export const getWorldRanking = onCall(callableOptions, request => accessCall(async () => {
+  const uid = requireMember(request.auth)
+  if (!request.data || Object.keys(request.data).length) throw new HttpsError('invalid-argument','Paramètres invalides.')
+  return readWorldRanking(db,uid)
+}))
+export const setRankingAlias = onCall(callableOptions, request => accessCall(async () => {
+  return updateRankingAlias(db,requireMember(request.auth),request.data)
+}))
 const learningCatalog = JSON.parse(readFileSync(new URL('../catalog/learning.json', import.meta.url), 'utf8'))
 export const commitLearningAction = onCall(callableOptions, request => accessCall(async () => {
   const uid = requireMember(request.auth)
@@ -102,9 +111,11 @@ export const stripeSubscriptionWebhook = onRequest({ region: 'europe-west9', max
   } catch { response.status(503).send('Retry later') }
 })
 const lifecycle = createAccountLifecycle({ db, auth: getAuth(), beforeDelete: async uid => {
-  if (!(await db.doc(`users/${uid}/billing/stripe`).get()).exists) return
-  const stripe = new Stripe(stripeKey.value(),{apiVersion:subscriptionConfig.apiVersion,maxNetworkRetries:1,timeout:15000})
-  await closeAccountBilling({db,stripe,uid,liveMode:subscriptionsLive.value()})
+  if ((await db.doc(`users/${uid}/billing/stripe`).get()).exists) {
+    const stripe = new Stripe(stripeKey.value(),{apiVersion:subscriptionConfig.apiVersion,maxNetworkRetries:1,timeout:15000})
+    await closeAccountBilling({db,stripe,uid,liveMode:subscriptionsLive.value()})
+  }
+  await removeRankingMember(db,uid)
 } })
 export const exportAccountData = onCall({ ...callableOptions, timeoutSeconds: 540, concurrency: 1 }, lifecycle.exportAccountData)
 export const deleteAccountData = onCall({ ...callableOptions, secrets:[stripeKey], timeoutSeconds: 540, concurrency: 1 }, lifecycle.deleteAccountData)

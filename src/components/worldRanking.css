@@ -1,0 +1,23 @@
+.world-ranking { min-width: 0; }
+.world-ranking h2 { margin: .4rem 0; display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+.world-ranking h2 > span { color: #9374b3; }
+.ranking-caption { font-size: .8rem; color: #796983; margin: .5rem 0 1rem; }
+.ranking-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .5rem; }
+.ranking-list li { display: flex; align-items: center; gap: .7rem; padding: .65rem .75rem; background: #f6f0fa; border-radius: 12px; color: #59436c; }
+.ranking-list li[data-you='true'] { background: #eadef5; }
+.ranking-place { display: grid; place-items: center; background: #fffaf6; width: 1.65rem; height: 1.65rem; border-radius: 50%; font-size: .8rem; flex-shrink: 0; }
+.ranking-alias { flex: 1; min-width: 0; overflow-wrap: anywhere; font-size: .9rem; }
+.ranking-alias small { margin-left: .5rem; font-size: .7rem; }
+.ranking-list strong { white-space: nowrap; font-size: 1rem; }
+.ranking-list strong > span { font-weight: 400; font-size: .8rem; }
+.ranking-self { display: flex; justify-content: space-between; gap: .5rem; border-top: 1px solid #dfd3e8; margin: 1rem 0 .6rem; padding-top: .75rem; font-size: .85rem; color: #665079; }
+.ranking-alias-form { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #dfd3e8; }
+.ranking-alias-form label { font-weight: 650; }
+.ranking-alias-form p { font-size: .85rem; color: #796983; }
+.ranking-alias-form > div { display: flex; gap: .75rem; flex-wrap: wrap; }
+.ranking-alias-form input { min-width: 0; flex: 1; border: 1px solid #cdb5e3; background: #fffdf9; border-radius: 12px; padding: .75rem; font: inherit; color: #514064; }
+.ranking-alias-form input:focus-visible { outline: 3px solid #b598d6; outline-offset: 2px; }
+.world-ranking-compact .ranking-caption { margin-bottom: .65rem; }
+.world-ranking-compact .ranking-list li { padding: .45rem .6rem; }
+.world-ranking-compact .ranking-self { margin-top: .75rem; }
+.world-ranking-compact .text-link { font-size: .8rem; }

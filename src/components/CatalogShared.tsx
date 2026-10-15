@@ -34,6 +34,15 @@ export function badgesFor(progress: LearningProgress) {
     { symbol: '▤', title: 'La curiosité grandit', description: 'Terminer dix leçons.', unlocked: stats.completed >= 10 },
     { symbol: '↟', title: 'Les idées prennent racine', description: 'Pratiquer vingt-cinq cartes, comptées une fois par carte et par jour.', unlocked: rewards.practices >= 25 },
     { symbol: '★', title: 'Un atelier bien vivant', description: 'Atteindre le niveau cinq.', unlocked: rewards.level >= 5 },
+    { symbol: '❋', title: 'Une saison avec Mémo', description: 'Apprendre ou pratiquer 90 jours de suite.', unlocked: rewards.longestStreak >= 90 },
+    { symbol: '✹', title: 'Le rythme est ancré', description: 'Apprendre ou pratiquer 180 jours de suite.', unlocked: rewards.longestStreak >= 180 },
+    { symbol: '♛', title: 'Un an, une idée par jour', description: 'Apprendre ou pratiquer 365 jours de suite.', unlocked: rewards.longestStreak >= 365 },
+    { symbol: '◈', title: 'La moitié du chemin', description: 'Terminer 75 leçons.', unlocked: stats.completed >= 75 },
+    { symbol: '▥', title: 'Toute la bibliothèque', description: 'Terminer les 150 leçons de la bibliothèque.', unlocked: stats.completed >= 150 },
+    { symbol: '✵', title: 'Mille petits rappels', description: 'Pratiquer 1 000 cartes, comptées une fois par carte et par jour.', unlocked: rewards.practices >= 1000 },
+    { symbol: '✶', title: 'La mémoire au long cours', description: 'Pratiquer 5 000 cartes, comptées une fois par carte et par jour.', unlocked: rewards.practices >= 5000 },
+    { symbol: '♜', title: 'Mémo voit grand', description: 'Atteindre le niveau 10.', unlocked: rewards.level >= 10 },
+    { symbol: '✷', title: 'Une passion qui dure', description: 'Atteindre le niveau 20.', unlocked: rewards.level >= 20 },
   ]
 }
 export function CourseProgress({ course, progress }: { course: Course, progress: LearningProgress }) {

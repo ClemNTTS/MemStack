@@ -10,6 +10,8 @@ import LearningRewards from './LearningRewards'
 import { useSubscription } from '../progress/subscription'
 import { learningAllowance } from '../review/learningLimits'
 import PremiumReminder from './PremiumReminder'
+import WorldRanking from './WorldRanking'
+import './homeHub.css'
 
 function Dashboard() {
   const { progress } = useProgress()
@@ -26,19 +28,20 @@ function Dashboard() {
   const suggestions = getRelearningSuggestions(progress)
   const lastLesson = catalogLessons.filter(lesson => Object.hasOwn(progress.completedLessons, lesson.id))
     .sort((a, b) => progress.completedLessons[b.id].localeCompare(progress.completedLessons[a.id]))[0]
-  return <main className="dashboard">
+  return <main className="dashboard home-page">
     <WorkshopBackground stage="rest" beat={0} />
-    <div className="dashboard-heading learning-hero">
-      <div><p className="lesson-category">Ton rendez-vous avec Mémo</p><h1>Une idée de plus.<br /><span>Un peu mieux retenue.</span></h1><p>Un petit pas chaque jour. Tu choisis quand t’arrêter.</p><div className="hero-meta"><a href={appHref('/profile')}>Repère du jour : {discoveredToday} / {dailyLessonGoal} leçon{dailyLessonGoal > 1 ? 's' : ''}</a><span>{premium ? 'Premium · à ton rythme' : `${allowance.lessonsRemaining} leçon et ${allowance.reviewsRemaining} cartes dues disponibles aujourd’hui`}</span></div></div>
-      <img className="memo-learning" src={`${import.meta.env.BASE_URL}memo/learning.webp`} alt="Mémo apprend avec son livre ouvert" width="300" height="250" />
-    </div>
+    <section className="home-hub" aria-labelledby="home-hub-title">
+      <header className="hub-heading"><p className="lesson-category">Ton rendez-vous avec Mémo</p><h1 id="home-hub-title">Ton élan, un jour à la fois.</h1><p>Chaque petit pas compte. Retrouve le tien.</p></header>
+      <div className="hub-grid"><LearningRewards hub /><WorldRanking compact /></div>
+      <div className="hub-bottom"><a className="hub-review-link" href={appHref('/reviews')}>Réviser mes cartes <span>{stats.due} due{stats.due>1?'s':''} ↗</span></a><a className="hub-profile-link" href={appHref('/profile')}>Ma progression et mes badges →</a></div>
+      <div className="hub-meta"><span>Repère du jour : {discoveredToday} / {dailyLessonGoal} leçon{dailyLessonGoal>1?'s':''}</span><span>{premium?'Premium · à ton rythme':`${allowance.lessonsRemaining} leçon et ${allowance.reviewsRemaining} cartes dues disponibles`}</span></div>
+    </section>
     <section className="dashboard-session" aria-labelledby="today-title">
       <div><p className="lesson-category">{consolidateFirst ? 'Tes nouvelles cartes · tous les parcours' : reviewFirst ? 'Tes révisions · tous les parcours' : `Prochaine leçon conseillée · ${course.theme}`}</p><h2 id="today-title">{consolidateFirst ? 'Consolide ta dernière découverte.' : reviewFirst ? 'Un petit rappel avant de continuer.' : plan.lesson?.title ?? 'Un chemin parcouru.'}</h2><p>{consolidateFirst ? `${plan.pendingCardIds.length} cartes de leçons terminées à découvrir, puis les révisions dues.` : reviewFirst ? `${stats.due} cartes dues, par lots de cinq. Tu choisis quand t’arrêter.` : plan.lesson ? `${plan.lesson.estimatedMinutes} min · ${plan.lesson.cardIds.length} nouvelles cartes · ${course.title}` : 'Ton parcours est terminé. Tes cartes continuent de revenir aux bonnes échéances.'}</p>
         {(consolidateFirst || reviewFirst) && <p className="dashboard-note">Mémo te conseille tes cartes d’abord. {plan.lesson ? <a className="text-link" href={appHref('/today?start=lesson')}>Découvrir plutôt « {plan.lesson.title} » →</a> : <a className="text-link" href={appHref('/courses')}>Explorer un autre parcours →</a>}</p>}
       </div><a className="dashboard-cta" href={appHref(consolidateFirst ? '/today?start=cards' : reviewFirst ? '/reviews' : plan.lesson ? '/today?start=lesson' : '/courses')}>{consolidateFirst ? 'Consolider mes cartes' : reviewFirst ? 'Réviser mes cartes' : plan.lesson ? 'Découvrir cette leçon' : 'Explorer les parcours'} <span aria-hidden="true">↗</span></a>
     </section>
     {!premium && (!allowance.reviewsRemaining || !allowance.lessonsRemaining) && <PremiumReminder reason={!allowance.reviewsRemaining ? 'reviews' : 'lesson'} />}
-    <LearningRewards />
     <section className="stats-strip" aria-label="Ton apprentissage">
       <div><strong>{stats.completed}</strong><span>{stats.completed === 1 ? 'leçon terminée' : 'leçons terminées'}</span></div><div><strong>{stats.learned}</strong><span>{stats.learned === 1 ? 'carte découverte' : 'cartes découvertes'}</span></div><div><strong>{stats.due}</strong><span>{stats.due === 1 ? 'carte due' : 'cartes dues'}</span></div>
     </section>

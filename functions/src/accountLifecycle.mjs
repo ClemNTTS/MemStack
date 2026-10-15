@@ -85,7 +85,8 @@ export function createAccountLifecycle({ db, auth, beforeDelete }) {
         const data = serializeAccountValue(entry.data())
         return { id: entry.id, ...data, actorUid: data.actorUid === uid ? uid : null, targetUid: data.targetUid === uid ? uid : null }
       })
-      const output = { version: 1, exportedAt: new Date().toISOString(), account: { uid, email: account.email ?? null, displayName: account.displayName ?? null, createdAt: account.metadata.creationTime, lastSignInAt: account.metadata.lastSignInTime }, documents, accessAudit: audit }
+      const ranking = serializeAccountValue((await db.doc(`_worldRanking/${uid}`).get()).data() ?? null)
+      const output = { version: 1, exportedAt: new Date().toISOString(), account: { uid, email: account.email ?? null, displayName: account.displayName ?? null, createdAt: account.metadata.creationTime, lastSignInAt: account.metadata.lastSignInTime }, documents, accessAudit: audit, worldRanking: ranking }
       if (Buffer.byteLength(JSON.stringify(output)) > MAX_BYTES) throw new HttpsError('resource-exhausted', 'Export trop volumineux. Contacte l’administrateur.')
       if ((await db.doc(`_accountLifecycle/${uid}`).get()).exists) throw new HttpsError('failed-precondition', 'Suppression en cours.')
       return output

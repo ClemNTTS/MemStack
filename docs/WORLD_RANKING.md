@@ -1,0 +1,11 @@
+# Séries et classement mondial
+
+Le propriétaire a demandé que tous les comptes participent avec un pseudo public. Le classement utilise les services Firebase existants, sans nouveau fournisseur. Les deux callables `getWorldRanking` et `setRankingAlias` imposent Google ou un email vérifié, App Check et deux instances maximum en `europe-west9`.
+
+Le serveur maintient une seule entrée par compte dans `_worldRanking`, avec un pseudo initial généré sans nom ni email. Les jours suivent le calendrier de Paris. Une leçon ou une carte enregistrée par `commitLearningAction` prolonge la série une fois par jour dans la même transaction que la progression. Les répétitions, actions refusées et imports ultérieurs ne prolongent pas la série du classement. L’initialisation reprend les dates valides déjà enregistrées dans Firestore, sans modifier la progression.
+
+Une série reste active aujourd’hui si la dernière activité était hier ; après une journée entière manquée, son score courant est zéro. Le classement combine les entrées du jour et de la veille, et les séries égales partagent la même place. Le score propre est classé par deux comptages agrégés. Les listes sont limitées à vingt entrées par jour, sans index composite ni tâche planifiée. Les comptes sans série active restent participants et partagent la place après les séries actives. Le premier écran affiche les trois premières lignes et la place personnelle ; la page dédiée affiche jusqu’à vingt lignes.
+
+Les documents privés et leurs identifiants Firebase ne sont jamais transmis par le callable. Seuls le pseudo, la série, la place et l’indication « toi » sont renvoyés. Le profil permet trois changements de pseudo par jour, après accusé serveur ; l’adresse email et le HTML ne sont pas acceptés comme pseudos. L’export inclut l’état propre et la suppression retire l’entrée globale et son entrée quotidienne avant suppression de l’identité.
+
+La qualification couvre les changements d’heure, les répétitions concurrentes, les égalités, la disparition des séries inactives, les pseudos et leur quota, les marqueurs de suppression et l’interdiction d’accès direct au classement via Firestore. Les badges existants sont conservés ; de nouveaux paliers couvrent 90, 180 et 365 jours, 75 et 150 leçons, 1 000 et 5 000 pratiques, les niveaux 10 et 20.

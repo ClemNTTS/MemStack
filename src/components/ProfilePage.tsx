@@ -10,6 +10,7 @@ import LearningRewards from './LearningRewards'
 import SubscriptionPanel from './SubscriptionPanel'
 import './profile.css'
 import AccountSecurityPanel from './AccountSecurityPanel'
+import WorldRanking from './WorldRanking'
 
 function ProfilePage() {
   const { progress, user } = useProgress()
@@ -38,6 +39,7 @@ function ProfilePage() {
     </section>
     <SubscriptionPanel />
     <AccountSecurityPanel />
+    <WorldRanking editable />
     <section className="profile-badges" aria-labelledby="profile-badges-title">
       <div className="section-heading"><div><p className="lesson-category">La collection de tes efforts</p><h2 id="profile-badges-title">Tes petites victoires</h2></div><span className="profile-badge-count">{badges.filter(badge => badge.unlocked).length} / {badges.length} obtenus</span></div>
       <div className="badge-grid">{badges.map(badge => <article className="badge-card" data-unlocked={badge.unlocked} key={badge.title}><span className="badge-symbol" aria-hidden="true">{badge.symbol}</span><h3>{badge.title}</h3><p>{badge.description}</p><span className="badge-status">{badge.unlocked ? '✦ Obtenu' : 'À débloquer'}</span></article>)}</div>

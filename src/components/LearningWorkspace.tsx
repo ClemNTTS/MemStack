@@ -8,6 +8,7 @@ import CoursesPage from './CoursesPage'
 import LibraryPage from './LibraryPage'
 import ProfilePage from './ProfilePage'
 import PremiumPage from './PremiumPage'
+import WorldRanking from './WorldRanking'
 import ReportsPage from '../reports/ReportsPage'
 import AdminAiPage from './AdminAiPage'
 import LessonReplay from './LessonReplay'
@@ -44,7 +45,7 @@ export function Pages({ initialRoute }: { initialRoute?: string } = {}) {
   const immersive = Boolean(lesson) || path === '/today' || path === '/reviews'
   const previousRoute = useRef(route)
   useEffect(() => {
-    const title = lesson?.title ?? (path === '/reports' ? 'Mes signalements' : path === '/admin/ai' ? 'Membres IA' : path === '/challenges' ? 'Défis' : challengeId ? challenges.find(challenge => challenge.id === challengeId)?.title : path === '/courses' ? 'Parcours' : courseId ? catalogCourses.find(course => course.id === courseId)?.title : path === '/library' ? 'Bibliothèque' : path === '/premium' ? 'Premium' : path === '/profile' ? 'Mon compte' : path === '/reviews' ? 'Révisions' : path === '/' || path === '/today' ? 'Aujourd’hui' : 'Page introuvable')
+    const title = lesson?.title ?? (path === '/reports' ? 'Mes signalements' : path === '/admin/ai' ? 'Membres IA' : path === '/challenges' ? 'Défis' : challengeId ? challenges.find(challenge => challenge.id === challengeId)?.title : path === '/courses' ? 'Parcours' : courseId ? catalogCourses.find(course => course.id === courseId)?.title : path === '/library' ? 'Bibliothèque' : path === '/ranking' ? 'Classement mondial' : path === '/premium' ? 'Premium' : path === '/profile' ? 'Mon compte' : path === '/reviews' ? 'Révisions' : path === '/' || path === '/today' ? 'Aujourd’hui' : 'Page introuvable')
     document.title = `${title ?? 'Page introuvable'} · MemStack`
     if (previousRoute.current !== route) {
       document.querySelector('.account-menu')?.removeAttribute('open')
@@ -89,6 +90,7 @@ export function Pages({ initialRoute }: { initialRoute?: string } = {}) {
   else if (path === '/library') page = <LibraryPage />
   else if (path === '/profile') page = <ProfilePage />
   else if (path === '/premium') page = <PremiumPage />
+  else if (path === '/ranking') page = <main className="dashboard"><h1>Un jour de plus, ensemble.</h1><p>Le classement mondial des séries quotidiennes.</p><WorldRanking editable /><a className="text-link" href={appHref('/')}>Retour à mon atelier →</a></main>
   else if (path === '/reports') page = <ReportsPage />
   else if (path === '/admin/ai') page = <AdminAiPage />
   else if (path === '/challenges' || challengeId !== undefined) page = <ChallengeAccessGate><ChallengeProvider>{challengeId !== undefined ? <ChallengeView key={challengeId} challengeId={challengeId} /> : <ChallengesPage />}</ChallengeProvider></ChallengeAccessGate>

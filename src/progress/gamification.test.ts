@@ -3,6 +3,15 @@ import assert from 'node:assert/strict'
 import { activityDay, learningRewards } from './gamification.ts'
 import { emptyProgress } from './storage.ts'
 
+test('long-term streaks cross a leap year and preserve their earned record after a break', () => {
+  const dates = Array.from({length:365},(_,index)=>new Date(Date.parse('2023-03-02T12:00:00Z')+index*86400000).toISOString())
+  const progress = {...emptyProgress(),completedLessons:Object.fromEntries(dates.map((date,index)=>[`lesson-${index}`,date]))}
+  const rewards = learningRewards(progress,new Date(dates.at(-1)!))
+  assert.equal(rewards.longestStreak,365)
+  assert.equal(rewards.currentStreak,365)
+  assert.equal(learningRewards(progress,new Date('2024-03-05T12:00:00Z')).longestStreak,365)
+})
+
 test('a streak survives until the next day, then expires without erasing its record', () => {
   const progress = { ...emptyProgress(), completedLessons: { first: '2026-10-10T10:00:00.000Z', second: '2026-10-11T10:00:00.000Z' } }
   assert.equal(learningRewards(progress, new Date('2026-10-12T10:00:00Z')).currentStreak, 2)

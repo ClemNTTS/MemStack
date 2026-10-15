@@ -1,0 +1,47 @@
+.dashboard.home-page { padding-top: 1rem; }
+.home-hub { min-height: calc(100svh - 128px); box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; gap: 1.15rem; padding: 1rem 0 2rem; }
+.home-page .hub-heading h1 { font-size: clamp(1.75rem, 3.5vw, 2.7rem); letter-spacing: -.045em; color: #48365b; margin: .3rem 0; }
+.hub-heading > p:last-child { color: #7a6985; margin: .5rem 0 0; }
+.hub-grid { display: grid; grid-template-columns: minmax(0,1.6fr) minmax(280px,1fr); gap: 1.25rem; }
+.home-hub .overview-panel { margin: 0; border-radius: 24px; padding: 1.5rem; }
+.home-hub .learning-rewards { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-content: center; }
+.home-hub .reward-memo { grid-row: span 2; padding: .5rem; }
+.home-hub .reward-memo .memo { width: 100px; }
+.home-hub .reward-copy h2 { font-size: 2.25rem !important; }
+.home-hub .reward-streak { grid-column: 2; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 0 0; border-left: 0; border-top: 1px solid #d6c2e7; min-width: 0; text-align: left; }
+.home-hub .reward-streak > strong { font-size: 2.6rem; }
+.home-hub .reward-streak p { margin: 0; text-align: right; }
+.hub-bottom { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.hub-review-link { display: flex; align-items: center; gap: 1rem; color: #594070; font-weight: 700; font-size: 1rem; text-decoration: none; }
+.hub-review-link > span { background: #eadff3; padding: .45rem .75rem; border-radius: 30px; font-size: .8rem; font-weight: 500; }
+.hub-review-link:hover, .hub-profile-link:hover { text-decoration: underline; }
+.hub-profile-link { font-size: .85rem; color: #735187; }
+.hub-meta { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; color: #82728b; font-size: .75rem; }
+@media (max-width: 760px) {
+  .home-hub { gap: .75rem; padding-top: .5rem; padding-bottom: 1rem; min-height: calc(100svh - 135px); }
+  .hub-grid { grid-template-columns: 1fr; gap: .65rem; }
+  .home-hub .overview-panel { padding: .9rem 1rem; border-radius: 18px; }
+  .hub-heading > p:last-child, .home-hub .reward-streak p, .hub-meta { display: none; }
+  .home-page .hub-heading h1 { font-size: 1.25rem; }
+  .hub-heading .lesson-category { font-size: .65rem; }
+  .home-hub .learning-rewards { grid-template-columns: auto 1fr auto; gap: .6rem; }
+  .home-hub .reward-memo { grid-row: auto; padding: 0; }
+  .home-hub .reward-memo .memo { width: 48px; }
+  .home-hub .reward-copy > .lesson-category { display: none; }
+  .home-hub .reward-copy h2 { font-size: 1.3rem !important; gap: .35rem; margin: 0 0 .5rem; }
+  .home-hub .reward-copy h2 > span { font-size: .65rem; padding: .2rem .4rem; }
+  .home-hub .reward-next-level { font-size: .65rem; margin-bottom: 0; }
+  .home-hub .reward-streak { grid-column: auto; border: 0; padding: 0 0 0 .5rem; width: auto; }
+  .home-hub .reward-streak > strong { font-size: 1.8rem; text-align: center; }
+  .home-hub .reward-streak strong > span { font-size: .6rem; margin-top: .3rem; }
+  .home-hub .world-ranking h2 { font-size: 1.05rem; margin: .2rem 0; }
+  .home-hub .world-ranking .lesson-category { display: none; }
+  .home-hub .ranking-caption { font-size: .7rem; margin: .3rem 0 .5rem; }
+  .home-hub .ranking-list { gap: .3rem; }
+  .home-hub .ranking-list li { padding: .25rem .5rem; }
+  .home-hub .ranking-list .ranking-place { width: 1.4rem; height: 1.4rem; }
+  .home-hub .ranking-self { font-size: .75rem; margin-top: .5rem; padding-top: .5rem; }
+  .hub-bottom { flex-wrap: wrap; gap: .5rem; }
+  .hub-review-link { font-size: .9rem; }
+  .hub-profile-link { font-size: .75rem; }
+}

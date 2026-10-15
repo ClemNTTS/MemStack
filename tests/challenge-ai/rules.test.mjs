@@ -21,6 +21,13 @@ beforeEach(async () => { await env.clearFirestore(); await grantAccess() })
 after(async () => env?.cleanup())
 const db = uid => uid ? env.authenticatedContext(uid,{firebase:{sign_in_provider:'google.com'},email_verified:true}).firestore() : env.unauthenticatedContext().firestore()
 
+test('global ranking identities and streak counters are server-only', async () => {
+  await assertFails(getDoc(doc(db('alice'),'_worldRanking/alice')))
+  await assertFails(getDocsFromServer(collection(db('alice'),'_worldRanking')))
+  await assertFails(setDoc(doc(db('alice'),'_worldRanking/alice'),{alias:'Fake',streak:999,lastDay:'2026-10-15'}))
+  await assertFails(setDoc(doc(db('alice'),'_worldRankingDays/2026-10-15/members/alice'),{alias:'Fake',streak:999}))
+})
+
 test('email accounts require verification and cannot access another members data', async () => {
   const emailDb=verified => env.authenticatedContext('alice',{firebase:{sign_in_provider:'password'},email_verified:verified}).firestore()
   await assertSucceeds(getDoc(doc(emailDb(true),'users/alice/settings/challengeAccess')))

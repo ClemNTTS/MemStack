@@ -1,4 +1,5 @@
 .profile-page { max-width: 1120px; }
+.profile-page > .overview-panel + .overview-panel { margin-top: 1.5rem; }
 .profile-heading { display: flex; align-items: center; gap: 1.2rem; margin: 1rem 0 2rem; }
 .profile-heading > div:nth-child(2) { flex: 1; }
 .profile-heading h1 { margin: .3rem 0 .6rem; font-size: clamp(1.8rem, 3vw, 2.7rem); letter-spacing: -.035em; color: #49365e; }

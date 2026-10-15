@@ -1,5 +1,6 @@
 import { AnalysisError } from './analysis.mjs'
 import { hasPermanentPremium, hasPremium } from './subscription.mjs'
+import { ensureRankingMember, recordRankingActivity } from './worldRanking.mjs'
 
 const dateFormat = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit' })
 export function learningDay(now) {
@@ -40,15 +41,16 @@ export async function submitLearningAction({ db, uid, data, catalog, now = Date.
   validateLearningAction(data)
   const lesson = catalog.find(lesson => data.type === 'lesson' ? lesson.id === data.lessonId : lesson.cardIds.includes(data.cardId))
   if (!lesson) throw new AnalysisError('invalid-argument','Contenu inconnu.')
+  await ensureRankingMember(db,uid,now)
   const receiptRef = db.doc(`users/${uid}/learningReceipts/${data.requestId}`)
   const day = learningDay(now)
   const usageRef = db.doc(`users/${uid}/learningUsage/${day}`)
   const lessonRef = db.doc(`users/${uid}/lessons/${lesson.id}`)
   return db.runTransaction(async transaction => {
-    const [marker, receipt, paid, access, usage, completed] = await Promise.all([
+    const [marker, receipt, paid, access, usage, completed, ranking] = await Promise.all([
       transaction.get(db.doc(`_accountLifecycle/${uid}`)), transaction.get(receiptRef),
       transaction.get(db.doc(`users/${uid}/settings/subscription`)), transaction.get(db.doc(`users/${uid}/settings/premiumAccess`)),
-      transaction.get(usageRef), transaction.get(lessonRef)
+      transaction.get(usageRef), transaction.get(lessonRef), transaction.get(db.doc(`_worldRanking/${uid}`))
     ])
     if (marker.exists) throw new AnalysisError('failed-precondition','Ce compte est en cours de suppression.')
     if (receipt.exists) {
@@ -84,6 +86,7 @@ export async function submitLearningAction({ db, uid, data, catalog, now = Date.
       result = { type: 'card', card, event }
     }
     transaction.create(receiptRef,{ request: data, result })
+    recordRankingActivity(transaction,db,uid,ranking.data(),now)
     return result
   })
 }
