@@ -2,7 +2,7 @@
   "id": "./",
   "name": "MemStack",
   "short_name": "MemStack",
-  "description": "Apprendre l’informatique, réviser ses cartes et résoudre des défis.",
+  "description": "Apprendre le développement ou former son équipe à l’IA, avec des leçons et des révisions dans deux espaces distincts.",
   "lang": "fr",
   "start_url": "./",
   "scope": "./",
