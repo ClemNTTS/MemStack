@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="robots" content="noindex">
+    <title>MemStack Entreprise · Le film</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: 48px 24px; font-family: system-ui, sans-serif; background: #f5f2ea; color: #30263d; }
+      main { max-width: 1120px; margin: auto; }
+      .eyebrow { color: #75539d; font-size: 13px; font-weight: 750; letter-spacing: .13em; text-transform: uppercase; }
+      h1 { font-size: clamp(30px, 5vw, 54px); line-height: 1.06; letter-spacing: -.04em; margin: 16px 0 24px; max-width: 20ch; }
+      video { width: 100%; aspect-ratio: 16/9; display: block; background: #30263d; border-radius: 20px; box-shadow: 0 18px 64px #30263d14; }
+      p, summary { line-height: 1.65; }
+      .downloads { display: flex; gap: 14px; flex-wrap: wrap; margin: 24px 0; }
+      a { color: #644184; text-underline-offset: 4px; }
+      .downloads a { padding: 12px 18px; border: 1px solid #cbb8da; border-radius: 12px; font-weight: 650; text-decoration: none; }
+      details { padding: 20px 0; border-top: 1px solid #d8cde0; }
+      summary { cursor: pointer; font-weight: 700; }
+      details p { max-width: 72ch; }
+      :focus-visible { outline: 3px solid #75539d; outline-offset: 5px; }
+      @media (max-width: 600px) { body { padding: 26px 16px; } video { border-radius: 12px; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">MemStack Entreprise · Film de présentation</p>
+      <h1>Faites de l’IA une compétence collective.</h1>
+      <video controls playsinline preload="metadata" poster="memstack-entreprise-poster.webp" aria-label="Présentation de l’offre MemStack Entreprise, 48 secondes" aria-describedby="film-note">
+        <source src="memstack-entreprise.mp4" type="video/mp4">
+        <source src="memstack-entreprise.webm" type="video/webm">
+        <track kind="captions" src="memstack-entreprise.fr.vtt" srclang="fr" label="Français · voix off">
+        Votre navigateur ne peut pas lire cette vidéo. <a href="memstack-entreprise.mp4">Télécharger le MP4</a>.
+      </video>
+      <p id="film-note">48 secondes · Mémo et voix off française · musique originale à 120 BPM · compréhensible sans son.</p>
+      <div class="downloads"><a href="memstack-entreprise.mp4" download>Télécharger le MP4</a><a href="memstack-entreprise.webm" download>Télécharger le WebM</a><a href="memstack-entreprise-poster.webp" download>Image de présentation</a></div>
+      <details>
+        <summary>Lire la transcription et la description</summary>
+        <p>Votre équipe a des idées. Donnons-lui une méthode pour avancer. Avec les assistants, précisez votre demande et son contexte pour préparer un livrable utile.</p>
+        <p>Pour automatiser, construisez un fonctionnement clair, que vos collègues pourront reprendre. Pour vos projets, cadrez le besoin et avancez par étapes vers une première version.</p>
+        <p>En pratique, partez d’un cas fictif, préparez votre livrable, puis comparez-le à un exemple expliqué. Les parcours et les révisions entretiennent les acquis. Les repères d’équipe aident à accompagner les progrès.</p>
+        <p>MemStack Entreprise. Faites de l’intelligence artificielle une compétence collective.</p>
+        <p>À l’image, Mémo accompagne des cartes qui deviennent une demande structurée, un processus, une feuille de route et des parcours partagés. Les schémas illustrent des méthodes d’apprentissage ; ils ne représentent pas des outils métier connectés ou une exécution automatique par MemStack.</p>
+        <p><a href="CREDITS.txt">Crédits audio et voix de synthèse</a></p>
+      </details>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+MemStack Entreprise — film de présentation, octobre 2026
+
+Scénario, réalisation vectorielle et composition instrumentale originale :
+créés pour MemStack avec l'assistance d'agents. Musique originale à 120 BPM,
+sans échantillons musicaux tiers. Illustrations de Mémo : assets MemStack existants.
+
+Narration française : synthèse locale avec Kokoro-82M v1.0, voix ff_siwis.
+Aucune personne n'a enregistré ce script et aucun clonage de voix n'a été demandé.
+Modèle Kokoro, hexgrad, poids publiés sous Apache 2.0 :
+https://huggingface.co/hexgrad/Kokoro-82M
+Runtime kokoro-onnx, thewh1teagle et contributeurs, licence MIT :
+https://github.com/thewh1teagle/kokoro-onnx
+
+Attribution de la source vocale indiquée par la fiche officielle de Kokoro :
+Yamagishi, Junichi; Honnet, Pierre-Edouard; Garner, Philip; Lazaridis, Alexandros.
+(2017). The SIWIS French Speech Synthesis Database, 2016 [dataset].
+University of Edinburgh, School of Informatics, Centre for Speech Technology Research.
+https://doi.org/10.7488/ds/1705
+https://huggingface.co/hexgrad/Kokoro-82M/blob/main/VOICES.md
+
+Le son est généré à partir du texte original du film ; il ne reprend pas un
+enregistrement du corpus SIWIS. Ces crédits identifient les outils et la source
+de données mentionnée par le modèle ; ils ne suggèrent pas leur soutien à MemStack.

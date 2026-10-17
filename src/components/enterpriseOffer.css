@@ -2,6 +2,16 @@
 .enterprise-offer * { box-sizing:border-box; }
 .enterprise-offer h1,.enterprise-offer h2,.enterprise-offer h3,.enterprise-offer p { margin-top:0; }
 .enterprise-offer em { color:var(--enterprise-purple); font-style:normal; }
+.enterprise-offer-film { min-width:0; margin:0; align-self:center; }
+.enterprise-offer-film video { display:block; width:100%; height:auto; aspect-ratio:16/9; border:1px solid #d7cddd; border-radius:24px; background:#30263d; box-shadow:0 18px 55px #30263d12; }
+.enterprise-offer-film video:focus-visible { outline:3px solid #75539d; outline-offset:5px; }
+.enterprise-offer-film figcaption { display:flex; flex-direction:column; gap:5px; padding:17px 3px 12px; font-size:.83rem; line-height:1.5; }
+.enterprise-offer-film figcaption span { color:#746280; font-size:.76rem; }
+.enterprise-offer-film-transcript { color:#746280; font-size:.8rem; line-height:1.7; }
+.enterprise-offer-film-transcript summary { cursor:pointer; width:fit-content; color:#644184; text-decoration:underline; text-underline-offset:4px; }
+.enterprise-offer-film-transcript summary:focus-visible { outline:3px solid #75539d; outline-offset:4px; border-radius:2px; }
+.enterprise-offer-film-transcript p { margin:15px 0; }
+.enterprise-offer-film-transcript a { color:#644184; text-underline-offset:4px; }
 .enterprise-offer-eyebrow { font-size:.68rem; line-height:1.7; letter-spacing:.13em; font-weight:800; color:#8863aa; }
 .enterprise-offer-hero { display:grid; grid-template-columns:1.05fr 1fr; align-items:center; gap:62px; padding:78px 0 56px; }
 .enterprise-offer h1 { font-size:clamp(2.7rem,5.4vw,4.9rem); line-height:1.02; letter-spacing:-.065em; font-weight:800; margin-bottom:28px; }
