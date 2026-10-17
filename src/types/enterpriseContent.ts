@@ -18,11 +18,13 @@ export type EnterpriseLesson = {
   cards: EnterpriseCard[]
   sources: string[]
   continuous?: boolean
+  prerequisiteLessonIds?: string[]
 }
 export type EnterpriseChallenge = {
   id: string
   chapterId: string
   title: string
+  prerequisiteLessonIds?: string[]
   scenario: string
   files: { name: string; content: string }[]
   questions: { id: string; prompt: string; options: { id: string; text: string }[] }[]
@@ -34,4 +36,16 @@ export type EnterpriseCurriculum = {
   chapters: EnterpriseChapter[]
   lessons: EnterpriseLesson[]
   challenges: EnterpriseChallenge[]
+  foundationLessonIds?: string[]
+  tracks?: EnterpriseTrack[]
+}
+
+export type EnterpriseTrack = {
+  id: string
+  title: string
+  description: string
+  outcome: string
+  audience: string
+  lessonIds: string[]
+  challengeIds: string[]
 }

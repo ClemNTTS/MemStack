@@ -1,4 +1,26 @@
-# MemStack Entreprise — contrat produit et qualification V1
+# MemStack Entreprise — offre et contrat produit
+
+## Offre enrichie du 17 octobre 2026
+
+**Faites de l’IA une compétence collective.** Apprenez à mieux utiliser les assistants, à automatiser vos tâches et à faire avancer vos projets numériques.
+
+Le catalogue v2 conserve les 22 missions et les huit situations historiques et ajoute 18 missions pratiques et trois situations intégratives. Il contient au total 40 missions, 120 cartes et 11 situations. Deux fondations communes ouvrent trois parcours de six nouvelles missions chacun ; une personne peut choisir un parcours sans finir les deux autres. Les 20 autres missions historiques restent des ressources complémentaires. Les identifiants et acquis existants sont conservés.
+
+| Parcours | Résultat travaillé |
+| --- | --- |
+| Assistants métier | Préparer une demande, exploiter un dossier, produire un compte rendu ou une comparaison, améliorer le résultat et transmettre une méthode réutilisable à l’équipe |
+| Automatisation collective | Décrire un processus, choisir les étapes à automatiser, définir les données et exceptions, tester un pilote et organiser sa reprise par un collègue |
+| Projets numériques | Passer d’une idée à des besoins et critères, choisir une approche, prototyper par étapes, préparer la recette, la livraison et la maintenance avec les compétences nécessaires |
+
+Chaque mission spécialisée comporte un cas fictif autonome, des explications, un exemple et un contre-exemple, un atelier avec livrable et critères, deux questions expliquées et des cartes. Les ateliers invitent à produire avant de comparer à un exemple commenté. Le transfert vers un outil d’entreprise autorisé est facultatif et explicite ; MemStack n’exécute pas le code apprenant et n’appelle pas un LLM pour noter la production. Les situations finales sont corrigées côté serveur après sauvegarde. Elles ne certifient pas une maîtrise professionnelle.
+
+Les durées sont propres aux missions, indicatives et à calibrer auprès de vrais utilisateurs. La revue pédagogique par agents, la QA indépendante, les personas simulés et les contrôles navigateur ont des périmètres distincts ; consulter leurs comptes rendus et ne pas les présenter comme une étude auprès de salariés réels. Le [plan de refonte](ENTERPRISE_REDESIGN_PLAN.md) définit le contrat de données et le [registre éditorial](content/ENTERPRISE_REDESIGN_REVIEW.md) trace les inspections.
+
+Cette évolution réutilise Firebase et les droits d’organisation existants, conserve le tarif affiché de 10 € TTC par membre actif et par mois, et ne modifie pas le mode Stripe. La publication du frontend doit être précédée du catalogue et du serveur compatibles avec les prérequis par parcours. Les paiements LIVE, décisions légales et recettes de production restent distincts de la réalisation locale.
+
+## Référence V1 et comptes rendus conservés
+
+Les sections suivantes conservent le contrat et les inspections du 15 octobre. Leurs mentions de vingt missions initiales et huit chapitres décrivent cette version antérieure ; pour la structure actuelle, les parcours et les objectifs, la section ci-dessus et le catalogue v2 font référence. Les règles d’isolation, de facturation et de protection des données restent applicables lorsqu’elles ne dépendent pas de ce découpage historique.
 
 Date : 15 octobre 2026. PO et QA indépendants de la réalisation. Ce document fixe les résultats attendus ; il ne constitue pas une preuve de déploiement.
 

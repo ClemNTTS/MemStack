@@ -1,11 +1,11 @@
 # Préparer la présentation de MemStack
 
-Kit de présentation rédigé le 16 octobre 2026. Aucun message n’a été envoyé et aucune publication n’est effectuée par ces documents.
+Kit de présentation mis à jour le 17 octobre 2026. Aucun message n’a été envoyé et aucune publication n’est effectuée par ces documents.
 
 ## Deux publics, deux promesses
 
 - **Développeurs** : comprendre les notions du développement, les pratiquer et les retenir grâce aux révisions espacées.
-- **Entreprises** : faire monter les équipes en compétences sur l’IA au travail, sans prérequis de code, avec un parcours guidé puis des révisions continues.
+- **Entreprises** : faire de l’IA une compétence collective : mieux utiliser les assistants, automatiser les tâches et faire avancer les projets numériques. Deux missions communes, trois parcours de six missions, puis des ressources et révisions continues.
 
 Le même compte peut utiliser les deux environnements. Les leçons, les cartes de révision, les défis et la progression restent séparés. Le classement développeur est mondial ; le classement Entreprise reste dans l’organisation. Un abonnement Premium développeur n’inclut pas l’abonnement d’une organisation.
 
@@ -26,7 +26,7 @@ Tarifs de référence : Dev Premium **1,50 € TTC/mois ou 9,90 € TTC/an** ; E
 
 Utiliser une organisation de démonstration et des pseudos fictifs. Ne pas filmer d’adresse email personnelle, d’invitation, de facture, d’identifiant technique ou de données d’un client. Préparer une leçon non terminée et une carte réellement due, sans falsifier une progression présentée comme réelle. Afficher les illustrations comme illustrations, jamais comme photos de clients ou témoignages.
 
-Éviter les promesses de résultat chiffré, de certification, de conformité garantie ou de suppression des erreurs de l’IA. La valeur à montrer est concrète : une demande mieux formulée, une source vérifiée, une révision qui revient au bon moment.
+Éviter les promesses de résultat chiffré, de certification, de conformité garantie ou de suppression des erreurs de l’IA. La valeur à montrer est concrète : un livrable mieux préparé, un processus documenté, un projet découpé en étapes et une méthode partagée. Les ateliers ne connectent aucun outil réel et ne publient aucun site ; le transfert dans un outil autorisé est facultatif.
 
 ## Dernière vérification avant diffusion
 

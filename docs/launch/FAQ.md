@@ -2,7 +2,7 @@
 
 ## Pourquoi deux environnements ?
 
-L’environnement Développeurs accompagne l’apprentissage des notions techniques du développement. L’environnement Entreprise apprend aux collaborateurs et aux managers à utiliser l’IA au travail et à cadrer les projets associés, sans prérequis de code. Les deux suivent une logique commune : apprendre, pratiquer, puis réviser.
+L’environnement Développeurs accompagne l’apprentissage des notions techniques du développement. L’environnement Entreprise apprend aux collaborateurs et aux managers à mieux utiliser les assistants IA, à organiser les automatisations et à faire avancer les projets numériques, sans prérequis de code. Les deux suivent une logique commune : apprendre, pratiquer, puis réviser.
 
 ## Peut-on utiliser les deux avec un seul compte ?
 
@@ -20,9 +20,13 @@ Toutes les cartes dues peuvent être révisées, sans plafond quotidien. Une car
 
 Non. Les notions de prompt, contexte ou agent sont expliquées à partir d’exemples de travail. Les cas et documents fournis sont fictifs ; les exercices ne demandent pas d’envoyer de vrais dossiers d’entreprise à un assistant IA.
 
-## Que se passe-t-il après les vingt missions ?
+## Comment se compose le programme Entreprise ?
 
-Les leçons terminées restent consultables, les cartes entretiennent les acquis à leurs échéances et les nouvelles leçons sont accessibles lorsqu’elles sont publiées. Aucune fréquence de publication garantie n’est annoncée dans cette offre.
+Deux missions communes précèdent trois parcours de six missions : assistants IA, automatisation et projets numériques. Un premier parcours compte donc huit missions. Les trois parcours réunissent vingt missions recommandées ; vingt ressources complémentaires portent le catalogue à 40 missions, 120 cartes et 11 situations. Les révisions restent disponibles à leurs échéances. Aucune fréquence de nouvelles publications n’est garantie.
+
+## Les ateliers exécutent-ils une IA ou publient-ils mon site ?
+
+Non. Ils font préparer des demandes, tableaux, procédures ou plans sur des cas fictifs, puis les comparer à des exemples expliqués. Le transfert vers un outil autorisé est facultatif ; il ne conditionne pas la réussite du parcours. Certaines réalisations nécessitent ensuite une compétence technique. Les durées de 10 à 18 minutes par mission sont indicatives.
 
 ## Que peut consulter le manager ?
 

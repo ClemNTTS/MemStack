@@ -1,5 +1,11 @@
 # État du projet — 17 octobre 2026
 
+## Évolution locale Entreprise après la revue initiale
+
+L’offre Entreprise fait l’objet d’une refonte locale : deux fondations communes, trois parcours pratiques indépendants (assistants, automatisation, projets numériques), 18 nouvelles missions et trois nouvelles situations. Le catalogue v2 totalise 40 missions, 120 cartes et 11 situations en conservant le contenu historique. Voir [le contrat courant](ENTERPRISE_PRODUCT.md), [le plan](ENTERPRISE_REDESIGN_PLAN.md) et [la QA pédagogique](content/ENTERPRISE_QA_20261017.md). Cette évolution ne fait pas partie de la publication attestée ci-dessous ; son serveur et son frontend doivent être publiés ensemble dans l’ordre prévu. Les simulations de salariés par agents ne remplacent pas une qualification humaine.
+
+## État publié examiné lors de la revue initiale
+
 Cette synthèse correspond au code `758ee21` et à la revue du 17 octobre. Les recettes datées restent les preuves de leurs environnements respectifs ; elles n’ont pas été rejouées pendant cette revue documentaire. Une réussite technique TEST n’établit pas une ouverture commerciale LIVE.
 
 ## Produit actuel

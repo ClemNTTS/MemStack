@@ -1,8 +1,24 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { validateEnterpriseAction, enterpriseActor } from './enterprise.mjs'
+import { validateEnterpriseAction, enterpriseActor, enterprisePrerequisites } from './enterprise.mjs'
 
 const catalog = {lessons:[{id:'ent-first',cards:[{id:'ent-card'}]}],challenges:[{id:'ent-case',questions:[{id:'q1',options:[{id:'a'},{id:'b'}]}]}]}
+
+test('enterprise paths depend on their foundation and own branch, not the previous catalogue row', () => {
+  const foundation = { id: 'ent-foundation' }
+  const first = { id: 'ent-applied-first', prerequisiteLessonIds: ['ent-foundation'] }
+  const other = { id: 'ent-other-path', prerequisiteLessonIds: ['ent-foundation'] }
+  const second = { id: 'ent-applied-second', prerequisiteLessonIds: ['ent-applied-first'] }
+  const paths = { foundationLessonIds: ['ent-foundation'], lessons: [foundation, first, other, second] }
+  assert.deepEqual(enterprisePrerequisites(foundation, paths), [])
+  assert.deepEqual(enterprisePrerequisites(other, paths), ['ent-foundation'])
+  assert.deepEqual(enterprisePrerequisites(second, paths), ['ent-applied-first'])
+  assert.deepEqual(enterprisePrerequisites({ prerequisiteLessonIds: [first.id, second.id] }, paths, 'challenge'), [first.id, second.id])
+  for (const prerequisiteLessonIds of [['unknown'], [first.id], [foundation.id, foundation.id], 'ent-foundation']) {
+    assert.throws(() => enterprisePrerequisites({ ...first, prerequisiteLessonIds }, paths), { code: 'unavailable' })
+  }
+  assert.deepEqual(enterprisePrerequisites(catalog.lessons[0], catalog), [])
+})
 test('enterprise actions cannot inject another identity, dates, answers or developer content',()=>{
   const request = {organizationId:'org-one',requestId:'request-123456789',type:'lesson',lessonId:'ent-first'}
   assert.equal(validateEnterpriseAction(request,catalog).id,'ent-first')

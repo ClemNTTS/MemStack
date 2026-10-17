@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { enterprisePlan, enterpriseRewards, enterpriseScope } from './model.ts'
-import { enterpriseCards, enterpriseChapters, enterpriseLessons } from '../data/enterprise.ts'
+import { enterpriseCards, enterpriseChapters, enterpriseLessons, enterpriseTracks, enterpriseCurriculum } from '../data/enterprise.ts'
 import type { EnterpriseWorkspace } from '../types/enterprise.ts'
 import type { CardProgress } from '../types/card.ts'
 
@@ -13,8 +13,7 @@ const state = (cardId: string, dueAt: string, lastReviewedAt = past): CardProgre
 
 test('enterprise revisions include only cards from completed enterprise lessons, never developer or future content', () => {
   const progress = empty()
-  const first = enterpriseLessons[0]
-  const next = enterpriseLessons[1]
+  const [first, next] = enterprisePlan(progress, now).guided
   progress.lessons[first.id] = { completedAt: past }
   progress.lessons[next.id] = { completedAt: future }
   progress.lessons['docker-images'] = { completedAt: past }
@@ -42,21 +41,22 @@ test('enterprise due queue uses real due dates and ignores invalid or future rev
   assert.equal(plan.pending.length, 0)
 })
 
-test('finishing the initial enterprise path preserves revisions and offers published continuing missions in order', () => {
+test('finishing one practical path preserves revisions without completing or starting another path', () => {
   const progress = empty()
-  const guided = enterpriseLessons.filter(lesson => !lesson.continuous)
-  const continuing = enterpriseLessons.filter(lesson => lesson.continuous)
-  assert.equal(guided.length, 20)
-  assert.ok(continuing.length >= 2)
+  const track = enterpriseTracks[0]
+  const guided = enterprisePlan(progress, now, track.id).guided
+  assert.equal(guided.length, (enterpriseCurriculum.foundationLessonIds?.length ?? 0) + track.lessonIds.length)
   for (const lesson of guided) progress.lessons[lesson.id] = { completedAt: past }
-  let plan = enterprisePlan(progress, now)
-  assert.equal(plan.completed, 20)
-  assert.equal(plan.next?.id, continuing[0].id)
+  let plan = enterprisePlan(progress, now, track.id)
+  assert.equal(plan.completed, guided.length)
+  assert.equal(plan.next, undefined)
   assert.equal(plan.pending.length, guided.reduce((sum, lesson) => sum + lesson.cards.length, 0))
-  for (const lesson of continuing) progress.lessons[lesson.id] = { completedAt: past }
-  const card = enterpriseCards[0]
+  const other = enterprisePlan(progress, now, enterpriseTracks[1].id)
+  assert.equal(other.next?.id, enterpriseTracks[1].lessonIds[0])
+  assert.equal(other.completed, enterpriseCurriculum.foundationLessonIds?.length)
+  const card = guided[0].cards[0]
   progress.cards[card.id] = state(card.id, past)
-  plan = enterprisePlan(progress, now)
+  plan = enterprisePlan(progress, now, track.id)
   assert.equal(plan.next, undefined)
   assert.equal(plan.due[0].card.id, card.id)
   assert.ok(plan.pending.length > 0)
@@ -65,6 +65,28 @@ test('finishing the initial enterprise path preserves revisions and offers publi
 test('enterprise local request scopes separate identities and organizations', () => {
   assert.notEqual(enterpriseScope('same-user', 'org-a'), enterpriseScope('same-user', 'org-b'))
   assert.notEqual(enterpriseScope('first-user', 'org-a'), enterpriseScope('other-user', 'org-a'))
+})
+
+test('track selection changes recommendations without sharing completion or skipping prerequisites', () => {
+  const progress = empty()
+  const foundation = enterpriseCurriculum.foundationLessonIds!
+  const first = enterpriseTracks[0]
+  const second = enterpriseTracks[1]
+  const firstMission = enterpriseLessons.find(lesson => lesson.id === first.lessonIds[0])!
+  const secondMission = enterpriseLessons.find(lesson => lesson.id === second.lessonIds[0])!
+  assert.equal(enterprisePlan(progress, now, first.id).available(firstMission), false)
+  for (const id of foundation) progress.lessons[id] = { completedAt: past }
+  let plan = enterprisePlan(progress, now, second.id)
+  assert.equal(plan.next?.id, secondMission.id)
+  assert.equal(plan.available(firstMission), true)
+  assert.equal(plan.available(secondMission), true)
+  progress.lessons[firstMission.id] = { completedAt: past }
+  assert.equal(enterprisePlan(progress, now, first.id).completed, foundation.length + 1)
+  assert.equal(enterprisePlan(progress, now, second.id).completed, foundation.length)
+  progress.lessons[foundation.at(-1)!] = { completedAt: future }
+  plan = enterprisePlan(progress, now, second.id)
+  assert.equal(plan.available(secondMission), false)
+  assert.equal(plan.next?.id, foundation.at(-1))
 })
 
 test('enterprise rewards count known acknowledged progress, never unknown, future or repeated review entries', () => {

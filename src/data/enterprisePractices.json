@@ -251,5 +251,245 @@
     ],
     "example": "Ne pas basculer vers B : deux omissions sur 12 enfreignent le critère zéro, malgré les deux secondes gagnées et le coût identique. Nadia garde A pour les brouillons relus. Après correction de B, rejouer le lot de référence, vérifier les escalades et les réglages ; noter les conditions contractuelles annoncées inchangées. Après une éventuelle bascule autorisée, suivre erreurs, coût et délai, avec un nouveau cas fictif de produit cassé dont la photo manque. Une omission impose de suspendre B et revenir à A, retour disponible ici, puis d’ajouter le cas au lot.",
     "explanation": "Le plan compare des résultats sur la même tâche et lie le choix au critère fixé. D’autres cas nouveaux sont recevables s’ils testent une difficulté précise ; la rapidité ne remplace pas le respect des conditions."
+  },
+  "ent-assistants-brief": {
+    "scenario": "Boréal fictive : accueil lundi à 9 h en salle Pin pour douze collègues ; ordinateur fourni ; carnet à apporter ; inviter à répondre si cet horaire pose problème. Aucune donnée individuelle.",
+    "task": "Rédige un brief prêt à copier pour obtenir le courriel d’accueil, puis deux critères de réussite observables.",
+    "starter": "Destinataires et action : …\nInformations : …\nForme et ton : …\nDeux critères : …",
+    "checklist": [
+      "Lundi, 9 h et salle Pin sont présents.",
+      "Ordinateur fourni et carnet à apporter sont distingués.",
+      "Le courriel invite à répondre en cas de difficulté.",
+      "Deux critères sont observables."
+    ],
+    "example": "Rédige un courriel chaleureux aux douze nouveaux collègues de Boréal. Annonce l’accueil lundi à 9 h en salle Pin. L’ordinateur est fourni ; demander d’apporter un carnet. Invite à répondre si l’horaire pose problème. Livre un objet et un message de 120 mots maximum. Critères : rendez-vous complet ; aucune demande d’apporter un ordinateur.",
+    "explanation": "Le brief associe les informations à une action du lecteur. Une limite de mots différente convient si le message reste bref et complet ; aucune formule magique n’est imposée. Transfert facultatif : Copie ton brief avec les seules données fictives dans un outil autorisé ; compare au critère rendez-vous complet et à la liste de matériel. Ce transfert est extérieur à MemStack et ne conditionne pas la fin du parcours."
+  },
+  "ent-assistants-documents": {
+    "scenario": "Pièces fictives Lumen. DEMANDE : 40 carnets pour vendredi ; budget produits 280 €. CATALOGUE ACTUEL : carnet recyclé 6 € l’unité, minimum 30. LOGISTIQUE : livraison 25 €, arrivée vendredi possible si validation avant mardi midi. Heure de validation inconnue.",
+    "task": "Prépare la demande à l’assistant puis un tableau de quatre lignes : quantité, produits, total livré et délai. Nomme les pièces utiles et termine par la question qui débloque le délai.",
+    "starter": "Demande : …\nQuantité | proposition | pièce : …\nProduits : …\nTotal : …\nDélai : …\nQuestion : …",
+    "checklist": [
+      "40 unités respectent le minimum de 30.",
+      "40 × 6 = 240 € de produits ; 240 + 25 = 265 € livrés.",
+      "Le budget produits est comparé aux 240 € de produits.",
+      "La condition mardi midi et la question de validation sont explicites."
+    ],
+    "example": "Demande : rapproche les trois pièces pour préparer une proposition, sans envoyer de commande. Quantité : 40, minimum 30 respecté (demande et catalogue). Produits : 240 €, dans le budget produits 280 €. Total livré : 265 € (catalogue et logistique). Délai : vendredi possible si validation avant mardi midi. Question : la commande pourra-t-elle être validée avant mardi midi ?",
+    "explanation": "Le résultat aide à conclure la vente en explicitant la prochaine action. Le budget fourni concerne les produits ; lui attribuer un plafond total ajouterait une règle absente. Transfert facultatif : Soumets les trois pièces fictives et ta demande dans un outil autorisé ; compare les montants et la question de délai à ton tableau. Ce transfert est extérieur à MemStack et ne conditionne pas la fin du parcours."
+  },
+  "ent-assistants-meeting": {
+    "scenario": "Notes fictives Nova : essai de deux créneaux décidé pour lundi. Zoé prépare la grille jeudi. Malik propose une ouverture samedi ; aucun accord pris. Responsable et date du bilan non définis.",
+    "task": "Prépare une demande à l’assistant en précisant catégories, destinataires et format. Rédige un relevé de quatre lignes puis un message de suivi de trois phrases maximum qui fait avancer l’attribution du bilan.",
+    "starter": "Demande à l’assistant : …\nDécision : …\nAction / responsable / date : …\nProposition : …\nÀ attribuer : …\nMessage : …",
+    "checklist": [
+      "L’essai lundi est la seule décision.",
+      "Grille, Zoé et jeudi sont associés.",
+      "Samedi reste une proposition.",
+      "Le message demande qui prépare le bilan et pour quand.",
+      "La demande à l’assistant nomme le livrable, son destinataire ou sa priorité et les critères utilisés."
+    ],
+    "example": "Demande : transforme ces notes en relevé pour les participants ; sépare décisions, actions, propositions et points ouverts ; puis rédige un suivi bref. Décision : essai de deux créneaux lundi. Action : grille / Zoé / jeudi. Proposition : samedi, sans décision. À attribuer : responsable et date du bilan. Message : Nous testerons les deux créneaux lundi ; Zoé prépare la grille jeudi. L’ouverture samedi reste à discuter. Qui peut prendre le bilan et pour quelle date ?",
+    "explanation": "Le relevé conserve ce qui permet d’organiser le travail. Un tableau convient aussi ; il doit garder les mêmes statuts et ne pas attribuer une action à partir du seul nom de l’orateur. Transfert facultatif : Soumets les notes fictives et ta demande dans un outil autorisé ; compare les quatre catégories et les responsables au relevé attendu. Ce transfert est extérieur à MemStack et ne conditionne pas la fin du parcours."
+  },
+  "ent-assistants-options": {
+    "scenario": "Atlas fictive : douze participants ; budget maximal 500 € ; proximité souhaitée. Salle A : dix places, 300 €, trajet 5 min. B : quatorze places, 450 €, 20 min. C : douze places, 480 €, 10 min. Disponibilité et équipement inconnus.",
+    "task": "Prépare une demande à l’assistant indiquant contraintes, préférence et format de comparaison. Écris un tableau comparant les trois salles puis une recommandation de deux phrases pour une équipe qui privilégie le trajet court.",
+    "starter": "Demande à l’assistant : …\nA / contraintes / compromis : …\nB : …\nC : …\nRecommandation conditionnelle : …\nQuestion suivante : …",
+    "checklist": [
+      "A est écartée faute de capacité.",
+      "B et C sont comparées avec les mêmes unités.",
+      "C est proposée pour la proximité, à un coût supérieur de 30 €.",
+      "Disponibilité et équipement restent à confirmer.",
+      "La demande à l’assistant nomme le livrable, son destinataire ou sa priorité et les critères utilisés."
+    ],
+    "example": "Demande : compare les trois salles avec les mêmes critères ; applique capacité et budget obligatoires puis privilégie le trajet court ; fournis tableau et recommandation conditionnelle. A : écartée, dix places pour douze. B : admissible, 450 € et 20 min. C : admissible, 480 € et 10 min. Je propose C pour une équipe qui privilégie le trajet : dix minutes de moins que B pour 30 € de plus. Avant réservation, confirmer disponibilité à la date voulue et équipement nécessaire.",
+    "explanation": "La conclusion dépend d’une priorité explicitement fournie. B serait cohérente avec une priorité économique différente. A ne devient pas admissible en changeant de préférence. Transfert facultatif : Soumets le dossier fictif et ta demande dans un outil autorisé ; regarde si A est écartée et si le compromis entre B et C est expliqué. Ce transfert est extérieur à MemStack et ne conditionne pas la fin du parcours."
+  },
+  "ent-assistants-iterate": {
+    "scenario": "Cas fictifs. Critère : rappeler livrable + échéance, sans engagement ajouté. A : grille jeudi ; B : devis lundi. V1-A et V1-B : « Merci pour l’échange ». V2-A : « Grille jeudi ». V2-B : « Devis lundi et remise de 10 % ». Aucune remise prévue.",
+    "task": "Compare V1 et V2 pour chaque cas, rédige une modification unique du prompt et donne une sortie attendue pour A puis B. Termine par la demande révisée prête à conserver, en séparant le modèle et les cas à remplacer.",
+    "starter": "Critère : …\nA : V1… / V2…\nB : V1… / V2…\nModification : …\nSorties attendues : …\nModèle révisé à conserver : …",
+    "checklist": [
+      "V1 échoue aux deux rappels.",
+      "V2 réussit A et échoue B sur la remise.",
+      "La consigne corrige l’engagement sans supprimer le rappel.",
+      "Les sorties gardent deux échéances distinctes.",
+      "Le modèle révisé contient des champs réutilisables, séparés des sorties du test.",
+      "Le statut attendu ne devient pas une confirmation de disponibilité ou d’achèvement."
+    ],
+    "example": "A : V1 incomplet, V2 conforme. B : V1 incomplet, V2 ajoute une remise. Consigne : conserver le format bref mais reprendre uniquement livrable et échéance fournis. Attendus : « La grille est attendue jeudi » ; « Le devis est attendu lundi ». Rejouer les deux cas. Modèle : pour [livrable] attendu [échéance], prépare un message bref rappelant seulement ces informations, sans engagement ajouté.",
+    "explanation": "Ces sorties sont des exemples, pas des formulations imposées. Un message chaleureux convient aussi s’il garde le rappel exact sans inventer remise ou action déjà faite. Transfert facultatif : Essaie ton modèle sur A et B dans un outil autorisé avec les seules données fictives ; compare les rappels et les engagements ajoutés. Ce transfert est extérieur à MemStack et ne conditionne pas la fin du parcours. Un livrable attendu jeudi ne devient pas « confirmé prêt jeudi » : conserver la différence entre échéance attendue et achèvement établi."
+  },
+  "ent-assistants-team-playbook": {
+    "scenario": "Nova fictive partage le relevé de réunion. Exemple : essai décidé lundi ; grille par Zoé jeudi ; samedi proposé sans décision. Outil : assistant autorisé, fonctions variables selon contrat. Camille entretient la fiche. Revue pour l’exercice : 15 novembre 2026. Essai complet : 20 min avant, 14 min après.",
+    "task": "Rédige une fiche de méthode en six rubriques puis un protocole d’essai pour un collègue novice. Calcule le gain fourni et limite la conclusion.",
+    "starter": "But/public : …\nEntrées : …\nModèle : …\nExemple et critères : …\nResponsable/revue : …\nEssai/mesure : …",
+    "checklist": [
+      "Le modèle contient des champs à remplacer.",
+      "Les statuts décisions, actions et propositions restent distincts.",
+      "Camille et la date de revue figurent dans la fiche.",
+      "Un nouveau cas sans aide, les retours et le temps complet sont prévus.",
+      "Le gain de six minutes reste limité à cet essai."
+    ],
+    "example": "But : relevé pour les participants. Entrées : notes autorisées et destinataires. Modèle : à partir de [notes], fournir [format], séparer décisions, actions attribuées, propositions et points ouverts. Exemple : essai lundi / grille Zoé jeudi / samedi non décidé. Critères : statuts fidèles, dates et responsables conservés. Camille entretient la fiche ; revue 15 novembre 2026. Essai : nouveau cas sans aide, noter difficultés, qualité et temps complet. 20 − 14 = 6 minutes gagnées sur ce cas ; répéter avant généralisation.",
+    "explanation": "La fiche partage une méthode, pas les données d’une réunion. Elle ne suppose ni mémoire partagée ni connecteur payant. Un échange textuel sur pièces fictives suffit pour un transfert facultatif. Transfert facultatif : Fais essayer ta fiche et un nouveau cas fictif par un collègue dans un outil autorisé ; note ses difficultés et le temps complet pour un résultat conforme. Ce transfert est extérieur à MemStack et ne conditionne pas la fin du parcours."
+  },
+  "ent-automation-map": {
+    "scenario": "Rivage fictif : 30 formulaires par semaine avec référence, service et date. Lina ressaisit et prépare les brouillons. Karim fixe les prix et envoie. Quatre demandes ont un service absent. Objectif : supprimer la ressaisie, sans automatiser prix ni envoi.",
+    "task": "Rédige une carte en cinq à sept lignes avec entrée, sortie et responsable ; ajoute le cas incomplet et un résultat mesurable.",
+    "starter": "Début : …\nÉtape / entrée / sortie / responsable : …\nSi service absent : …\nRésultat observable : …",
+    "checklist": [
+      "Le formulaire lance le processus.",
+      "Le service absent retourne à Lina.",
+      "Prix et envoi restent à Karim.",
+      "Ligne créée et devis envoyé sont distingués."
+    ],
+    "example": "Début : nouveau formulaire. Contrôle des champs : complet ou incomplet, sous responsabilité de Lina. Si service absent : Lina demande une précision. Si complet : champs vers une ligne unique. Lina prépare le brouillon ; Karim décide le prix puis envoie. Mesure : références complètes reprises une fois dans la liste, sans ressaisie.",
+    "explanation": "La carte rend les passages visibles avant le choix du logiciel. Un tableau convient aussi. Le résultat de la première liaison est une ligne de suivi, pas une validation commerciale."
+  },
+  "ent-automation-select": {
+    "scenario": "Lumen fictif : référence/service/montant EUR. Dès 500 € inclus : responsable achats ; sinon responsable du service. Décision humaine dans les deux cas. Formulaire et liste autorisés ; connecteur et droits de création de tâche non confirmés. Justification facultative. La table service → responsable est tenue par l’équipe ; un service inconnu demande une clarification au responsable achats.",
+    "task": "Prépare une fiche de sélection : étapes, règle exacte, place éventuelle de l’IA et éléments à confirmer avant un essai réel.",
+    "starter": "Déclencheur : …\nRègle et sorties : …\nIA utile pour… / inutile pour…\nÀ confirmer : …",
+    "checklist": [
+      "500 € va au responsable achats.",
+      "Aucune commande automatique ajoutée.",
+      "Résumé facultatif distinct du montant source.",
+      "Liaison, droits et conditions à confirmer.",
+      "La table service → responsable maintenue par l’équipe permet de trouver le destinataire ; un service inconnu est à clarifier."
+    ],
+    "example": "Nouvelle demande complète → lire montant. Si ≥ 500 €, tâche au responsable achats, sinon au responsable du service. Attendre leur décision. IA facultative pour résumer la justification avec source ; inutile pour comparer le seuil. Confirmer opérations du connecteur, droits de lecture/création et conditions du contrat. Sans liaison disponible, documenter le transfert manuel. Retrouver le responsable dans la table service → responsable tenue par l’équipe ; si le service est inconnu, demander clarification au responsable achats.",
+    "explanation": "Un flux peut être utile sans IA à chaque étape. Une notification peut remplacer la tâche si le destinataire et la trace de décision sont explicités."
+  },
+  "ent-automation-data-contract": {
+    "scenario": "Solis fictif : inscription_id INS-204, session_id AT-17, places 2, date_session 2026-11-05, statut soumise. Liste : Référence, Session, Nombre de places, Date, État. Après création, État est géré dans la liste. Deux sessions ont le même nom. Variante : places vide. Les demandes incomplètes sont suivies dans une file distincte de la liste des réservations. À la création seulement, statut=soumise devient État=à traiter. Ensuite, le coordinateur gère État ; un renvoi ne remplace pas confirmé par à traiter.",
+    "task": "Rédige le contrat des cinq champs avec formats et règles de reprise. Traite la variante et cite les informations inutiles ici.",
+    "starter": "Source → destination / sens / format / obligatoire : …\nValeur absente : …\nDéjà présent : …\nSource qui fait foi pour État : …",
+    "checklist": [
+      "Identifiants inscription et session distingués.",
+      "Places entier positif et date non ambiguë.",
+      "Places vide conduit à compléter.",
+      "La répétition ne recrée ni ne réinitialise État.",
+      "L’état à compléter figure dans une file séparée, sans ligne cible invalide.",
+      "soumise devient à traiter uniquement lors de la création ; un renvoi préserve le statut géré dans la liste."
+    ],
+    "example": "inscription_id → Référence : texte stable obligatoire ; session_id → Session : identifiant connu obligatoire ; places → Nombre de places : entier positif obligatoire ; date_session → Date : année-mois-jour obligatoire ; soumise → État à traiter à la création. Si places manque : référence et motif dans la file séparée à compléter, assignée au coordinateur ; aucune ligne dans la liste des réservations. Si INS-204 existe : ne pas recréer ni réinitialiser État ; la liste fait foi après création. Prénoms et coordonnées inutiles au comptage.",
+    "explanation": "Le contrat permet une configuration sans deviner. Un autre format de date convient s’il est explicite. La reprise protège le travail déjà réalisé dans la destination."
+  },
+  "ent-automation-exceptions": {
+    "scenario": "Helio fictif : INT-88 fiche créée à 09:00, notification échouée à 09:01. INT-89 adresse absente, aucune fiche. Pour une panne de notification : deux nouvelles tentatives espacées puis alerte au planificateur. Aucun outil réel configuré ici.",
+    "task": "Prépare le tableau de reprise des deux demandes : état, action, responsable et trace. Ajoute la protection technique à faire confirmer.",
+    "starter": "Référence / effet présent / état / suite / responsable : …\nTrace minimale : …\nProtection à confirmer : …",
+    "checklist": [
+      "INT-88 ne produit pas une autre fiche.",
+      "INT-89 reste à compléter sans adresse inventée.",
+      "Deux nouvelles tentatives de notification au maximum après l’échec initial, puis alerte au planificateur.",
+      "Protection contre traitements simultanés à confirmer."
+    ],
+    "example": "INT-88 : fiche présente, notification en attente ; vérifier puis retenter la notification au plus deux fois ; planificateur suit l’alerte finale. INT-89 : aucune fiche, à compléter ; demander l’adresse ; planificateur responsable. Trace : référence, étape, état et heure. Au référent : quel mécanisme empêche deux créations de même référence même simultanées, et comment contrôler un résultat incertain ?",
+    "explanation": "La procédure distingue effets réalisés, données manquantes et panne. Une autre organisation des alertes convient si le responsable, la limite et la vérification restent explicites. Le délai entre nouvelles tentatives doit être défini avec le référent selon l’outil et l’incident ; aucune durée universelle n’est fournie dans cet exercice."
+  },
+  "ent-automation-pilot": {
+    "scenario": "Solis fictif : 20 événements = 16 inscriptions distinctes complètes + deux répétitions + une sans places + une session inconnue. Critères : zéro doublon, aucune réservation inventée. Lot comparable : manuel 60 minutes ; nouveau 18 de surveillance + 12 de corrections ; mise en place 180 minutes. Aucun tarif de licence fourni.",
+    "task": "Rédige le plan d’essai : résultats, deux cas supplémentaires, gain net, nombre de lots compensant la mise en place et règle de décision.",
+    "starter": "Résultats : …\nCas supplémentaires / attendu : …\nGain net : …\nNombre de lots : …\nDécision et limites : …",
+    "checklist": [
+      "16 fiches et deux cas à compléter ; répétitions distinctes.",
+      "Panne et reprise avec attendus.",
+      "30 minutes de gain, six lots sous hypothèses.",
+      "Seuils respectés avant extension et coûts absents explicités."
+    ],
+    "example": "16 fiches, deux répétitions sans création et deux dossiers à compléter. Ajouter panne de destination : attente visible et alerte ; reprise après fiche créée : aucune deuxième fiche. Gain 60−18−12=30 minutes. 180/30=6 lots, si gain et volume stables, hors autres coûts. Étendre après respect des seuils et correction des écarts, avec repli manuel et référent. Chiffrer licences et entretien avant conclusion économique.",
+    "explanation": "Un cas d’essai sans résultat attendu ne permet pas de décider. Les calculs évaluent uniquement les efforts fournis dans les pièces ; ils ne prouvent pas une rentabilité commerciale. Tout essai de panne ou de reprise dans un outil réel se prépare avec le référent, dans un environnement de test distinct, sans perturber un flux de production."
+  },
+  "ent-automation-handover": {
+    "scenario": "Helio fictif. Nora quitte le projet ; Malik responsable métier, Inès remplaçante, référent outils pour connexions et arrêt. INT-88 : fiche présente, notification en attente. Aucun partage de compte personnel autorisé. Certains proposent chacun une copie active.",
+    "task": "Rédige la fiche de transmission et un exercice de reprise pour Inès : rôles, accès à confirmer, copies, arrêt et revues.",
+    "starter": "But et référence : …\nRôles : …\nAccès : …\nReprise INT-88 : …\nCopies : …\nArrêt et repli : …\nRevue : …",
+    "checklist": [
+      "Malik, Inès et référent ont des rôles distincts.",
+      "La reprise ne recrée pas INT-88 et laisse une trace.",
+      "Connexions confirmées sans mot de passe partagé.",
+      "Copies concurrentes coordonnées ou désactivées.",
+      "Arrêt, repli manuel et revues prévus."
+    ],
+    "example": "Référence : fiche commune v1 du suivi unique INT. Malik suit les résultats ; Inès remplace ; référent gère connexions et arrêt. Confirmer les accès nominatifs et connexions après Nora, sans partager son compte. Inès retrouve INT-88, confirme la fiche, reprend la notification selon procédure et note le résultat. Éviter les copies actives concurrentes ; garder les modèles inactifs identifiés. Si double fiche, Malik demande l’arrêt ; référent coupe le déclenchement et organise le traitement manuel. Revue mensuelle et à chaque changement de champ, règle, outil ou responsable.",
+    "explanation": "La répétition prépare la transmission. La mise en pratique réelle reste à démontrer avec les accès autorisés. Une fiche plus courte convient si le remplaçant y trouve les mêmes décisions et traces."
+  },
+  "ent-projects-outcome": {
+    "task": "Rédige une fiche Cyprès et une demande IA produisant deux options comparables.",
+    "starter": "Public et difficulté : …\nPremière version / exclusions : …\nResponsable : …\nTest et mesure : …\nDemande IA : …",
+    "checklist": [
+      "Les 18 appels motivent le choix sans promettre leur disparition.",
+      "La fiche délimite la version et deux exclusions.",
+      "Responsable, test et mesure sont présents."
+    ],
+    "example": "Public : clients préparant une visite. Version : horaires, adresse, préparation ; ni paiement ni suivi. Inès entretient les textes. Test : trois personnes cherchent les horaires d’un samedi. Mesure : appels d’horaires avant/après sur semaines comparables. Demande IA : comparer page et application à partir de ces faits, avec exclusions et questions ouvertes.",
+    "explanation": "La fiche aide à choisir une réalisation limitée. Une autre proposition convient si elle traite un besoin documenté et prévoit son entretien.",
+    "scenario": "Cas entièrement fictif : l’atelier vélo Cyprès veut « un site fait avec l’IA ». Inès, à l’accueil, traite 30 appels hebdomadaires : 18 demandent les horaires, 8 une estimation, 4 le suivi d’un vélo déposé. Un tarif fiable exige un diagnostic sur place. L’équipe veut d’abord rendre les horaires et la préparation de visite faciles à trouver. Aucun gain n’a encore été mesuré."
+  },
+  "ent-projects-specification": {
+    "task": "Prépare la demande de réalisation Rivage : besoin, trois critères, exclusions et question bloquante.",
+    "starter": "Public / action / but : …\nCritères : …\nExclusions : …\nQuestion à résoudre : …\nPremière livraison : …",
+    "checklist": [
+      "Les deux ateliers et leurs champs sont conservés.",
+      "Les critères permettent une comparaison avec la page.",
+      "Année à confirmer, inscription et paiement exclus.",
+      "L’heure de début de chaque atelier est conservée pour choisir un créneau."
+    ],
+    "example": "Un visiteur compare les ateliers pour choisir un créneau. Critères : deux fiches ; titre/date complète/heure/durée/salle ; lecture mobile possible. Exclusions : inscription et paiement. Question : quelle année pour les dates ? Première livraison : structure avec données fictives et année à confirmer, sans publication.",
+    "explanation": "Un critère décrit un résultat visible. Une préférence de couleur ne remplace pas la présence d’une date complète.",
+    "scenario": "Cas fictif : le centre Rivage publie deux ateliers. Pièces : Initiation tableur, 12 novembre, 14 h, salle Bleue, 2 h ; Présenter un projet, 14 novembre, 9 h, salle Verte, 3 h. L’année n’est pas fournie. La première version doit permettre de comparer les créneaux, sans inscription ni paiement. Les dates définitives attendent confirmation de l’année."
+  },
+  "ent-projects-prototype": {
+    "task": "Compare les trois options Hublot, choisis un essai et prépare deux tâches pour tester la navigation.",
+    "starter": "Options / besoins / entretien : …\nEssai et raison : …\nTâches test : …\nObservations à recueillir : …",
+    "checklist": [
+      "Trois options comparées au besoin sans compte ni paiement.",
+      "Entretien mensuel pris en compte, sans prix inventé.",
+      "Deux tâches sans chemin de clic imposé."
+    ],
+    "example": "Outil connu : pages adaptées, entretien maîtrisé. Sur mesure : reprise technique à organiser. Application : comptes et paiement hors besoin. Essai : deux navigations non publiées. Tâches : trouvez le prochain événement ; trouvez son adresse. Observer erreurs et hésitations avant choix.",
+    "explanation": "Le choix reste provisoire. Un test indiquant où cliquer ne montre pas si la navigation est compréhensible.",
+    "scenario": "Cas fictif : l’association culturelle Hublot présente ses événements. Elle dispose de trois textes, de photos autorisées et d’un calendrier mensuel. Aucun compte ni paiement n’est demandé. Nora connaît déjà un outil de site et peut consacrer une heure par mois à l’entretien. Options : page dans cet outil ; site sur mesure avec aide au code ; application avec réservation et comptes."
+  },
+  "ent-projects-iteration": {
+    "task": "Prépare la première demande Fougère et sa fiche de recette, c’est-à-dire les contrôles avant acceptation.",
+    "starter": "Version conservée : …\nModification unique : …\nDonnées / éléments préservés : …\nContrôles : …\nSi échec : …",
+    "checklist": [
+      "Zones séparées des boutons.",
+      "Trois zones et tarifs exacts.",
+      "Comparaison, lecture mobile et action si échec prévues."
+    ],
+    "example": "Conserver la version actuelle. Ajouter seulement jardin Nord/Sud, haie Nord, compost Sud. Garder les titres et jardin 35 €/h, haie sur devis, compost 12 €/sac. Contrôler zones, tarifs identiques et lecture mobile. Corriger ou restaurer avant les boutons, puis faire relire.",
+    "explanation": "La recette porte sur la réalisation et les comportements utiles. Demander au modèle s’il est satisfait ne fournit pas ces observations.",
+    "scenario": "Cas fictif : la coopérative Fougère présente trois services. Jardin : Nord et Sud, 35 €/h ; haie : Nord, sur devis ; compost : Sud, 12 €/sac. L’équipe veut ajouter les zones et des boutons de contact. Le site fonctionne sur téléphone, les tarifs doivent rester identiques. Une personne technique relit les modifications. Les deux demandes peuvent être livrées séparément."
+  },
+  "ent-projects-release": {
+    "task": "Prépare le lancement Terre Claire et le repli si un succès apparaît sans enregistrement. Ajoute le test B puis une répétition de A : aucune inscription supplémentaire attendue ; le mécanisme réel de protection est à confirmer avec le responsable technique. Répéter A signifie renvoyer la même demande métier, et non une nouvelle demande ultérieure de la même personne.",
+    "starter": "Avant ouverture / preuve : …\nEssais mobile, clavier, erreur : …\nResponsables : …\nDéclencheur de repli / solution / reprise : …",
+    "checklist": [
+      "Test de bout en bout avec une fiche fictive.",
+      "Message vert insuffisant pour ouvrir.",
+      "Repli avec contact et rapprochement avant reprise.",
+      "B et la répétition de A sont testées ; deux inscriptions distinctes seulement sont attendues."
+    ],
+    "example": "Technique : connecter le registre ; test A visible une fois et retrouvable par Jo. Tester mobile, clavier et champ manquant. Jo suit les inscriptions, la personne technique corrige, le responsable autorise. Perte : retirer le formulaire, afficher contact Jo, rapprocher les demandes et tester la correction avant reprise. Ajouter B, puis répéter A : deux inscriptions distinctes au total et statut visible pour la répétition. Le responsable technique confirme la protection réelle contre les doubles soumissions.",
+    "explanation": "Un plan exploitable dépasse la présentation visuelle. L’absence d’enregistrement empêche l’ouverture même si d’autres tests réussissent. La détection porte sur la même demande métier renvoyée : une personne peut faire une autre demande légitime, qui ne doit pas être supprimée parce que son identité est déjà connue.",
+    "scenario": "Cas fictif : le collectif Terre Claire prépare une page d’inscription. Son prototype affiche une confirmation mais n’enregistre rien. Avant ouverture, le responsable technique doit connecter un enregistrement autorisé et traiter les accès. Jo, à l’accueil, doit retrouver chaque demande. A et B désignent deux identités de test fictives distinctes, avec les champs à définir par l’équipe technique pour ses essais ; ce ne sont pas des dossiers déjà fournis. Aucun participant réel ne fournit de données dans cette mission."
+  },
+  "ent-projects-maintenance": {
+    "task": "Prépare la fiche de reprise Lanterne et arbitre les deux heures. Emplacement du projet et restauration ne sont pas fournis. Rassemble enfin un dossier de première version pour Cyprès, le cas de départ : fiche besoin, critères, approche choisie, première modification, recette et reprise. Pièces rappelées : 18 appels d’horaires sur 30 ; page horaires/adresse/préparation, sans paiement ni suivi ; Inès tient les textes. Tu peux proposer une maquette dans un outil connu, garder trois critères observables (horaires, adresse, préparation trouvables), une évolution à la fois, des essais mobile et clavier, puis une fiche de reprise. Toute information technique absente devient une question à attribuer, sans l’inventer. Aucun document externe n’est nécessaire.",
+    "starter": "Contenu / responsable / fréquence : …\nIncident / contact : …\nAccès et emplacement à confirmer : …\nSauvegarde et restauration : …\nPriorité / raison / piste suivante : …\n\nDossier Cyprès\nBesoin : …\nCritères : …\nApproche : …\nModification : …\nRecette : …\nReprise : …",
+    "checklist": [
+      "Lila et Rémi ont des responsabilités distinctes.",
+      "Aucun accès ni procédure inconnue inventés, aucun secret demandé.",
+      "Les horaires sont corrigés ; espace client cadré avant réalisation.",
+      "Le dossier Cyprès rassemble six rubriques cohérentes ; les choix sont motivés et les inconnues attribuées."
+    ],
+    "example": "Lila : textes mensuels et correction horaire. Rémi : incidents ; confirmer emplacement, propriétaire, accès nominatifs, sauvegardes et restauration sans secrets dans la fiche. Deux heures : correction et rappel. Explorer ensuite le besoin derrière l’espace client avant estimation. Dossier Cyprès : besoin horaires ; critères horaires/adresse/préparation trouvables ; maquette dans outil connu à confirmer avec le référent ; première modification limitée aux horaires ; recette recherche d’information, mobile, clavier et liens ; reprise par Inès pour les textes, avec référent et restauration à confirmer. Tester avec trois personnes puis mesurer les appels sur semaines comparables.",
+    "explanation": "Les inconnues restent utiles si une personne doit les résoudre. Explorer un espace client ne justifie pas de laisser l’horaire connu comme faux.",
+    "scenario": "Cas fictif : le studio Lanterne publie trois offres sur un outil de site. Lila met les textes à jour mensuellement, Rémi traite les incidents techniques. Dernier mois : 12 demandes d’information, 3 signalements d’horaire périmé, 2 demandes d’espace client. Deux heures sont disponibles pour une amélioration ; aucun budget ni compétence supplémentaire n’est confirmé."
   }
 }

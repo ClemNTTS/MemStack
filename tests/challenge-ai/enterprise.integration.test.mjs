@@ -30,6 +30,41 @@ async function create(name,manager) {
   return created.organizationId
 }
 
+test('independent learning paths enforce real foundation and branch prerequisites in server transactions', async () => {
+  const organizationId = await create('Paths organization', 'paths-member')
+  const pathCatalog = {
+    version: 2,
+    foundationLessonIds: ['ent-foundation'],
+    lessons: [
+      { id: 'ent-foundation', chapterId: 'foundation', cards: [] },
+      { id: 'ent-path-a', chapterId: 'path-a', cards: [], prerequisiteLessonIds: ['ent-foundation'] },
+      { id: 'ent-path-b', chapterId: 'path-b', cards: [], prerequisiteLessonIds: ['ent-foundation'] },
+      { id: 'ent-path-a-finish', chapterId: 'path-a', cards: [], prerequisiteLessonIds: ['ent-path-a'] },
+    ],
+    challenges: [{ ...catalog.challenges[0], prerequisiteLessonIds: ['ent-path-a', 'ent-path-a-finish'] }],
+  }
+  const pathKeys = { ...keys, version: 2 }
+  const submit = data => commitEnterpriseLearningAction({ ...context('paths-member', data), catalog: pathCatalog, keys: pathKeys })
+  const lesson = lessonId => action(organizationId, 'lesson', { lessonId }, `request-paths-${lessonId}`)
+  await assert.rejects(submit(lesson('ent-path-b')), { code: 'failed-precondition' })
+  await submit(lesson('ent-foundation'))
+  // A future or malformed completion cannot unlock a branch.
+  const foundationRef = db.doc(`organizations/${organizationId}/learners/paths-member/lessons/ent-foundation`)
+  for (const completedAt of ['invalid', new Date(now + 86400000).toISOString()]) {
+    await foundationRef.set({ completedAt })
+    await assert.rejects(submit(lesson('ent-path-b')), { code: 'failed-precondition' })
+  }
+  await foundationRef.set({ completedAt: new Date(now).toISOString() })
+  await submit(lesson('ent-path-b'))
+  await assert.rejects(submit(lesson('ent-path-a-finish')), { code: 'failed-precondition' })
+  const challenge = action(organizationId, 'challenge', { challengeId: 'ent-case', catalogVersion: 2, answers: keys.challenges['ent-case'] }, 'request-paths-assessment')
+  await assert.rejects(submit(challenge), { code: 'failed-precondition' })
+  await submit(lesson('ent-path-a'))
+  await submit(lesson('ent-path-a-finish'))
+  assert.equal((await submit(challenge)).passed, true)
+  assert.equal((await db.collection(`organizations/${organizationId}/learners/paths-member/lessons`).get()).size, 4)
+})
+
 test('only current administrators provision pilots; invitations are email-bound, expiring and one-use',async()=>{
   await assert.rejects(manageEnterpriseOrganization(context('intruder',{action:'create',name:'Forged',managerEmail:'intruder@example.com',requestId:'request-forged-admin'},true)),{code:'permission-denied'})
   const createRequest = {action:'create',name:'Invitation pilot',managerEmail:'invite-manager@example.com',requestId:'request-invitation-pilot'}

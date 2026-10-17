@@ -1,31 +1,33 @@
 # MemStack Entreprise
-## Faire monter vos équipes en compétences sur l’IA — et entretenir les acquis
 
-**Pour les collaborateurs et les managers, sans prérequis de code.** Un parcours guidé pour utiliser les assistants IA avec discernement et mieux cadrer les projets qui les intègrent.
+## Faites de l’IA une compétence collective.
 
-### Apprendre sur des situations de travail
+**Apprenez à mieux utiliser les assistants, à automatiser vos tâches et à faire avancer vos projets numériques.** Pour les collaborateurs et les managers, sans prérequis de programmation.
 
-Une politique de retour contredit un résumé produit par un assistant IA. Un export client contient trop de données. Un projet commence par « il nous faut un chatbot » sans besoin défini. Les missions proposent des documents fictifs, des explications et des questions pour apprendre à décider face à ces situations.
+### Trois parcours pour des besoins concrets
 
-Le parcours initial comporte **20 missions guidées**, organisées autour de huit étapes : comprendre les limites, protéger les informations, formuler une demande et son contexte, vérifier les résultats, choisir un usage proportionné, cadrer un projet, évaluer un pilote et organiser son suivi. Il aborde notamment le prompting, les agents, les coûts et les impacts.
+Deux missions communes donnent les repères de départ. Chacun choisit ensuite un parcours de six missions :
 
-### Continuer après le parcours
+- **Travailler avec les assistants IA** : préparer un courriel, exploiter des documents, organiser une réunion, comparer des options et partager une méthode.
+- **Automatiser les tâches et organiser les pratiques** : décrire un processus, sélectionner une première liaison, préparer les données, les reprises, les essais et la transmission.
+- **Faire avancer un projet numérique** : définir un besoin, rédiger une demande de réalisation, préparer un prototype, organiser les modifications, le lancement et la maintenance.
 
-Les cartes de révision reviennent à leurs échéances pour entretenir les notions travaillées. Les leçons terminées restent consultables et les nouvelles leçons rejoignent l’espace lorsqu’elles sont publiées. Les défis permettent de mettre les acquis à l’épreuve avec une correction. La formation se prolonge dans la durée.
+Un premier parcours représente huit missions, socle compris. Les trois parcours réunissent vingt missions recommandées ; vingt ressources complémentaires restent disponibles. Le catalogue contient au total 40 missions, 120 cartes et 11 situations d’évaluation. Prévoir environ 10 à 18 minutes par mission selon le sujet ; ces durées sont indicatives et restent à calibrer avec de vrais apprenants.
 
-### Un espace pour votre organisation
+### Préparer, comparer, améliorer
 
-- Invitation et retrait des membres par les responsables.
-- Suivi d’avancement et de participation, sans accès aux réponses pédagogiques individuelles.
-- Classement propre à l’organisation.
-- Contenus, révisions et progression séparés de l’environnement Développeurs, même avec un compte commun.
+Chaque atelier propose des pièces fictives et un livrable : demande, tableau, procédure ou plan. L’apprenant prépare sa proposition puis la compare à un exemple expliqué à l’aide de critères. Les questions et révisions espacées entretiennent les méthodes.
+
+Le transfert dans un outil d’entreprise autorisé est facultatif. Aucun achat d’outil, aucune donnée réelle et aucun compte d’assistant externe ne sont nécessaires pour terminer le parcours. MemStack ne connecte pas d’automatisation, ne lance pas d’assistant et ne publie pas de site pendant les ateliers. La préparation sans code ne remplace pas les compétences techniques nécessaires à certaines réalisations.
+
+### Un espace pour l’organisation
+
+Invitation et retrait des membres, suivi d’avancement et de participation, classement propre à l’organisation. Les responsables ne consultent pas les réponses pédagogiques individuelles. La progression et les révisions restent séparées de l’environnement Développement.
 
 ### Tarif
 
-**10 € TTC par membre actif et par mois.** Les responsables sont inclus dans le décompte. Une invitation non acceptée ne compte pas. « Actif » signifie membre de l’organisation, même sans connexion récente. Les changements d’effectif ajustent la quantité facturée ; les éventuels proratas sont calculés par Stripe et reportés sur la prochaine facture.
+**10 € TTC par membre actif et par mois**, responsables compris. Une invitation non acceptée ne compte pas. Un membre actif est une adhésion active, même sans connexion récente. Stripe calcule les ajustements d’effectif et les éventuels proratas sur la prochaine facture. Le Premium personnel est distinct.
 
-Le Premium développeur est une offre distincte. Les conditions contractuelles et les montants applicables sont à consulter avant souscription.
+[Découvrir le programme](https://memstack.fr/#/business).
 
-**Découvrir le programme : https://memstack.fr/#/business**
-
-*Document de présentation du 16 octobre 2026. Paiements LIVE en cours de finalisation au dernier état vérifié ; ce document ne confirme pas leur ouverture et ne remplace pas les conditions de vente. Les conditions d’un pilote éventuel sont à convenir séparément.*
+Document mis à jour le 17 octobre 2026. Les changements de contenu ne prouvent pas l’ouverture de Stripe LIVE ; vérifier l’état commercial et les conditions contractuelles avant toute annonce d’achat disponible. Les conditions d’un éventuel pilote sont à convenir séparément. Les inspections d’agents et personas simulés ne constituent pas une étude avec des salariés réels ni une mesure d’efficacité.

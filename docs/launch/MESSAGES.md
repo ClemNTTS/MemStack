@@ -22,11 +22,13 @@ Je cherche vos retours sur les premiers parcours : https://memstack.fr/ → **D�
 
 ## Entreprises — publication de découverte
 
-Un assistant IA peut produire une réponse convaincante… et inventer une référence. Savoir s’en servir, c’est aussi apprendre à vérifier.
+Faites de l’IA une compétence collective.
 
-MemStack Entreprise aide les collaborateurs et les managers à développer ces réflexes : formuler une demande, apporter le bon contexte, protéger les informations, contrôler les résultats et cadrer un projet utile.
+Apprenez à mieux utiliser les assistants, à automatiser vos tâches et à faire avancer vos projets numériques.
 
-Le parcours est guidé, sans prérequis de code, avec des documents fictifs et des situations de travail. Après les missions, les cartes de révision entretiennent les acquis ; les nouvelles leçons complètent l’espace lorsqu’elles sont publiées.
+MemStack Entreprise propose deux missions communes, puis trois parcours de six missions. Préparer une réunion, organiser un circuit administratif ou cadrer une première version de site : chaque atelier produit une demande, un tableau ou un plan à partir de pièces fictives. On compare sa proposition à un exemple expliqué, puis les révisions entretiennent la méthode.
+
+Le transfert vers un outil autorisé par votre entreprise est facultatif. Aucun assistant externe, automatisation connectée ou site publié n’est nécessaire pour finir les parcours.
 
 Je souhaite échanger avec des équipes intéressées par une démonstration et un premier pilote, dont nous définirons les conditions ensemble.
 
@@ -40,9 +42,11 @@ Bonjour,
 
 Je développe MemStack Entreprise, un espace d’apprentissage pour les collaborateurs et les managers qui utilisent l’IA au travail, sans avoir besoin de savoir coder.
 
-Le programme travaille des situations concrètes : vérifier une réponse à partir d’un document, formuler un prompt avec un contexte utile, choisir les données à partager ou cadrer un pilote avant de généraliser un outil. Il aborde aussi les limites, les impacts et les permissions des agents.
+Le programme propose trois parcours : travailler avec les assistants IA, automatiser les tâches et organiser les pratiques, faire avancer un projet numérique. Deux missions communes et six missions appliquées permettent de commencer par votre priorité.
 
-Le parcours initial est suivi de révisions espacées pour entretenir les acquis. Les leçons restent consultables et les nouvelles publications enrichissent l’espace. L’organisation dispose de ses membres, de son suivi d’avancement et de son classement, séparés de l’environnement développeur.
+Les ateliers font préparer des livrables concrets sur des cas fictifs : un brief, une synthèse de réunion, une carte de processus ou un dossier de première version. On les compare à un exemple expliqué ; leur transfert vers un outil autorisé est facultatif. MemStack ne publie pas de site et ne connecte pas de flux pendant le cours.
+
+Les cartes de révision entretiennent les méthodes. L’organisation dispose de son suivi d’avancement et de son classement, séparés de l’environnement développeur.
 
 Le tarif prévu est de **10 € TTC par membre actif et par mois**, responsables inclus. Les conditions d’un éventuel pilote seront définies ensemble ; l’ouverture des paiements réels est en cours de finalisation.
 

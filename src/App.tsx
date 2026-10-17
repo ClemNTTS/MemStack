@@ -31,7 +31,7 @@ function AppContent() {
       window.location.replace(appHref(destination))
     }
     if (!account.user && (path === '/' || path === '/discover')) document.title = 'MemStack · Développement pour les devs, IA pour les équipes'
-    if (!account.user && path === '/business') document.title = 'MemStack Entreprise · Les bons réflexes avec l’IA'
+    if (!account.user && path === '/business') document.title = 'MemStack Entreprise · Faites de l’IA une compétence collective'
   }, [account.user, account.ready, path, route])
   if (legalPaths.includes(path)) return <LegalPage path={path} />
   if (account.authResolved && !account.user && (path === '/' || path === '/discover')) return <LandingPage />

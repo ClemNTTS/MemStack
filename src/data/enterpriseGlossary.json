@@ -1270,5 +1270,298 @@
       "title": "Évaluation continue",
       "definition": "Le fait de vérifier régulièrement les résultats pendant l'utilisation du service, au-delà des essais de départ. On examine aussi des situations nouvelles et les erreurs rencontrées. Exemple : ajouter au lot de tests un dossier où la nouvelle version a oublié une condition importante."
     }
+  ],
+  "ent-assistants-brief": [
+    {
+      "id": "brief-metier",
+      "terms": [
+        "brief"
+      ],
+      "title": "Brief",
+      "definition": "Une courte description du travail : qui utilisera le résultat, pour quoi faire et sous quelle forme."
+    },
+    {
+      "id": "livrable",
+      "terms": [
+        "livrable"
+      ],
+      "title": "Livrable",
+      "definition": "Un résultat concret à utiliser ou transmettre : courriel, tableau, fiche ou plan."
+    }
+  ],
+  "ent-assistants-documents": [
+    {
+      "id": "dossier-source",
+      "terms": [
+        "dossier"
+      ],
+      "title": "Dossier source",
+      "definition": "Des pièces nommées dont on précise le rôle et le statut avant de demander un travail."
+    },
+    {
+      "id": "tracabilite-metier",
+      "terms": [
+        "traçabilité",
+        "traçable"
+      ],
+      "title": "Traçabilité",
+      "definition": "La possibilité de retrouver le document ou le calcul qui explique un élément du livrable."
+    }
+  ],
+  "ent-assistants-meeting": [
+    {
+      "id": "releve-decisions",
+      "terms": [
+        "relevé de décisions"
+      ],
+      "title": "Relevé de décisions",
+      "definition": "Une synthèse des choix actés et des suites à donner, distincte de la transcription de tous les échanges."
+    },
+    {
+      "id": "question-ouverte",
+      "terms": [
+        "question ouverte"
+      ],
+      "title": "Question ouverte",
+      "definition": "Un point qui nécessite encore une information ou un choix ; le signaler permet de l’attribuer."
+    }
+  ],
+  "ent-assistants-options": [
+    {
+      "id": "contrainte-eliminatoire",
+      "terms": [
+        "contrainte éliminatoire"
+      ],
+      "title": "Contrainte éliminatoire",
+      "definition": "Une exigence obligatoire : une option qui ne la respecte pas doit être écartée pour ce besoin."
+    },
+    {
+      "id": "compromis",
+      "terms": [
+        "compromis"
+      ],
+      "title": "Compromis",
+      "definition": "Ce que l’on gagne et accepte en choisissant une option plutôt qu’une autre, par exemple moins de trajet pour un prix supérieur."
+    }
+  ],
+  "ent-assistants-iterate": [
+    {
+      "id": "iteration-metier",
+      "terms": [
+        "itération"
+      ],
+      "title": "Itération",
+      "definition": "Un cycle court : produire, observer un défaut concret, ajuster puis comparer à nouveau."
+    },
+    {
+      "id": "cas-comparaison",
+      "terms": [
+        "mêmes cas"
+      ],
+      "title": "Cas de comparaison",
+      "definition": "Une situation conservée identique pour comparer des versions avec les mêmes critères."
+    }
+  ],
+  "ent-assistants-team-playbook": [
+    {
+      "id": "fiche-methode",
+      "terms": [
+        "fiche de méthode"
+      ],
+      "title": "Fiche de méthode",
+      "definition": "Une fiche expliquant quand utiliser une pratique, quoi préparer, quoi demander, comment reconnaître le bon résultat et qui la met à jour."
+    },
+    {
+      "id": "temps-complet",
+      "terms": [
+        "temps complet"
+      ],
+      "title": "Temps complet",
+      "definition": "Le temps de toute la tâche : préparation, interaction, relecture et retouches, pas seulement la génération."
+    }
+  ],
+  "ent-automation-map": [
+    {
+      "id": "ent-automation-map-term-1",
+      "terms": [
+        "Processus"
+      ],
+      "title": "Processus",
+      "definition": "La suite d’étapes et décisions qui transforme une demande en résultat utilisable."
+    },
+    {
+      "id": "ent-automation-map-term-2",
+      "terms": [
+        "Déclencheur"
+      ],
+      "title": "Déclencheur",
+      "definition": "L’événement, la demande manuelle ou l’horaire qui fait commencer une automatisation."
+    }
+  ],
+  "ent-automation-select": [
+    {
+      "id": "ent-automation-select-term-1",
+      "terms": [
+        "Flux"
+      ],
+      "title": "Flux",
+      "definition": "Un enchaînement d’étapes, de conditions et d’actions, aussi appelé workflow."
+    },
+    {
+      "id": "ent-automation-select-term-2",
+      "terms": [
+        "Connecteur"
+      ],
+      "title": "Connecteur",
+      "definition": "Une liaison fournie par un outil pour lire ou modifier un autre service selon des opérations et des accès définis."
+    }
+  ],
+  "ent-automation-data-contract": [
+    {
+      "id": "ent-automation-data-contract-term-1",
+      "terms": [
+        "Contrat de données"
+      ],
+      "title": "Contrat de données",
+      "definition": "La fiche commune décrivant le sens, le format, les correspondances et les règles des informations échangées."
+    },
+    {
+      "id": "ent-automation-data-contract-term-2",
+      "terms": [
+        "Mapping"
+      ],
+      "title": "Mapping",
+      "definition": "La correspondance explicite entre un champ source et un champ destination."
+    },
+    {
+      "id": "ent-automation-data-contract-term-3",
+      "terms": [
+        "Source de référence"
+      ],
+      "title": "Source de référence",
+      "definition": "L’endroit faisant foi pour une donnée, avec sa règle de mise à jour."
+    }
+  ],
+  "ent-automation-exceptions": [
+    {
+      "id": "ent-automation-exceptions-term-1",
+      "terms": [
+        "Exception"
+      ],
+      "title": "Exception",
+      "definition": "Une situation qui demande un chemin différent du cas normal."
+    },
+    {
+      "id": "ent-automation-exceptions-term-2",
+      "terms": [
+        "Idempotence"
+      ],
+      "title": "Idempotence",
+      "definition": "Le fait que répéter une même demande ne multiplie pas son effet métier."
+    },
+    {
+      "id": "ent-automation-exceptions-term-3",
+      "terms": [
+        "Journal"
+      ],
+      "title": "Journal",
+      "definition": "Une trace d’exécutions ou d’étapes pour comprendre un résultat et reprendre le travail."
+    }
+  ],
+  "ent-automation-pilot": [
+    {
+      "id": "ent-automation-pilot-term-1",
+      "terms": [
+        "Pilote"
+      ],
+      "title": "Pilote",
+      "definition": "Un essai limité avec critères et décision prévus avant d’étendre l’usage."
+    },
+    {
+      "id": "ent-automation-pilot-term-2",
+      "terms": [
+        "Gain net"
+      ],
+      "title": "Gain net",
+      "definition": "Le bénéfice restant une fois retranchés les efforts nécessaires au nouveau fonctionnement."
+    }
+  ],
+  "ent-automation-handover": [
+    {
+      "id": "ent-automation-handover-term-1",
+      "terms": [
+        "Version de référence"
+      ],
+      "title": "Version de référence",
+      "definition": "La version commune retenue pour l’usage et les corrections, distincte d’une copie indépendante."
+    },
+    {
+      "id": "ent-automation-handover-term-2",
+      "terms": [
+        "Solution de repli"
+      ],
+      "title": "Solution de repli",
+      "definition": "Le fonctionnement prévu pour poursuivre le travail quand le flux est arrêté ou indisponible."
+    }
+  ],
+  "ent-projects-outcome": [
+    {
+      "id": "perimetre",
+      "terms": [
+        "périmètre"
+      ],
+      "title": "Périmètre",
+      "definition": "Ce que la version couvre et ce qu’elle exclut explicitement."
+    }
+  ],
+  "ent-projects-specification": [
+    {
+      "id": "specification",
+      "terms": [
+        "spécification"
+      ],
+      "title": "Spécification",
+      "definition": "Description du résultat à réaliser avec données, limites et critères observables."
+    }
+  ],
+  "ent-projects-prototype": [
+    {
+      "id": "prototype",
+      "terms": [
+        "prototype"
+      ],
+      "title": "Prototype",
+      "definition": "Représentation limitée destinée à essayer une idée avant réalisation finale."
+    }
+  ],
+  "ent-projects-iteration": [
+    {
+      "id": "iteration",
+      "terms": [
+        "itération"
+      ],
+      "title": "Itération",
+      "definition": "Cycle court de demande, réalisation et observation pour ajuster progressivement le projet."
+    }
+  ],
+  "ent-projects-release": [
+    {
+      "id": "recette",
+      "terms": [
+        "recette"
+      ],
+      "title": "Recette",
+      "definition": "Vérifications organisées pour décider si une réalisation répond aux attentes."
+    }
+  ],
+  "ent-projects-maintenance": [
+    {
+      "id": "maintenance",
+      "terms": [
+        "maintenance"
+      ],
+      "title": "Maintenance",
+      "definition": "Travail gardant le service utile : contenus, corrections, suivi et capacité de reprise."
+    }
   ]
 }

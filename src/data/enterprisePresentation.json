@@ -1,0 +1,11 @@
+{
+  "lessons": 40,
+  "cards": 120,
+  "challenges": 11,
+  "tracks": 3,
+  "foundationLessons": 2,
+  "lessonsPerTrack": 6,
+  "referenceLessons": 20,
+  "minimumMinutes": 10,
+  "maximumMinutes": 18
+}

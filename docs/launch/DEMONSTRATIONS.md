@@ -19,22 +19,22 @@ Carton facultatif : « Gratuit : une nouvelle leçon et cinq cartes dues par jou
 
 | Temps | À montrer | Voix ou sous-titre |
 | --- | --- | --- |
-| 0–15 s | Page Entreprise, intitulé clair | « Vos équipes utilisent déjà l’IA. Savent-elles quelles informations partager, comment formuler une demande et quand vérifier une réponse ? MemStack leur propose un parcours guidé, sans prérequis de code. » |
-| 15–35 s | Chemin de missions et prochaine étape | « On commence par comprendre les limites, puis protéger les informations, donner un contexte utile et contrôler les résultats. Le parcours aborde aussi les impacts, les agents et le cadrage des projets. » |
-| 35–65 s | Mission sur une politique de retour fictive, document puis affirmation erronée | « Ici, un assistant IA invente une durée de retour. Le collaborateur compare sa réponse à un document fourni et repère ce qui est confirmé, contredit ou introuvable. Il travaille un réflexe qu’il pourra réutiliser. » |
-| 65–85 s | Définition au survol ou au toucher, question et retour explicatif | « Les notions importantes sont expliquées au moment où elles apparaissent. Les exercices proposent des choix compréhensibles et un retour pour progresser. » |
-| 85–105 s | Révisions de l’organisation et prochaine mission | « La formation continue après le parcours initial : les cartes entretiennent les acquis, les leçons restent consultables et de nouvelles leçons sont accessibles lorsqu’elles sont publiées. » |
-| 105–125 s | Espace équipe puis classement de l’organisation | « L’organisation dispose de son espace, de ses membres et d’indicateurs de participation et d’avancement. Les réponses personnelles détaillées ne sont pas présentées dans le suivi manager. Le classement reste celui de l’organisation. » |
-| 125–140 s | Sélecteur d’environnements, puis fiche offre | « Un collaborateur peut aussi apprendre le développement avec le même compte : ses révisions et sa progression ne se mélangent pas avec celles de l’entreprise. L’offre Entreprise coûte 10 € TTC par membre actif et par mois. » |
-| 140–150 s | Page publique Entreprise | « Découvrons ensemble le programme et la façon de le proposer à votre équipe. » |
+| 0–15 s | Page Entreprise et trois axes | « Faites de l’IA une compétence collective. Apprenez à mieux utiliser les assistants, à automatiser vos tâches et à faire avancer vos projets numériques. » |
+| 15–35 s | Socle commun et choix du parcours | « Deux missions pour démarrer, puis six missions pour avancer sur votre priorité. Les deux autres parcours et les ressources restent accessibles ensuite. » |
+| 35–65 s | Atelier assistants sur pièces fictives | « Préparez une demande pour une proposition commerciale, puis améliorez-la avec les critères et un exemple expliqué. Aucun vrai dossier client n’est nécessaire. » |
+| 65–85 s | Ateliers automatisation et projet | « Décrivez un processus et ses reprises, ou rassemblez les besoins et essais d’une première version de site. Vous préparez des livrables : les outils ne sont pas connectés et le site n’est pas publié dans MemStack. » |
+| 85–105 s | Révisions et prochaine mission | « Les cartes entretiennent les méthodes. Vous pouvez reprendre les missions et transférer vos acquis dans un outil autorisé, quand votre équipe est prête. » |
+| 105–125 s | Équipe fictive | « Les responsables suivent l’avancement et la participation, sans accès aux réponses individuelles. La progression reste propre à votre organisation. » |
+| 125–140 s | Présentation du tarif | « Trois parcours, des ressources et des révisions à 10 € TTC par membre actif et par mois, responsables compris. » |
+| 140–150 s | Page publique Entreprise | « Découvrons le premier objectif concret de votre équipe. » |
 
-Ne pas montrer de paiement réel pendant une démonstration. Si le prospect souhaite un pilote, convenir explicitement de son périmètre, de sa durée et de ses conditions ; ces documents ne créent aucune gratuité ni engagement commercial spécifique.
+Aucune vidéo produite à ce stade. Le minutage concerne la démonstration, pas les durées d’apprentissage. Ne montrer aucun paiement réel et vérifier l’ouverture LIVE avant tout CTA d’achat. Le pilote éventuel nécessite des conditions convenues ; aucune gratuité ou efficacité mesurée n’est promise.
 
 ## Captures utiles à préparer
 
 - La bifurcation Développeurs / Entreprises, lisible sans défilement.
 - Une leçon développeur, une carte due et une correction de défi.
 - Le chemin Entreprise et son prochain objectif.
-- Le document de politique de retour fictive avec l’exercice de comparaison.
+- Un atelier assistants, un tableau de processus et un dossier projet, tous fictifs.
 - Une définition de notion et la correction d’une question.
 - Une équipe fictive avec son classement, sans données personnelles.

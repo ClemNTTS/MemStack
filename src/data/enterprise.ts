@@ -8,6 +8,10 @@ export const enterpriseLessons = enterpriseCurriculum.lessons
 export const enterpriseGuidedLessons = enterpriseLessons.filter((lesson) => !lesson.continuous)
 export const enterpriseContinuingLessons = enterpriseLessons.filter((lesson) => lesson.continuous)
 export const enterpriseChallenges = enterpriseCurriculum.challenges
+export const enterpriseTracks = enterpriseCurriculum.tracks ?? []
+export const enterpriseFoundationLessons = (enterpriseCurriculum.foundationLessonIds ?? []).flatMap(id => enterpriseLessons.filter(lesson => lesson.id === id))
+const mainLessonIds = new Set([...enterpriseFoundationLessons.map(lesson => lesson.id), ...enterpriseTracks.flatMap(track => track.lessonIds)])
+export const enterpriseReferenceLessons = enterpriseLessons.filter(lesson => !mainLessonIds.has(lesson.id))
 export const enterpriseCards = enterpriseLessons.flatMap((lesson) => lesson.cards.map((card) => ({ ...card, lessonId: lesson.id })))
 export const enterpriseLessonById = new Map(enterpriseLessons.map((lesson) => [lesson.id, lesson]))
 export const enterpriseChallengeById = new Map(enterpriseChallenges.map((challenge) => [challenge.id, challenge]))

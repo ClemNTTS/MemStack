@@ -1,7 +1,7 @@
 {
-  "version": 1,
-  "title": "Travailler avec l'IA : des usages utiles aux projets maîtrisés",
-  "description": "Un programme guidé de 20 missions, puis des révisions et de nouvelles leçons pour entretenir les réflexes dans la durée. Cas Aster entièrement fictif, sans prérequis technique.",
+  "version": 2,
+  "title": "Faites de l’IA une compétence collective",
+  "description": "Apprenez à mieux utiliser les assistants, à automatiser vos tâches et à faire avancer vos projets numériques. Deux missions de démarrage, trois parcours de six missions avec livrables et des ressources complémentaires. Cas entièrement fictifs, sans prérequis de programmation.",
   "chapters": [
     {
       "id": "ent-chapter-understand",
@@ -42,6 +42,21 @@
       "id": "ent-chapter-decide",
       "title": "Passer du pilote à la pratique durable",
       "description": "Décide à partir d'un dossier puis entretiens les acquis et les usages dans la durée."
+    },
+    {
+      "id": "ent-chapter-applied-assistants",
+      "title": "Produire et coopérer avec les assistants IA",
+      "description": "Courriels, documents, réunions et décisions : transforme des besoins concrets en livrables puis en pratiques collectives."
+    },
+    {
+      "id": "ent-chapter-applied-automation",
+      "title": "Construire une automatisation partagée",
+      "description": "Cartographie le travail, choisis une première liaison, prépare ses données et ses reprises puis transmets la méthode."
+    },
+    {
+      "id": "ent-chapter-applied-projects",
+      "title": "Faire avancer un projet numérique",
+      "description": "Cadrer un site ou outil, collaborer avec IA et compétences techniques, puis préparer lancement et maintenance."
     }
   ],
   "lessons": [
@@ -2179,6 +2194,1877 @@
         "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
       ],
       "continuous": true
+    },
+    {
+      "id": "ent-assistants-brief",
+      "chapterId": "ent-chapter-applied-assistants",
+      "title": "Transformer une tâche en demande productive",
+      "estimatedMinutes": 15,
+      "objective": "Préparer une demande qui aboutit à un livrable adapté à son destinataire.",
+      "prerequisiteLessonIds": [
+        "ent-answer-or-action",
+        "ent-useful-request"
+      ],
+      "steps": [
+        {
+          "id": "ent-assistants-brief-message-1",
+          "type": "message",
+          "text": "Le service RH fictif de Boréal prépare l’accueil de douze collègues. Lina veut rédiger un message avec un assistant IA. « Fais un mail professionnel » laisse beaucoup de travail à la sortie : pour qui, pour annoncer quoi, avec quelle prochaine étape ? Commence par le travail à faciliter : chacun doit savoir où aller et quoi préparer. Le livrable est le résultat concret utilisable, ici un courriel d’accueil."
+        },
+        {
+          "id": "ent-assistants-brief-message-2",
+          "type": "message",
+          "text": "Construis un brief : destinataire, action attendue, pièces utiles, contraintes et forme du résultat. Dire « tu es expert RH » peut orienter le style, mais ne remplace pas les horaires ni le lieu. Ici, aucune identité ou dossier salarié n’est nécessaire : les informations collectives suffisent. Un bon brief fait gagner les retouches consacrées à expliquer après coup le besoin réel."
+        },
+        {
+          "id": "ent-assistants-brief-message-3",
+          "type": "message",
+          "text": "Exemple : « Rédige un courriel aux nouveaux collègues : accueil lundi à 9 h, salle Pin, ordinateur fourni ; apporter un carnet. Ton chaleureux, 120 mots maximum, objet puis message. Inviter à répondre si l’horaire pose problème. » Contre-exemple : « Écris comme un expert, rends cela parfait ». Le premier fournit une matière exploitable ; le second laisse l’assistant deviner le contenu."
+        },
+        {
+          "id": "ent-assistants-brief-message-4",
+          "type": "message",
+          "text": "Si une information utile manque, demande une question ciblée ou un emplacement à compléter plutôt qu’un détail inventé. Ne bloque pas sur une préférence secondaire : le premier brouillon permettra de travailler le ton. L’atelier te fait préparer le brief sans appeler d’IA. Ensuite, tu peux facultativement essayer ces données fictives dans un outil autorisé et comparer le résultat aux critères."
+        },
+        {
+          "id": "ent-assistants-brief-practice-1",
+          "type": "message",
+          "text": "Pratique · Rédige un brief prêt à copier pour obtenir le courriel d’accueil, puis deux critères de réussite observables. Toutes les pièces sont fictives et disponibles dans l’atelier. Écris avant l’exemple ; aucune IA externe n’est appelée. Le transfert facultatif est proposé après comparaison."
+        },
+        {
+          "id": "ent-assistants-brief-question-1",
+          "type": "question",
+          "prompt": "Quel élément aide le plus à obtenir un courriel exploitable ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Demander un expert RH avec vingt ans d’expérience.",
+              "feedback": "Le rôle peut orienter le style, mais ne donne ni les horaires ni l’action attendue."
+            },
+            {
+              "id": "option-2",
+              "text": "Préciser public, informations et action attendue du lecteur.",
+              "feedback": "Ces éléments dirigent le contenu vers le besoin réel du destinataire."
+            },
+            {
+              "id": "option-3",
+              "text": "Demander une réponse très longue.",
+              "feedback": "La longueur ne remplace pas les informations utiles et peut alourdir la lecture."
+            }
+          ],
+          "correctOptionId": "option-2"
+        },
+        {
+          "id": "ent-assistants-brief-question-2",
+          "type": "question",
+          "prompt": "Le lieu reste à décider. Comment avancer ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Choisir la salle la plus vraisemblable.",
+              "feedback": "Une salle inventée crée une fausse information de rendez-vous."
+            },
+            {
+              "id": "option-2",
+              "text": "Abandonner la préparation du message.",
+              "feedback": "Les parties connues peuvent être préparées sans attendre le lieu."
+            },
+            {
+              "id": "option-3",
+              "text": "Rédiger avec « lieu à préciser » et poser la question sur ce point.",
+              "feedback": "Le brouillon avance et le seul manque nécessaire reste explicite."
+            }
+          ],
+          "correctOptionId": "option-3"
+        }
+      ],
+      "cards": [
+        {
+          "id": "ent-assistants-brief-card-1",
+          "question": "Que contient un brief utile ?",
+          "answer": "Destinataire, action attendue, informations utiles, contraintes et forme du livrable."
+        },
+        {
+          "id": "ent-assistants-brief-card-2",
+          "question": "Pourquoi « sois expert » ne suffit-il pas ?",
+          "answer": "Cela peut orienter le style mais ne fournit ni les faits ni le résultat attendu."
+        },
+        {
+          "id": "ent-assistants-brief-card-3",
+          "question": "Comment avancer quand une information manque ?",
+          "answer": "Préparer les parties possibles, marquer le manque et poser une question ciblée."
+        }
+      ],
+      "sources": [
+        "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices",
+        "https://developers.openai.com/api/docs/guides/prompt-engineering"
+      ]
+    },
+    {
+      "id": "ent-assistants-documents",
+      "chapterId": "ent-chapter-applied-assistants",
+      "title": "Exploiter plusieurs documents pour préparer une réponse",
+      "estimatedMinutes": 15,
+      "objective": "Assembler des pièces complémentaires et produire une réponse commerciale traçable.",
+      "prerequisiteLessonIds": [
+        "ent-assistants-brief"
+      ],
+      "steps": [
+        {
+          "id": "ent-assistants-documents-message-1",
+          "type": "message",
+          "text": "Chez l’imprimeur fictif Lumen, une commerciale prépare une proposition pour un salon. Elle dispose d’une demande client, d’un catalogue et d’une note logistique. L’assistant peut rapprocher les besoins des offres puis préparer les questions pour finaliser. « Résume ces documents » donne souvent plusieurs résumés ; « prépare une proposition pour ce besoin » donne un objectif métier à la lecture."
+        },
+        {
+          "id": "ent-assistants-documents-message-2",
+          "type": "message",
+          "text": "Présente le dossier avec titre, statut et rôle de chaque pièce. La demande décrit le besoin, le catalogue décrit les produits, la note logistique fixe les conditions de livraison. Demande de distinguer informations fournies, calculs et propositions. Le tableau « besoin | réponse proposée | pièce | point à confirmer » transforme les documents en support commercial. Une référence permet de retrouver le passage utile ; elle ne remplace pas sa lecture. Cette traçabilité relie la proposition au dossier utilisé."
+        },
+        {
+          "id": "ent-assistants-documents-message-3",
+          "type": "message",
+          "text": "Pièces fictives : besoin de 40 carnets pour vendredi, budget produits 280 € ; catalogue actuel : carnet recyclé 6 €, minimum 30 unités ; logistique : livraison 25 €, arrivée vendredi possible si commande validée avant mardi midi. Les produits coûtent 240 €, soit 265 € livraison comprise. Exemple : proposer le carnet, expliciter les deux montants et demander quand la commande sera validée. Contre-exemple : annoncer « livraison garantie vendredi » sans connaître cette validation."
+        },
+        {
+          "id": "ent-assistants-documents-message-4",
+          "type": "message",
+          "text": "Plus de documents ne signifie pas toujours plus d’aide : retire les pièces sans rapport et identifie les versions remplacées. Si l’outil lit des fichiers, assure-toi que les passages utiles sont accessibles ; sinon colle les extraits autorisés. Toutes les pièces de cet exercice sont disponibles ici : aucun abonnement ni connecteur n’est nécessaire. Le tableau prépare une proposition ; il ne réalise ni envoi ni commande."
+        },
+        {
+          "id": "ent-assistants-documents-practice-1",
+          "type": "message",
+          "text": "Pratique · Prépare la demande à l’assistant puis un tableau de quatre lignes : quantité, produits, total livré et délai. Nomme les pièces utiles et termine par la question qui débloque le délai. Toutes les pièces sont fictives et disponibles dans l’atelier. Écris avant l’exemple ; aucune IA externe n’est appelée. Le transfert facultatif est proposé après comparaison."
+        },
+        {
+          "id": "ent-assistants-documents-question-1",
+          "type": "question",
+          "prompt": "Quelle demande rapproche utilement les trois pièces ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Rédige trois résumés sans conclusion.",
+              "feedback": "Cela aide à lire mais laisse au commercial tout le rapprochement besoin-offre-délai."
+            },
+            {
+              "id": "option-2",
+              "text": "Prépare besoin, offre, montant et condition de livraison en nommant les pièces.",
+              "feedback": "Ce rapprochement fournit un support directement utile pour finaliser la proposition."
+            },
+            {
+              "id": "option-3",
+              "text": "Prends le catalogue comme seule source de la livraison.",
+              "feedback": "La condition de date figure dans la note logistique, pas dans le catalogue."
+            }
+          ],
+          "correctOptionId": "option-2"
+        },
+        {
+          "id": "ent-assistants-documents-question-2",
+          "type": "question",
+          "prompt": "Quels montant et délai présenter ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "240 € de produits, 265 € livrés ; vendredi conditionné à la validation avant mardi midi.",
+              "feedback": "40 × 6 donne 240, puis 25 de livraison ; la condition reste visible."
+            },
+            {
+              "id": "option-2",
+              "text": "280 € au total et vendredi acquis.",
+              "feedback": "280 est le budget produits, pas le prix ; la validation reste inconnue."
+            },
+            {
+              "id": "option-3",
+              "text": "265 € de produits, livraison offerte.",
+              "feedback": "265 inclut les frais ; les annoncer offerts change l’offre."
+            }
+          ],
+          "correctOptionId": "option-1"
+        }
+      ],
+      "cards": [
+        {
+          "id": "ent-assistants-documents-card-1",
+          "question": "Comment exploiter plusieurs documents pour un besoin métier ?",
+          "answer": "Définir le livrable attendu, donner un rôle aux pièces et demander un rapprochement structuré."
+        },
+        {
+          "id": "ent-assistants-documents-card-2",
+          "question": "Que distinguer dans une proposition commerciale préparée par IA ?",
+          "answer": "Faits des pièces, calculs, propositions et conditions restant à confirmer."
+        },
+        {
+          "id": "ent-assistants-documents-card-3",
+          "question": "Pourquoi donner le statut des documents ?",
+          "answer": "Pour retrouver la base de la réponse et éviter de mélanger version actuelle et ancienne règle."
+        }
+      ],
+      "sources": [
+        "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices",
+        "https://developers.openai.com/api/docs/guides/prompt-engineering"
+      ]
+    },
+    {
+      "id": "ent-assistants-meeting",
+      "chapterId": "ent-chapter-applied-assistants",
+      "title": "Transformer des notes de réunion en prochaines actions",
+      "estimatedMinutes": 15,
+      "objective": "Produire un relevé utile qui distingue décisions, propositions et actions.",
+      "prerequisiteLessonIds": [
+        "ent-assistants-documents"
+      ],
+      "steps": [
+        {
+          "id": "ent-assistants-meeting-message-1",
+          "type": "message",
+          "text": "Une réunion utile laisse un support pour agir. Chez Nova, entreprise fictive de maintenance, l’équipe organise un essai de créneaux de rendez-vous. Un assistant peut transformer les notes en relevé de décisions, actions et message de suivi. Choisis d’abord le destinataire : les participants ont besoin d’engagements précis ; une direction absente peut aussi avoir besoin d’un court contexte."
+        },
+        {
+          "id": "ent-assistants-meeting-message-2",
+          "type": "message",
+          "text": "Distingue trois éléments : une décision est actée ; une proposition reste à discuter ; une action attribue un travail avec responsable et échéance. Notes fictives : « Essai de deux créneaux décidé pour lundi. Zoé prépare la grille jeudi. Malik : on pourrait ouvrir le samedi. Pas de décision sur samedi. Responsable du bilan à désigner. » Ces éléments peuvent être organisés sans transformer chaque prise de parole en engagement."
+        },
+        {
+          "id": "ent-assistants-meeting-message-3",
+          "type": "message",
+          "text": "Exemple : « Décision : essai lundi. Action : Zoé prépare la grille jeudi. Proposition : samedi, non décidé. À attribuer : responsable et date du bilan. » Contre-exemple : « Malik ouvrira samedi et fera le bilan vendredi ». Ce texte paraît opérationnel mais ajoute des engagements. Un format décision | action | responsable | échéance | question ouverte fait apparaître les points utiles sans réécrire toute la conversation."
+        },
+        {
+          "id": "ent-assistants-meeting-message-4",
+          "type": "message",
+          "text": "Le relevé peut alimenter un courriel bref : rappeler le choix, les prochaines actions et les points à attribuer. Ne transforme pas une suggestion en décision pour remplir une colonne : « à désigner » aide réellement à coordonner. Dans la pratique, un participant peut confirmer le relevé avant partage selon les habitudes de l’équipe. Ici, tu utilises seulement les notes fictives ; aucun enregistrement ou compte externe n’est requis."
+        },
+        {
+          "id": "ent-assistants-meeting-practice-1",
+          "type": "message",
+          "text": "Pratique · Prépare une demande à l’assistant en précisant catégories, destinataires et format. Rédige un relevé de quatre lignes puis un message de suivi de trois phrases maximum qui fait avancer l’attribution du bilan. Toutes les pièces sont fictives et disponibles dans l’atelier. Écris avant l’exemple ; aucune IA externe n’est appelée. Le transfert facultatif est proposé après comparaison."
+        },
+        {
+          "id": "ent-assistants-meeting-question-1",
+          "type": "question",
+          "prompt": "Comment classer « on pourrait ouvrir samedi », sans décision ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Action de Malik pour samedi.",
+              "feedback": "Il a proposé une idée, pas pris un engagement."
+            },
+            {
+              "id": "option-2",
+              "text": "Décision implicite, faute de contradiction.",
+              "feedback": "Le dossier précise qu’aucune décision n’a été prise."
+            },
+            {
+              "id": "option-3",
+              "text": "Proposition à discuter.",
+              "feedback": "Le statut garde l’idée disponible sans créer un engagement fictif."
+            }
+          ],
+          "correctOptionId": "option-3"
+        },
+        {
+          "id": "ent-assistants-meeting-question-2",
+          "type": "question",
+          "prompt": "Quel relevé aide à préparer le bilan ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Responsable et date à désigner ; demander leur attribution.",
+              "feedback": "Le manque devient une prochaine décision visible."
+            },
+            {
+              "id": "option-2",
+              "text": "Bilan par Zoé vendredi, puisqu’elle a déjà une action.",
+              "feedback": "Son action concerne la grille ; ajouter le bilan change ses engagements."
+            },
+            {
+              "id": "option-3",
+              "text": "Supprimer le bilan puisqu’il n’a pas de responsable.",
+              "feedback": "Cela masque le besoin de coordination au lieu de le résoudre."
+            }
+          ],
+          "correctOptionId": "option-1"
+        }
+      ],
+      "cards": [
+        {
+          "id": "ent-assistants-meeting-card-1",
+          "question": "Quelles catégories séparer dans un relevé de réunion ?",
+          "answer": "Décisions actées, propositions, actions attribuées et questions ouvertes."
+        },
+        {
+          "id": "ent-assistants-meeting-card-2",
+          "question": "Quelles informations rendent une action exploitable ?",
+          "answer": "Travail attendu, responsable et échéance ; marquer ce qui reste à attribuer."
+        },
+        {
+          "id": "ent-assistants-meeting-card-3",
+          "question": "Pourquoi ne pas remplir tous les blancs d’une synthèse ?",
+          "answer": "Un blanc peut correspondre à un choix encore à prendre ; l’inventer crée un faux engagement."
+        }
+      ],
+      "sources": [
+        "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices",
+        "https://developers.openai.com/api/docs/guides/prompt-engineering"
+      ]
+    },
+    {
+      "id": "ent-assistants-options",
+      "chapterId": "ent-chapter-applied-assistants",
+      "title": "Préparer une décision avec plusieurs options",
+      "estimatedMinutes": 15,
+      "objective": "Construire une comparaison explicite et une recommandation conditionnelle.",
+      "prerequisiteLessonIds": [
+        "ent-assistants-meeting"
+      ],
+      "steps": [
+        {
+          "id": "ent-assistants-options-message-1",
+          "type": "message",
+          "text": "Une responsable des opérations d’Atlas, entreprise fictive, doit choisir un lieu d’atelier. « Quel est le meilleur lieu ? » laisse l’assistant choisir ses priorités. Précise le besoin et les critères : capacité, budget, proximité ou disponibilité. L’assistant peut construire des options et expliquer les compromis ; la recommandation doit servir les priorités de la responsable, pas les remplacer."
+        },
+        {
+          "id": "ent-assistants-options-message-2",
+          "type": "message",
+          "text": "Une contrainte éliminatoire doit être respectée pour retenir une option. Une préférence départage ensuite les options admissibles. Pour Atlas : douze places et 500 € maximum sont obligatoires ; la proximité est souhaitée. Pièces fictives : A, dix places, 300 €, trajet 5 min ; B, quatorze places, 450 €, trajet 20 min ; C, douze places, 480 €, trajet 10 min. A ne répond pas au besoin malgré son prix."
+        },
+        {
+          "id": "ent-assistants-options-message-3",
+          "type": "message",
+          "text": "Exemple utile : « B et C respectent capacité et budget. C est plus proche ; B coûte 30 € de moins. Si la proximité prime, choisir C ; si l’économie prime, B. » Contre-exemple : « A est la meilleure car moins chère ». Un tableau option | contraintes | avantages | compromis | information manquante permet de comprendre la recommandation sans fabriquer une note scientifique."
+        },
+        {
+          "id": "ent-assistants-options-message-4",
+          "type": "message",
+          "text": "Le dossier ne donne ni disponibilité ni équipement. Une recommandation peut donc être conditionnelle : proposer C sous réserve de disponibilité et du matériel nécessaire. Quand les priorités sont inconnues, demander ce qui compte le plus aide davantage que calculer des poids arbitraires. Le livrable doit éclairer une décision prochaine ; une dizaine de variantes mal comparées ajoute de la confusion."
+        },
+        {
+          "id": "ent-assistants-options-practice-1",
+          "type": "message",
+          "text": "Pratique · Prépare une demande à l’assistant indiquant contraintes, préférence et format de comparaison. Écris un tableau comparant les trois salles puis une recommandation de deux phrases pour une équipe qui privilégie le trajet court. Toutes les pièces sont fictives et disponibles dans l’atelier. Écris avant l’exemple ; aucune IA externe n’est appelée. Le transfert facultatif est proposé après comparaison."
+        },
+        {
+          "id": "ent-assistants-options-question-1",
+          "type": "question",
+          "prompt": "Quelle comparaison suit les contraintes d’Atlas ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Comparer B et C, puis arbitrer 30 € contre dix minutes de trajet.",
+              "feedback": "A manque de places ; B et C sont admissibles et leur compromis est explicite."
+            },
+            {
+              "id": "option-2",
+              "text": "Retenir A, meilleur prix donc meilleur choix.",
+              "feedback": "Le prix ne compense pas deux places manquantes sur une exigence obligatoire."
+            },
+            {
+              "id": "option-3",
+              "text": "Retenir toujours C : la durée gagne toute comparaison.",
+              "feedback": "La proximité est une préférence ; sa priorité dépend du décideur."
+            }
+          ],
+          "correctOptionId": "option-1"
+        },
+        {
+          "id": "ent-assistants-options-question-2",
+          "type": "question",
+          "prompt": "La disponibilité des salles est inconnue. Que faire ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "La déduire du prix.",
+              "feedback": "Le prix ne donne aucune information sur le calendrier."
+            },
+            {
+              "id": "option-2",
+              "text": "Formuler une préférence conditionnelle et demander la disponibilité.",
+              "feedback": "La recommandation avance et identifie l’information nécessaire pour décider."
+            },
+            {
+              "id": "option-3",
+              "text": "Donner une note de confiance à la disponibilité supposée.",
+              "feedback": "Une note ne crée pas d’information sur une réservation possible."
+            }
+          ],
+          "correctOptionId": "option-2"
+        }
+      ],
+      "cards": [
+        {
+          "id": "ent-assistants-options-card-1",
+          "question": "Quelle différence entre contrainte et préférence ?",
+          "answer": "La contrainte conditionne l’admissibilité ; la préférence départage les options admissibles."
+        },
+        {
+          "id": "ent-assistants-options-card-2",
+          "question": "Que montre une comparaison utile ?",
+          "answer": "Des critères communs, les avantages, les compromis et les informations manquantes."
+        },
+        {
+          "id": "ent-assistants-options-card-3",
+          "question": "Quand recommander une option sous condition ?",
+          "answer": "Lorsqu’elle paraît adaptée mais qu’une condition nécessaire reste à confirmer ; nommer cette condition et la prochaine question."
+        }
+      ],
+      "sources": [
+        "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices",
+        "https://developers.openai.com/api/docs/guides/prompt-engineering"
+      ]
+    },
+    {
+      "id": "ent-assistants-iterate",
+      "chapterId": "ent-chapter-applied-assistants",
+      "title": "Améliorer un livrable par petites itérations",
+      "estimatedMinutes": 15,
+      "objective": "Donner un retour ciblé et comparer des versions sur des cas communs.",
+      "prerequisiteLessonIds": [
+        "ent-assistants-options"
+      ],
+      "steps": [
+        {
+          "id": "ent-assistants-iterate-message-1",
+          "type": "message",
+          "text": "Un premier résultat est un point de départ. Chez Lumen, entreprise fictive, une fiche produit est exacte mais trop générale pour les acheteurs. « Fais mieux » peut changer le ton sans ajouter l’information utile. Nomme le défaut et la modification attendue : « Remplace les formules promotionnelles par dimensions, prix et conditions de livraison ; termine par une question sur la quantité ». Le retour devient une consigne exploitable."
+        },
+        {
+          "id": "ent-assistants-iterate-message-2",
+          "type": "message",
+          "text": "Une itération est un cycle court : produire, comparer au besoin, préciser une amélioration puis réessayer. Garde ce qui fonctionne plutôt que réécrire tout le brief à chaque essai. Pour comprendre le progrès, change un point principal et compare sur les mêmes cas. La méthode ne promet pas de réussir du premier coup ; elle rend les essais plus faciles à comprendre et à transmettre."
+        },
+        {
+          "id": "ent-assistants-iterate-message-3",
+          "type": "message",
+          "text": "Dossier fictif de messages de suivi. Critère : rappeler prochain livrable et échéance sans engagement supplémentaire. Cas A : grille jeudi. Cas B : devis lundi. V1 dit « Merci pour l’échange » dans les deux cas. V2 dit « Grille jeudi » pour A et « Devis lundi et remise de 10 % » pour B. V2 améliore A, mais ajoute en B une remise absente des pièces. Un style direct ne rend pas à lui seul les deux résultats utilisables."
+        },
+        {
+          "id": "ent-assistants-iterate-message-4",
+          "type": "message",
+          "text": "Exemple de retour : « Conserve le ton bref ; rappelle seulement livrable et échéance fournis, sans avantage ajouté. Rejoue A et B. » Contre-exemple : « Utilise toujours Grille jeudi ». Un exemple montre une structure transposable ; il ne doit pas faire recopier le contenu hors contexte. L’atelier fournit les versions : compare-les et propose le prochain essai, sans extrapoler ces deux cas à toute l’entreprise."
+        },
+        {
+          "id": "ent-assistants-iterate-practice-1",
+          "type": "message",
+          "text": "Pratique · Compare V1 et V2 pour chaque cas, rédige une modification unique du prompt et donne une sortie attendue pour A puis B. Termine par la demande révisée prête à conserver, en séparant le modèle et les cas à remplacer. Toutes les pièces sont fictives et disponibles dans l’atelier. Écris avant l’exemple ; aucune IA externe n’est appelée. Le transfert facultatif est proposé après comparaison."
+        },
+        {
+          "id": "ent-assistants-iterate-question-1",
+          "type": "question",
+          "prompt": "Quel retour corrige le défaut de V2 sur B ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Rends tous les messages plus chaleureux.",
+              "feedback": "Le défaut est une remise ajoutée ; changer le ton ne retire pas cet engagement."
+            },
+            {
+              "id": "option-2",
+              "text": "Réutilise « Grille jeudi » partout.",
+              "feedback": "Cette formule ne convient pas au devis attendu dans B."
+            },
+            {
+              "id": "option-3",
+              "text": "Rappelle seulement livrable et échéance fournis puis rejoue A et B.",
+              "feedback": "La consigne cible l’ajout et les cas communs montrent si A reste correct."
+            }
+          ],
+          "correctOptionId": "option-3"
+        },
+        {
+          "id": "ent-assistants-iterate-question-2",
+          "type": "question",
+          "prompt": "Quelle conclusion peut-on tirer des deux cas ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "V2 est validée pour tous les messages commerciaux.",
+              "feedback": "Deux cas dont un incorrect ne soutiennent pas cette généralisation."
+            },
+            {
+              "id": "option-2",
+              "text": "V2 progresse sur A ; corriger B puis comparer à nouveau A et B.",
+              "feedback": "Le progrès est conservé et le défaut restant est traité avec le même critère."
+            },
+            {
+              "id": "option-3",
+              "text": "V1 est parfaite puisque rien de faux n’est ajouté.",
+              "feedback": "Elle ne rappelle ni livrable ni échéance et échoue au besoin utile."
+            }
+          ],
+          "correctOptionId": "option-2"
+        }
+      ],
+      "cards": [
+        {
+          "id": "ent-assistants-iterate-card-1",
+          "question": "Comment donner un retour utile à l’assistant ?",
+          "answer": "Nommer un défaut observé, préciser le changement attendu et conserver les éléments satisfaisants."
+        },
+        {
+          "id": "ent-assistants-iterate-card-2",
+          "question": "Pourquoi comparer des versions sur les mêmes cas ?",
+          "answer": "Pour attribuer le progrès au changement essayé plutôt qu’à la différence entre situations."
+        },
+        {
+          "id": "ent-assistants-iterate-card-3",
+          "question": "Que doit montrer un exemple réutilisable ?",
+          "answer": "La structure et le niveau de détail, pas un contenu à recopier dans chaque cas."
+        }
+      ],
+      "sources": [
+        "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices",
+        "https://developers.openai.com/api/docs/guides/prompt-engineering"
+      ]
+    },
+    {
+      "id": "ent-assistants-team-playbook",
+      "chapterId": "ent-chapter-applied-assistants",
+      "title": "Partager une méthode que les collègues peuvent reprendre",
+      "estimatedMinutes": 15,
+      "objective": "Documenter un usage réutilisable, l’essayer à deux et organiser son évolution.",
+      "prerequisiteLessonIds": [
+        "ent-assistants-iterate"
+      ],
+      "steps": [
+        {
+          "id": "ent-assistants-team-playbook-message-1",
+          "type": "message",
+          "text": "Quand chacun garde ses meilleurs échanges dans son historique, l’équipe recommence les mêmes essais. Une fiche partagée transforme un résultat individuel en point de départ commun. Chez Nova, entreprise fictive, deux collègues veulent reprendre la méthode de relevé de réunion. Le but est de rendre une pratique compréhensible, adaptable et entretenue, sans supposer que tous les métiers ont les mêmes besoins."
+        },
+        {
+          "id": "ent-assistants-team-playbook-message-2",
+          "type": "message",
+          "text": "La fiche décrit tâche et public, données à préparer, outil autorisé s’il est disponible, demande modèle avec champs à remplacer, livrable et exemple fictif. Ajoute un responsable et une date de revue. Sépare les éléments fixes — distinguer décisions et propositions — des variables — notes, destinataires et échéances. Un prompt isolé cache souvent ces informations dans l’expérience de son auteur."
+        },
+        {
+          "id": "ent-assistants-team-playbook-message-3",
+          "type": "message",
+          "text": "Exemple : « À partir de [notes autorisées], prépare [format] pour [destinataires]. Sépare décisions, actions, propositions et questions ouvertes. Garde responsables et dates fournis ; marque les points à attribuer. » Contre-exemple : « Copie le troisième échange de mon historique de mardi et remplace les noms ». Une bonne fiche peut être essayée avec un nouveau cas par un collègue absent lors de sa création."
+        },
+        {
+          "id": "ent-assistants-team-playbook-message-4",
+          "type": "message",
+          "text": "Organise un essai croisé : le collègue prépare le livrable sans aide, puis relève ce qui lui a manqué. Compare le temps complet, préparation et retouches incluses, pour un résultat répondant aux mêmes critères métier. Un essai favorable reste un signal local. Archive les versions remplacées et indique qui adapte la fiche si la procédure ou l’outil change. C’est ainsi que l’IA devient une compétence collective."
+        },
+        {
+          "id": "ent-assistants-team-playbook-practice-1",
+          "type": "message",
+          "text": "Pratique · Rédige une fiche de méthode en six rubriques puis un protocole d’essai pour un collègue novice. Calcule le gain fourni et limite la conclusion. Toutes les pièces sont fictives et disponibles dans l’atelier. Écris avant l’exemple ; aucune IA externe n’est appelée. Le transfert facultatif est proposé après comparaison."
+        },
+        {
+          "id": "ent-assistants-team-playbook-question-1",
+          "type": "question",
+          "prompt": "Quelle fiche permet à un collègue de reprendre la méthode ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Un lien vers un ancien échange sans contexte.",
+              "feedback": "Il devra deviner quelles données remplacer et quel résultat viser."
+            },
+            {
+              "id": "option-2",
+              "text": "Modèle, entrées, exemple, critères, responsable et date de revue.",
+              "feedback": "Il sait préparer, essayer et améliorer l’usage sans dépendre de l’auteur."
+            },
+            {
+              "id": "option-3",
+              "text": "Copier le résultat à l’identique à chaque réunion.",
+              "feedback": "Chaque réunion a ses propres décisions et échéances ; copier le contenu empêche l’adaptation."
+            }
+          ],
+          "correctOptionId": "option-2"
+        },
+        {
+          "id": "ent-assistants-team-playbook-question-2",
+          "type": "question",
+          "prompt": "Un essai passe de 20 à 14 minutes, préparation et retouches comprises. Que conclure ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Six minutes gagnées sur cet essai ; répéter et recueillir les difficultés.",
+              "feedback": "Le calcul porte sur le temps complet et garde sa portée limitée au cas mesuré."
+            },
+            {
+              "id": "option-2",
+              "text": "Tous les salariés gagneront six minutes sur toute tâche.",
+              "feedback": "Le résultat ne couvre ni tous les salariés ni les autres tâches."
+            },
+            {
+              "id": "option-3",
+              "text": "Exclure les retouches du prochain relevé de temps.",
+              "feedback": "Elles font partie du travail nécessaire ; les retirer fausserait la comparaison."
+            }
+          ],
+          "correctOptionId": "option-1"
+        }
+      ],
+      "cards": [
+        {
+          "id": "ent-assistants-team-playbook-card-1",
+          "question": "Que partager au-delà d’un bon prompt ?",
+          "answer": "Tâche, entrées, livrable, exemple, critères et personne responsable de l’entretien de la méthode."
+        },
+        {
+          "id": "ent-assistants-team-playbook-card-2",
+          "question": "Comment tester qu’une méthode se transmet ?",
+          "answer": "Faire essayer un nouveau cas par un collègue sans aide et relever ses difficultés."
+        },
+        {
+          "id": "ent-assistants-team-playbook-card-3",
+          "question": "Quel temps comparer pour évaluer un usage ?",
+          "answer": "Le temps complet avec préparation et retouches, pour un résultat répondant aux mêmes critères métier."
+        }
+      ],
+      "sources": [
+        "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices",
+        "https://developers.openai.com/api/docs/guides/prompt-engineering"
+      ]
+    },
+    {
+      "id": "ent-automation-map",
+      "chapterId": "ent-chapter-applied-automation",
+      "title": "Dessiner le travail avant de connecter les outils",
+      "estimatedMinutes": 15,
+      "objective": "Transformer une tâche répétitive en un processus lisible, avec entrée, étapes, décision et résultat.",
+      "prerequisiteLessonIds": [
+        "ent-answer-or-action",
+        "ent-useful-request"
+      ],
+      "steps": [
+        {
+          "id": "ent-automation-map-message-1",
+          "type": "message",
+          "text": "Une automatisation exécute une suite d’étapes à partir d’un événement ou d’une demande. Avant de choisir un outil, décris le travail tel qu’il se fait : qui reçoit quoi, que transforme-t-il, qui utilise le résultat ? Cela permet de repérer une ressaisie inutile. Simplifier un formulaire peut déjà faire gagner du temps ; ajouter une IA à une étape confuse ne suffit pas à la rendre utile."
+        },
+        {
+          "id": "ent-automation-map-message-2",
+          "type": "message",
+          "text": "Cas fictif : Atelier Rivage reçoit 30 demandes de devis par semaine. Lina copie référence, service et date souhaitée depuis un formulaire vers une liste. Elle prépare ensuite un brouillon de devis. Karim décide du prix et envoie le devis. Quatre demandes sur 30 ont un service manquant : Lina demande alors une précision. Le problème retenu est la ressaisie de la liste, pas la fixation du prix."
+        },
+        {
+          "id": "ent-automation-map-message-3",
+          "type": "message",
+          "text": "La carte peut tenir en cinq lignes : formulaire reçu → champs présents ? → ligne de suivi créée → brouillon préparé → prix décidé et devis envoyé par Karim. Pour chaque ligne, note entrée, sortie, outil et responsable. La branche « service absent » revient vers Lina au lieu de continuer comme si la demande était complète. Le résultat est une demande suivie une seule fois, puis un devis décidé par Karim."
+        },
+        {
+          "id": "ent-automation-map-message-4",
+          "type": "message",
+          "text": "Un déclencheur lance la suite : ici une nouvelle réponse au formulaire. Une action effectue une étape : créer une ligne. Contre-exemple : « Gérer les devis avec l’IA » ne donne ni début ni résultat observable. Exemple : « À chaque demande complète, créer une ligne puis préparer un brouillon soumis à Karim » délimite un essai. L’IA pourrait aider à rédiger ; copier un champ existant demande surtout une règle stable."
+        },
+        {
+          "id": "ent-automation-map-practice-1",
+          "type": "message",
+          "text": "Pratique · Rédige une carte en cinq à sept lignes avec entrée, sortie et responsable ; ajoute le cas incomplet et un résultat mesurable. Les pièces sont fictives. Rédige ici ton livrable puis compare-le à la proposition et aux critères ; aucune automatisation ne sera exécutée. Transfert facultatif : refaire ensuite cet essai dans un outil autorisé, sur des données fictives et avec le référent concerné. Résultat à observer : retrouver une demande complète une seule fois dans la liste, prix et envoi restant humains. Aucun achat ni outil externe n’est nécessaire pour terminer cette mission."
+        },
+        {
+          "id": "ent-automation-map-question-1",
+          "type": "question",
+          "prompt": "Quelle carte correspond au problème Rivage ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Formulaire reçu → ligne → brouillon → décision et envoi par Karim, avec branche vers Lina si service absent.",
+              "feedback": "Oui. La ressaisie et la décision restent distinctes et le cas incomplet a une sortie."
+            },
+            {
+              "id": "option-2",
+              "text": "Message reçu → IA choisit le prix → envoi automatique.",
+              "feedback": "Cela ajoute une décision et un envoi que le périmètre confie à Karim."
+            },
+            {
+              "id": "option-3",
+              "text": "Une liste des logiciels disponibles.",
+              "feedback": "Ces noms ne disent ni quand commencer ni qui décide. Les passages restent à décrire."
+            }
+          ],
+          "correctOptionId": "option-1"
+        },
+        {
+          "id": "ent-automation-map-question-2",
+          "type": "question",
+          "prompt": "La ligne est créée mais le prix attend. Quel état est exact ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Devis envoyé puisque la première action a réussi.",
+              "feedback": "Créer une ligne ne produit ni prix approuvé ni envoi."
+            },
+            {
+              "id": "option-2",
+              "text": "Demande suivie ; prix encore à décider et envoi encore à effectuer.",
+              "feedback": "Oui. La ligne est présente ; le prix attend une décision et rien n’établit un envoi. Le dossier ne précise pas si un brouillon existe déjà."
+            },
+            {
+              "id": "option-3",
+              "text": "Demande terminée si l’IA propose un montant.",
+              "feedback": "Une proposition ne remplace pas la décision de Karim dans le cas fourni."
+            }
+          ],
+          "correctOptionId": "option-2"
+        }
+      ],
+      "cards": [
+        {
+          "id": "ent-automation-map-card-1",
+          "question": "Que noter sur la carte du processus ?",
+          "answer": "Le début, les entrées, étapes et décisions, les sorties, outils et responsables, ainsi que les exceptions."
+        },
+        {
+          "id": "ent-automation-map-card-2",
+          "question": "Déclencheur ou action : quelle différence ?",
+          "answer": "Le déclencheur lance la suite ; une action effectue une étape, par exemple créer une ligne après réception du formulaire."
+        },
+        {
+          "id": "ent-automation-map-card-3",
+          "question": "Comment choisir une première automatisation dans les devis ?",
+          "answer": "Isoler une tâche répétitive au résultat observable sans déplacer implicitement la décision du prix."
+        }
+      ],
+      "sources": [
+        "https://learn.microsoft.com/en-us/power-automate/triggers-introduction"
+      ]
+    },
+    {
+      "id": "ent-automation-select",
+      "chapterId": "ent-chapter-applied-automation",
+      "title": "Choisir un petit flux qui fait gagner du temps",
+      "estimatedMinutes": 15,
+      "objective": "Comparer règle simple, aide IA et décision humaine pour sélectionner un premier flux.",
+      "prerequisiteLessonIds": [
+        "ent-automation-map"
+      ],
+      "steps": [
+        {
+          "id": "ent-automation-select-message-1",
+          "type": "message",
+          "text": "Un flux, ou workflow, est un enchaînement concret de déclencheurs, conditions et actions. Choisis une portion qui peut fonctionner seule : son résultat doit servir même si la suite reste manuelle. Réutiliser un outil déjà autorisé évite de multiplier les versions concurrentes d’une même liste. Une IA peut aider à décrire le flux ; elle ne confirme pas les accès réellement disponibles."
+        },
+        {
+          "id": "ent-automation-select-message-2",
+          "type": "message",
+          "text": "Cas fictif : Lumen reçoit 40 demandes d’achats internes par semaine par formulaire : référence, service, montant en euros, justification facultative. La règle est explicite : à partir de 500 € inclus, validation par le responsable achats ; en dessous, par le responsable du service. Toutes les décisions restent humaines. Le besoin est d’orienter chaque demande vers le bon valideur, pas de commander automatiquement. La table service → responsable est tenue à jour par l’équipe ; un service inconnu va au responsable achats pour clarification au lieu de recevoir un destinataire inventé."
+        },
+        {
+          "id": "ent-automation-select-message-3",
+          "type": "message",
+          "text": "Exemple de choix utile : comparer le montant à 500 suit une règle déterministe : les mêmes données donnent la même branche. Contre-exemple : demander à un modèle de deviner le valideur n’apporte rien ici. Une IA pourrait résumer une justification longue, avec le texte source à disposition du valideur. Cet ajout se teste séparément ; il ne remplace ni le montant saisi ni la règle de routage. Commence par un flux dont le résultat attendu est clair."
+        },
+        {
+          "id": "ent-automation-select-message-4",
+          "type": "message",
+          "text": "Pour choisir l’outil, liste les opérations : lire le formulaire, retrouver le service, créer une tâche et obtenir son état. Un connecteur est une liaison préparée pour dialoguer avec un autre service. Son existence dans un catalogue ne garantit ni sa disponibilité dans votre contrat ni les permissions du compte. Fais confirmer ces points au référent. Si la liaison manque, documente un transfert manuel pour le premier essai plutôt que d’improviser une chaîne d’outils."
+        },
+        {
+          "id": "ent-automation-select-practice-1",
+          "type": "message",
+          "text": "Pratique · Prépare une fiche de sélection : étapes, règle exacte, place éventuelle de l’IA et éléments à confirmer avant un essai réel. Les pièces sont fictives. Rédige ici ton livrable puis compare-le à la proposition et aux critères ; aucune automatisation ne sera exécutée. Transfert facultatif : refaire ensuite cet essai dans un outil autorisé, sur des données fictives et avec le référent concerné. Résultat à observer : retrouver une demande à 500 € chez le responsable achats et une demande à 499 € chez le responsable du service. Aucun achat ni outil externe n’est nécessaire pour terminer cette mission."
+        },
+        {
+          "id": "ent-automation-select-question-1",
+          "type": "question",
+          "prompt": "Quel flux respecte la règle Lumen ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Une IA choisit le valideur selon le style de la justification.",
+              "feedback": "Le style ne détermine ni le seuil ni la responsabilité. Une règle suffit."
+            },
+            {
+              "id": "option-2",
+              "text": "Montant ≥ 500 € : tâche achats ; sinon tâche au responsable du service ; décision humaine.",
+              "feedback": "Oui. Exactement 500 € est inclus et aucune commande non prévue n’est ajoutée."
+            },
+            {
+              "id": "option-3",
+              "text": "Montant > 500 € : commande automatique ; sinon aucune tâche.",
+              "feedback": "500 € serait mal orienté et la commande automatique dépasse le périmètre."
+            }
+          ],
+          "correctOptionId": "option-2"
+        },
+        {
+          "id": "ent-automation-select-question-2",
+          "type": "question",
+          "prompt": "Un connecteur apparaît dans une démonstration publique. Que faut-il confirmer ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Le contrat, les permissions et les opérations nécessaires dans l’espace autorisé.",
+              "feedback": "Oui. Une démonstration ne prouve pas que la liaison est disponible pour vos outils et comptes."
+            },
+            {
+              "id": "option-2",
+              "text": "Une justification plus longue à envoyer au modèle.",
+              "feedback": "Cela ne donne ni accès à la liste ni confirmation des conditions du service."
+            },
+            {
+              "id": "option-3",
+              "text": "Un outil choisi librement par chaque salarié.",
+              "feedback": "Des choix dispersés créent des variantes sans établir la liaison nécessaire."
+            }
+          ],
+          "correctOptionId": "option-1"
+        }
+      ],
+      "cards": [
+        {
+          "id": "ent-automation-select-card-1",
+          "question": "Quand préférer une règle à une IA ?",
+          "answer": "Quand les données et la décision sont explicites, comme un seuil de routage. L’IA peut aider séparément sur un texte à résumer."
+        },
+        {
+          "id": "ent-automation-select-card-2",
+          "question": "Qu’est-ce qu’un connecteur ?",
+          "answer": "Une liaison préparée pour utiliser un autre service, dont les opérations et conditions doivent être confirmées pour l’entreprise."
+        },
+        {
+          "id": "ent-automation-select-card-3",
+          "question": "Que contient la fiche d’un premier flux ?",
+          "answer": "Un début précis, quelques actions utiles, une règle et un résultat observable, avec les décisions humaines conservées."
+        }
+      ],
+      "sources": [
+        "https://learn.microsoft.com/en-us/power-automate/triggers-introduction",
+        "https://learn.microsoft.com/en-us/power-automate/create-team-flows"
+      ]
+    },
+    {
+      "id": "ent-automation-data-contract",
+      "chapterId": "ent-chapter-applied-automation",
+      "title": "Faire circuler des données comprises par tous",
+      "estimatedMinutes": 15,
+      "objective": "Écrire un contrat de données simple entre formulaire et liste.",
+      "prerequisiteLessonIds": [
+        "ent-automation-select"
+      ],
+      "steps": [
+        {
+          "id": "ent-automation-data-contract-message-1",
+          "type": "message",
+          "text": "Connecter deux outils consiste aussi à leur faire comprendre les mêmes informations. Un contrat de données est une fiche qui précise quels champs circulent, leur sens, leur format et la conduite à tenir s’ils manquent. Un tableau suffit, sans programmation. Il aide le métier à exprimer ce qu’il attend et le référent à préparer la liaison sans deviner."
+        },
+        {
+          "id": "ent-automation-data-contract-message-2",
+          "type": "message",
+          "text": "Cas fictif : Solis organise des ateliers. Le formulaire donne inscription_id=INS-204, session_id=AT-17, places=2, date_session=2026-11-05, statut=soumise. La liste attend Référence, Session, Nombre de places, Date et État. Deux sessions s’appellent Atelier découverte : leur nom seul ne suffit pas. session_id désigne la bonne occurrence ; inscription_id désigne une inscription précise. La date année-mois-jour évite l’ambiguïté de 05/11."
+        },
+        {
+          "id": "ent-automation-data-contract-message-3",
+          "type": "message",
+          "text": "Écris les correspondances : inscription_id → Référence, texte stable obligatoire ; session_id → Session, identifiant connu ; places → Nombre de places, entier positif ; date_session → Date, année-mois-jour ; soumise → État=à traiter. Si places est vide ou vaut zéro, demande une correction ; remplacer par 1 inventerait une réservation. Un prénom n’est pas nécessaire à ce transfert limité au comptage. Les coordonnées relèvent d’un autre besoin à autoriser. Les demandes invalides sont inscrites dans une file de suivi séparée, avec référence, motif et responsable : elles ne créent pas de ligne de réservation dans la liste cible."
+        },
+        {
+          "id": "ent-automation-data-contract-message-4",
+          "type": "message",
+          "text": "Le mapping est cette correspondance entre champs de départ et d’arrivée. Choisis aussi la source de référence : l’endroit qui fait foi pour chaque donnée. Ici le formulaire fournit les valeurs à la création ; ensuite le coordinateur gère État dans la liste. Une répétition du transfert ne doit pas remplacer confirmé par à traiter. Copier toute la table sans règle de mise à jour pourrait défaire le travail d’un collègue."
+        },
+        {
+          "id": "ent-automation-data-contract-practice-1",
+          "type": "message",
+          "text": "Pratique · Rédige le contrat des cinq champs avec formats et règles de reprise. Traite la variante et cite les informations inutiles ici. Les pièces sont fictives. Rédige ici ton livrable puis compare-le à la proposition et aux critères ; aucune automatisation ne sera exécutée. Transfert facultatif : refaire ensuite cet essai dans un outil autorisé, sur des données fictives et avec le référent concerné. Résultat à observer : retrouver les cinq champs correctement associés, puis constater qu’une répétition ne réinitialise pas État. Aucun achat ni outil externe n’est nécessaire pour terminer cette mission."
+        },
+        {
+          "id": "ent-automation-data-contract-question-1",
+          "type": "question",
+          "prompt": "Comment traiter places vide ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Envoyer 1, valeur la plus fréquente.",
+              "feedback": "La fréquence ne remplace pas une information nécessaire ; cela inventerait une réservation."
+            },
+            {
+              "id": "option-2",
+              "text": "Copier le prénom dans Nombre de places.",
+              "feedback": "Le champ attend un entier positif. Une valeur d’un autre sens ne permet pas de réserver."
+            },
+            {
+              "id": "option-3",
+              "text": "Mettre à compléter sans réserver tant que le nombre manque.",
+              "feedback": "Oui. La demande reste visible et aucune place n’est inventée."
+            }
+          ],
+          "correctOptionId": "option-3"
+        },
+        {
+          "id": "ent-automation-data-contract-question-2",
+          "type": "question",
+          "prompt": "INS-204 est confirmé dans la liste ; son formulaire soumise revient. Quelle règle convient ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Remettre à traiter pour recopier toute la source.",
+              "feedback": "La liste fait foi pour État après création ; la copie annulerait la confirmation."
+            },
+            {
+              "id": "option-2",
+              "text": "Reconnaître INS-204 et conserver l’état géré dans la liste selon la règle de reprise.",
+              "feedback": "Oui. L’identifiant reconnaît l’objet et la source de référence préserve la décision."
+            },
+            {
+              "id": "option-3",
+              "text": "Créer une seconde inscription avec un autre numéro.",
+              "feedback": "Une répétition deviendrait deux réservations et fausserait le comptage."
+            }
+          ],
+          "correctOptionId": "option-2"
+        }
+      ],
+      "cards": [
+        {
+          "id": "ent-automation-data-contract-card-1",
+          "question": "Que décrit un contrat de données ?",
+          "answer": "Champs, sens, formats, obligations, correspondances, sources de référence et traitement des valeurs absentes ou invalides."
+        },
+        {
+          "id": "ent-automation-data-contract-card-2",
+          "question": "Pourquoi conserver un identifiant stable ?",
+          "answer": "Pour reconnaître le même objet entre outils et lors d’une répétition ; un nom peut désigner plusieurs objets."
+        },
+        {
+          "id": "ent-automation-data-contract-card-3",
+          "question": "Pourquoi définir la source de référence par donnée ?",
+          "answer": "Pour savoir quelle valeur fait foi et empêcher qu’une reprise écrase une modification légitime."
+        }
+      ],
+      "sources": [
+        "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.removeduplicates"
+      ]
+    },
+    {
+      "id": "ent-automation-exceptions",
+      "chapterId": "ent-chapter-applied-automation",
+      "title": "Prévoir les exceptions et reprendre sans doublon",
+      "estimatedMinutes": 15,
+      "objective": "Définir états et reprises pour qu’une panne partielle ne répète pas le travail.",
+      "prerequisiteLessonIds": [
+        "ent-automation-data-contract"
+      ],
+      "steps": [
+        {
+          "id": "ent-automation-exceptions-message-1",
+          "type": "message",
+          "text": "Un flux utile prévoit d’autres chemins que le cas normal : information absente, service indisponible, demande déjà reçue. Une exception est un cas qui demande ce chemin différent. Le but est de terminer le travail avec un état visible et un responsable. Tout relancer en cas d’erreur peut répéter une action déjà réussie, comme créer une intervention."
+        },
+        {
+          "id": "ent-automation-exceptions-message-2",
+          "type": "message",
+          "text": "Cas fictif : Helio reçoit intervention_id=INT-88. Le flux crée une fiche puis notifie le planificateur. La fiche existe mais la notification échoue. Conserve l’état fiche créée, notification en attente. Relancer toute la création risquerait une seconde fiche. Le planificateur retrouve INT-88, confirme sa présence puis reprend seulement la notification prévue. Un résultat incertain exige aussi une vérification dans la destination avant de relancer."
+        },
+        {
+          "id": "ent-automation-exceptions-message-3",
+          "type": "message",
+          "text": "Pour éviter les doublons, conserve un identifiant stable et la trace des étapes réussies. L’idempotence vise ce résultat : traiter plusieurs fois la même demande ne multiplie pas son effet métier. Un contrôle existe déjà peut être insuffisant si deux traitements partent ensemble. Le référent technique doit confirmer la protection réelle des outils ; ici tu définis le besoin sans programmer ce mécanisme. Un filtre de doublons a lui-même un périmètre et une durée d’historique à vérifier."
+        },
+        {
+          "id": "ent-automation-exceptions-message-4",
+          "type": "message",
+          "text": "Une panne passagère peut justifier quelques nouvelles tentatives espacées ; une adresse absente exige une correction, pas des reprises infinies. Prévois un maximum, une alerte et un responsable. Le journal utile conserve référence, étape, état et heure sans recopier tout le dossier. Le responsable suit aussi les demandes jamais démarrées : elles ne figurent pas nécessairement dans les exécutions. Un statut réussi est trompeur si une notification nécessaire reste en attente."
+        },
+        {
+          "id": "ent-automation-exceptions-practice-1",
+          "type": "message",
+          "text": "Pratique · Prépare le tableau de reprise des deux demandes : état, action, responsable et trace. Ajoute la protection technique à faire confirmer. Les pièces sont fictives. Rédige ici ton livrable puis compare-le à la proposition et aux critères ; aucune automatisation ne sera exécutée. Transfert facultatif : refaire ensuite cet essai dans un outil autorisé, sur des données fictives et avec le référent concerné. Résultat à observer : retrouver une seule fiche et terminer ou assigner clairement la notification en attente. Aucun achat ni outil externe n’est nécessaire pour terminer cette mission."
+        },
+        {
+          "id": "ent-automation-exceptions-question-1",
+          "type": "question",
+          "prompt": "INT-88 existe mais sa notification a échoué. Quelle reprise convient ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Vérifier INT-88 puis reprendre la notification prévue en conservant la trace de création.",
+              "feedback": "Oui. La reprise vise l’étape manquante et préserve l’effet déjà réalisé."
+            },
+            {
+              "id": "option-2",
+              "text": "Recréer une fiche avec une autre référence.",
+              "feedback": "Une autre référence masque la répétition et pourrait provoquer deux interventions."
+            },
+            {
+              "id": "option-3",
+              "text": "Marquer terminé parce que la fiche est l’étape importante.",
+              "feedback": "La notification est attendue ; masquer son échec empêche la reprise."
+            }
+          ],
+          "correctOptionId": "option-1"
+        },
+        {
+          "id": "ent-automation-exceptions-question-2",
+          "type": "question",
+          "prompt": "Une adresse d’intervention manque. Quelle sortie convient ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Réessayer chaque minute jusqu’à réussite.",
+              "feedback": "La relance technique n’apporte pas l’adresse et consomme des actions sans résoudre le dossier."
+            },
+            {
+              "id": "option-2",
+              "text": "Reprendre l’adresse d’une ancienne demande du même nom.",
+              "feedback": "Le nom ne prouve pas le lieu de cette intervention ; ce serait une donnée inventée."
+            },
+            {
+              "id": "option-3",
+              "text": "À compléter, assigné au planificateur, avec la précision demandée et aucune intervention confirmée.",
+              "feedback": "Oui. Le besoin est métier et le responsable peut obtenir l’information manquante."
+            }
+          ],
+          "correctOptionId": "option-3"
+        }
+      ],
+      "cards": [
+        {
+          "id": "ent-automation-exceptions-card-1",
+          "question": "Que faire après un échec partiel ?",
+          "answer": "Consulter les effets enregistrés, conserver les étapes réussies puis reprendre les étapes manquantes selon une procédure définie."
+        },
+        {
+          "id": "ent-automation-exceptions-card-2",
+          "question": "Quel résultat vise l’idempotence ?",
+          "answer": "Répéter une même demande ne multiplie pas son effet métier ; la protection réelle doit être vérifiée dans les outils."
+        },
+        {
+          "id": "ent-automation-exceptions-card-3",
+          "question": "Donnée absente ou panne passagère : quelle différence de traitement ?",
+          "answer": "La donnée demande une précision ; une panne peut appeler des tentatives limitées, puis une alerte et une reprise suivie."
+        }
+      ],
+      "sources": [
+        "https://learn.microsoft.com/en-us/power-automate/guidance/coding-guidelines/error-handling",
+        "https://docs.n8n.io/build/flow-logic/handle-errors-gracefully.md",
+        "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.removeduplicates"
+      ]
+    },
+    {
+      "id": "ent-automation-pilot",
+      "chapterId": "ent-chapter-applied-automation",
+      "title": "Mesurer un pilote avant de l’étendre",
+      "estimatedMinutes": 15,
+      "objective": "Construire un essai représentatif et mesurer le gain net avec les reprises.",
+      "prerequisiteLessonIds": [
+        "ent-automation-exceptions"
+      ],
+      "steps": [
+        {
+          "id": "ent-automation-pilot-message-1",
+          "type": "message",
+          "text": "Un pilote est un essai limité avec objectif, personnes et décision à la fin. Il sert à apprendre si le travail devient plus simple. Fixe les critères avant : résultat, délai, temps humain et cas à reprendre. Conserve une procédure manuelle pour terminer les demandes si le flux s’arrête. Le fonctionnement dans MemStack prépare cet essai ; il ne fait pas fonctionner vos outils."
+        },
+        {
+          "id": "ent-automation-pilot-message-2",
+          "type": "message",
+          "text": "Cas fictif : Solis prépare 20 événements d’inscription fictifs : 16 inscriptions complètes distinctes, deux répétitions de ces 16, une demande sans places et une session inconnue. Attendu : 16 fiches uniques, deux répétitions reconnues et deux demandes à compléter. Ni le nombre de places ni la session ne doivent être devinés. Le nombre d’événements reçus n’est donc pas le nombre de réservations créées."
+        },
+        {
+          "id": "ent-automation-pilot-message-3",
+          "type": "message",
+          "text": "Ajoute une panne de destination, une reprise après création et deux arrivées proches avec le référent si nécessaire. Pour chaque cas, écris le résultat attendu. Examine la liste et les états, pas seulement les voyants d’exécution. Une fiche en double demande une correction puis de nouveaux essais sur les cas concernés et ceux de référence. Ce lot limité ne prouve pas le fonctionnement à n’importe quel volume."
+        },
+        {
+          "id": "ent-automation-pilot-message-4",
+          "type": "message",
+          "text": "Exemple économique fictif sur un lot comparable : 60 minutes manuellement ; avec le flux, 18 minutes de surveillance et 12 de corrections. Gain net : 60 − 18 − 12 = 30 minutes par lot. Si la mise en place prend 180 minutes, six lots à ce rythme compensent ce temps initial. C’est un ordre de grandeur à volume et gain stables, hors autres coûts. Licences et entretien restent à chiffrer ; ce calcul n’est pas une garantie de rentabilité."
+        },
+        {
+          "id": "ent-automation-pilot-practice-1",
+          "type": "message",
+          "text": "Pratique · Rédige le plan d’essai : résultats, deux cas supplémentaires, gain net, nombre de lots compensant la mise en place et règle de décision. Les pièces sont fictives. Rédige ici ton livrable puis compare-le à la proposition et aux critères ; aucune automatisation ne sera exécutée. Transfert facultatif : refaire ensuite cet essai dans un outil autorisé, sur des données fictives et avec le référent concerné. Résultat à observer : comparer les résultats réels au lot et mesurer tout le temps humain avant décision. Aucun achat ni outil externe n’est nécessaire pour terminer cette mission."
+        },
+        {
+          "id": "ent-automation-pilot-question-1",
+          "type": "question",
+          "prompt": "Quel résultat respecte le lot Solis ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "20 fiches, une par événement reçu.",
+              "feedback": "Deux événements sont répétés et deux demandent une précision ; les compter comme réservations fausse le résultat."
+            },
+            {
+              "id": "option-2",
+              "text": "16 fiches distinctes, deux répétitions sans création et deux demandes à compléter.",
+              "feedback": "Oui. Cela sépare les inscriptions valides et uniques des répétitions et des dossiers incomplets."
+            },
+            {
+              "id": "option-3",
+              "text": "18 fiches en complétant les données avec les valeurs fréquentes.",
+              "feedback": "Les informations absentes ou inconnues ne sont pas établies ; les inventer produit des réservations injustifiées."
+            }
+          ],
+          "correctOptionId": "option-2"
+        },
+        {
+          "id": "ent-automation-pilot-question-2",
+          "type": "question",
+          "prompt": "Quel gain net retenir dans l’exemple, avant les autres coûts ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "42 minutes, en déduisant seulement la surveillance.",
+              "feedback": "Les 12 minutes de correction font aussi partie du nouveau travail et doivent être déduites."
+            },
+            {
+              "id": "option-2",
+              "text": "60 minutes car le transfert est automatique.",
+              "feedback": "Surveillance et corrections sont encore du temps humain."
+            },
+            {
+              "id": "option-3",
+              "text": "30 minutes : 60 moins 18 moins 12.",
+              "feedback": "Oui. On compare le même lot en incluant tout le temps humain annoncé."
+            }
+          ],
+          "correctOptionId": "option-3"
+        }
+      ],
+      "cards": [
+        {
+          "id": "ent-automation-pilot-card-1",
+          "question": "Que fixer avant un pilote ?",
+          "answer": "Périmètre, lot de cas, résultats et seuils attendus, temps à mesurer, responsables et repli."
+        },
+        {
+          "id": "ent-automation-pilot-card-2",
+          "question": "Pourquoi examiner la destination lors d’un test ?",
+          "answer": "Une exécution peut sembler réussie alors que le résultat comporte un doublon, une valeur incorrecte ou une étape manquante."
+        },
+        {
+          "id": "ent-automation-pilot-card-3",
+          "question": "Comment calculer un gain de temps net ?",
+          "answer": "Comparer des lots comparables et soustraire tout le nouveau temps humain, surveillance et correction incluses."
+        }
+      ],
+      "sources": [
+        "https://learn.microsoft.com/en-us/power-automate/guidance/coding-guidelines/error-handling",
+        "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.removeduplicates"
+      ]
+    },
+    {
+      "id": "ent-automation-handover",
+      "chapterId": "ent-chapter-applied-automation",
+      "title": "Transmettre un flux pour en faire une pratique d’équipe",
+      "estimatedMinutes": 15,
+      "objective": "Préparer une fiche et une reprise par un collègue sans dépendre du créateur.",
+      "prerequisiteLessonIds": [
+        "ent-automation-pilot"
+      ],
+      "steps": [
+        {
+          "id": "ent-automation-handover-message-1",
+          "type": "message",
+          "text": "Une automatisation devient collective quand un collègue peut l’utiliser, comprendre ses limites et reprendre un incident. Partager un lien ne suffit pas. La fiche commune décrit but, périmètre, début, données, règles, résultats et reprise. Un point d’entrée connu évite que chacun fabrique une version concurrente de la même règle. L’objectif reste un travail plus fluide, pas un maximum de flux créés. La version de référence est la version commune retenue ; les copies ne doivent pas la remplacer silencieusement."
+        },
+        {
+          "id": "ent-automation-handover-message-2",
+          "type": "message",
+          "text": "Cas fictif : chez Helio, Nora a préparé le suivi INT. Malik devient responsable métier, Inès le remplace et le référent outils gère les connexions. Les utilisateurs suivent les états, mais ne modifient pas tous le flux. Malik peut demander l’arrêt en cas de double fiche ; le référent sait désactiver le déclenchement et organiser le traitement manuel des demandes reçues pendant l’arrêt. Cette solution de repli permet de poursuivre le travail pendant l’arrêt du flux."
+        },
+        {
+          "id": "ent-automation-handover-message-3",
+          "type": "message",
+          "text": "Partager l’exécution, partager la modification et autoriser les accès aux services sont trois décisions distinctes. Un mot de passe personnel ne fait pas partie de la transmission. Le référent confirme que comptes et connexions nécessaires restent autorisés après le changement d’équipe de Nora. Une copie indépendante peut diverger : distingue un modèle inactif du flux commun et évite des copies actives traitant les mêmes demandes. Les fonctions disponibles dépendent des outils et contrats."
+        },
+        {
+          "id": "ent-automation-handover-message-4",
+          "type": "message",
+          "text": "Organise une répétition fictive : Inès retrouve INT-88, comprend que la fiche existe mais que sa notification attend, explique la reprise et indique où noter le résultat. Si elle doit appeler Nora pour chaque étape, complète la fiche. Prévois une revue datée et une revue à chaque changement de champ, règle, outil ou responsable. Le transfert vers les outils autorisés reste une étape réelle à démontrer avec le référent ; la réponse écrite seule ne le valide pas."
+        },
+        {
+          "id": "ent-automation-handover-practice-1",
+          "type": "message",
+          "text": "Pratique · Rédige la fiche de transmission et un exercice de reprise pour Inès : rôles, accès à confirmer, copies, arrêt et revues. Les pièces sont fictives. Rédige ici ton livrable puis compare-le à la proposition et aux critères ; aucune automatisation ne sera exécutée. Transfert facultatif : refaire ensuite cet essai dans un outil autorisé, sur des données fictives et avec le référent concerné. Résultat à observer : faire réaliser une reprise au remplaçant à partir de la fiche commune. Aucun achat ni outil externe n’est nécessaire pour terminer cette mission."
+        },
+        {
+          "id": "ent-automation-handover-question-1",
+          "type": "question",
+          "prompt": "Quelle transmission permet une reprise en l’absence de Nora ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Une fiche commune, rôles et accès confirmés, puis une reprise fictive réalisée par Inès.",
+              "feedback": "Oui. La répétition révèle les manques et évite de dépendre du compte personnel de Nora."
+            },
+            {
+              "id": "option-2",
+              "text": "Le mot de passe de Nora et une capture du flux.",
+              "feedback": "Un mot de passe personnel ne règle ni rôles ni reprise et ne doit pas circuler ainsi."
+            },
+            {
+              "id": "option-3",
+              "text": "Une copie active pour chacun afin de simplifier les versions.",
+              "feedback": "Les copies risquent de traiter une demande plusieurs fois avec des règles divergentes."
+            }
+          ],
+          "correctOptionId": "option-1"
+        },
+        {
+          "id": "ent-automation-handover-question-2",
+          "type": "question",
+          "prompt": "Le formulaire renomme session_id. Quelle action entretient la méthode ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Chaque collègue répare sa copie au prochain incident.",
+              "feedback": "Des réparations dispersées favorisent divergence et pertes de demandes."
+            },
+            {
+              "id": "option-2",
+              "text": "Les responsables revoient mapping, essais et fiche commune avant la bascule.",
+              "feedback": "Oui. Le champ est dans le contrat et son changement peut casser le transfert."
+            },
+            {
+              "id": "option-3",
+              "text": "Changer seulement le titre du flux.",
+              "feedback": "Le titre ne répare ni la correspondance des données ni la reprise."
+            }
+          ],
+          "correctOptionId": "option-2"
+        }
+      ],
+      "cards": [
+        {
+          "id": "ent-automation-handover-card-1",
+          "question": "Que doit permettre la fiche de transmission ?",
+          "answer": "Comprendre le flux, ses données et résultats, savoir qui utilise ou modifie, comment reprendre ou arrêter et où trouver la référence."
+        },
+        {
+          "id": "ent-automation-handover-card-2",
+          "question": "Pourquoi faire répéter la reprise au remplaçant ?",
+          "answer": "Pour voir s’il retrouve les informations et applique la procédure sans dépendre de l’auteur."
+        },
+        {
+          "id": "ent-automation-handover-card-3",
+          "question": "Quand revoir un flux partagé ?",
+          "answer": "À la date prévue et lors d’un changement de champ, règle, outil ou responsable, avec des essais adaptés."
+        }
+      ],
+      "sources": [
+        "https://learn.microsoft.com/en-us/power-automate/create-team-flows",
+        "https://docs.n8n.io/build/flow-logic/handle-errors-gracefully.md"
+      ]
+    },
+    {
+      "id": "ent-projects-outcome",
+      "chapterId": "ent-chapter-applied-projects",
+      "title": "Transformer une idée en projet utile",
+      "estimatedMinutes": 18,
+      "objective": "Produire une fiche de cadrage reliant un besoin, un public et une première version.",
+      "prerequisiteLessonIds": [
+        "ent-answer-or-action",
+        "ent-useful-request"
+      ],
+      "steps": [
+        {
+          "id": "ent-projects-outcome-message-1",
+          "type": "message",
+          "text": "Cas entièrement fictif : l’atelier vélo Cyprès veut « un site fait avec l’IA ». Inès, à l’accueil, traite 30 appels hebdomadaires : 18 demandent les horaires, 8 une estimation, 4 le suivi d’un vélo déposé. Un tarif fiable exige un diagnostic sur place. L’équipe veut d’abord rendre les horaires et la préparation de visite faciles à trouver. Aucun gain n’a encore été mesuré."
+        },
+        {
+          "id": "ent-projects-outcome-message-2",
+          "type": "message",
+          "text": "Commence par le travail à faciliter : pour qui, à quel moment et avec quel résultat observable ? L’assistant peut reformuler les observations et comparer des périmètres. Demande-lui de distinguer faits et hypothèses. Ici, ajouter un paiement et un compte client ne répond pas directement aux 18 demandes d’horaires. Une solution simple peut être le meilleur premier projet. Le périmètre précise ce que couvre cette première version et ce qu’elle exclut."
+        },
+        {
+          "id": "ent-projects-outcome-message-3",
+          "type": "message",
+          "text": "Exemple de demande : À partir de ces appels fictifs, compare une page horaires et une application avec comptes : besoin servi, informations nécessaires, entretien et questions à poser à Inès. Contre-exemple : Construis tout le site, les paiements et le suivi sans me poser de question. La seconde demande agrandit la réalisation avant que l’équipe ait choisi ce qui lui serait utile."
+        },
+        {
+          "id": "ent-projects-outcome-message-4",
+          "type": "message",
+          "text": "La fiche retenue propose horaires, adresse et préparation de visite, sous la responsabilité d’Inès ; les devis restent après diagnostic. Avant de construire, trois personnes cherchent les horaires dans une maquette. Après un éventuel lancement, Inès comparera les appels d’horaires sur des semaines comparables, en regardant aussi les demandes non résolues. Une baisse reste une hypothèse à examiner."
+        },
+        {
+          "id": "ent-projects-outcome-practice-1",
+          "type": "message",
+          "text": "Pratique · Rédige une fiche Cyprès et une demande IA produisant deux options comparables. Travaille ici avec les pièces fictives, sans outil externe ni achat. Compare ton livrable aux critères et à l’exemple. Transfert facultatif : reprendre cette méthode dans un outil autorisé avec des données adaptées et les responsables concernés ; observer le résultat obtenu plutôt que l’assurance du modèle."
+        },
+        {
+          "id": "ent-projects-outcome-question-1",
+          "type": "question",
+          "prompt": "Quelle première version traite directement le besoin majoritaire ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Un compte pour retrouver des factures.",
+              "feedback": "Les factures ne figurent pas dans les observations."
+            },
+            {
+              "id": "option-2",
+              "text": "Une page horaires, adresse et préparation.",
+              "feedback": "Les horaires représentent 18 appels et deviennent directement accessibles."
+            },
+            {
+              "id": "option-3",
+              "text": "Un paiement avant diagnostic.",
+              "feedback": "Le tarif dépend d’un diagnostic ; le paiement ajoute une contrainte."
+            }
+          ],
+          "correctOptionId": "option-2"
+        },
+        {
+          "id": "ent-projects-outcome-question-2",
+          "type": "question",
+          "prompt": "Quel rôle confier à l’assistant au cadrage ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Décider définitivement du budget.",
+              "feedback": "La décision de budget appartient à l’organisation."
+            },
+            {
+              "id": "option-2",
+              "text": "Produire tous les écrans immédiatement.",
+              "feedback": "Les écrans précèdent ici le choix du besoin."
+            },
+            {
+              "id": "option-3",
+              "text": "Comparer deux périmètres et expliciter les hypothèses.",
+              "feedback": "Les options peuvent être discutées sur les mêmes faits."
+            }
+          ],
+          "correctOptionId": "option-3"
+        }
+      ],
+      "cards": [
+        {
+          "id": "ent-projects-outcome-card-1",
+          "question": "Que comprend une fiche de cadrage ?",
+          "answer": "Public, difficulté observée, résultat attendu, première version, exclusions, responsable et façon de tester."
+        },
+        {
+          "id": "ent-projects-outcome-card-2",
+          "question": "Pourquoi demander plusieurs options à l’IA au cadrage ?",
+          "answer": "Pour comparer besoins couverts et complexité avant de choisir le périmètre."
+        },
+        {
+          "id": "ent-projects-outcome-card-3",
+          "question": "Un gain imaginé au cadrage est-il acquis ?",
+          "answer": "Non : c’est une hypothèse à mesurer et discuter après essai."
+        }
+      ],
+      "sources": [
+        "https://www.gov.uk/service-manual/agile-delivery/how-the-discovery-phase-works"
+      ]
+    },
+    {
+      "id": "ent-projects-specification",
+      "chapterId": "ent-chapter-applied-projects",
+      "title": "Écrire un besoin que l’on peut réaliser",
+      "estimatedMinutes": 18,
+      "objective": "Rédiger une demande de réalisation avec critères observables et questions ouvertes.",
+      "prerequisiteLessonIds": [
+        "ent-projects-outcome"
+      ],
+      "steps": [
+        {
+          "id": "ent-projects-specification-message-1",
+          "type": "message",
+          "text": "Cas fictif : le centre Rivage publie deux ateliers. Pièces : Initiation tableur, 12 novembre, 14 h, salle Bleue, 2 h ; Présenter un projet, 14 novembre, 9 h, salle Verte, 3 h. L’année n’est pas fournie. La première version doit permettre de comparer les créneaux, sans inscription ni paiement. Les dates définitives attendent confirmation de l’année."
+        },
+        {
+          "id": "ent-projects-specification-message-2",
+          "type": "message",
+          "text": "Une spécification décrit le résultat à réaliser. Indique le public, son action et son but, puis des critères observables. Exemple : un visiteur compare les ateliers pour choisir un créneau ; chaque fiche affiche titre, date complète, heure, durée et salle. Ces critères permettent de discuter une maquette et d’accepter ensuite la réalisation avec le même vocabulaire."
+        },
+        {
+          "id": "ent-projects-specification-message-3",
+          "type": "message",
+          "text": "Demande utile à l’assistant : propose la structure d’une page avec ces deux fiches, marque l’année à confirmer et liste les informations manquantes avant publication. Contre-exemple : fais une plateforme moderne avec tout ce qu’il faut. Moderne ne dit ni ce qu’un visiteur doit trouver, ni quelles fonctions exclure. Ajouter des inscriptions changerait les besoins de données et d’exploitation."
+        },
+        {
+          "id": "ent-projects-specification-message-4",
+          "type": "message",
+          "text": "Découpe : afficher les fiches, puis améliorer leur lecture sur téléphone, puis envisager un filtre si le catalogue grandit. Un outil avec comptes, paiements ou données sensibles demande l’avis de personnes compétentes sur architecture, accès et exploitation. Une bonne demande facilite cette collaboration ; elle ne transforme pas automatiquement une personne non technique en responsable de tous ces sujets."
+        },
+        {
+          "id": "ent-projects-specification-practice-1",
+          "type": "message",
+          "text": "Pratique · Prépare la demande de réalisation Rivage : besoin, trois critères, exclusions et question bloquante. Travaille ici avec les pièces fictives, sans outil externe ni achat. Compare ton livrable aux critères et à l’exemple. Transfert facultatif : reprendre cette méthode dans un outil autorisé avec des données adaptées et les responsables concernés ; observer le résultat obtenu plutôt que l’assurance du modèle."
+        },
+        {
+          "id": "ent-projects-specification-question-1",
+          "type": "question",
+          "prompt": "Quel critère permet de contrôler la page ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "La page est innovante.",
+              "feedback": "Innovante ne définit pas une observation."
+            },
+            {
+              "id": "option-2",
+              "text": "Chaque fiche affiche titre, date complète, heure, durée et salle.",
+              "feedback": "On peut comparer les champs à la réalisation."
+            },
+            {
+              "id": "option-3",
+              "text": "L’assistant est sûr de lui.",
+              "feedback": "L’assurance du modèle ne décrit pas la page."
+            }
+          ],
+          "correctOptionId": "option-2"
+        },
+        {
+          "id": "ent-projects-specification-question-2",
+          "type": "question",
+          "prompt": "Comment traiter l’année absente ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Choisir automatiquement l’année actuelle.",
+              "feedback": "Une année plausible peut être fausse."
+            },
+            {
+              "id": "option-2",
+              "text": "Enlever les dates de la page publique.",
+              "feedback": "Le visiteur perd une information indispensable."
+            },
+            {
+              "id": "option-3",
+              "text": "La marquer à confirmer dans la maquette et la faire préciser avant publication.",
+              "feedback": "La maquette avance sans inventer une information officielle."
+            }
+          ],
+          "correctOptionId": "option-3"
+        }
+      ],
+      "cards": [
+        {
+          "id": "ent-projects-specification-card-1",
+          "question": "Qu’est-ce qu’un critère de réussite ?",
+          "answer": "Un résultat observable comparable à la réalisation."
+        },
+        {
+          "id": "ent-projects-specification-card-2",
+          "question": "Comment éviter une demande IA trop vaste ?",
+          "answer": "Préciser besoin, première livraison et exclusions avant réalisation."
+        },
+        {
+          "id": "ent-projects-specification-card-3",
+          "question": "Comment traiter une information manquante ?",
+          "answer": "La lister comme question ouverte et préciser si elle bloque la publication."
+        }
+      ],
+      "sources": [
+        "https://www.gov.uk/service-manual/agile-delivery/writing-user-stories"
+      ]
+    },
+    {
+      "id": "ent-projects-prototype",
+      "chapterId": "ent-chapter-applied-projects",
+      "title": "Choisir une approche et tester une maquette",
+      "estimatedMinutes": 18,
+      "objective": "Comparer des solutions et organiser un essai avant développement.",
+      "prerequisiteLessonIds": [
+        "ent-projects-specification"
+      ],
+      "steps": [
+        {
+          "id": "ent-projects-prototype-message-1",
+          "type": "message",
+          "text": "Cas fictif : l’association culturelle Hublot présente ses événements. Elle dispose de trois textes, de photos autorisées et d’un calendrier mensuel. Aucun compte ni paiement n’est demandé. Nora connaît déjà un outil de site et peut consacrer une heure par mois à l’entretien. Options : page dans cet outil ; site sur mesure avec aide au code ; application avec réservation et comptes."
+        },
+        {
+          "id": "ent-projects-prototype-message-2",
+          "type": "message",
+          "text": "Compare l’entretien autant que l’apparence. Un outil connu peut couvrir le besoin sans code spécifique ; le sur mesure donne plus de liberté, mais exige une capacité de reprise, d’hébergement et de correction. L’assistant prépare une grille besoins couverts, contenu à fournir, compétences et prix à demander. Il ne peut déduire un coût réel ni l’autorisation de l’entreprise à partir de la seule description."
+        },
+        {
+          "id": "ent-projects-prototype-message-3",
+          "type": "message",
+          "text": "Un prototype est un essai pour apprendre. Trois écrans non connectés peuvent suffire pour demander de trouver un événement et son adresse. Exemple : Nora dessine accueil, détail et contact puis observe deux collègues sans leur expliquer les clics. Contre-exemple : publier ce prototype comme service fini parce qu’il est beau. Son apparence ne prouve ni l’usage sur téléphone ni l’entretien futur."
+        },
+        {
+          "id": "ent-projects-prototype-message-4",
+          "type": "message",
+          "text": "Hublot teste deux variantes de navigation avec les mêmes textes dans une maquette de l’outil connu. L’équipe observe les hésitations puis choisit. Si le besoin évolue vers la réservation payante, il faut recadrer données, opérations et expertise. Les fonctions et offres des outils varient ; cette mission enseigne le choix d’approche, sans imposer un produit à acheter."
+        },
+        {
+          "id": "ent-projects-prototype-practice-1",
+          "type": "message",
+          "text": "Pratique · Compare les trois options Hublot, choisis un essai et prépare deux tâches pour tester la navigation. Travaille ici avec les pièces fictives, sans outil externe ni achat. Compare ton livrable aux critères et à l’exemple. Transfert facultatif : reprendre cette méthode dans un outil autorisé avec des données adaptées et les responsables concernés ; observer le résultat obtenu plutôt que l’assurance du modèle."
+        },
+        {
+          "id": "ent-projects-prototype-question-1",
+          "type": "question",
+          "prompt": "Que tester d’abord avec les pièces Hublot ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Une application de paiement complète.",
+              "feedback": "Le paiement ne répond pas au besoin donné."
+            },
+            {
+              "id": "option-2",
+              "text": "Deux navigations dans une maquette de l’outil connu.",
+              "feedback": "L’essai est limité et compare la recherche d’information."
+            },
+            {
+              "id": "option-3",
+              "text": "Un site sur mesure sans responsable.",
+              "feedback": "L’entretien reste sans solution."
+            }
+          ],
+          "correctOptionId": "option-2"
+        },
+        {
+          "id": "ent-projects-prototype-question-2",
+          "type": "question",
+          "prompt": "Quelle consigne de test est utile ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Cliquez Agenda puis la première fiche.",
+              "feedback": "Le chemin donné masque les hésitations."
+            },
+            {
+              "id": "option-2",
+              "text": "Trouvez le prochain événement et son lieu.",
+              "feedback": "La personne choisit son chemin ; la réussite est observable."
+            },
+            {
+              "id": "option-3",
+              "text": "Dites si le bouton lilas est joli.",
+              "feedback": "La couleur ne renseigne pas sur la recherche du lieu."
+            }
+          ],
+          "correctOptionId": "option-2"
+        }
+      ],
+      "cards": [
+        {
+          "id": "ent-projects-prototype-card-1",
+          "question": "À quoi sert un prototype ?",
+          "answer": "À essayer une hypothèse avec une réalisation limitée avant d’engager la version finale."
+        },
+        {
+          "id": "ent-projects-prototype-card-2",
+          "question": "Que comparer en plus des fonctionnalités ?",
+          "answer": "Entretien, compétences de reprise, coûts à confirmer et adéquation au besoin."
+        },
+        {
+          "id": "ent-projects-prototype-card-3",
+          "question": "Une démonstration réussie suffit-elle à publier ?",
+          "answer": "Non : il reste les conditions réelles d’usage, l’exploitation et les contrôles adaptés."
+        }
+      ],
+      "sources": [
+        "https://www.gov.uk/service-manual/agile-delivery/how-the-alpha-phase-works"
+      ]
+    },
+    {
+      "id": "ent-projects-iteration",
+      "chapterId": "ent-chapter-applied-projects",
+      "title": "Faire évoluer une réalisation avec l’IA",
+      "estimatedMinutes": 18,
+      "objective": "Formuler une modification limitée et organiser sa vérification.",
+      "prerequisiteLessonIds": [
+        "ent-projects-prototype"
+      ],
+      "steps": [
+        {
+          "id": "ent-projects-iteration-message-1",
+          "type": "message",
+          "text": "Cas fictif : la coopérative Fougère présente trois services. Jardin : Nord et Sud, 35 €/h ; haie : Nord, sur devis ; compost : Sud, 12 €/sac. L’équipe veut ajouter les zones et des boutons de contact. Le site fonctionne sur téléphone, les tarifs doivent rester identiques. Une personne technique relit les modifications. Les deux demandes peuvent être livrées séparément."
+        },
+        {
+          "id": "ent-projects-iteration-message-2",
+          "type": "message",
+          "text": "Une itération est un petit cycle demande, réalisation, observation et ajustement. Demande utile : ajoute uniquement les zones aux trois fiches, conserve titres et tarifs, indique les éléments modifiés et propose des contrôles. Contre-exemple : améliore tout le site et modernise les prix. Plusieurs changements mêlés rendent plus difficile de comprendre l’effet de chacun."
+        },
+        {
+          "id": "ent-projects-iteration-message-3",
+          "type": "message",
+          "text": "Avant de modifier, conserver une version retrouvable. Dans un projet avec code, isoler une proposition permet de la relire avant intégration. L’assistant peut résumer les changements et suggérer des tests ; une personne compétente examine leur réalité. Le code généré peut contenir des erreurs. « Tous les tests passent » dans une réponse ne prouve pas leur exécution. MemStack n’exécute aucun code d’apprenant."
+        },
+        {
+          "id": "ent-projects-iteration-message-4",
+          "type": "message",
+          "text": "Après les zones, retrouver les trois fiches, comparer les tarifs à la version précédente et consulter sur téléphone. Traiter ensuite les boutons, en testant leur destination. Si un tarif disparaît, corriger ou revenir à la version précédente avant d’empiler des demandes. Chaque petite livraison apporte une valeur et laisse une trace reprenable par un collègue."
+        },
+        {
+          "id": "ent-projects-iteration-practice-1",
+          "type": "message",
+          "text": "Pratique · Prépare la première demande Fougère et sa fiche de recette, c’est-à-dire les contrôles avant acceptation. Travaille ici avec les pièces fictives, sans outil externe ni achat. Compare ton livrable aux critères et à l’exemple. Transfert facultatif : reprendre cette méthode dans un outil autorisé avec des données adaptées et les responsables concernés ; observer le résultat obtenu plutôt que l’assurance du modèle."
+        },
+        {
+          "id": "ent-projects-iteration-question-1",
+          "type": "question",
+          "prompt": "Quelle première demande est adaptée ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Ajouter les zones, conserver les tarifs.",
+              "feedback": "La modification reste limitée et comparable."
+            },
+            {
+              "id": "option-2",
+              "text": "Refaire prix, boutons et site ensemble.",
+              "feedback": "Les effets deviennent difficiles à attribuer."
+            },
+            {
+              "id": "option-3",
+              "text": "Changer les tarifs pour simplifier.",
+              "feedback": "Les tarifs doivent rester identiques."
+            }
+          ],
+          "correctOptionId": "option-1"
+        },
+        {
+          "id": "ent-projects-iteration-question-2",
+          "type": "question",
+          "prompt": "Le modèle annonce des tests réussis sans résultat. Que noter ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "La recette est finie.",
+              "feedback": "La phrase ne prouve aucune exécution."
+            },
+            {
+              "id": "option-2",
+              "text": "Les contrôles restent à exécuter et documenter dans l’environnement concerné.",
+              "feedback": "L’équipe a besoin des observations de la réalisation."
+            },
+            {
+              "id": "option-3",
+              "text": "Les critères sont inutiles.",
+              "feedback": "Sans critères, l’acceptation reste arbitraire."
+            }
+          ],
+          "correctOptionId": "option-2"
+        }
+      ],
+      "cards": [
+        {
+          "id": "ent-projects-iteration-card-1",
+          "question": "Comment formuler une modification à l’IA ?",
+          "answer": "Un changement limité, les données applicables, ce qui doit rester et les contrôles attendus."
+        },
+        {
+          "id": "ent-projects-iteration-card-2",
+          "question": "Pourquoi conserver une version avant modification ?",
+          "answer": "Comparer les changements et pouvoir retrouver un état connu."
+        },
+        {
+          "id": "ent-projects-iteration-card-3",
+          "question": "Qui accepte une modification générée ?",
+          "answer": "La personne responsable après relecture et contrôles adaptés."
+        }
+      ],
+      "sources": [
+        "https://docs.github.com/en/copilot/responsible-use/inline-suggestions",
+        "https://docs.github.com/en/pull-requests/reference/pull-request-reviews"
+      ]
+    },
+    {
+      "id": "ent-projects-release",
+      "chapterId": "ent-chapter-applied-projects",
+      "title": "Préparer une mise en ligne utile",
+      "estimatedMinutes": 18,
+      "objective": "Préparer un lancement avec tests, responsabilités et repli.",
+      "prerequisiteLessonIds": [
+        "ent-projects-iteration"
+      ],
+      "steps": [
+        {
+          "id": "ent-projects-release-message-1",
+          "type": "message",
+          "text": "Cas fictif : le collectif Terre Claire prépare une page d’inscription. Son prototype affiche une confirmation mais n’enregistre rien. Avant ouverture, le responsable technique doit connecter un enregistrement autorisé et traiter les accès. Jo, à l’accueil, doit retrouver chaque demande. A et B désignent deux identités de test fictives distinctes, avec les champs à définir par l’équipe technique pour ses essais ; ce ne sont pas des dossiers déjà fournis. Aucun participant réel ne fournit de données dans cette mission."
+        },
+        {
+          "id": "ent-projects-release-message-2",
+          "type": "message",
+          "text": "Le parcours complet compte : une personne remplit, comprend le résultat et l’équipe retrouve la demande. L’assistant peut préparer une checklist depuis les rôles et les pièces ; il ne peut constater seul le fonctionnement réel. Exemple : A apparaît une fois dans le registre de test et Jo peut la retrouver. Contre-exemple : accepter parce que le bouton devient vert alors qu’aucun enregistrement n’arrive. Cette recette rassemble les contrôles qui permettent d’accepter la réalisation avant ouverture."
+        },
+        {
+          "id": "ent-projects-release-message-3",
+          "type": "message",
+          "text": "Essayer sur téléphone, au clavier et avec un champ manquant aide à repérer des obstacles. Ces premiers contrôles ne constituent pas un audit complet d’accessibilité. Pour les données collectées, faire préciser information des participants, accès, conservation et sécurité par les personnes compétentes. Comptes, paiement ou documents sensibles demandent une expertise adaptée avant lancement."
+        },
+        {
+          "id": "ent-projects-release-message-4",
+          "type": "message",
+          "text": "Nommer qui autorise l’ouverture, qui suit le registre et qui reçoit les incidents. Prévoir un repli : si les inscriptions se perdent, retirer temporairement le formulaire et afficher un contact suivi par Jo. Restaurer une ancienne page ne récupère pas les demandes perdues : rapprocher les enregistrements avant reprise. Une ouverture à un petit groupe peut suivre les contrôles et l’accord du responsable."
+        },
+        {
+          "id": "ent-projects-release-practice-1",
+          "type": "message",
+          "text": "Pratique · Prépare le lancement Terre Claire et le repli si un succès apparaît sans enregistrement. Travaille ici avec les pièces fictives, sans outil externe ni achat. Compare ton livrable aux critères et à l’exemple. Transfert facultatif : reprendre cette méthode dans un outil autorisé avec des données adaptées et les responsables concernés ; observer le résultat obtenu plutôt que l’assurance du modèle."
+        },
+        {
+          "id": "ent-projects-release-question-1",
+          "type": "question",
+          "prompt": "Quel résultat valide le test d’inscription ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Un bouton vert.",
+              "feedback": "Le prototype affiche déjà un succès sans enregistrer."
+            },
+            {
+              "id": "option-2",
+              "text": "La fiche fictive enregistrée une fois et retrouvée par Jo.",
+              "feedback": "Cela couvre le résultat utile pour participant et accueil."
+            },
+            {
+              "id": "option-3",
+              "text": "Une explication du modèle.",
+              "feedback": "La description ne démontre pas le fonctionnement."
+            }
+          ],
+          "correctOptionId": "option-2"
+        },
+        {
+          "id": "ent-projects-release-question-2",
+          "type": "question",
+          "prompt": "Quel repli si des demandes se perdent ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Garder le formulaire et relire le prompt.",
+              "feedback": "Les pertes continueraient."
+            },
+            {
+              "id": "option-2",
+              "text": "Restaurer sans examiner les demandes reçues.",
+              "feedback": "La restauration ne traite pas les demandes partielles ou perdues."
+            },
+            {
+              "id": "option-3",
+              "text": "Retirer le formulaire, proposer le contact suivi et rapprocher avant reprise.",
+              "feedback": "L’équipe limite les pertes et organise le traitement existant."
+            }
+          ],
+          "correctOptionId": "option-3"
+        }
+      ],
+      "cards": [
+        {
+          "id": "ent-projects-release-card-1",
+          "question": "Qu’est-ce qu’une recette avant ouverture ?",
+          "answer": "Des contrôles du parcours et des résultats attendus avant acceptation."
+        },
+        {
+          "id": "ent-projects-release-card-2",
+          "question": "Que prévoir si un formulaire tombe en panne ?",
+          "answer": "Responsable, contact de repli, traitement des demandes reçues et critères de reprise."
+        },
+        {
+          "id": "ent-projects-release-card-3",
+          "question": "Un essai clavier certifie-t-il l’accessibilité ?",
+          "answer": "Non : il s’agit d’un contrôle initial, à compléter par une évaluation adaptée."
+        }
+      ],
+      "sources": [
+        "https://www.w3.org/WAI/test-evaluate/easy-checks/",
+        "https://www.gov.uk/service-manual/agile-delivery/how-the-live-phase-works"
+      ]
+    },
+    {
+      "id": "ent-projects-maintenance",
+      "chapterId": "ent-chapter-applied-projects",
+      "title": "Faire vivre le projet après le lancement",
+      "estimatedMinutes": 18,
+      "objective": "Écrire une fiche de reprise et choisir une amélioration utile.",
+      "prerequisiteLessonIds": [
+        "ent-projects-release"
+      ],
+      "steps": [
+        {
+          "id": "ent-projects-maintenance-message-1",
+          "type": "message",
+          "text": "Cas fictif : le studio Lanterne publie trois offres sur un outil de site. Lila met les textes à jour mensuellement, Rémi traite les incidents techniques. Dernier mois : 12 demandes d’information, 3 signalements d’horaire périmé, 2 demandes d’espace client. Deux heures sont disponibles pour une amélioration ; aucun budget ni compétence supplémentaire n’est confirmé."
+        },
+        {
+          "id": "ent-projects-maintenance-message-2",
+          "type": "message",
+          "text": "La fiche de reprise dit où est le projet, qui possède le compte, comment modifier le contenu, signaler un défaut et retrouver un état antérieur. Une sauvegarde des fichiers ne couvre pas forcément les données d’un outil externe : préciser périmètre et restauration. L’assistant peut transformer les procédures connues en guide et marquer les étapes à faire confirmer. Cette maintenance garde le service utilisable après son lancement."
+        },
+        {
+          "id": "ent-projects-maintenance-message-3",
+          "type": "message",
+          "text": "Demande utile : transforme ces notes en guide pour Lila, distingue texte à modifier et incident technique, puis liste les informations manquantes. Contre-exemple : invente le nom du compte administrateur et la procédure de restauration. Un collègue peut essayer une petite mise à jour sur une copie puis expliquer sa réaction à un incident. Les mots de passe ne figurent pas dans un guide partagé."
+        },
+        {
+          "id": "ent-projects-maintenance-message-4",
+          "type": "message",
+          "text": "L’équipe corrige d’abord l’horaire et installe un rappel mensuel avec Lila. Les demandes d’espace client deviennent une piste : quel problème résolvent-elles, quelles données et quel entretien faudrait-il ? L’assistant aide à préparer ces questions ; deux demandes ne suffisent pas à imposer une construction. Une meilleure organisation du contenu peut apporter davantage qu’une nouvelle fonction."
+        },
+        {
+          "id": "ent-projects-maintenance-practice-1",
+          "type": "message",
+          "text": "Pratique · Prépare la fiche de reprise Lanterne et arbitre les deux heures. Emplacement du projet et restauration ne sont pas fournis. Travaille ici avec les pièces fictives, sans outil externe ni achat. Compare ton livrable aux critères et à l’exemple. Transfert facultatif : reprendre cette méthode dans un outil autorisé avec des données adaptées et les responsables concernés ; observer le résultat obtenu plutôt que l’assurance du modèle. Rassemble enfin un dossier de première version pour Cyprès, le cas de départ : fiche besoin, critères, approche choisie, première modification, recette et reprise. Pièces rappelées : 18 appels d’horaires sur 30 ; page horaires/adresse/préparation, sans paiement ni suivi ; Inès tient les textes. Tu peux proposer une maquette dans un outil connu, garder trois critères observables (horaires, adresse, préparation trouvables), une évolution à la fois, des essais mobile et clavier, puis une fiche de reprise. Toute information technique absente devient une question à attribuer, sans l’inventer. Aucun document externe n’est nécessaire."
+        },
+        {
+          "id": "ent-projects-maintenance-question-1",
+          "type": "question",
+          "prompt": "Quelle priorité est la plus argumentée ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Corriger l’horaire et organiser son entretien.",
+              "feedback": "Un problème observé peut être traité avec les responsabilités connues."
+            },
+            {
+              "id": "option-2",
+              "text": "Construire tout l’espace client.",
+              "feedback": "Besoin et moyens restent à préciser."
+            },
+            {
+              "id": "option-3",
+              "text": "Ajouter un chatbot pour répondre aux horaires.",
+              "feedback": "Cela ajoute de l’entretien sans corriger la source."
+            }
+          ],
+          "correctOptionId": "option-1"
+        },
+        {
+          "id": "ent-projects-maintenance-question-2",
+          "type": "question",
+          "prompt": "Quelle demande IA aide à transmettre ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Inventer une restauration plausible.",
+              "feedback": "Une procédure inventée peut échouer lors d’un incident."
+            },
+            {
+              "id": "option-2",
+              "text": "Documenter les étapes connues et les questions pour Rémi.",
+              "feedback": "Les inconnues restent visibles et attribuées."
+            },
+            {
+              "id": "option-3",
+              "text": "Copier les mots de passe dans le guide.",
+              "feedback": "Un guide partagé ne doit pas contenir les secrets."
+            }
+          ],
+          "correctOptionId": "option-2"
+        }
+      ],
+      "cards": [
+        {
+          "id": "ent-projects-maintenance-card-1",
+          "question": "Que permet une fiche de reprise ?",
+          "answer": "Retrouver responsables, emplacement, accès autorisés, mises à jour, incidents et restauration."
+        },
+        {
+          "id": "ent-projects-maintenance-card-2",
+          "question": "La sauvegarde du code comprend-elle toutes les données ?",
+          "answer": "Non : définir séparément fichiers, données et services concernés."
+        },
+        {
+          "id": "ent-projects-maintenance-card-3",
+          "question": "Comment choisir une amélioration après lancement ?",
+          "answer": "Partir d’un problème observé, comparer utilité et effort puis cadrer les fonctions nouvelles."
+        }
+      ],
+      "sources": [
+        "https://www.gov.uk/service-manual/agile-delivery/how-the-live-phase-works",
+        "https://docs.github.com/en/repositories/archiving-a-github-repository/backing-up-a-repository"
+      ]
     }
   ],
   "challenges": [
@@ -3072,6 +4958,430 @@
             }
           ]
         }
+      ]
+    },
+    {
+      "id": "ent-challenge-assistants-delivery",
+      "chapterId": "ent-chapter-applied-assistants",
+      "title": "Préparer et transmettre un atelier partenaires",
+      "prerequisiteLessonIds": [
+        "ent-assistants-brief",
+        "ent-assistants-documents",
+        "ent-assistants-meeting",
+        "ent-assistants-options",
+        "ent-assistants-iterate",
+        "ent-assistants-team-playbook"
+      ],
+      "scenario": "Tu aides l’équipe fictive Orme à préparer une présentation pour ses partenaires, puis à transmettre sa méthode. Utilise uniquement les pièces. Ces choix mesurent des décisions sur dossier, pas une maîtrise en situation réelle.",
+      "files": [
+        {
+          "name": "Besoin et options",
+          "content": "Présentation pour 18 participants, plafond 720 €, accès en transports collectifs prioritaire. Espace A : 20 places, 680 €, 8 min à pied de la gare. B : 18 places, 620 €, 25 min de la gare. C : 16 places, 550 €, 5 min de la gare. Disponibilité et vidéoprojecteur inconnus."
+        },
+        {
+          "name": "Notes de préparation",
+          "content": "Présentation de 14 h à 16 h décidée. Rami remet une trame mardi. Clara suggère un enregistrement ; aucune décision prise. Responsable et date de réservation à attribuer."
+        },
+        {
+          "name": "Essais de message",
+          "content": "Critère : rappeler livrable et échéance, sans changer le statut d’avancement. Cas A : trame attendue mardi ; cas B : visuels attendus vendredi. V1 : Merci pour votre travail, dans les deux cas. V2-A : La trame est attendue mardi. V2-B : Les visuels sont déjà finalisés et seront envoyés vendredi. Aucun achèvement ni envoi n’est confirmé."
+        },
+        {
+          "name": "Transmission",
+          "content": "La méthode doit être reprise sans l’auteur. Responsable : Clara ; date de revue à fixer. Sur un résultat répondant aux mêmes critères : 25 min avant, 17 min après, préparation et retouches incluses. Aucun autre essai mesuré."
+        }
+      ],
+      "questions": [
+        {
+          "id": "ent-challenge-assistants-delivery-question-1",
+          "prompt": "Quelle demande exploite les deux premières pièces pour préparer l’atelier ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Produire une proposition de lieu et un relevé avec décisions, actions et points ouverts, en indiquant les informations encore à obtenir."
+            },
+            {
+              "id": "option-2",
+              "text": "Résumer seulement les prix et laisser le choix de capacité pour la réservation."
+            },
+            {
+              "id": "option-3",
+              "text": "Préparer un courriel annonçant le lieu le plus proche et l’enregistrement de la séance."
+            }
+          ]
+        },
+        {
+          "id": "ent-challenge-assistants-delivery-question-2",
+          "prompt": "Quelle recommandation suit les priorités fournies ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "B, car son économie de 60 € doit toujours primer."
+            },
+            {
+              "id": "option-2",
+              "text": "A, sous réserve de disponibilité et vidéoprojecteur : 20 places et 8 min de la gare pour 680 €."
+            },
+            {
+              "id": "option-3",
+              "text": "C, car ses 5 min de trajet compensent les deux places manquantes."
+            }
+          ]
+        },
+        {
+          "id": "ent-challenge-assistants-delivery-question-3",
+          "prompt": "Quel relevé respecte les notes ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Présentation 14 h–16 h ; réservation Rami mardi ; enregistrement à organiser."
+            },
+            {
+              "id": "option-2",
+              "text": "Présentation décidée ; aucun travail ne peut avancer avant attribution de la réservation."
+            },
+            {
+              "id": "option-3",
+              "text": "Présentation 14 h–16 h décidée ; trame Rami mardi ; enregistrement proposé ; réservation à attribuer et dater."
+            }
+          ]
+        },
+        {
+          "id": "ent-challenge-assistants-delivery-question-4",
+          "prompt": "Quelle modification corrige V2 sans perdre le progrès ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Retirer les dates des deux cas pour éviter une promesse."
+            },
+            {
+              "id": "option-2",
+              "text": "Garder livrable et échéance, conserver le statut attendu et ne pas affirmer achèvement ou envoi non établis ; rejouer A et B."
+            },
+            {
+              "id": "option-3",
+              "text": "Conserver le message B car une échéance implique que le livrable est déjà prêt."
+            }
+          ]
+        },
+        {
+          "id": "ent-challenge-assistants-delivery-question-5",
+          "prompt": "Quelle transmission et quelle conclusion sont justifiées ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Partager modèle, entrées, exemple et critères avec Clara, fixer la revue et faire un essai sans aide ; huit minutes gagnées sur ce seul cas."
+            },
+            {
+              "id": "option-2",
+              "text": "Partager uniquement V2 et annoncer huit minutes gagnées sur tous les messages."
+            },
+            {
+              "id": "option-3",
+              "text": "Partager une fiche et exclure les retouches du prochain relevé pour mieux montrer le gain."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ent-challenge-automation-workflow",
+      "chapterId": "ent-chapter-applied-automation",
+      "title": "Un flux d’inscriptions que l’équipe peut reprendre",
+      "scenario": "Tu prépares le pilote de l’association fictive Mosaïque. Relie les pièces pour choisir le flux, traiter les incidents et transmettre la méthode. Aucune action ne sera exécutée.",
+      "prerequisiteLessonIds": [
+        "ent-automation-map",
+        "ent-automation-select",
+        "ent-automation-data-contract",
+        "ent-automation-exceptions",
+        "ent-automation-pilot",
+        "ent-automation-handover"
+      ],
+      "files": [
+        {
+          "name": "Périmètre et contrat",
+          "content": "Nouvelle inscription complète : créer une fiche unique à traiter. Champs obligatoires : inscription_id stable, session_id connu, places entier positif. Après création, le coordinateur gère État dans la liste. Aucune réservation définitive automatique. Formulaire et liste autorisés ; connexions à confirmer par le référent avant essai réel. Une demande incomplète est inscrite dans une file distincte avec motif et responsable ; aucune ligne de réservation n’est créée tant que les champs obligatoires manquent."
+        },
+        {
+          "name": "Événements fictifs",
+          "content": "ATEL-72 déjà présent, état confirmé, même formulaire reçu de nouveau. ATEL-73 places vide, aucune fiche. ATEL-74 fiche créée à 10:00, notification échouée à 10:01. Pour une panne passagère de notification : vérifier l’état réel, au plus deux nouvelles tentatives espacées puis alerte au coordinateur."
+        },
+        {
+          "name": "Critères et transmission",
+          "content": "Avant extension : aucune double fiche, aucune place inventée, dossiers incomplets visibles et assignés, reprise démontrée. Référent : connexions et arrêt ; coordinateur : résultat ; remplaçante : reprise selon fiche commune. Pas de compte personnel partagé ni copies actives concurrentes. Répétition fictive puis accès réels confirmés."
+        }
+      ],
+      "questions": [
+        {
+          "id": "ent-challenge-automation-workflow-question-1",
+          "prompt": "Quel début et quelle sortie respectent le pilote ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Nouvelle inscription complète : une fiche unique à traiter pour le coordinateur."
+            },
+            {
+              "id": "option-2",
+              "text": "Chaque ouverture de la liste : une nouvelle fiche pour chaque ligne."
+            },
+            {
+              "id": "option-3",
+              "text": "Chaque texte reçu : réservation définitive décidée par l’IA."
+            }
+          ]
+        },
+        {
+          "id": "ent-challenge-automation-workflow-question-2",
+          "prompt": "Comment traiter ATEL-72, déjà confirmé, reçu de nouveau ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Créer une autre référence pour distinguer les envois."
+            },
+            {
+              "id": "option-2",
+              "text": "Reconnaître ATEL-72 et conserver confirmé, sans seconde fiche."
+            },
+            {
+              "id": "option-3",
+              "text": "Écraser confirmé par à traiter pour recopier le formulaire."
+            }
+          ]
+        },
+        {
+          "id": "ent-challenge-automation-workflow-question-3",
+          "prompt": "ATEL-73 n’a pas de nombre de places. Quelle suite correspond au contrat ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Mettre une place, la valeur fréquente."
+            },
+            {
+              "id": "option-2",
+              "text": "Réessayer sans limite pour obtenir une valeur."
+            },
+            {
+              "id": "option-3",
+              "text": "Suivre à compléter dans la file séparée, assigner au coordinateur, sans ligne de réservation."
+            }
+          ]
+        },
+        {
+          "id": "ent-challenge-automation-workflow-question-4",
+          "prompt": "ATEL-74 a sa fiche mais sa notification échoue. Quelle reprise convient ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Vérifier la fiche, conserver sa trace et reprendre la notification selon les limites."
+            },
+            {
+              "id": "option-2",
+              "text": "Rejouer la création avec une nouvelle référence."
+            },
+            {
+              "id": "option-3",
+              "text": "Marquer terminé puisque la fiche existe."
+            }
+          ]
+        },
+        {
+          "id": "ent-challenge-automation-workflow-question-5",
+          "prompt": "Quelle décision prépare une transmission après les essais ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Étendre après un test normal réussi et une fiche écrite, puis vérifier les connexions et la reprise après le départ du créateur."
+            },
+            {
+              "id": "option-2",
+              "text": "Étendre sans remplaçant pour conserver un seul responsable."
+            },
+            {
+              "id": "option-3",
+              "text": "Respecter les critères, confirmer accès et connexions puis faire répéter la reprise au remplaçant."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ent-challenge-projects-launch",
+      "chapterId": "ent-chapter-applied-projects",
+      "title": "Du projet de site à la première mise en ligne",
+      "prerequisiteLessonIds": [
+        "ent-projects-outcome",
+        "ent-projects-specification",
+        "ent-projects-prototype",
+        "ent-projects-iteration",
+        "ent-projects-release",
+        "ent-projects-maintenance"
+      ],
+      "scenario": "Cas fictif Équinoxe : préparer une première mise en ligne utile, sans produire ni exécuter du code.",
+      "files": [
+        {
+          "name": "Besoin validé",
+          "content": "Catalogue de trois événements avec dates et coordonnées, sans compte, inscription ni paiement. Les visiteurs doivent trouver le lieu du prochain événement."
+        },
+        {
+          "name": "État du travail",
+          "content": "Prototype de deux écrans non connecté, réalisé avec aide IA. Trois fiches fournies. Aucun essai mobile ou clavier, aucun responsable d’entretien, aucun repli. Ces écrans ne sont pas le site public et ne permettent pas de tester l’hébergement ou une modification de contenu réelle."
+        },
+        {
+          "name": "Nouvelle idée",
+          "content": "Une collègue propose des réservations payantes. Besoin détaillé, paiement, gestion des accès et support non définis."
+        }
+      ],
+      "questions": [
+        {
+          "id": "ent-challenge-projects-launch-question-1",
+          "prompt": "Quel périmètre retenir ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Catalogue et coordonnées, sans réservation."
+            },
+            {
+              "id": "option-2",
+              "text": "Une page annonçant les événements, sans leurs lieux, avec renvoi vers l’accueil pour les détails."
+            },
+            {
+              "id": "option-3",
+              "text": "Une page avec les lieux actuels et ouverture immédiate de réservations sans paiement pour anticiper la suite."
+            }
+          ]
+        },
+        {
+          "id": "ent-challenge-projects-launch-question-2",
+          "prompt": "Quelle demande prépare la première livraison ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Réaliser d’abord l’accueil et les animations ; laisser les fiches détaillées et leurs lieux pour une prochaine version."
+            },
+            {
+              "id": "option-2",
+              "text": "Affiche les trois événements et propose un test de recherche du lieu."
+            },
+            {
+              "id": "option-3",
+              "text": "Réécrire les trois événements pour les rendre attractifs, en laissant le modèle compléter les lieux manquants."
+            }
+          ]
+        },
+        {
+          "id": "ent-challenge-projects-launch-question-3",
+          "prompt": "Que permet le prototype ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Accepter le site public après un essai réussi, sans tester les liens et l’hébergement de la réalisation finale."
+            },
+            {
+              "id": "option-2",
+              "text": "Vérifier que la procédure réelle de modification des événements fonctionne, alors que seuls deux écrans non connectés sont disponibles."
+            },
+            {
+              "id": "option-3",
+              "text": "Observer si un visiteur trouve lieu et date."
+            }
+          ]
+        },
+        {
+          "id": "ent-challenge-projects-launch-question-4",
+          "prompt": "Comment traiter la réservation payante suggérée ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Recadrer avec expertise données, paiement, droits et exploitation."
+            },
+            {
+              "id": "option-2",
+              "text": "L’ajouter sans changer les tests."
+            },
+            {
+              "id": "option-3",
+              "text": "Tester seulement le bouton de paiement sur la maquette, en gardant le cadrage initial sans inscription."
+            }
+          ]
+        },
+        {
+          "id": "ent-challenge-projects-launch-question-5",
+          "prompt": "Que manque-t-il avant publication ?",
+          "options": [
+            {
+              "id": "option-1",
+              "text": "Ouvrir après un test mobile réussi, puis chercher un responsable d’entretien si un incident apparaît."
+            },
+            {
+              "id": "option-2",
+              "text": "Responsable d’entretien, tests mobile/clavier/liens et repli."
+            },
+            {
+              "id": "option-3",
+              "text": "L’assurance du modèle que tout est fini."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "foundationLessonIds": [
+    "ent-answer-or-action",
+    "ent-useful-request"
+  ],
+  "tracks": [
+    {
+      "id": "ent-track-assistants",
+      "title": "Travailler avec les assistants IA",
+      "description": "Du brief au livrable métier, puis à la méthode partagée : six mises en pratique sur des cas fictifs variés.",
+      "outcome": "Préparer des livrables utiles avec un assistant et transmettre une méthode que les collègues peuvent reprendre.",
+      "audience": "Équipes RH, commerciales, administratives et opérationnelles, sans prérequis technique.",
+      "lessonIds": [
+        "ent-assistants-brief",
+        "ent-assistants-documents",
+        "ent-assistants-meeting",
+        "ent-assistants-options",
+        "ent-assistants-iterate",
+        "ent-assistants-team-playbook"
+      ],
+      "challengeIds": [
+        "ent-challenge-assistants-delivery"
+      ]
+    },
+    {
+      "id": "ent-track-automation",
+      "title": "Automatiser les tâches et organiser les pratiques",
+      "description": "Passe d’une tâche répétitive à un flux documenté que l’équipe peut comprendre et reprendre.",
+      "outcome": "Une carte de processus, un contrat de données, un plan d’essai et une fiche de transmission pour un petit flux utile.",
+      "audience": "Équipes administratives, opérations, coordination et responsables métier, sans prérequis de programmation.",
+      "lessonIds": [
+        "ent-automation-map",
+        "ent-automation-select",
+        "ent-automation-data-contract",
+        "ent-automation-exceptions",
+        "ent-automation-pilot",
+        "ent-automation-handover"
+      ],
+      "challengeIds": [
+        "ent-challenge-automation-workflow"
+      ]
+    },
+    {
+      "id": "ent-track-projects",
+      "title": "Faire avancer un projet numérique",
+      "description": "De l’idée au lancement : cadrer, demander une réalisation avec l’IA, tester et organiser la suite.",
+      "outcome": "Un dossier de première version : besoin, spécification, choix d’approche, recette et reprise.",
+      "audience": "Responsables de projet, dirigeants et équipes métier ; aucun prérequis de programmation.",
+      "lessonIds": [
+        "ent-projects-outcome",
+        "ent-projects-specification",
+        "ent-projects-prototype",
+        "ent-projects-iteration",
+        "ent-projects-release",
+        "ent-projects-maintenance"
+      ],
+      "challengeIds": [
+        "ent-challenge-projects-launch"
       ]
     }
   ]

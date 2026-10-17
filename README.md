@@ -12,7 +12,7 @@ Le compte gratuit permet une nouvelle leçon et cinq révisions dues par jour ci
 
 Les 36 défis actifs proposent chacun cinq questions à choix unique, corrigées côté serveur après enregistrement. Il faut 4/5 pour réussir. Ils exigent Premium, les leçons liées au dossier et au moins deux leçons de sa thématique. Aucune exécution de code ni disponibilité Mistral n’est nécessaire. Les versions et tentatives historiques sont conservées.
 
-Niveaux, badges et séries accompagnent la progression. Le classement mondial compare les séries sous pseudo, sur la base d’activités acceptées par le serveur. L’espace Entreprise possède son propre parcours IA : huit chapitres, vingt missions initiales, deux missions complémentaires, 66 cartes et huit mises en situation, avec suivi et classement limités à l’organisation.
+Niveaux, badges et séries accompagnent la progression. Le classement mondial compare les séries sous pseudo, sur la base d’activités acceptées par le serveur. L’espace Entreprise propose deux fondations puis trois parcours de six missions : assistants métier, automatisation collective et projets numériques. Le catalogue enrichi totalise 40 missions, 120 cartes et 11 mises en situation, ressources historiques comprises, avec suivi et classement limités à l’organisation. Cette refonte locale est décrite dans [le contrat produit](docs/ENTERPRISE_PRODUCT.md) ; elle nécessite une publication coordonnée du catalogue serveur et du frontend.
 
 ## Accès et état commercial
 

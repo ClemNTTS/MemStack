@@ -4,6 +4,7 @@ import test from 'node:test'
 import type { EnterpriseCurriculum } from '../types/enterpriseContent.ts'
 
 const curriculum = JSON.parse(readFileSync(new URL('../../shared/enterpriseCurriculum.json', import.meta.url), 'utf8')) as EnterpriseCurriculum
+const presentation = JSON.parse(readFileSync(new URL('./enterprisePresentation.json', import.meta.url), 'utf8'))
 const practices = JSON.parse(readFileSync(new URL('./enterprisePractices.json', import.meta.url), 'utf8')) as Record<string, {
   scenario: string; task: string; starter: string; checklist: string[]; example: string; explanation: string
 }>
@@ -35,22 +36,73 @@ test('every enterprise practice has its case, task and commented comparison befo
     if (lesson.id === 'ent-plausible-not-proven') continue // Dedicated interactive claim-check exercise.
     const activity = practices[lesson.id]
     for (const field of ['scenario', 'task', 'starter', 'example', 'explanation'] as const) assert.ok(activity[field].trim(), `${lesson.id}: ${field}`)
-    assert.ok(activity.checklist.length >= 2 && activity.checklist.length <= 4, lesson.id)
+    assert.ok(activity.checklist.length >= 2 && activity.checklist.length <= 6, lesson.id)
     assert.equal(new Set(activity.checklist).size, activity.checklist.length, lesson.id)
   }
 })
 
-test('enterprise has a complete ordered 20-mission programme and separate continuing practice', () => {
+test('enterprise offers three independent practical tracks sharing a short foundation', () => {
   const guided = curriculum.lessons.filter((lesson) => !lesson.continuous)
   const continuing = curriculum.lessons.filter((lesson) => lesson.continuous)
-  assert.equal(curriculum.chapters.length, 8)
-  assert.equal(guided.length, 20)
+  assert.equal(curriculum.version, 2)
+  assert.equal(assessmentKeys.version, curriculum.version)
+  assert.equal(curriculum.tracks?.length, 3)
+  assert.equal(curriculum.foundationLessonIds?.length, 2)
+  const known = new Map(curriculum.lessons.map(lesson => [lesson.id, lesson]))
+  const trackLessons = new Set<string>()
+  for (const track of curriculum.tracks ?? []) {
+    assert.ok(track.outcome && track.audience && track.description, track.id)
+    assert.equal(track.lessonIds.length, 6, track.id)
+    assert.equal(track.challengeIds.length, 1, track.id)
+    for (const id of track.lessonIds) {
+      assert.ok(known.has(id), id)
+      assert.ok(!trackLessons.has(id), `Specialized missions must not accidentally belong to two paths: ${id}`)
+      trackLessons.add(id)
+    }
+    assert.ok(track.challengeIds.every(id => curriculum.challenges.some(challenge => challenge.id === id)))
+    assert.deepEqual(known.get(track.lessonIds[0])?.prerequisiteLessonIds, curriculum.foundationLessonIds)
+    for (let index = 1; index < track.lessonIds.length; index++) {
+      assert.deepEqual(known.get(track.lessonIds[index])?.prerequisiteLessonIds, [track.lessonIds[index - 1]])
+    }
+    const challenge = curriculum.challenges.find(challenge => challenge.id === track.challengeIds[0])!
+    assert.deepEqual(challenge.prerequisiteLessonIds, track.lessonIds)
+  }
+  assert.equal(trackLessons.size, 18)
+  assert.equal(guided.length, 38)
   assert.equal(continuing.length, 2)
-  assert.deepEqual(curriculum.lessons.slice(20), continuing)
   for (const chapter of curriculum.chapters) {
     assert.ok(guided.some((lesson) => lesson.chapterId === chapter.id), chapter.id)
     assert.equal(curriculum.challenges.filter((challenge) => challenge.chapterId === chapter.id).length, 1)
   }
+})
+
+test('public enterprise figures stay aligned with the learning catalogue', () => {
+  const tracks = curriculum.tracks ?? []
+  const recommended = new Set([...(curriculum.foundationLessonIds ?? []), ...tracks.flatMap(track => track.lessonIds)])
+  const minutes = curriculum.lessons.map(lesson => lesson.estimatedMinutes)
+  assert.equal(presentation.lessons, curriculum.lessons.length)
+  assert.equal(presentation.cards, curriculum.lessons.reduce((total, lesson) => total + lesson.cards.length, 0))
+  assert.equal(presentation.challenges, curriculum.challenges.length)
+  assert.equal(presentation.tracks, tracks.length)
+  assert.equal(presentation.foundationLessons, curriculum.foundationLessonIds?.length)
+  assert.ok(tracks.every(track => track.lessonIds.length === presentation.lessonsPerTrack))
+  assert.equal(presentation.referenceLessons, curriculum.lessons.filter(lesson => !recommended.has(lesson.id)).length)
+  assert.equal(presentation.minimumMinutes, Math.min(...minutes))
+  assert.equal(presentation.maximumMinutes, Math.max(...minutes))
+})
+
+test('enterprise explicit prerequisites form a known acyclic curriculum', () => {
+  const known = new Map(curriculum.lessons.map(lesson => [lesson.id, lesson]))
+  const visit = (id: string, ancestors = new Set<string>()) => {
+    assert.ok(!ancestors.has(id), `Cyclic lesson prerequisite: ${id}`)
+    const lesson = known.get(id)
+    assert.ok(lesson, `Unknown prerequisite: ${id}`)
+    const required = lesson.prerequisiteLessonIds ?? []
+    assert.equal(new Set(required).size, required.length, id)
+    for (const previous of required) visit(previous, new Set([...ancestors, id]))
+  }
+  for (const id of known.keys()) visit(id)
+  for (const id of curriculum.foundationLessonIds ?? []) assert.ok(known.has(id), id)
 })
 
 test('enterprise identifiers are unique, stable and isolated from developer content', () => {
@@ -67,7 +119,7 @@ test('enterprise identifiers are unique, stable and isolated from developer cont
 
 test('each enterprise mission teaches, diagnoses twice with feedback and includes retrieval cards', () => {
   for (const lesson of curriculum.lessons) {
-    assert.ok(lesson.estimatedMinutes >= 10 && lesson.estimatedMinutes <= 15, lesson.id)
+    assert.ok(Number.isInteger(lesson.estimatedMinutes) && lesson.estimatedMinutes >= 5 && lesson.estimatedMinutes <= 25, lesson.id)
     assert.ok(lesson.steps.length >= 4 && lesson.steps.length <= 8, lesson.id)
     const messages = lesson.steps.filter((step) => step.type === 'message')
     assert.ok(messages.length >= 3, lesson.id)

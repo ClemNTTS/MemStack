@@ -160,6 +160,25 @@ export function validateEnterpriseAction(data,catalog) {
   return entry
 }
 
+export function enterprisePrerequisites(entry, catalog, kind = 'lesson') {
+  let required = entry.prerequisiteLessonIds
+  if (required === undefined && kind === 'challenge') {
+    required = catalog.lessons.filter(row => row.chapterId === entry.chapterId && !row.continuous).map(row => row.id)
+  }
+  if (required === undefined) {
+    const foundationIndex = catalog.foundationLessonIds?.indexOf(entry.id) ?? -1
+    const index = catalog.lessons.findIndex(row => row.id === entry.id)
+    required = foundationIndex >= 0
+      ? catalog.foundationLessonIds.slice(0, foundationIndex)
+      : index > 0 ? [catalog.lessons[index - 1].id] : []
+  }
+  if (!Array.isArray(required) || new Set(required).size !== required.length
+    || required.some(requiredId => requiredId === entry.id || !catalog.lessons.some(row => row.id === requiredId))) {
+    fail('unavailable', 'Les prérequis de cette mission sont indisponibles.')
+  }
+  return required
+}
+
 export async function commitEnterpriseLearningAction({db,auth,lookup,data,catalog,keys,now = Date.now()}) {
   const {uid} = await enterpriseActor({db,auth,lookup})
   if (!Number.isSafeInteger(catalog.version) || catalog.version<1 || keys.version!==catalog.version) fail('unavailable','Version du contenu indisponible.')
@@ -178,9 +197,14 @@ export async function commitEnterpriseLearningAction({db,auth,lookup,data,catalo
     let result, activity = true
     const summary = {lessons:member.summary?.lessons ?? 0,cards:member.summary?.cards ?? 0,attempts:member.summary?.attempts ?? 0}
     if (data.type === 'lesson') {
-      const index = catalog.lessons.findIndex(row=>row.id===entry.id)
-      const [current,previous] = await Promise.all([tx.get(db.doc(`${base}/lessons/${entry.id}`)),index ? tx.get(db.doc(`${base}/lessons/${catalog.lessons[index-1].id}`)) : Promise.resolve(null)])
-      if (index && !previous.exists) fail('failed-precondition','Termine d’abord la mission précédente.')
+      const current = await tx.get(db.doc(`${base}/lessons/${entry.id}`))
+      if (!current.exists) {
+        const required = enterprisePrerequisites(entry, catalog)
+        const previous = await Promise.all(required.map(requiredId => tx.get(db.doc(`${base}/lessons/${requiredId}`))))
+        if (previous.some(row => !row.exists || !Number.isFinite(Date.parse(row.data().completedAt)) || Date.parse(row.data().completedAt) > now)) {
+          fail('failed-precondition', 'Termine les missions prérequises avant celle-ci.')
+        }
+      }
       result = {type:'lesson',lessonId:entry.id,completedAt:current.data()?.completedAt ?? new Date(now).toISOString()}
       activity = !current.exists
       if (!current.exists) {
@@ -198,9 +222,9 @@ export async function commitEnterpriseLearningAction({db,auth,lookup,data,catalo
       result = {type:'card',card,event}
       if (!previous.exists) summary.cards++
     } else {
-      const lessons = catalog.lessons.filter(row=>row.chapterId===entry.chapterId && !row.continuous)
-      const completed = await Promise.all(lessons.map(row=>tx.get(db.doc(`${base}/lessons/${row.id}`))))
-      if (completed.some(row=>!row.exists)) fail('failed-precondition','Termine les missions de ce chapitre avant sa mise en situation.')
+      const required = enterprisePrerequisites(entry, catalog, 'challenge')
+      const completed = await Promise.all(required.map(requiredId => tx.get(db.doc(`${base}/lessons/${requiredId}`))))
+      if (completed.some(row=>!row.exists || !Number.isFinite(Date.parse(row.data().completedAt)) || Date.parse(row.data().completedAt) > now)) fail('failed-precondition','Termine les missions prérequises avant cette mise en situation.')
       const key = keys.challenges[entry.id]
       if (!key || !entry.questions.every(q=>q.options.some(o=>o.id===key[q.id]))) fail('unavailable','Correction indisponible.')
       const explanations = keys.explanations?.[entry.id]

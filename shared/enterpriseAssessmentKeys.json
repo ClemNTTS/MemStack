@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "challenges": {
     "ent-challenge-first-draft": {
       "ent-challenge-first-draft-question-1": "option-2",
@@ -56,6 +56,27 @@
       "ent-challenge-final-decision-question-3": "option-1",
       "ent-challenge-final-decision-question-4": "option-3",
       "ent-challenge-final-decision-question-5": "option-1"
+    },
+    "ent-challenge-assistants-delivery": {
+      "ent-challenge-assistants-delivery-question-1": "option-1",
+      "ent-challenge-assistants-delivery-question-2": "option-2",
+      "ent-challenge-assistants-delivery-question-3": "option-3",
+      "ent-challenge-assistants-delivery-question-4": "option-2",
+      "ent-challenge-assistants-delivery-question-5": "option-1"
+    },
+    "ent-challenge-automation-workflow": {
+      "ent-challenge-automation-workflow-question-1": "option-1",
+      "ent-challenge-automation-workflow-question-2": "option-2",
+      "ent-challenge-automation-workflow-question-3": "option-3",
+      "ent-challenge-automation-workflow-question-4": "option-1",
+      "ent-challenge-automation-workflow-question-5": "option-3"
+    },
+    "ent-challenge-projects-launch": {
+      "ent-challenge-projects-launch-question-1": "option-1",
+      "ent-challenge-projects-launch-question-2": "option-2",
+      "ent-challenge-projects-launch-question-3": "option-3",
+      "ent-challenge-projects-launch-question-4": "option-1",
+      "ent-challenge-projects-launch-question-5": "option-2"
     }
   },
   "explanations": {
@@ -114,6 +135,27 @@
       "ent-challenge-final-decision-question-3": "L'offre comprend l'entretien des acquis par les cartes et l'accès à de nouvelles leçons. Elle n'attribue pas automatiquement la maîtrise de situations futures simplement parce que le programme initial est terminé.",
       "ent-challenge-final-decision-question-4": "Une permission nouvelle change les actions possibles et peut modifier le risque. Le périmètre et les tests doivent être revus, même si le nom de l'assistant IA reste identique.",
       "ent-challenge-final-decision-question-5": "Le classement de l'organisation présente une régularité d'apprentissage. Il ne constitue ni une mesure de performance professionnelle ni une autorisation de contourner les validations."
+    },
+    "ent-challenge-assistants-delivery": {
+      "ent-challenge-assistants-delivery-question-1": "La demande prépare les deux livrables utiles et garde les inconnues visibles. Comparer seulement les prix masque la capacité ; annoncer le lieu et un enregistrement transformerait des propositions en engagements.",
+      "ent-challenge-assistants-delivery-question-2": "A et B respectent capacité et plafond. La priorité transport favorise A : 8 min contre 25 min, pour 60 € de plus. C ne peut accueillir les 18 personnes. Disponibilité et équipement restent à vérifier.",
+      "ent-challenge-assistants-delivery-question-3": "La présentation et la trame sont actées ; l’enregistrement est seulement suggéré. Le nom de Rami pour la trame ne lui attribue pas la réservation, dont la date reste ouverte.",
+      "ent-challenge-assistants-delivery-question-4": "V2 réussit A mais transforme en B une attente en achèvement et envoi. La correction conserve le rappel utile tout en rétablissant le statut exact, puis teste les deux cas.",
+      "ent-challenge-assistants-delivery-question-5": "Le temps complet passe de 25 à 17 minutes : huit minutes sur un seul cas comparable. La fiche et l’essai sans aide préparent la transmission ; rien ne garantit ce gain sur toutes les tâches."
+    },
+    "ent-challenge-automation-workflow": {
+      "ent-challenge-automation-workflow-question-1": "Le périmètre démarre à une inscription complète et attend une fiche unique à traiter. Ouvrir la liste ne doit pas créer de nouvelle inscription ; la décision définitive reste au coordinateur.",
+      "ent-challenge-automation-workflow-question-2": "ATEL-72 existe déjà. Son identifiant permet de reconnaître la répétition ; le formulaire ne doit ni créer un doublon ni écraser le statut confirmé géré dans la liste.",
+      "ent-challenge-automation-workflow-question-3": "Le nombre de places obligatoire manque : aucun chiffre ne peut être inventé. La file séparée garde le dossier visible et attribué sans violer le contrat de la liste de réservations.",
+      "ent-challenge-automation-workflow-question-4": "La fiche existe : recréer risquerait un doublon. La notification reste nécessaire ; vérifier son état puis reprendre seulement cette étape, avec au plus deux tentatives espacées avant alerte selon les pièces.",
+      "ent-challenge-automation-workflow-question-5": "Le dossier impose critères de qualité, accès confirmés et reprise démontrée. Une fiche écrite ou un cas normal réussi ne prouve pas que le remplaçant dispose des connexions et sait reprendre un incident."
+    },
+    "ent-challenge-projects-launch": {
+      "ent-challenge-projects-launch-question-1": "Le besoin exige de trouver événements et lieux sans inscription. Une page sans lieu laisse le besoin non résolu ; ajouter des réservations élargit le périmètre même sans paiement.",
+      "ent-challenge-projects-launch-question-2": "La première livraison exploite les trois fiches et permet de chercher un lieu. Une belle page d’accueil sans lieux n’atteint pas le but ; compléter les lieux par génération ajouterait des informations non fournies.",
+      "ent-challenge-projects-launch-question-3": "Deux écrans permettent d’observer la recherche d’un lieu et d’une date. Ils ne testent pas encore le site public, son hébergement ou la procédure réelle de mise à jour : ces contrôles attendent la réalisation correspondante.",
+      "ent-challenge-projects-launch-question-4": "Une réservation payante change le service, les données et les responsabilités. Elle exige un cadrage avec les compétences adaptées ; tester un bouton ne couvre ni paiement, ni accès, ni exploitation.",
+      "ent-challenge-projects-launch-question-5": "La publication demande des contrôles et des responsabilités de fonctionnement. Le seul test mobile ne traite ni clavier, ni liens, ni entretien, ni repli en cas d’incident."
     }
   }
 }

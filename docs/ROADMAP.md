@@ -10,7 +10,7 @@
 - 36 défis actifs v4 de cinq questions, correction déterministe serveur et réussite à 4/5. Prérequis : leçons liées et au moins deux leçons de la thématique. Historique versionné et brouillons conservés ; aucun appel Mistral nécessaire.
 - Niveaux, XP, badges, séries, pseudo et classement mondial alimenté par les activités serveur.
 - Signalements versionnés, suivi des corrections, propositions assistées et administration avec journal ; revue humaine avant fusion des propositions.
-- Espace Entreprise séparé par organisation : huit chapitres, vingt missions initiales, deux complémentaires, 66 cartes, huit situations, invitations, suivi d’équipe et classement interne.
+- Espace Entreprise séparé par organisation : invitations, suivi d’équipe et classement interne. La refonte locale du 17 octobre ajoute trois parcours pratiques après deux fondations, pour un catalogue de 40 missions, 120 cartes et 11 situations, ressources historiques comprises ; sa publication serveur/frontend reste distincte des recettes V1. Voir [ENTERPRISE_PRODUCT.md](ENTERPRISE_PRODUCT.md).
 - Stripe Managed Payments personnel et Entreprise, droits vérifiés serveur, webhooks signés et idempotents, portail et rapprochement des quantités Entreprise.
 - Présentation publique et pages d’information ; apprentissage réservé aux comptes connectés et en ligne.
 
