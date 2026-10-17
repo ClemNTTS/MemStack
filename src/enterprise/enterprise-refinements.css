@@ -33,6 +33,7 @@
 .enterprise-conversation-turn { min-width: 0; scroll-margin-block: 24px 120px; animation: message-arrive 280ms ease-out; }
 .enterprise-conversation .chat-row { margin: 0; }
 .enterprise-conversation .lesson-bubble { background: #fffdf8; border-color: #ddc9ed; }
+.enterprise-conversation .lesson-rich-text > p + p { margin-top: .85rem; }
 .enterprise-conversation .chat-row-feedback .lesson-bubble { background: #edf5ee; }
 .enterprise-conversation .chat-avatar .memo { animation: enterprise-memo-greet 3s ease-in-out; }
 .enterprise-conversation fieldset { margin: 18px 0 18px 64px; }
