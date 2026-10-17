@@ -1,5 +1,7 @@
 # Analyse IA des défis — bêta privée
 
+> **Statut au 17 octobre 2026 : historique du service IA.** Les 36 défis actifs utilisent cinq questions à correction serveur déterministe ; l’IA ne décide pas de leur résultat. Les essais v6/v7 consignés ici et dans [la qualification fournisseur](CHALLENGE_AI_QUALIFICATION.md) ne qualifient pas leur stabilité. Les mentions « locale », « non déployée » et les paramètres ci-dessous appartiennent aux étapes datées, sans constituer un inventaire actuel du backend. Commencer par [STATUS.md](STATUS.md) et [le contrat actuel des défis](content/CHALLENGES.md).
+
 ## Évaluation booléenne puis explication — v7 locale
 
 La révision `challenge-feedback-v7` remplace les deux évaluations indépendantes v6 par deux étapes différentes. Le premier appel reçoit la liste ordonnée des critères du dossier, le scénario, les fichiers et les alternatives admises. Il retourne uniquement `{criteria: [true, false, ...]}` sous JSON Schema strict, avec exactement un booléen par critère. La correction complète est réservée au second appel pour éviter qu’elle ajoute des exigences à la première évaluation. Les dossiers historiques restent immuables ; la vue explicite des volumes conserve trois critères et leurs indices.

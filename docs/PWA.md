@@ -12,7 +12,7 @@ Selon le navigateur, l’installation peut produire une application autonome ou 
 
 ## Connexion et fonctionnement
 
-Internet et un compte Google restent obligatoires. Aucune exception n’est ajoutée au contrôle d’accès. L’application installée peut avoir une session distincte du navigateur, notamment sur iOS : une reconnexion Google peut être nécessaire à la première ouverture.
+L’apprentissage exige Internet et un compte connecté par Google ou par email/mot de passe avec adresse vérifiée. Les pages publiques de présentation et d’information légale restent accessibles sans compte. L’installation n’ajoute aucune exception au contrôle d’accès des espaces d’apprentissage. L’application installée peut avoir une session distincte du navigateur, notamment sur iOS : une nouvelle connexion peut être nécessaire à la première ouverture. Voir [AUTHENTICATION.md](AUTHENTICATION.md).
 
 Il n’y a **pas de service worker**, de cache applicatif ni de mode d’apprentissage hors ligne. Un service worker n’est pas nécessaire à l’installation selon les critères actuels documentés par MDN. Cette décision évite d’introduire une copie persistante du catalogue ou des réponses et conserve le fonctionnement réseau existant. Le cache HTTP normal du navigateur reste soumis aux en-têtes du serveur ; il ne permet pas de contourner le contrôle de connexion de MemStack.
 
@@ -25,7 +25,7 @@ Les mises à jour suivent le chargement habituel du site. Fermer puis rouvrir l�
 - `scripts/generate-pwa-icons.mjs` régénère les PNG avec `sharp`, dépendance de développement verrouillée dans `package-lock.json`. Après `npm ci`, exécuter `node scripts/generate-pwa-icons.mjs`. La variante maskable garde toute la composition dans le cercle central protégé de 80 % du diamètre.
 - `src/pwa/install.ts` capture l’invitation native dès le démarrage, même avant l’ouverture du profil. `InstallApp` affiche le bouton uniquement après cet événement.
 
-Avant livraison : exécuter `npm run build`, vérifier le manifeste et les dimensions des PNG dans `dist`, puis vérifier l’affichage du profil et de ses instructions en largeur téléphone. Sur un appareil réel : installer depuis Safari et Chrome Android, relancer via l’icône, se connecter à Google, ouvrir un défi et une révision, couper Internet et vérifier le blocage, puis rétablir le réseau. Une fenêtre de navigateur redimensionnée vérifie la mise en page mais ne remplace pas ces contrôles d’installation et d’authentification sur iOS/Android.
+Avant livraison : exécuter `npm run build`, vérifier le manifeste et les dimensions des PNG dans `dist`, puis vérifier l’affichage du profil et de ses instructions en largeur téléphone. Sur un appareil réel : installer depuis Safari et Chrome Android, relancer via l’icône, vérifier Google et la connexion par email vérifié, ouvrir un défi avec un compte Premium et les prérequis requis, puis une révision due, couper Internet et vérifier le blocage, puis rétablir le réseau. Une fenêtre de navigateur redimensionnée vérifie la mise en page mais ne remplace pas ces contrôles d’installation et d’authentification sur iOS/Android.
 
 `npm test` vérifie le contrat d’installation, la résolution des URLs sous une base de déploiement, le décodage et les dimensions réelles des cinq PNG, leur opacité et la zone de sécurité maskable. Les icônes sont livrées dans Git ; leur génération ne fait pas partie du build et aucun binaire de traitement d’image n’est envoyé au téléphone.
 

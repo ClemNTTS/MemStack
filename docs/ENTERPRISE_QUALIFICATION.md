@@ -1,5 +1,7 @@
 # Qualification Entreprise — 15 octobre 2026
 
+> **Lecture au 17 octobre 2026 :** cette qualification préalable est conservée comme preuve historique. Les réserves ci-dessous sur le paiement TEST et le worker ont ensuite été complétées par [la recette déployée](ENTERPRISE_DEPLOYMENT_20261015.md), y compris le parcours connecté local. Le frontend a depuis été publié sur `main` ; cela ne prouve ni son retour de paiement Entreprise ni une ouverture LIVE. Voir [STATUS.md](STATUS.md).
+
 État actualisé : le backend a ensuite été déployé en mode Stripe TEST avec l’autorisation du propriétaire. Le paiement fictif, le webhook, le worker Eventarc et l’annulation ont été vérifiés sur l’infrastructure réelle ; voir [le compte rendu de déploiement](ENTERPRISE_DEPLOYMENT_20261015.md). Le reste de ce document conserve les preuves et limites de la qualification préalable au déploiement.
 
 ## Périmètre livré

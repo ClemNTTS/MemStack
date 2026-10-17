@@ -1,5 +1,7 @@
 # Vérification indépendante des défis IA
 
+> Archive de qualification des anciens défis à réponse libre. Les questionnaires actifs sont corrigés de façon déterministe côté serveur, sans appel Mistral. Les résultats datés ci-dessous ne qualifient ni le format actif ni les révisions IA ultérieures ; voir [content/CHALLENGES.md](content/CHALLENGES.md), [CHALLENGE_AI_QUALIFICATION.md](CHALLENGE_AI_QUALIFICATION.md) et [STATUS.md](STATUS.md).
+
 Inspection initiale du 7 octobre 2026, complétée le 8 octobre par une évaluation fournisseur et un test de production. Les résultats initiaux ci-dessous concernent l’implémentation locale ; les sections datées suivantes décrivent les vérifications réelles.
 
 ## Résultats

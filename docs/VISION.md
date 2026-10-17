@@ -2,6 +2,8 @@
 
 Document de cadrage du **7 octobre 2026**, à discuter avant de transformer les propositions en spécifications. [PRODUCT.md](PRODUCT.md) décrit le produit actuel et le MVP ; [ARCHITECTURE.md](ARCHITECTURE.md) décrit ses contraintes techniques. Ce document propose une cible finie au-delà du MVP, sans annoncer ces fonctionnalités comme disponibles.
 
+> Lecture au 17 octobre 2026 : ce cadrage est conservé comme proposition historique. Les décisions implémentées depuis (connexion Google ou email vérifié, quotas gratuit/Premium, défis à correction déterministe, niveaux, séries, classements et environnement Entreprise) remplacent ses descriptions de l’existant et ses exclusions correspondantes. Pour l’état actuel et les travaux restants, lire [PRODUCT.md](PRODUCT.md), [ROADMAP.md](ROADMAP.md) et [STATUS.md](STATUS.md). Les sections ci-dessous ne constituent pas des consignes de régression du produit.
+
 ## Intention et public
 
 MemStack devient un atelier personnel pour comprendre, retenir et mobiliser des connaissances de développement. Il s’adresse à une personne qui apprend le développement web, reprend des notions oubliées ou souhaite consolider son raisonnement professionnel.

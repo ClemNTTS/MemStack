@@ -1,5 +1,7 @@
 # Vérification mobile — 8 octobre 2026
 
+> Compte rendu historique : les observations et nombres de tests ci-dessous concernent le 8 octobre. Depuis, la connexion par email vérifié complète Google et les défis actifs utilisent cinq questions corrigées côté serveur. Ce document ne qualifie pas ces évolutions sur appareil réel. Voir [PWA.md](PWA.md) pour les contrôles actuels et [STATUS.md](STATUS.md) pour l’état du projet.
+
 Objectif : utiliser principalement MemStack sur téléphone et pouvoir l’ajouter à l’écran d’accueil. Audit visuel du site publié avant modifications, puis du frontend local modifié. Trois agents spécialisés ont séparé installation, navigation et parcours ; une revue croisée a contrôlé les changements.
 
 ## Parcours inspectés

@@ -1,5 +1,7 @@
 # Recette de production — 9 octobre 2026
 
+> **Document historique.** Les fonctionnalités, callables, nombres de tests et verdicts IA ci-dessous correspondent aux recettes du 9 octobre. Les défis actifs sont désormais des QCM à correction déterministe et le backend a été étendu. Consulter [STATUS.md](STATUS.md) pour l’état au 17 octobre et [RELEASE_READINESS.md](RELEASE_READINESS.md) pour les limites encore ouvertes ; cette recette ne qualifie pas les services ajoutés ensuite.
+
 Les sept fonctionnalités sont déployées sur memstack.fr avec les cinq callables Firebase et les règles Firestore. Le rôle administrateur des deux comptes autorisés a été attribué et relu sur Firebase, en conservant leurs autres claims. Aucune identité personnelle n’est publiée dans ce compte rendu.
 
 ## Résultats
