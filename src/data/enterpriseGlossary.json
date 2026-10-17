@@ -6,7 +6,7 @@
         "système génératif"
       ],
       "title": "Système génératif",
-      "definition": "Un outil d’IA qui crée un contenu à partir de ta demande et de ce qu’il a appris sur de nombreux exemples. Par exemple, il peut rédiger un courriel pour annoncer une réunion. Il peut aussi ajouter une heure qui ne figurait pas dans ta demande : un texte naturel n’est pas forcément exact."
+      "definition": "Un outil d’IA qui crée un contenu à partir de ton prompt et de ce qu’il a appris sur de nombreux exemples. Par exemple, il peut rédiger un courriel pour annoncer une réunion. Il peut aussi ajouter une heure qui ne figurait pas dans ton prompt : un texte naturel n’est pas forcément exact."
     },
     {
       "id": "entrainement",
@@ -55,7 +55,7 @@
         "pilote"
       ],
       "title": "Pilote",
-      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant IA de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-answer-or-action": [
@@ -66,7 +66,7 @@
         "brouillons"
       ],
       "title": "Brouillon",
-      "definition": "Une première version d’un texte que tu peux relire et modifier avant de l’utiliser. Par exemple, l’assistant propose une invitation à la réunion de jeudi. Le brouillon n’est pas encore un mail envoyé aux collègues."
+      "definition": "Une première version d’un texte que tu peux relire et modifier avant de l’utiliser. Par exemple, l’assistant IA propose une invitation à la réunion de jeudi. Le brouillon n’est pas encore un mail envoyé aux collègues."
     },
     {
       "id": "ent-start-recipients",
@@ -90,7 +90,16 @@
         "messagerie"
       ],
       "title": "Messagerie",
-      "definition": "L’application qui te permet de lire, écrire et envoyer tes mails. Par exemple, tu y copies l’invitation préparée avec l’assistant, tu relis les adresses puis tu l’envoies. L’assistant ne peut pas utiliser ta messagerie si cette possibilité n’a pas été prévue."
+      "definition": "L’application qui te permet de lire, écrire et envoyer tes mails. Par exemple, tu y copies l’invitation préparée avec l’assistant IA, tu relis les adresses puis tu l’envoies. L’assistant IA ne peut pas utiliser ta messagerie si cette possibilité n’a pas été prévue."
+    },
+    {
+      "id": "ent-start-prompt",
+      "terms": [
+        "prompt",
+        "prompts"
+      ],
+      "title": "Prompt",
+      "definition": "Le message que tu écris à un assistant IA pour lui expliquer ce que tu veux obtenir. Par exemple : « Prépare un mail pour inviter mon équipe jeudi à 10 h, en cinq lignes maximum. » Tu peux ensuite préciser ou modifier ton prompt selon le résultat."
     }
   ],
   "ent-minimum-data": [
@@ -227,7 +236,7 @@
         "pilote"
       ],
       "title": "Pilote",
-      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant IA de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-hostile-document": [
@@ -278,18 +287,18 @@
         "pilote"
       ],
       "title": "Pilote",
-      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant IA de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-useful-request": [
     {
       "id": "ent-start-request",
       "terms": [
-        "demande",
-        "demandes"
+        "prompt",
+        "prompts"
       ],
-      "title": "Demande à l’assistant",
-      "definition": "Ce que tu écris à l’assistant pour lui expliquer le travail souhaité. Par exemple : prépare une invitation pour l’équipe, jeudi à 10 h, en cinq lignes maximum. On appelle aussi cette demande un prompt."
+      "title": "Prompt",
+      "definition": "Le message que tu écris à un assistant IA pour lui expliquer ce que tu veux obtenir. Par exemple : « Prépare un mail pour inviter mon équipe jeudi à 10 h, en cinq lignes maximum. » Tu peux ensuite préciser ou modifier ton prompt selon le résultat."
     },
     {
       "id": "ent-start-mail-subject",
@@ -305,7 +314,7 @@
         "lieu à confirmer"
       ],
       "title": "Lieu à confirmer",
-      "definition": "Une façon de dire que l’endroit de la réunion n’a pas encore été choisi. L’assistant peut garder cette indication dans le brouillon au lieu d’inventer une salle. Tu complètes le lieu avant d’envoyer l’invitation définitive."
+      "definition": "Une façon de dire que l’endroit de la réunion n’a pas encore été choisi. L’assistant IA peut garder cette indication dans le brouillon au lieu d’inventer une salle. Tu complètes le lieu avant d’envoyer l’invitation définitive."
     },
     {
       "id": "ent-start-short-format",
@@ -314,7 +323,7 @@
         "longueur"
       ],
       "title": "Forme et longueur du message",
-      "definition": "La manière dont tu veux présenter le texte et la place qu’il doit prendre. Par exemple : un objet puis un message de cinq lignes maximum. Cela aide l’assistant à proposer un mail facile à reprendre."
+      "definition": "La manière dont tu veux présenter le texte et la place qu’il doit prendre. Par exemple : un objet puis un message de cinq lignes maximum. Cela aide l’assistant IA à proposer un mail facile à reprendre."
     }
   ],
   "ent-context-rag": [
@@ -324,7 +333,7 @@
         "capacité de contexte"
       ],
       "title": "Capacité de contexte",
-      "definition": "La quantité d’informations que l’assistant IA peut utiliser à un moment donné pour répondre. Par exemple, il peut tenir compte de ta demande et d’un document joint sans garder tous les documents d’une très longue conversation. Si un document est indispensable, rends-le de nouveau disponible."
+      "definition": "La quantité d’informations que l’assistant IA peut utiliser à un moment donné pour répondre. Par exemple, il peut tenir compte de ton prompt et d’un document joint sans garder tous les documents d’une très longue conversation. Si un document est indispensable, rends-le de nouveau disponible."
     },
     {
       "id": "applicable-version",
@@ -356,7 +365,7 @@
         "modèle"
       ],
       "title": "Modèle IA",
-      "definition": "Le système d’IA qui prépare les réponses derrière l’application avec laquelle tu échanges. Il a été préparé à partir de nombreux exemples. Par exemple, dans un assistant qui recherche des documents, il rédige une réponse à partir des passages trouvés ; il peut encore mal comprendre une règle."
+      "definition": "Le système d’IA qui prépare les réponses derrière l’application avec laquelle tu échanges. Il a été préparé à partir de nombreux exemples. Par exemple, dans un assistant IA qui recherche des documents, il rédige une réponse à partir des passages trouvés ; il peut encore mal comprendre une règle."
     }
   ],
   "ent-iterate-examples": [
@@ -366,7 +375,7 @@
         "cas de test"
       ],
       "title": "Cas de test",
-      "definition": "Une situation préparée pour vérifier comment une demande fonctionne dans un cas précis. On réutilise les mêmes situations pour comparer plusieurs versions. Exemple : tester chaque prompt avec un colis endommagé, une livraison en retard et une demande hors délai, à partir des mêmes informations fictives."
+      "definition": "Une situation préparée pour vérifier comment un prompt fonctionne dans un cas précis. On réutilise les mêmes situations pour comparer plusieurs versions. Exemple : tester chaque prompt avec un colis endommagé, une livraison en retard et une demande hors délai, à partir des mêmes informations fictives."
     },
     {
       "id": "ent-iterate-examples-style-example",
@@ -526,7 +535,7 @@
         "pilote"
       ],
       "title": "Pilote",
-      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant IA de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-human-escalation": [
@@ -584,7 +593,7 @@
         "pilote"
       ],
       "title": "Pilote",
-      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant IA de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-right-tool": [
@@ -603,7 +612,7 @@
         "génération"
       ],
       "title": "Génération par IA",
-      "definition": "Le fait de créer un contenu avec l’IA, par exemple un brouillon de courriel ou un plan de réunion. On donne une demande et l’outil propose un résultat. On le relit pour garder le sens voulu et les bonnes informations."
+      "definition": "Le fait de créer un contenu avec l’IA, par exemple un brouillon de courriel ou un plan de réunion. On donne un prompt et l’outil propose un résultat. On le relit pour garder le sens voulu et les bonnes informations."
     },
     {
       "id": "exact-search",
@@ -619,7 +628,7 @@
         "coût d'exploitation"
       ],
       "title": "Coût d’exploitation",
-      "definition": "Les dépenses et le temps nécessaires pour continuer à utiliser une solution. Par exemple, pour un assistant de rédaction, compter l’abonnement mais aussi le temps de relecture, les corrections et l’aide aux collègues."
+      "definition": "Les dépenses et le temps nécessaires pour continuer à utiliser une solution. Par exemple, pour un assistant IA de rédaction, compter l’abonnement mais aussi le temps de relecture, les corrections et l’aide aux collègues."
     },
     {
       "id": "representative-trials",
@@ -651,7 +660,7 @@
         "pilote"
       ],
       "title": "Pilote",
-      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant IA de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-environment-cost": [
@@ -679,7 +688,7 @@
         "centres de données"
       ],
       "title": "Infrastructure et centres de données",
-      "definition": "Les équipements qui permettent à un service numérique de fonctionner : ordinateurs, connexions et bâtiments qui les accueillent. Par exemple, les réponses d’un assistant en ligne sont préparées sur les ordinateurs de son fournisseur. Leur fabrication et leur utilisation consomment des ressources."
+      "definition": "Les équipements qui permettent à un service numérique de fonctionner : ordinateurs, connexions et bâtiments qui les accueillent. Par exemple, les réponses d’un assistant IA en ligne sont préparées sur les ordinateurs de son fournisseur. Leur fabrication et leur utilisation consomment des ressources."
     },
     {
       "id": "measurement-uncertainty",
@@ -727,7 +736,7 @@
         "pilote"
       ],
       "title": "Pilote",
-      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant IA de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-problem-before-solution": [
@@ -804,7 +813,7 @@
         "pilote"
       ],
       "title": "Pilote",
-      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant IA de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-agents-permissions": [
@@ -858,7 +867,7 @@
         "trace des actions"
       ],
       "title": "Trace des actions",
-      "definition": "Un historique de ce que l’assistant a demandé et de ce qui s’est passé. Par exemple : « 9 h : brouillon créé ; envoi non effectué ». Il aide à retrouver une étape réussie ou un problème. Il faut distinguer une action demandée d’une action réellement terminée."
+      "definition": "Un historique de ce que l’assistant IA a demandé et de ce qui s’est passé. Par exemple : « 9 h : brouillon créé ; envoi non effectué ». Il aide à retrouver une étape réussie ou un problème. Il faut distinguer une action demandée d’une action réellement terminée."
     },
     {
       "id": "isolated-environment",
@@ -883,7 +892,7 @@
         "pilote"
       ],
       "title": "Pilote",
-      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant IA de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-accountable-project": [
@@ -949,7 +958,7 @@
         "pilote"
       ],
       "title": "Pilote",
-      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant IA de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-test-representative": [
@@ -1027,7 +1036,7 @@
         "pilote"
       ],
       "title": "Pilote",
-      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant IA de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-measure-incident": [
@@ -1106,7 +1115,7 @@
         "pilote"
       ],
       "title": "Pilote",
-      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant IA de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-decision-dossier": [
@@ -1175,7 +1184,7 @@
         "déployer"
       ],
       "title": "Déploiement",
-      "definition": "La mise à disposition d’un outil pour le travail réel. Par exemple, après un essai avec cinq collègues, l’entreprise peut décider de proposer l’assistant de rédaction à toute une équipe. Cela ne concerne pas seulement l’installation d’un logiciel : il faut aussi prévoir les accès, l’accompagnement et le suivi."
+      "definition": "La mise à disposition d’un outil pour le travail réel. Par exemple, après un essai avec cinq collègues, l’entreprise peut décider de proposer l’assistant IA de rédaction à toute une équipe. Cela ne concerne pas seulement l’installation d’un logiciel : il faut aussi prévoir les accès, l’accompagnement et le suivi."
     }
   ],
   "ent-continue-learning": [
@@ -1209,7 +1218,7 @@
         "modèle"
       ],
       "title": "Modèle IA",
-      "definition": "Le système entraîné qui produit les réponses de l'assistant IA à partir des informations reçues. Deux modèles peuvent répondre différemment à une même demande. Lorsqu'on change de modèle, on vérifie à nouveau les tâches prévues, avec des exemples connus et des cas difficiles, avant de lui faire confiance."
+      "definition": "Le système entraîné qui produit les réponses de l'assistant IA à partir des informations reçues. Deux modèles peuvent répondre différemment à un même prompt. Lorsqu'on change de modèle, on vérifie à nouveau les tâches prévues, avec des exemples connus et des cas difficiles, avant de lui faire confiance."
     },
     {
       "id": "authorized-scope",
@@ -1349,7 +1358,7 @@
         "brief"
       ],
       "title": "Brief",
-      "definition": "Une courte description du travail que tu demandes : pour qui, pour quoi faire et sous quelle forme. Par exemple : « Prépare un courriel aux nouveaux collègues pour leur expliquer le rendez-vous de lundi. » On ajoute les informations à conserver et les limites utiles."
+      "definition": "Une courte description du travail : pour qui, pour quoi faire, avec quelles informations et sous quelle forme. Ce brief sert à préparer le prompt, le message que tu écris à l’assistant IA. Par exemple, pour un mail d’accueil : le rendez-vous, le matériel prévu et les informations à transmettre."
     },
     {
       "id": "livrable",
@@ -1357,7 +1366,7 @@
         "livrable"
       ],
       "title": "Livrable",
-      "definition": "Le résultat concret que tu veux pouvoir utiliser ou transmettre. Par exemple, un courriel prêt à relire, un tableau comparatif ou un plan de réunion. Dire le résultat attendu aide l’assistant à produire quelque chose d’utile."
+      "definition": "Le résultat concret que tu veux pouvoir utiliser ou transmettre. Par exemple, un courriel prêt à relire, un tableau comparatif ou un plan de réunion. Dire le résultat attendu aide l’assistant IA à produire quelque chose d’utile."
     }
   ],
   "ent-assistants-documents": [
@@ -1422,7 +1431,7 @@
         "itération"
       ],
       "title": "Itération",
-      "definition": "Une nouvelle tentative pour améliorer un résultat : préparer, regarder ce qui manque, modifier la demande puis réessayer. Par exemple, ajouter une consigne pour que le courriel conserve bien l’échéance, puis comparer avec le premier brouillon."
+      "definition": "Une nouvelle tentative pour améliorer un résultat : préparer, regarder ce qui manque, modifier le prompt puis réessayer. Par exemple, ajouter une consigne pour que le courriel conserve bien l’échéance, puis comparer avec le premier brouillon."
     },
     {
       "id": "cas-comparaison",
@@ -1430,7 +1439,7 @@
         "mêmes cas"
       ],
       "title": "Cas de comparaison",
-      "definition": "Une même situation utilisée pour comparer deux façons de demander le travail. Par exemple, garder les mêmes notes de réunion et vérifier si deux demandes différentes produisent un relevé plus clair, sans changer les décisions."
+      "definition": "Une même situation utilisée pour comparer deux façons de demander le travail. Par exemple, garder les mêmes notes de réunion et vérifier si deux prompts différents produisent un relevé plus clair, sans changer les décisions."
     }
   ],
   "ent-assistants-team-playbook": [
@@ -1440,7 +1449,7 @@
         "fiche de méthode"
       ],
       "title": "Fiche de méthode",
-      "definition": "Un petit guide qu’un collègue peut reprendre sans son auteur. Par exemple, pour préparer un compte rendu : quels documents fournir, quelle demande écrire, quoi relire et qui tient le guide à jour."
+      "definition": "Un petit guide qu’un collègue peut reprendre sans son auteur. Par exemple, pour préparer un compte rendu : quels documents fournir, quel prompt écrire, quoi relire et qui tient le guide à jour."
     },
     {
       "id": "temps-complet",
@@ -1448,7 +1457,7 @@
         "temps complet"
       ],
       "title": "Temps complet",
-      "definition": "Tout le temps passé sur la tâche, du début à la fin. Par exemple, pour un courriel avec l’IA : préparer les informations, écrire la demande, attendre, relire et corriger. Mesurer seulement le temps de réponse de l’outil oublierait une partie du travail."
+      "definition": "Tout le temps passé sur la tâche, du début à la fin. Par exemple, pour un courriel avec l’IA : préparer les informations, écrire le prompt, attendre, relire et corriger. Mesurer seulement le temps de réponse de l’outil oublierait une partie du travail."
     }
   ],
   "ent-automation-map": [
@@ -1546,7 +1555,7 @@
         "Pilote"
       ],
       "title": "Pilote",
-      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant IA de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     },
     {
       "id": "ent-automation-pilot-term-2",

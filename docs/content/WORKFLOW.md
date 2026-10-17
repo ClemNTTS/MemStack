@@ -1,5 +1,7 @@
 # Production des leçons
 
+Pour les textes Entreprise, appliquer aussi la [convention de vocabulaire de Mémo](ENTERPRISE_WORDING.md) : prompt expliqué, assistant IA explicite, outil en français et demandes métier préservées.
+
 ## Les quatre rôles
 
 1. **Programme** : lire le produit et l’architecture, définir thèmes, parcours ordonnés, objectifs et prérequis dans `docs/CURRICULUM.md`. Le plan machine lisible accompagne ce catalogue.
