@@ -41,8 +41,9 @@ test('every enterprise lesson has reviewed definitions that match its teaching t
 test('lesson-specific definitions do not leak to another lesson and apostrophe variants match', () => {
   assert.ok(splitGlossaryText('minimisation', 'ent-minimum-data').some(part => part.entry))
   assert.ok(!splitGlossaryText('minimisation', 'ent-plausible-not-proven').some(part => part.entry))
-  const straight = splitGlossaryText("identifiant de l'opération", 'ent-answer-or-action')
-  const curly = splitGlossaryText('identifiant de l’opération', 'ent-answer-or-action')
+  const straight = splitGlossaryText("date relative d'achat", 'ent-minimum-data')
+  const curly = splitGlossaryText('date relative d’achat', 'ent-minimum-data')
   assert.ok(straight[0].entry)
+  assert.equal(straight[0].entry?.id, 'relative-purchase-date')
   assert.equal(straight[0].entry?.id, curly[0].entry?.id)
 })

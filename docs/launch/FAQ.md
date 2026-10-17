@@ -26,7 +26,7 @@ Deux missions communes précèdent trois parcours de six missions : assistants I
 
 ## Les ateliers exécutent-ils une IA ou publient-ils mon site ?
 
-Non. Ils font préparer des demandes, tableaux, procédures ou plans sur des cas fictifs, puis les comparer à des exemples expliqués. Le transfert vers un outil autorisé est facultatif ; il ne conditionne pas la réussite du parcours. Certaines réalisations nécessitent ensuite une compétence technique. Les durées de 10 à 18 minutes par mission sont indicatives.
+Non. Ils font préparer des demandes, tableaux, procédures ou plans sur des cas fictifs, puis les comparer à des exemples expliqués. Le transfert vers un outil autorisé est facultatif ; il ne conditionne pas la réussite du parcours. Certaines réalisations nécessitent ensuite une compétence technique. Les durées de 6 à 18 minutes par mission sont indicatives.
 
 ## Que peut consulter le manager ?
 

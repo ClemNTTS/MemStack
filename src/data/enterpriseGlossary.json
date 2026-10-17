@@ -6,7 +6,7 @@
         "système génératif"
       ],
       "title": "Système génératif",
-      "definition": "Un outil qui produit du contenu, par exemple un texte, à partir de régularités apprises et des informations disponibles dans la demande. Il peut rédiger une réponse très naturelle sans avoir vérifié les faits qu’elle contient."
+      "definition": "Un outil d’IA qui crée un contenu à partir de ta demande et de ce qu’il a appris sur de nombreux exemples. Par exemple, il peut rédiger un courriel pour annoncer une réunion. Il peut aussi ajouter une heure qui ne figurait pas dans ta demande : un texte naturel n’est pas forcément exact."
     },
     {
       "id": "entrainement",
@@ -14,7 +14,7 @@
         "entraînement"
       ],
       "title": "Entraînement",
-      "definition": "La phase pendant laquelle un modèle apprend des régularités à partir de nombreux exemples. Cet apprentissage l’aide à produire du contenu, mais ne garantit pas qu’il connaît la politique actuelle d’une entreprise ni que chaque affirmation est exacte."
+      "definition": "La préparation d’un système d’IA à partir de nombreux exemples de textes ou d’autres contenus. Cela l’aide à produire une réponse. Par exemple, il peut savoir rédiger un courriel professionnel sans connaître les horaires actuels de ton entreprise."
     },
     {
       "id": "affirmation",
@@ -48,58 +48,49 @@
       ],
       "title": "Document de référence",
       "definition": "Le document retenu pour contrôler une réponse parce qu’il énonce les règles applicables. Ici, c’est la politique de retour d’Aster. Il faut consulter sa version à jour et comparer les conditions précises : délai, frais et éventuelles exceptions."
+    },
+    {
+      "id": "ent-project-pilot",
+      "terms": [
+        "pilote"
+      ],
+      "title": "Pilote",
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-answer-or-action": [
     {
-      "id": "connected-tool",
+      "id": "ent-start-draft",
       "terms": [
-        "outil",
-        "outils"
+        "brouillon",
+        "brouillons"
       ],
-      "title": "Outil connecté",
-      "definition": "Une fonction reliée à un système que l’assistant IA peut utiliser pour consulter des informations ou effectuer une opération. Par exemple, un outil peut lire une commande ou demander un remboursement. Sa présence ne garantit ni les droits nécessaires ni la réussite de l’opération."
+      "title": "Brouillon",
+      "definition": "Une première version d’un texte que tu peux relire et modifier avant de l’utiliser. Par exemple, l’assistant propose une invitation à la réunion de jeudi. Le brouillon n’est pas encore un mail envoyé aux collègues."
     },
     {
-      "id": "read-access",
+      "id": "ent-start-recipients",
       "terms": [
-        "accès en lecture"
+        "destinataires"
       ],
-      "title": "Accès en lecture",
-      "definition": "Un accès permettant de consulter des informations dans un système. Par exemple, l’assistant IA peut voir le montant et l’état d’une commande. Cet accès ne permet pas, à lui seul, de changer la commande ou de rembourser : ces actions demandent des droits supplémentaires."
+      "title": "Destinataires",
+      "definition": "Les personnes à qui tu adresses un message. Par exemple, les collègues invités à une réunion. Avant d’envoyer, relis leurs adresses : le bon texte envoyé aux mauvaises personnes ne remplit pas ton objectif."
     },
     {
-      "id": "execution-evidence",
+      "id": "ent-start-sent-mail",
       "terms": [
-        "preuve d'exécution",
-        "confirmations des outils"
+        "messages envoyés"
       ],
-      "title": "Preuve d’exécution",
-      "definition": "Un élément fourni par le système concerné qui aide à vérifier qu’une action a réellement eu lieu. Par exemple, on consulte l’historique du paiement et l’état du remboursement. La phrase « C’est fait » produite par l’assistant IA ne suffit pas à établir cette réalisation."
+      "title": "Messages envoyés",
+      "definition": "Le dossier de ta messagerie où tu retrouves les mails que tu as envoyés. Il aide à vérifier l’envoi et les destinataires. Par exemple, cherche l’invitation de jeudi ; un texte présent seulement dans les brouillons n’a pas encore été envoyé."
     },
     {
-      "id": "operation-identifier",
+      "id": "ent-start-mailbox",
       "terms": [
-        "identifiant de l'opération"
+        "messagerie"
       ],
-      "title": "Identifiant de l’opération",
-      "definition": "Une référence attribuée par un système à une opération pour pouvoir la retrouver et suivre son état. Par exemple, la référence d’une demande de remboursement permet de consulter son résultat. Cet identifiant peut exister avant la réussite : il faut aussi vérifier l’état associé."
-    },
-    {
-      "id": "authorized-scope",
-      "terms": [
-        "périmètre autorisé"
-      ],
-      "title": "Périmètre autorisé",
-      "definition": "L’ensemble des tâches et des informations auxquelles l’assistant IA est autorisé à accéder dans une situation donnée. Par exemple, il peut consulter une politique et rédiger une réponse, tandis qu’une personne conserve l’envoi. Les outils disponibles et leurs droits doivent correspondre à cette limite."
-    },
-    {
-      "id": "work-procedure",
-      "terms": [
-        "procédure de travail"
-      ],
-      "title": "Procédure de travail",
-      "definition": "Des règles qui précisent les étapes d’une tâche et la personne ou le système responsable de chacune. Par exemple, l’assistant IA prépare un brouillon, puis Sami le relit et l’envoie. Cette organisation complète les restrictions techniques ; elle ne retire pas elle-même un droit accordé à un outil."
+      "title": "Messagerie",
+      "definition": "L’application qui te permet de lire, écrire et envoyer tes mails. Par exemple, tu y copies l’invitation préparée avec l’assistant, tu relis les adresses puis tu l’envoies. L’assistant ne peut pas utiliser ta messagerie si cette possibilité n’a pas été prévue."
     }
   ],
   "ent-minimum-data": [
@@ -186,7 +177,7 @@
         "hébergement européen"
       ],
       "title": "Hébergement européen",
-      "definition": "Une indication sur la localisation de l'infrastructure qui accueille le service ou ses données. Cette mention ne répond pas à toutes les questions sur les accès, la conservation ou la réutilisation. Exemple : une offre hébergée en Europe demande encore un examen du contrat et des options activées."
+      "definition": "Le fait que les ordinateurs qui font fonctionner un service ou gardent ses informations se trouvent en Europe, selon ce que précise l’offre. Par exemple, un espace de documents peut être hébergé en Europe. Cela ne dit pas encore qui peut lire les documents, combien de temps ils restent gardés ou comment ils sont réutilisés."
     },
     {
       "id": "named-access",
@@ -194,7 +185,7 @@
         "accès nominatifs"
       ],
       "title": "Accès nominatifs",
-      "definition": "Des accès attribués individuellement à des personnes identifiées, plutôt qu'un accès partagé sans distinction entre utilisateurs. Ils permettent de préciser qui est autorisé à utiliser l'espace professionnel. Exemple : chaque participant au pilote dispose de son propre compte ; cela n'autorise pas pour autant tous les types de documents."
+      "definition": "Un accès personnel au service, attribué à une personne identifiée. Par exemple, Léa et Sami ont chacun leur compte plutôt que le même mot de passe. L’entreprise peut ainsi décider ce que chacun peut consulter ou modifier."
     },
     {
       "id": "model-training-reuse",
@@ -228,7 +219,15 @@
         "configuration"
       ],
       "title": "Configuration du service",
-      "definition": "L'ensemble des réglages et options effectivement activés pour l'organisation dans un outil. Ces choix déterminent une partie du traitement des contenus et des accès. Exemple : avant de transmettre des documents, comparer ce que prévoit le contrat avec les options réellement actives dans l'espace professionnel."
+      "definition": "Les réglages réellement choisis dans un logiciel. Par exemple, l’entreprise peut autoriser la lecture de certains documents et interdire leur partage à l’extérieur. Le nom de l’offre ne suffit pas : il faut aussi regarder les réglages activés."
+    },
+    {
+      "id": "ent-project-pilot",
+      "terms": [
+        "pilote"
+      ],
+      "title": "Pilote",
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-hostile-document": [
@@ -272,50 +271,50 @@
       ],
       "title": "Outil d'envoi",
       "definition": "Fonction permettant à un assistant IA de transmettre un message ou des données à un destinataire, par exemple par email. Elle transforme une préparation de texte en action extérieure. Retirer un outil d'envoi inutile réduit certaines conséquences possibles d'une fausse consigne, sans suffire à sécuriser tous les usages."
+    },
+    {
+      "id": "ent-project-pilot",
+      "terms": [
+        "pilote"
+      ],
+      "title": "Pilote",
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-useful-request": [
     {
-      "id": "evaluation-criteria",
+      "id": "ent-start-request",
       "terms": [
-        "critères",
-        "critère"
+        "demande",
+        "demandes"
       ],
-      "title": "Critère d’évaluation",
-      "definition": "Un point précis qui permet de décider si une réponse convient. Il doit être vérifiable dans le résultat, sans dépendre seulement d’une impression. Exemple : le brouillon indique un délai de 30 jours et n’annonce aucun remboursement déjà effectué."
+      "title": "Demande à l’assistant",
+      "definition": "Ce que tu écris à l’assistant pour lui expliquer le travail souhaité. Par exemple : prépare une invitation pour l’équipe, jeudi à 10 h, en cinq lignes maximum. On appelle aussi cette demande un prompt."
     },
     {
-      "id": "model-output",
+      "id": "ent-start-mail-subject",
       "terms": [
-        "sorties"
+        "objet"
       ],
-      "title": "Sortie d’un assistant IA",
-      "definition": "Le résultat produit par l’assistant IA après une demande : par exemple un texte, une liste ou un tableau. Une sortie peut sembler convaincante tout en contenant une erreur. Exemple : comparer deux brouillons avec les mêmes critères pour vérifier lequel respecte la politique de retour."
+      "title": "Objet du mail",
+      "definition": "Le titre court qui apparaît dans la liste des mails avant même d’ouvrir le message. Par exemple : Réunion d’équipe jeudi à 10 h. Un objet précis aide les collègues à comprendre de quoi il s’agit."
     },
     {
-      "id": "applicable-documents",
+      "id": "ent-start-missing-place",
       "terms": [
-        "documents applicables"
+        "lieu à confirmer"
       ],
-      "title": "Documents applicables",
-      "definition": "Les documents dont les règles concernent effectivement le cas traité et doivent guider la réponse. Un document disponible n’est pas forcément pertinent pour chaque situation. Exemple : joindre la politique de retour de la lampe et demander de s’appuyer uniquement sur ses dispositions."
+      "title": "Lieu à confirmer",
+      "definition": "Une façon de dire que l’endroit de la réunion n’a pas encore été choisi. L’assistant peut garder cette indication dans le brouillon au lieu d’inventer une salle. Tu complètes le lieu avant d’envoyer l’invitation définitive."
     },
     {
-      "id": "request-constraints",
+      "id": "ent-start-short-format",
       "terms": [
-        "limites à respecter"
+        "forme",
+        "longueur"
       ],
-      "title": "Contraintes de la demande",
-      "definition": "Les règles qui encadrent ce que l’assistant IA peut utiliser, affirmer ou proposer pendant une tâche. Elles se formulent explicitement dans la demande. Exemple : utiliser uniquement la politique jointe, ne pas annoncer un remboursement effectué et signaler les informations manquantes."
-    },
-    {
-      "id": "fictional-example",
-      "terms": [
-        "exemple fictif",
-        "contexte fictif"
-      ],
-      "title": "Exemple fictif",
-      "definition": "Une situation inventée pour expliquer le résultat souhaité ou s’exercer sans raconter un dossier réel. Elle aide à comprendre la tâche, mais ne constitue pas une preuve sur un client. Exemple : décrire une lampe imaginaire reçue endommagée pour préparer un brouillon de réponse."
+      "title": "Forme et longueur du message",
+      "definition": "La manière dont tu veux présenter le texte et la place qu’il doit prendre. Par exemple : un objet puis un message de cinq lignes maximum. Cela aide l’assistant à proposer un mail facile à reprendre."
     }
   ],
   "ent-context-rag": [
@@ -325,7 +324,7 @@
         "capacité de contexte"
       ],
       "title": "Capacité de contexte",
-      "definition": "La quantité limitée d’informations qu’un modèle peut prendre en compte pour préparer une réponse. Elle ne garantit pas que chaque ancienne pièce jointe reste disponible dans une conversation. Exemple : rendre de nouveau accessible la politique actuelle quand la réponse dépend de cette règle."
+      "definition": "La quantité d’informations que l’assistant IA peut utiliser à un moment donné pour répondre. Par exemple, il peut tenir compte de ta demande et d’un document joint sans garder tous les documents d’une très longue conversation. Si un document est indispensable, rends-le de nouveau disponible."
     },
     {
       "id": "applicable-version",
@@ -357,7 +356,7 @@
         "modèle"
       ],
       "title": "Modèle IA",
-      "definition": "Le système entraîné sur des exemples qui produit une réponse à partir des informations reçues. Dans un assistant IA documentaire, il reçoit notamment les extraits trouvés par la recherche. Exemple : il rédige une explication à partir d’une politique fournie, mais peut encore en interpréter une règle de travers."
+      "definition": "Le système d’IA qui prépare les réponses derrière l’application avec laquelle tu échanges. Il a été préparé à partir de nombreux exemples. Par exemple, dans un assistant qui recherche des documents, il rédige une réponse à partir des passages trouvés ; il peut encore mal comprendre une règle."
     }
   ],
   "ent-iterate-examples": [
@@ -520,6 +519,14 @@
       ],
       "title": "Source institutionnelle",
       "definition": "Un document ou une information provenant d'une institution. Son origine ne suffit pas à prouver toutes les affirmations qui s'en réclament. Exemple : une étude institutionnelle sur la traduction ne démontre pas un gain commercial pour Aster si ce gain n'y a pas été mesuré."
+    },
+    {
+      "id": "ent-project-pilot",
+      "terms": [
+        "pilote"
+      ],
+      "title": "Pilote",
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-human-escalation": [
@@ -570,6 +577,14 @@
       ],
       "title": "Message d’attente",
       "definition": "Une réponse provisoire qui explique que le dossier suit la procédure prévue, sans annoncer une décision encore inconnue. L’entreprise précise ce que ce message peut promettre. Exemple : confirmer la réception et la transmission du signalement à la personne compétente, sans garantir une indemnisation."
+    },
+    {
+      "id": "ent-project-pilot",
+      "terms": [
+        "pilote"
+      ],
+      "title": "Pilote",
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-right-tool": [
@@ -580,7 +595,7 @@
         "déterministe"
       ],
       "title": "Règle de calcul déterministe",
-      "definition": "Une règle précise qui donne toujours le même résultat pour les mêmes données et les mêmes conditions. Exemple : ajouter 30 jours à une date de réception selon une convention définie. On peut vérifier ce calcul directement, sans demander à une IA de produire une réponse."
+      "definition": "Une règle de calcul ou de classement définie à l’avance : avec les mêmes informations, elle donne le même résultat. Par exemple, orienter toutes les demandes de 500 € ou plus vers la personne chargée des achats. Une telle règle ne nécessite pas de demander à l’IA de deviner la décision."
     },
     {
       "id": "generation",
@@ -588,7 +603,7 @@
         "génération"
       ],
       "title": "Génération par IA",
-      "definition": "La production d’un nouveau contenu par un modèle IA à partir d’une demande. Exemple : proposer une reformulation plus claire d’un brouillon. Le texte obtenu doit être relu : sa fluidité ne garantit ni le respect du sens initial ni l’exactitude des informations."
+      "definition": "Le fait de créer un contenu avec l’IA, par exemple un brouillon de courriel ou un plan de réunion. On donne une demande et l’outil propose un résultat. On le relit pour garder le sens voulu et les bonnes informations."
     },
     {
       "id": "exact-search",
@@ -604,7 +619,7 @@
         "coût d'exploitation"
       ],
       "title": "Coût d’exploitation",
-      "definition": "Ce qu’il faut dépenser pour faire fonctionner une solution au quotidien : service utilisé, maintenance et temps de contrôle, par exemple. Pour une reformulation automatique, le coût comprend aussi le temps passé à vérifier les textes produits, en plus du prix des requêtes."
+      "definition": "Les dépenses et le temps nécessaires pour continuer à utiliser une solution. Par exemple, pour un assistant de rédaction, compter l’abonnement mais aussi le temps de relecture, les corrections et l’aide aux collègues."
     },
     {
       "id": "representative-trials",
@@ -629,6 +644,14 @@
       ],
       "title": "Prototype",
       "definition": "Une première version limitée d’une solution, construite pour vérifier une idée avant d’investir davantage. Exemple : une recherche testée sur quelques documents de politique de retour. Son bon fonctionnement dans ces conditions ne prouve pas encore qu’elle conviendra à toutes les demandes réelles."
+    },
+    {
+      "id": "ent-project-pilot",
+      "terms": [
+        "pilote"
+      ],
+      "title": "Pilote",
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-environment-cost": [
@@ -638,7 +661,7 @@
         "requête"
       ],
       "title": "Requête",
-      "definition": "Une demande envoyée à un service informatique pour obtenir un résultat. Ici, demander un brouillon à l’IA déclenche une requête. Si le service en envoie une à chaque frappe du clavier, le nombre de traitements peut augmenter fortement, même sans besoin explicite du salarié."
+      "definition": "Une demande envoyée à un logiciel ou service pour obtenir une réponse. Par exemple, cliquer sur Envoyer après avoir demandé un brouillon à un assistant IA. Un logiciel peut aussi envoyer ces demandes automatiquement ; une demande humaine peut donc entraîner plusieurs échanges entre logiciels."
     },
     {
       "id": "model",
@@ -646,7 +669,7 @@
         "modèle"
       ],
       "title": "Modèle IA",
-      "definition": "Le système entraîné qui produit la réponse de l’assistant IA à partir de ta demande. Un même service peut proposer différents modèles. Leur choix, associé à la tâche et aux conditions d’exécution, influence les ressources utilisées : le nom du service seul ne suffit donc pas pour estimer un impact."
+      "definition": "Le système d’IA qui produit les réponses derrière l’application. Un service peut en proposer plusieurs, par exemple pour écrire ou analyser des documents. Leur fonctionnement et l’usage qu’on en fait influencent les ressources consommées ; le seul nom du service ne suffit pas pour les estimer."
     },
     {
       "id": "infrastructure",
@@ -656,7 +679,7 @@
         "centres de données"
       ],
       "title": "Infrastructure et centres de données",
-      "definition": "Les moyens matériels et techniques qui font fonctionner le service : ordinateurs, réseaux et bâtiments qui les accueillent. Les centres de données regroupent ces ordinateurs et leurs systèmes de fonctionnement. Évaluer l’impact demande de considérer ces équipements, leur fabrication et les ressources nécessaires à leur usage, notamment l’eau."
+      "definition": "Les équipements qui permettent à un service numérique de fonctionner : ordinateurs, connexions et bâtiments qui les accueillent. Par exemple, les réponses d’un assistant en ligne sont préparées sur les ordinateurs de son fournisseur. Leur fabrication et leur utilisation consomment des ressources."
     },
     {
       "id": "measurement-uncertainty",
@@ -688,7 +711,7 @@
         "intégration"
       ],
       "title": "Intégration",
-      "definition": "Le travail nécessaire pour faire fonctionner un nouvel outil dans les outils et les pratiques de l’entreprise. Par exemple, relier un assistant IA à un espace de documents et configurer ses accès demande du temps. Ce travail doit entrer dans le budget, même si l’abonnement semble peu coûteux."
+      "definition": "Le travail pour faire entrer un nouvel outil dans les habitudes et logiciels de l’entreprise. Par exemple, relier un formulaire à une liste partagée, choisir qui y accède et expliquer son usage aux collègues. Ce travail demande du temps en plus de l’achat du service."
     },
     {
       "id": "maintenance",
@@ -696,7 +719,15 @@
         "maintenance"
       ],
       "title": "Maintenance",
-      "definition": "Le travail réalisé après l’installation pour garder un service en état de fonctionner : corriger un problème, adapter un réglage ou vérifier qu’une modification ne casse pas un usage. Ce suivi mobilise du temps et des moyens ; il doit donc être prévu dans le budget au-delà du démarrage."
+      "definition": "Le travail régulier pour qu’un outil reste utile après son lancement. Par exemple, corriger un formulaire qui ne transmet plus les demandes ou adapter un réglage après un changement de logiciel. Ce suivi doit être prévu dans le temps et le budget."
+    },
+    {
+      "id": "ent-project-pilot",
+      "terms": [
+        "pilote"
+      ],
+      "title": "Pilote",
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-problem-before-solution": [
@@ -766,6 +797,14 @@
       ],
       "title": "Engagement non autorisé",
       "definition": "Une promesse faite au nom de l'entreprise sans avoir le droit de la faire. Exemple : une réponse assure au client un remboursement alors que personne n'a validé cette décision. Même bien rédigée, cette réponse dépasse le rôle prévu et peut obliger l'équipe à gérer ses conséquences."
+    },
+    {
+      "id": "ent-project-pilot",
+      "terms": [
+        "pilote"
+      ],
+      "title": "Pilote",
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-agents-permissions": [
@@ -776,7 +815,7 @@
         "contrat de délégation"
       ],
       "title": "Délégation à un agent",
-      "definition": "Confier une tâche à un agent en précisant ce qu’il peut faire et jusqu’où il peut aller. Le contrat de délégation décrit ces limites de façon explicite. Exemple : lire le seul dossier courant et préparer une réponse, sans pouvoir l’envoyer."
+      "definition": "Confier une tâche à un assistant IA capable d’enchaîner des actions, en précisant ce qu’il peut faire et quand il doit s’arrêter. Par exemple, préparer un brouillon à partir d’un document sans l’envoyer au client."
     },
     {
       "id": "agent-tools",
@@ -785,7 +824,7 @@
         "outils"
       ],
       "title": "Outil d’un agent",
-      "definition": "Fonction d’un logiciel que l’agent peut utiliser pour consulter des informations ou effectuer une action. Exemple : rechercher une règle dans des documents ou créer un brouillon. Chaque outil doit avoir des accès limités, car un autre outil peut parfois permettre une action pourtant interdite."
+      "definition": "Une fonction de logiciel qu’un assistant IA peut utiliser. Par exemple, rechercher un document, créer un brouillon ou envoyer un message. Ces fonctions n’ont pas toutes les mêmes conséquences : l’entreprise choisit celles qui sont utiles et les droits associés."
     },
     {
       "id": "agent-loop",
@@ -793,7 +832,7 @@
         "boucle"
       ],
       "title": "Boucle d’un agent",
-      "definition": "Enchaînement dans lequel l’agent choisit une action, observe son résultat puis décide de la suite. Il peut répéter ce fonctionnement plusieurs fois. Exemple : chercher un document puis relancer la recherche s’il manque une information. Une limite d’étapes ou de budget imposée par le système permet d’arrêter cette répétition."
+      "definition": "Une suite d’étapes que l’assistant IA peut répéter : choisir une action, regarder son résultat, puis choisir la suite. Par exemple, rechercher un document puis essayer une autre recherche si la réponse manque. On fixe une limite pour éviter qu’il recommence sans fin."
     },
     {
       "id": "human-approval",
@@ -819,7 +858,7 @@
         "trace des actions"
       ],
       "title": "Trace des actions",
-      "definition": "Historique permettant de comprendre les opérations effectuées par l’agent : outil utilisé, action demandée, résultat obtenu et accord éventuel. Exemple : conserver le fait qu’un brouillon a été créé mais jamais envoyé. Cette trace aide à vérifier le déroulement et à rechercher la cause d’un problème."
+      "definition": "Un historique de ce que l’assistant a demandé et de ce qui s’est passé. Par exemple : « 9 h : brouillon créé ; envoi non effectué ». Il aide à retrouver une étape réussie ou un problème. Il faut distinguer une action demandée d’une action réellement terminée."
     },
     {
       "id": "isolated-environment",
@@ -827,7 +866,7 @@
         "environnement isolé"
       ],
       "title": "Environnement isolé",
-      "definition": "Espace de test séparé des systèmes et données réellement utilisés par l’entreprise. On y essaie les actions de l’agent avec des cas fictifs et des accès limités. Exemple : simuler un envoi vers une fausse boîte de réception pour vérifier le contrôle sans contacter un vrai client."
+      "definition": "Une copie ou un espace d’essai séparé du travail réel de l’entreprise. Par exemple, essayer un formulaire avec des noms inventés sans ajouter de vrais clients à la liste. La séparation doit être vérifiée avec la personne qui gère l’outil."
     },
     {
       "id": "malicious-document-instruction",
@@ -837,6 +876,14 @@
       ],
       "title": "Instruction malveillante dans un document",
       "definition": "Consigne placée dans un contenu consulté par l’agent pour le pousser à détourner sa tâche ou à dépasser ses droits. Exemple : un dossier lui demande d’ignorer les limites et d’envoyer des données ailleurs. Ce texte doit rester une information à examiner, sans devenir une autorisation d’agir."
+    },
+    {
+      "id": "ent-project-pilot",
+      "terms": [
+        "pilote"
+      ],
+      "title": "Pilote",
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-accountable-project": [
@@ -895,6 +942,14 @@
       ],
       "title": "Retour à la procédure précédente",
       "definition": "Une organisation préparée pour reprendre le travail selon la méthode connue si l'essai s'arrête ou si le service devient indisponible. Elle précise les personnes et les étapes nécessaires. Par exemple, couper les accès à l'IA, récupérer les documents utiles et reprendre le traitement manuel des demandes."
+    },
+    {
+      "id": "ent-project-pilot",
+      "terms": [
+        "pilote"
+      ],
+      "title": "Pilote",
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-test-representative": [
@@ -965,6 +1020,14 @@
       ],
       "title": "Vérification des régressions",
       "definition": "Refaire les tests qui réussissaient avant une modification pour repérer une fonction qui s'est dégradée : c'est une régression. Par exemple, une correction aide l'assistant IA à gérer les documents manquants, mais lui fait désormais refuser tous les retours simples. Rejouer les anciens cas permet de détecter cet effet."
+    },
+    {
+      "id": "ent-project-pilot",
+      "terms": [
+        "pilote"
+      ],
+      "title": "Pilote",
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-measure-incident": [
@@ -1036,6 +1099,14 @@
       ],
       "title": "Indicateur",
       "definition": "Une mesure choisie pour observer un aspect d’une activité ou de ses résultats. Par exemple, le nombre de brouillons générés indique l’utilisation de l’outil. Pour juger son intérêt, il faut aussi regarder le temps réellement gagné, les erreurs et les coûts : un seul chiffre ne décrit pas toute la situation."
+    },
+    {
+      "id": "ent-project-pilot",
+      "terms": [
+        "pilote"
+      ],
+      "title": "Pilote",
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     }
   ],
   "ent-decision-dossier": [
@@ -1104,7 +1175,7 @@
         "déployer"
       ],
       "title": "Déploiement",
-      "definition": "La mise à disposition d’un outil pour son usage réel par les personnes concernées. Il faut préciser son étendue : une équipe, certaines tâches ou toute l’entreprise. Par exemple, autoriser un essai interne ne donne pas automatiquement le droit de laisser l’outil répondre directement aux clients."
+      "definition": "La mise à disposition d’un outil pour le travail réel. Par exemple, après un essai avec cinq collègues, l’entreprise peut décider de proposer l’assistant de rédaction à toute une équipe. Cela ne concerne pas seulement l’installation d’un logiciel : il faut aussi prévoir les accès, l’accompagnement et le suivi."
     }
   ],
   "ent-continue-learning": [
@@ -1278,7 +1349,7 @@
         "brief"
       ],
       "title": "Brief",
-      "definition": "Une courte description du travail : qui utilisera le résultat, pour quoi faire et sous quelle forme."
+      "definition": "Une courte description du travail que tu demandes : pour qui, pour quoi faire et sous quelle forme. Par exemple : « Prépare un courriel aux nouveaux collègues pour leur expliquer le rendez-vous de lundi. » On ajoute les informations à conserver et les limites utiles."
     },
     {
       "id": "livrable",
@@ -1286,7 +1357,7 @@
         "livrable"
       ],
       "title": "Livrable",
-      "definition": "Un résultat concret à utiliser ou transmettre : courriel, tableau, fiche ou plan."
+      "definition": "Le résultat concret que tu veux pouvoir utiliser ou transmettre. Par exemple, un courriel prêt à relire, un tableau comparatif ou un plan de réunion. Dire le résultat attendu aide l’assistant à produire quelque chose d’utile."
     }
   ],
   "ent-assistants-documents": [
@@ -1296,7 +1367,7 @@
         "dossier"
       ],
       "title": "Dossier source",
-      "definition": "Des pièces nommées dont on précise le rôle et le statut avant de demander un travail."
+      "definition": "Les documents ou extraits que tu fournis pour préparer une réponse. Par exemple, une demande de client, un catalogue de prix et les conditions de livraison. Donne un nom à chaque pièce et précise laquelle contient les informations à jour."
     },
     {
       "id": "tracabilite-metier",
@@ -1305,7 +1376,7 @@
         "traçable"
       ],
       "title": "Traçabilité",
-      "definition": "La possibilité de retrouver le document ou le calcul qui explique un élément du livrable."
+      "definition": "Le fait de pouvoir retrouver d’où vient une information. Par exemple, à côté d’un prix dans une proposition, indiquer le catalogue utilisé et le calcul effectué. Un collègue peut ainsi comprendre et relire la proposition."
     }
   ],
   "ent-assistants-meeting": [
@@ -1315,7 +1386,7 @@
         "relevé de décisions"
       ],
       "title": "Relevé de décisions",
-      "definition": "Une synthèse des choix actés et des suites à donner, distincte de la transcription de tous les échanges."
+      "definition": "Une note courte qui dit ce qui a été décidé en réunion et ce qu’il reste à faire. Par exemple : « Zoé prépare la grille jeudi ; la date du bilan reste à choisir ». Elle ne recopie pas toutes les paroles."
     },
     {
       "id": "question-ouverte",
@@ -1323,7 +1394,7 @@
         "question ouverte"
       ],
       "title": "Question ouverte",
-      "definition": "Un point qui nécessite encore une information ou un choix ; le signaler permet de l’attribuer."
+      "definition": "Une question qui n’a pas encore de réponse ou de décision. Par exemple : « Qui réservera la salle, et pour quelle date ? » La noter permet de choisir une personne pour la résoudre plutôt que d’inventer une réponse."
     }
   ],
   "ent-assistants-options": [
@@ -1333,7 +1404,7 @@
         "contrainte éliminatoire"
       ],
       "title": "Contrainte éliminatoire",
-      "definition": "Une exigence obligatoire : une option qui ne la respecte pas doit être écartée pour ce besoin."
+      "definition": "Une condition indispensable pour que le choix convienne. Par exemple, une salle doit accueillir les douze participants : une salle de dix places est écartée, même si elle coûte moins cher."
     },
     {
       "id": "compromis",
@@ -1341,7 +1412,7 @@
         "compromis"
       ],
       "title": "Compromis",
-      "definition": "Ce que l’on gagne et accepte en choisissant une option plutôt qu’une autre, par exemple moins de trajet pour un prix supérieur."
+      "definition": "Un choix qui apporte un avantage en échange d’un autre effort ou d’une limite. Par exemple, payer 30 € de plus pour une salle dix minutes plus proche. On explique cet échange au lieu de présenter une option comme meilleure dans tous les cas."
     }
   ],
   "ent-assistants-iterate": [
@@ -1351,7 +1422,7 @@
         "itération"
       ],
       "title": "Itération",
-      "definition": "Un cycle court : produire, observer un défaut concret, ajuster puis comparer à nouveau."
+      "definition": "Une nouvelle tentative pour améliorer un résultat : préparer, regarder ce qui manque, modifier la demande puis réessayer. Par exemple, ajouter une consigne pour que le courriel conserve bien l’échéance, puis comparer avec le premier brouillon."
     },
     {
       "id": "cas-comparaison",
@@ -1359,7 +1430,7 @@
         "mêmes cas"
       ],
       "title": "Cas de comparaison",
-      "definition": "Une situation conservée identique pour comparer des versions avec les mêmes critères."
+      "definition": "Une même situation utilisée pour comparer deux façons de demander le travail. Par exemple, garder les mêmes notes de réunion et vérifier si deux demandes différentes produisent un relevé plus clair, sans changer les décisions."
     }
   ],
   "ent-assistants-team-playbook": [
@@ -1369,7 +1440,7 @@
         "fiche de méthode"
       ],
       "title": "Fiche de méthode",
-      "definition": "Une fiche expliquant quand utiliser une pratique, quoi préparer, quoi demander, comment reconnaître le bon résultat et qui la met à jour."
+      "definition": "Un petit guide qu’un collègue peut reprendre sans son auteur. Par exemple, pour préparer un compte rendu : quels documents fournir, quelle demande écrire, quoi relire et qui tient le guide à jour."
     },
     {
       "id": "temps-complet",
@@ -1377,7 +1448,7 @@
         "temps complet"
       ],
       "title": "Temps complet",
-      "definition": "Le temps de toute la tâche : préparation, interaction, relecture et retouches, pas seulement la génération."
+      "definition": "Tout le temps passé sur la tâche, du début à la fin. Par exemple, pour un courriel avec l’IA : préparer les informations, écrire la demande, attendre, relire et corriger. Mesurer seulement le temps de réponse de l’outil oublierait une partie du travail."
     }
   ],
   "ent-automation-map": [
@@ -1387,7 +1458,7 @@
         "Processus"
       ],
       "title": "Processus",
-      "definition": "La suite d’étapes et décisions qui transforme une demande en résultat utilisable."
+      "definition": "Les étapes suivies pour accomplir un travail. Par exemple : recevoir une demande, vérifier les informations, préparer une réponse et l’envoyer. Décrire ces étapes permet de choisir celles qu’un logiciel pourrait prendre en charge."
     },
     {
       "id": "ent-automation-map-term-2",
@@ -1395,7 +1466,7 @@
         "Déclencheur"
       ],
       "title": "Déclencheur",
-      "definition": "L’événement, la demande manuelle ou l’horaire qui fait commencer une automatisation."
+      "definition": "Ce qui fait démarrer automatiquement une suite d’étapes dans un logiciel. Par exemple, l’arrivée d’un formulaire rempli, une heure prévue ou le clic d’un salarié sur un bouton Démarrer."
     }
   ],
   "ent-automation-select": [
@@ -1405,7 +1476,7 @@
         "Flux"
       ],
       "title": "Flux",
-      "definition": "Un enchaînement d’étapes, de conditions et d’actions, aussi appelé workflow."
+      "definition": "La suite d’étapes qu’une demande suit entre les personnes ou logiciels. Par exemple : formulaire reçu, ligne ajoutée dans la liste, puis message au responsable. Le mot anglais workflow désigne aussi cette organisation."
     },
     {
       "id": "ent-automation-select-term-2",
@@ -1413,7 +1484,7 @@
         "Connecteur"
       ],
       "title": "Connecteur",
-      "definition": "Une liaison fournie par un outil pour lire ou modifier un autre service selon des opérations et des accès définis."
+      "definition": "Une fonction prévue pour faire communiquer deux logiciels. Par exemple, récupérer les réponses d’un formulaire pour ajouter une ligne dans une liste. Elle ne permet pas forcément toutes les actions : il faut vérifier ce qu’elle sait faire et qui peut l’utiliser."
     }
   ],
   "ent-automation-data-contract": [
@@ -1423,7 +1494,7 @@
         "Contrat de données"
       ],
       "title": "Contrat de données",
-      "definition": "La fiche commune décrivant le sens, le format, les correspondances et les règles des informations échangées."
+      "definition": "Une fiche commune qui explique quelles informations passent d’un outil à un autre et comment les lire. Par exemple : la référence de demande est obligatoire, le nombre de places doit être positif et une date doit inclure l’année. Ce n’est pas un contrat commercial à signer."
     },
     {
       "id": "ent-automation-data-contract-term-2",
@@ -1431,7 +1502,7 @@
         "Mapping"
       ],
       "title": "Mapping",
-      "definition": "La correspondance explicite entre un champ source et un champ destination."
+      "definition": "La correspondance entre une information au départ et son emplacement à l’arrivée. Par exemple : la réponse Nombre de places du formulaire va dans la colonne Places de la liste. On précise aussi si la valeur doit changer, comme soumise qui devient à traiter."
     },
     {
       "id": "ent-automation-data-contract-term-3",
@@ -1439,7 +1510,7 @@
         "Source de référence"
       ],
       "title": "Source de référence",
-      "definition": "L’endroit faisant foi pour une donnée, avec sa règle de mise à jour."
+      "definition": "L’endroit retenu pour connaître la bonne valeur d’une information. Par exemple, après réception d’une demande, le coordinateur met son état à jour dans la liste : c’est cette liste qui fait référence pour l’état, même si le formulaire initial dit encore soumise."
     }
   ],
   "ent-automation-exceptions": [
@@ -1449,7 +1520,7 @@
         "Exception"
       ],
       "title": "Exception",
-      "definition": "Une situation qui demande un chemin différent du cas normal."
+      "definition": "Un cas qui ne peut pas suivre les étapes habituelles. Par exemple, une demande sans adresse attend un complément ; une notification qui n’arrive pas doit être reprise ou signalée. On prévoit ce qui se passe et qui s’en occupe."
     },
     {
       "id": "ent-automation-exceptions-term-2",
@@ -1457,7 +1528,7 @@
         "Idempotence"
       ],
       "title": "Idempotence",
-      "definition": "Le fait que répéter une même demande ne multiplie pas son effet métier."
+      "definition": "Le résultat recherché quand la même demande arrive plusieurs fois : elle ne doit pas créer plusieurs fois la même action. Par exemple, renvoyer le formulaire INT-88 ne crée pas une deuxième intervention. La personne technique doit vérifier comment les logiciels assurent cette protection."
     },
     {
       "id": "ent-automation-exceptions-term-3",
@@ -1465,7 +1536,7 @@
         "Journal"
       ],
       "title": "Journal",
-      "definition": "Une trace d’exécutions ou d’étapes pour comprendre un résultat et reprendre le travail."
+      "definition": "Un historique des étapes et de leurs résultats. Par exemple : « INT-88, 9 h : fiche créée ; 9 h 01 : notification en échec ». Il permet de reprendre la notification sans créer à nouveau la fiche."
     }
   ],
   "ent-automation-pilot": [
@@ -1475,7 +1546,7 @@
         "Pilote"
       ],
       "title": "Pilote",
-      "definition": "Un essai limité avec critères et décision prévus avant d’étendre l’usage."
+      "definition": "Dans un projet numérique, un petit essai avant de décider de l’élargir. Cela peut concerner un assistant de travail, une automatisation ou un nouvel outil. Par exemple, cinq collègues essaient la préparation de comptes rendus pendant une semaine avant de la proposer à toute l’équipe. On choisit les tâches, la durée et les résultats attendus, puis on décide de continuer, d’ajuster ou d’arrêter."
     },
     {
       "id": "ent-automation-pilot-term-2",
@@ -1483,7 +1554,7 @@
         "Gain net"
       ],
       "title": "Gain net",
-      "definition": "Le bénéfice restant une fois retranchés les efforts nécessaires au nouveau fonctionnement."
+      "definition": "Ce qui reste du temps gagné une fois compté le travail ajouté. Par exemple, économiser 60 minutes de saisie mais passer 30 minutes à préparer et corriger laisse 30 minutes gagnées. Le calcul doit comparer un résultat de qualité équivalente."
     }
   ],
   "ent-automation-handover": [
@@ -1493,7 +1564,7 @@
         "Version de référence"
       ],
       "title": "Version de référence",
-      "definition": "La version commune retenue pour l’usage et les corrections, distincte d’une copie indépendante."
+      "definition": "La version commune que l’équipe utilise et met à jour. Par exemple, tous les collègues reprennent la même fiche de méthode datée, plutôt que des copies différentes dans leurs dossiers personnels."
     },
     {
       "id": "ent-automation-handover-term-2",
@@ -1501,7 +1572,7 @@
         "Solution de repli"
       ],
       "title": "Solution de repli",
-      "definition": "Le fonctionnement prévu pour poursuivre le travail quand le flux est arrêté ou indisponible."
+      "definition": "La façon prévue de continuer le travail si l’outil s’arrête. Par exemple, recevoir temporairement les demandes dans une liste tenue par le coordinateur, puis vérifier lesquelles restent à traiter quand l’outil reprend."
     }
   ],
   "ent-projects-outcome": [
@@ -1511,7 +1582,7 @@
         "périmètre"
       ],
       "title": "Périmètre",
-      "definition": "Ce que la version couvre et ce qu’elle exclut explicitement."
+      "definition": "Ce que le projet prévoit de faire, et ce qu’il laisse de côté pour le moment. Par exemple, créer une page avec les horaires et l’adresse, sans ajouter de compte client ni de paiement. Ces limites aident à terminer une première version utile."
     }
   ],
   "ent-projects-specification": [
@@ -1521,7 +1592,7 @@
         "spécification"
       ],
       "title": "Spécification",
-      "definition": "Description du résultat à réaliser avec données, limites et critères observables."
+      "definition": "Une description assez précise de ce qu’il faut réaliser pour pouvoir le demander puis le relire. Par exemple : deux fiches d’atelier, chacune avec son titre, sa date, son heure et sa salle ; pas d’inscription en ligne. On note aussi ce qui manque avant de publier."
     }
   ],
   "ent-projects-prototype": [
@@ -1531,7 +1602,7 @@
         "prototype"
       ],
       "title": "Prototype",
-      "definition": "Représentation limitée destinée à essayer une idée avant réalisation finale."
+      "definition": "Un premier aperçu pour essayer une idée avant de construire la version complète. Par exemple, deux écrans dessinés pour voir si un visiteur trouve le lieu d’un événement. Cet aperçu ne prouve pas encore que le vrai site fonctionne."
     }
   ],
   "ent-projects-iteration": [
@@ -1541,7 +1612,7 @@
         "itération"
       ],
       "title": "Itération",
-      "definition": "Cycle court de demande, réalisation et observation pour ajuster progressivement le projet."
+      "definition": "Une petite étape de réalisation suivie d’un essai et d’un ajustement. Par exemple, ajouter d’abord les horaires à une page, regarder si les visiteurs les trouvent, puis améliorer la présentation avant de demander une autre fonction."
     }
   ],
   "ent-projects-release": [
@@ -1551,7 +1622,7 @@
         "recette"
       ],
       "title": "Recette",
-      "definition": "Vérifications organisées pour décider si une réalisation répond aux attentes."
+      "definition": "Les essais faits avant d’accepter une réalisation. Par exemple, remplir un formulaire avec un cas inventé puis vérifier que l’équipe retrouve bien la demande. Un bouton qui affiche Merci ne suffit pas si rien n’a été enregistré."
     }
   ],
   "ent-projects-maintenance": [
@@ -1561,7 +1632,7 @@
         "maintenance"
       ],
       "title": "Maintenance",
-      "definition": "Travail gardant le service utile : contenus, corrections, suivi et capacité de reprise."
+      "definition": "Le travail pour garder un site ou un outil utile au fil du temps. Par exemple, corriger un horaire périmé, réparer un formulaire et savoir qui contacter en cas de problème. Il faut le prévoir après la première mise en ligne."
     }
   ]
 }

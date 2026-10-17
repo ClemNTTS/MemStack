@@ -42,8 +42,8 @@ export default function LandingPage({ connected = false, embedded = false }: { c
           <article className="landing-environment landing-environment-business" aria-labelledby="landing-business-title">
             <img className="landing-environment-memo" src={`${import.meta.env.BASE_URL}memo/journey-guide.webp`} width="74" height="68" alt="" />
             <div className="landing-environment-label"><Users size={22} aria-hidden="true" /><span>POUR LES ENTREPRISES</span></div>
-            <h2 id="landing-business-title" tabIndex={-1}>Fais monter ton équipe<br />en compétences sur l’IA.</h2><p>Prompts, contexte, agents, confidentialité et vérification : un parcours guidé pour utiliser l’IA avec discernement, sans savoir coder.</p>
-            <LearningSignal labels={['Explorer', 'Vérifier', 'Appliquer']} />
+            <h2 id="landing-business-title" tabIndex={-1}>Fais monter ton équipe<br />en compétences sur l’IA.</h2><p>Mieux utiliser les assistants, organiser les tâches répétitives et faire avancer les projets numériques : trois parcours pour apprendre en pratiquant, sans savoir coder.</p>
+            <LearningSignal labels={['Découvrir', 'Pratiquer', 'Partager']} />
             <div className="landing-environment-bottom"><a className="landing-primary" href={appHref('/business')}>Découvrir l’offre Entreprise <ArrowRight size={18} aria-hidden="true" /></a><span>10 € TTC par membre actif et par mois</span></div>
           </article>
         </div>

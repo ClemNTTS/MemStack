@@ -15,7 +15,10 @@
 .enterprise-practice-tools { display: flex; flex-wrap: wrap; gap: .75rem; margin: 1rem 0; }
 .enterprise-practice-tools .catalog-button { white-space: normal; text-align: left; }
 .enterprise-practice-checklist { display: grid; gap: .75rem; }
-.enterprise-practice-checklist > label { display: flex; align-items: flex-start; gap: .75rem; }
+.enterprise-practice-comparison .lesson-rich-text > p { margin-block:1rem; line-height:1.8; }
+.enterprise-main .enterprise-practice-checklist > label { display: flex; align-items: flex-start; gap: .75rem; }
+.enterprise-practice-checklist > label > span { flex:1; min-width:0; }
+.enterprise-practice-comparison .enterprise-practice-checklist .lesson-rich-text > p { margin:0; }
 .enterprise-practice-checklist input { width: 1.2rem; height: 1.2rem; flex-shrink: 0; margin-top: .25rem; }
 .enterprise-flow-practice fieldset { border: 0; padding: 0; margin: 0; }
 .enterprise-flow-practice legend { font-weight: 700; }
@@ -29,3 +32,9 @@
 .enterprise-challenge-group { margin: 2.5rem 0; }
 @media (max-width: 900px) { .enterprise-track-grid { grid-template-columns: 1fr; } }
 @media (max-width: 600px) { .enterprise-flow-state { grid-template-columns: 1fr; } .enterprise-practice-tools { flex-direction: column; align-items: stretch; } .enterprise-conversation .enterprise-practice { padding: 12px; } }
+@media (max-width: 600px) {
+  .enterprise-conversation-turn:has(.enterprise-guided-practice) .chat-row { grid-template-columns:minmax(0,1fr); }
+  .enterprise-conversation-turn:has(.enterprise-guided-practice) .chat-avatar { display:none; }
+  .enterprise-conversation-turn:has(.enterprise-guided-practice) .lesson-bubble { padding:12px; }
+  .enterprise-guided-practice .enterprise-practice-comparison { padding:14px; }
+}

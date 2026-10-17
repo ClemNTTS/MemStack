@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="700" viewBox="0 0 900 700" role="img" aria-labelledby="title description">
+  <title id="title">Préparer, retrouver, envoyer : trois gestes différents</title>
+  <desc id="description">Préparer produit un brouillon. Retrouver permet de lire le lieu dans une note. Envoyer fait partir le message. Dans cet exercice, Léa garde l’envoi dans sa messagerie.</desc>
+  <rect width="900" height="700" rx="32" fill="#f5f2eb"/>
+  <g font-family="Segoe UI,Arial,sans-serif" fill="#30263d">
+    <rect x="40" y="35" width="820" height="190" rx="26" fill="#eadcf5"/>
+    <g transform="translate(83 76)" fill="none" stroke="#75539d" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M13 0h65l25 25v83H13zM78 0v25h25M33 49h49M33 70h37M33 91h24"/>
+      <path d="m88 104 28-28 12 12-28 28-17 5z" fill="#fffdf9"/>
+    </g>
+    <text x="255" y="113" font-size="54" font-weight="700">Préparer</text>
+    <text x="255" y="173" font-size="38">Un brouillon à relire.</text>
+    <rect x="40" y="255" width="820" height="190" rx="26" fill="#fffdf9" stroke="#d7cddd" stroke-width="2"/>
+    <g transform="translate(85 298)" fill="none" stroke="#75539d" stroke-width="7" stroke-linecap="round">
+      <rect x="5" y="0" width="95" height="100" rx="12"/>
+      <path d="M28 25h46M28 46h25"/>
+      <circle cx="78" cy="78" r="29" fill="#eadcf5"/>
+      <path d="m99 100 21 21"/>
+    </g>
+    <text x="255" y="333" font-size="54" font-weight="700">Retrouver</text>
+    <text x="255" y="393" font-size="38">Une information dans une note.</text>
+    <rect x="40" y="475" width="820" height="190" rx="26" fill="#e4e9df"/>
+    <g transform="translate(84 525)" fill="none" stroke="#526852" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m2 45 124-43-39 119-27-52zM60 69l66-67" fill="#fffdf9"/>
+    </g>
+    <text x="255" y="553" font-size="54" font-weight="700">Envoyer</text>
+    <text x="255" y="613" font-size="38">Le message part aux collègues.</text>
+  </g>
+</svg>

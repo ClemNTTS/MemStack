@@ -25,3 +25,12 @@ test('ordinary prose and an unfinished fence remain readable', () => {
   assert.deepEqual(parseTextBlocks('Un message.'), [{ type: 'text', text: 'Un message.' }])
   assert.deepEqual(parseTextBlocks('```js\nconst x = 1'), [{ type: 'text', text: '```js\nconst x = 1' }])
 })
+
+test('practice examples separate paragraphs without flattening lines or splitting code', () => {
+  assert.deepEqual(parseTextBlocks('Assistant : un brouillon.\r\nToujours à relire.\r\n\r\nLéa : elle envoie.\r\n\r\n```text\nune ligne\n\nune autre\n```\n\nDernier repère.'), [
+    { type: 'text', text: 'Assistant : un brouillon.\r\nToujours à relire.' },
+    { type: 'text', text: 'Léa : elle envoie.' },
+    { type: 'code', language: 'text', text: 'une ligne\n\nune autre' },
+    { type: 'text', text: 'Dernier repère.' },
+  ])
+})

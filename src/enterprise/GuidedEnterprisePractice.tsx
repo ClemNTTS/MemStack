@@ -41,11 +41,11 @@ export default function GuidedEnterprisePractice({ lessonId, draft = '', onDraft
 
   return <div className="enterprise-practice enterprise-guided-practice">
     <h2>À toi de jouer</h2>
-    <p className="lesson-category">Auto-comparaison guidée · sans analyse IA de ta saisie</p>
-    <section className="enterprise-practice-case" aria-label="Situation fictive de l’exercice"><p className="lesson-category">Toutes les informations pour cet exercice</p><LessonText glossary glossaryId={lessonId} text={practice.scenario}/></section>
+    <p className="lesson-category">Un petit essai, puis un exemple pour te guider</p>
+    <section className="enterprise-practice-case" aria-label="Situation fictive de l’exercice"><p className="lesson-category">Le cas à explorer</p><LessonText glossary glossaryId={lessonId} text={practice.scenario}/></section>
     <LessonText glossary glossaryId={lessonId} text={practice.task}/>
-    <section aria-label="Critères pour préparer ta proposition"><h3>Ton résultat doit permettre de…</h3><ul>{practice.checklist.map(point => <li key={point}><LessonText glossary glossaryId={lessonId} text={point}/></li>)}</ul></section>
-    <p className="dashboard-note">Travaille avec les pièces fictives. Ta saisie reste en mémoire dans cet espace, sans envoi au responsable ni à une IA. Copie-la ou télécharge-la avant de fermer ou de quitter l’espace : elle sera perdue.</p>
+    <section aria-label="Critères pour préparer ta proposition"><h3>Quelques repères pour t’aider</h3><ul>{practice.checklist.map(point => <li key={point}><LessonText glossary glossaryId={lessonId} text={point}/></li>)}</ul></section>
+    <p className="dashboard-note">Ton texte reste ici, sans envoi à ton équipe ou à une IA. Copie-le ou télécharge-le avant de quitter cet espace.</p>
     <label>Ta proposition<textarea value={draft} onChange={event => { onDraftChange(event.target.value); setExportStatus(''); setReviewed({}) }} maxLength={5000} rows={6} placeholder={practice.starter}/></label>
     <div className="dashboard-note"><LessonText glossary glossaryId={lessonId} text={`Tu peux t’aider de cette structure : ${practice.starter}`}/></div>
     <div className="enterprise-practice-tools"><button type="button" className="catalog-button secondary" disabled={!draft.trim()} onClick={() => setCompared(true)}>Comparer avec un exemple</button><button type="button" className="catalog-button secondary" disabled={!draft.trim()} onClick={() => { void copy() }}>Copier mon texte</button><button type="button" className="catalog-button secondary" disabled={!draft.trim()} onClick={download}>Télécharger (.txt)</button></div>
@@ -56,10 +56,10 @@ export default function GuidedEnterprisePractice({ lessonId, draft = '', onDraft
       <h3>Pourquoi cet exemple convient</h3>
       <LessonText glossary glossaryId={lessonId} text={practice.explanation}/>
       <h3>Relis maintenant ton propre texte</h3>
-      <p>Coche les critères que tu retrouves dans ta proposition, puis complète les points manquants. Cette auto-comparaison ne note pas ta saisie et ne certifie pas le résultat.</p>
+      <p>Coche les points déjà présents dans ton texte, puis complète ce qui manque. Tu compares toi-même ; il n’y a pas de note automatique.</p>
       <div className="enterprise-practice-checklist">{practice.checklist.map((point, index) => <label key={point}><input type="checkbox" checked={Boolean(reviewed[index])} onChange={event => setReviewed(previous => ({ ...previous, [index]: event.target.checked }))}/><span><LessonText glossary glossaryId={lessonId} text={point}/></span></label>)}</div>
       <p>Plusieurs formulations peuvent convenir. Compare les idées plutôt que les mots de l’exemple. Tu peux modifier ta proposition ci-dessus.</p>
     </section>}
-    <p className="dashboard-note">Les questions qui suivent consolident la méthode. Aucun assistant externe ni achat n’est nécessaire pour terminer cet atelier.</p>
+    <p className="dashboard-note">Tu peux terminer cet atelier sans autre outil.</p>
   </div>
 }

@@ -64,7 +64,7 @@ button.landing-secondary { border:0; padding:0; background:transparent; font-fam
 .landing-dual-hero { position:relative; isolation:isolate; padding-top:28px; }
 .landing-motion-control { position:absolute; top:0; right:0; display:block; margin:0; padding:5px 10px; border:1px solid #dfd2eb; border-radius:20px; background:#faf7fc; color:#715781; font:inherit; font-size:.65rem; cursor:pointer; }
 .landing-motion-control:focus-visible { outline:3px solid #a981cb; outline-offset:3px; }
-.landing-signal-field { position:absolute; inset:0 -20px 0; z-index:-1; overflow:hidden; pointer-events:none; background:radial-gradient(ellipse at 18% 30%,#d9c2f032,transparent 50%),radial-gradient(ellipse at 85% 55%,#c5b3ee26,transparent 50%); }
+.landing-signal-field { position:absolute; inset:0 -20px 0; z-index:-1; overflow:hidden; pointer-events:none; mask-image:linear-gradient(to right,transparent,#000 12%,#000 88%,transparent),linear-gradient(to bottom,transparent,#000 10%,#000 85%,transparent); mask-composite:intersect; }
 .landing-signal-field span { position:absolute; left:var(--signal-x); top:10%; width:1px; height:78%; background:linear-gradient(transparent,#b89ad44a,transparent); transform:rotate(28deg); }
 .landing-signal-field span:nth-child(1) { --signal-x:5%; --signal-delay:0s; }
 .landing-signal-field span:nth-child(2) { --signal-x:22%; --signal-delay:-2s; }

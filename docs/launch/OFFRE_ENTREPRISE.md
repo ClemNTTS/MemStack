@@ -12,7 +12,7 @@ Deux missions communes donnent les repères de départ. Chacun choisit ensuite u
 - **Automatiser les tâches et organiser les pratiques** : décrire un processus, sélectionner une première liaison, préparer les données, les reprises, les essais et la transmission.
 - **Faire avancer un projet numérique** : définir un besoin, rédiger une demande de réalisation, préparer un prototype, organiser les modifications, le lancement et la maintenance.
 
-Un premier parcours représente huit missions, socle compris. Les trois parcours réunissent vingt missions recommandées ; vingt ressources complémentaires restent disponibles. Le catalogue contient au total 40 missions, 120 cartes et 11 situations d’évaluation. Prévoir environ 10 à 18 minutes par mission selon le sujet ; ces durées sont indicatives et restent à calibrer avec de vrais apprenants.
+Un premier parcours représente huit missions, socle compris. Les trois parcours réunissent vingt missions recommandées ; vingt ressources complémentaires restent disponibles. Le catalogue contient au total 40 missions, 120 cartes et 11 situations d’évaluation. Prévoir environ 6 à 18 minutes par mission selon le sujet ; ces durées sont indicatives et restent à calibrer avec de vrais apprenants.
 
 ### Préparer, comparer, améliorer
 
