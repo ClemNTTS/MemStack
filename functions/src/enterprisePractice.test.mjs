@@ -29,8 +29,8 @@ test('only dated provider models are accepted and untrusted instructions stay in
   assert.deepEqual(JSON.parse(messages[1].content), { case: practice.scenario, task: practice.task, essential: rubric.essential, learnerAnswerSegments: practiceAnswerSegments(answer) })
 })
 
-test('v9 advice contract stays grounded in the case without adding invented requirements or dates', () => {
-  assert.equal(PRACTICE_PROMPT_VERSION, 'enterprise-practice-v9')
+test('v12 advice contract stays grounded in the case without adding invented requirements or dates', () => {
+  assert.equal(PRACTICE_PROMPT_VERSION, 'enterprise-practice-v12')
   const system = practiceMessages(practice, 'Mon essai', rubric)[0].content
   assert.match(system, /uniquement sur les faits du cas et sur le critère évalué/)
   assert.match(system, /n'invente aucun détail, critère supplémentaire ou date de remplacement/)
@@ -60,6 +60,8 @@ test('server derives status and feedback exclusively from essential criterion st
   assert.equal(derive([met, missing, met]).nextStep, three.hints[1])
   assert.equal(derive([met, missing, contradicted]).status, 'retry')
   assert.equal(derive([met, missing, contradicted]).nextStep, three.hints[2])
+  assert.equal(derive([contradicted, met, contradicted]).nextStep, three.hints[0])
+  assert.ok(!derive([contradicted, met, contradicted]).nextStep.includes(three.hints[1]))
   assert.deepEqual(derive([missing, contradicted, missing]).strengths, [])
   assert.equal(derive([missing, missing, missing]).status, 'retry')
   assert.equal(derive([{ ...missing, evidenceIds: ['e1'] }, missing, missing]).status, 'almost')

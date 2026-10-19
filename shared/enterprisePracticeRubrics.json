@@ -1,19 +1,19 @@
 {
-  "version": 4,
+  "version": 7,
   "lessons": {
     "ent-answer-or-action": {
       "essential": [
-        "Distinguer la préparation du brouillon par l’assistant IA de l’envoi que Léa doit faire elle-même.",
-        "Léa garde la relecture avant envoi ; une formulation courte ou implicite claire convient."
+        "Respecter le partage des capacités : l’assistant IA peut préparer le mail et lire la note fournie ; Léa doit envoyer elle-même le mail. Mentionner la lecture de la note reste facultatif, mais la nier contredit le cas. Une réponse qui dit brouillon par l’assistant IA puis envoi par Léa est suffisante sans parler de la note.",
+        "Léa garde la relecture avant envoi. Évaluer uniquement cette relecture : si elle est présente, ce critère est acquis même si la réponse se trompe sur l’envoi ou la lecture de la note."
       ],
       "optional": [
-        "Retrouver la salle dans la note.",
+        "Mentionner explicitement la salle ou la lecture de la note : son omission n’est pas une erreur.",
         "Nommer les destinataires ou les messages envoyés.",
         "Reprendre exactement les deux phrases ou leurs libellés."
       ],
       "hints": [
-        "L’assistant IA prépare le brouillon ; c’est Léa qui doit envoyer le mail. Ajoute ce partage du travail dans ta réponse.",
-        "Avant l’envoi, garde une étape où Léa relit le texte. Une courte phrase suffit."
+        "L’assistant IA peut retrouver « salle Bleue » dans la note fournie.\nEn revanche, il ne peut pas envoyer le mail : après relecture, Léa doit l’envoyer elle-même.",
+        "Avant l’envoi, Léa doit relire le brouillon. Ajoute cette étape si elle manque dans ta réponse."
       ]
     },
     "ent-useful-request": {
