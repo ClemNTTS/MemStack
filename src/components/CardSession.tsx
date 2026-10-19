@@ -31,7 +31,8 @@ function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel, 
   const ratedIds = useRef(new Set<string>())
   const [isRevealed, setIsRevealed] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [departingRating, setDepartingRating] = useState<CardRating | null>(null)
+  const [pendingRating, setPendingRating] = useState<CardRating | null>(null)
+  const [saveFailed, setSaveFailed] = useState(false)
   const savingRef = useRef(false)
   const currentItem = cards[results.length]
   const currentCard = currentItem?.card
@@ -42,22 +43,23 @@ function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel, 
     const result = { cardId: currentCard.id, rating, reviewedAt: new Date().toISOString() }
     savingRef.current = true
     setSaving(true)
+    setPendingRating(rating)
+    setSaveFailed(false)
     let saved = false
     try {
       saved = await onRate(result, currentItem.kind)
-      if (!saved) return false
+      if (!saved) { setSaveFailed(true); return false }
       ratedIds.current.add(currentCard.id)
-      setDepartingRating(rating)
-      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        await new Promise<void>((resolve) => window.setTimeout(resolve, 280))
-      }
       setResults((previous) => [...previous, result])
       setIsRevealed(false)
       return true
+    } catch {
+      setSaveFailed(true)
+      return false
     } finally {
       savingRef.current = false
       setSaving(false)
-      setDepartingRating(null)
+      setPendingRating(null)
     }
   }
 
@@ -101,19 +103,19 @@ function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel, 
       <article className="card-stage" key={currentCard.id}>
         <h2 className="card-question">{currentCard.question}</h2>
         <div className="card-deck">
-          <button className="memo-rating" type="button" disabled={!isRevealed || saving} aria-label={ratingLabels.forgotten} title={ratingLabels.forgotten} onClick={() => { void rateCard('forgotten') }}>
+          <button className="memo-rating" type="button" data-selected={pendingRating === 'forgotten'} disabled={!isRevealed || saving} aria-label={ratingLabels.forgotten} title={ratingLabels.forgotten} onClick={() => { void rateCard('forgotten') }}>
             <Memo expression="forgotten" />
             <span aria-hidden="true" className="rating-symbol">← ×</span>
             <span className="rating-mobile-label" aria-hidden="true">À retrouver</span>
           </button>
-          <FlashCard card={currentCard} isRevealed={isRevealed} isSaving={saving} departingRating={departingRating} onFlip={() => setIsRevealed((previous) => !previous)} onRate={rateCard} />
-          <button className="memo-rating" type="button" disabled={!isRevealed || saving} aria-label={ratingLabels.recalled} title={ratingLabels.recalled} onClick={() => { void rateCard('recalled') }}>
+          <FlashCard card={currentCard} isRevealed={isRevealed} isSaving={saving} pendingRating={pendingRating} onFlip={() => setIsRevealed((previous) => !previous)} onRate={rateCard} />
+          <button className="memo-rating" type="button" data-selected={pendingRating === 'recalled'} disabled={!isRevealed || saving} aria-label={ratingLabels.recalled} title={ratingLabels.recalled} onClick={() => { void rateCard('recalled') }}>
             <Memo expression="recalled" />
             <span aria-hidden="true" className="rating-symbol">✓ →</span>
             <span className="rating-mobile-label" aria-hidden="true">Retrouvée</span>
           </button>
         </div>
-        <p className="card-save-status" role="status">{departingRating ? 'Carte enregistrée' : saving ? 'Enregistrement de ta réponse…' : '\u00a0'}</p>
+        <p className="card-save-status" role="status">{saving ? 'Enregistrement de ta réponse…' : saveFailed ? 'Enregistrement impossible. Ta carte reste ici ; tu peux réessayer.' : '\u00a0'}</p>
         <p className="card-rating-prompt" aria-hidden="true">{isRevealed ? 'Avais-tu retrouvé la réponse ? À gauche : non. À droite : oui.' : 'Retrouve la réponse avant de retourner la carte.'}</p>
         {!environment && <ContentReportButton context={cardReportContext(currentCard, catalogLessons)} />}
         <p id="card-instructions" className="sr-only">

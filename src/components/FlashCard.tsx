@@ -10,10 +10,10 @@ type FlashCardProps = {
   onFlip: () => void
   onRate: (rating: CardRating) => boolean | Promise<boolean>
   isSaving?: boolean
-  departingRating?: CardRating | null
+  pendingRating?: CardRating | null
 }
 
-function FlashCard({ card, isRevealed, onFlip, onRate, isSaving = false, departingRating = null }: FlashCardProps) {
+function FlashCard({ card, isRevealed, onFlip, onRate, isSaving = false, pendingRating = null }: FlashCardProps) {
   const start = useRef<{ x: number, y: number, pointerId: number } | null>(null)
   const suppressClick = useRef(false)
   const swipePending = useRef(false)
@@ -41,8 +41,7 @@ function FlashCard({ card, isRevealed, onFlip, onRate, isSaving = false, departi
       setOffset(0)
       return
     }
-    // Keep the release pose until the server confirms the rating. A failed save
-    // springs back; a confirmed save exits from these same coordinates.
+    // Keep the release pose until confirmation; a failed save springs back.
     setOffset(Math.max(-120, Math.min(120, dx * 0.8)))
     swipePending.current = true
     try {
@@ -56,13 +55,13 @@ function FlashCard({ card, isRevealed, onFlip, onRate, isSaving = false, departi
 
   return (
     <button
-      className={`flash-card${isDragging ? ' flash-card--dragging' : ''}${departingRating ? ' flash-card--departing' : ''}`}
+      className={`flash-card${isDragging ? ' flash-card--dragging' : ''}${isSaving ? ' flash-card--saving' : ''}`}
       type="button"
       aria-label={isRevealed ? 'Masquer la réponse' : 'Révéler la réponse'}
       aria-pressed={isRevealed}
       aria-describedby="card-instructions"
       aria-disabled={isSaving}
-      data-direction={departingRating ?? direction}
+      data-direction={pendingRating ?? direction}
       style={{ '--card-drag-x': `${offset}px`, '--card-drag-angle': `${offset / 22}deg`, '--card-drag-lift': `${-Math.abs(offset) / 18}px`, '--card-intent-opacity': Math.min(1, Math.abs(offset) / 60) } as CSSProperties}
       onClick={() => {
         if (!suppressClick.current && !isSaving) onFlip()
@@ -113,7 +112,7 @@ function FlashCard({ card, isRevealed, onFlip, onRate, isSaving = false, departi
           <span className="flash-card-action" aria-hidden="true">{'\u00a0'}</span>
         </span>
       </span>
-      <span className="flash-card-intent" aria-hidden="true">{(departingRating ?? direction) === 'forgotten' ? '← À retrouver' : 'Retrouvée ✓'}</span>
+      <span className="flash-card-intent" aria-hidden="true">{(pendingRating ?? direction) === 'forgotten' ? '← À retrouver' : 'Retrouvée ✓'}</span>
       <span className="sr-only" aria-live="polite">{isRevealed ? card.answer : ''}</span>
     </button>
   )

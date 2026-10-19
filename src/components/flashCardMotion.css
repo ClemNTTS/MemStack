@@ -4,7 +4,7 @@
   transform: translate3d(var(--card-drag-x, 0px), var(--card-drag-lift, 0px), 0) rotate(var(--card-drag-angle, 0deg));
   transform-origin: 50% 85%;
   transition: transform 380ms cubic-bezier(.2, 1.45, .4, 1), opacity 220ms ease;
-  animation: flash-card-arrive 340ms cubic-bezier(.2, .8, .3, 1) both;
+  animation: flash-card-arrive 180ms cubic-bezier(.2, .8, .3, 1) both;
 }
 
 .card-deck .flash-card--dragging {
@@ -44,29 +44,13 @@
   left: .875rem;
 }
 
-.card-deck .flash-card--departing {
-  --card-exit-x: 95px;
-  --card-exit-angle: 7deg;
-  animation: flash-card-depart 280ms cubic-bezier(.4, 0, .8, .4) both;
-  pointer-events: none;
-}
-
-.card-deck .flash-card--departing[data-direction='forgotten'] {
-  --card-exit-x: -95px;
-  --card-exit-angle: -7deg;
-}
-
-.flash-card--departing .flash-card-intent { opacity: 1; }
+.flash-card--saving .flash-card-intent { opacity: 1; }
+.memo-rating[data-selected='true'] { border-color: #7951a5; background: #eee2fa; box-shadow: 0 0 0 3px #7951a522; }
 .card-save-status { min-height: 1.4em; margin: .6rem 0 0; color: #76558f; font-size: .8rem; }
 
 @keyframes flash-card-arrive {
   from { opacity: 0; translate: 0 10px; scale: .975; }
   to { opacity: 1; translate: 0 0; scale: 1; }
-}
-
-@keyframes flash-card-depart {
-  from { opacity: 1; transform: translate3d(var(--card-drag-x, 0px), var(--card-drag-lift, 0px), 0) rotate(var(--card-drag-angle, 0deg)); }
-  to { opacity: 0; transform: translate3d(calc(var(--card-drag-x, 0px) + var(--card-exit-x)), calc(var(--card-drag-lift, 0px) - 14px), 0) rotate(calc(var(--card-drag-angle, 0deg) + var(--card-exit-angle))) scale(.95); }
 }
 
 @media (prefers-reduced-motion: reduce) {
