@@ -580,7 +580,7 @@
         {
           "id": "ent-useful-request-message-2",
           "type": "message",
-          "text": "Écoute la différence entre ces deux prompts.\n\n« Fais un bon mail. »\n\n« Prépare une invitation courte pour mes collègues : réunion jeudi à 10 h, salle Bleue. Demande-leur de répondre avant mardi. Commence par Bonjour à tous. »\n\nDans la seconde, l’assistant IA sait à qui parler, quoi annoncer et quelle réponse attendre. C’est un peu comme donner les bonnes indications à un collègue : il a moins de choses à deviner."
+          "text": "Écoute la différence entre ces deux prompts.\n\n« Fais un bon mail. »\n\n« Prépare une invitation courte pour mes collègues : réunion jeudi à 10 h, salle Bleue. Demande-leur de répondre avant mardi. Commence par Bonjour à tous. »\n\nDans le second prompt, l’assistant IA sait à qui parler, quoi annoncer et quelle réponse attendre. C’est un peu comme donner les bonnes indications à un collègue : il a moins de choses à deviner."
         },
         {
           "id": "ent-useful-request-message-3",
@@ -590,7 +590,7 @@
         {
           "id": "ent-useful-request-practice-1",
           "type": "message",
-          "text": "Pratique · À ton tour de demander une invitation. Pense à quatre petites lignes : pour qui, quelles informations, quelle longueur et quoi faire du détail manquant.\n\nTu écris le prompt à l’assistant IA ; tu n’as pas à rédiger le mail. On comparera ensuite avec un exemple, sans chercher une phrase unique à recopier."
+          "text": "Pratique · À toi de préparer un prompt pour un rendez-vous client. Tu trouveras ci-dessous de nouvelles informations : deux créneaux possibles, une date de réponse souhaitée et un lien encore à communiquer."
         },
         {
           "id": "ent-useful-request-question-1",
@@ -599,8 +599,8 @@
           "options": [
             {
               "id": "option-1",
-              "text": "Le jour, l’heure et la salle sont bien ceux demandés.",
-              "feedback": "Oui : ces trois informations permettent aux collègues de venir au bon endroit au bon moment."
+              "text": "Les deux créneaux et la date de réponse souhaitée sont bien ceux du cas.",
+              "feedback": "Oui : ces informations permettent à Camille de choisir un créneau et de savoir quand répondre."
             },
             {
               "id": "option-2",
@@ -618,22 +618,22 @@
         {
           "id": "ent-useful-request-question-2",
           "type": "question",
-          "prompt": "La salle n’est pas encore choisie. Que demander à l’assistant IA ?",
+          "prompt": "Le lien de visioconférence n’est pas encore disponible. Que préciser dans ton prompt ?",
           "options": [
             {
               "id": "option-1",
-              "text": "Reprendre la salle de la réunion précédente sans demander.",
-              "feedback": "La salle précédente peut ne pas convenir à cette réunion."
+              "text": "Reprendre un ancien lien de réunion sans le vérifier.",
+              "feedback": "Un ancien lien ne correspond pas forcément à ce rendez-vous. Le nouveau lien reste à communiquer."
             },
             {
               "id": "option-2",
-              "text": "Choisir une salle qui semble habituelle.",
-              "feedback": "Une salle vraisemblable reste une salle que tu n’as pas choisie."
+              "text": "Laisser l’assistant IA créer un lien qui semble crédible.",
+              "feedback": "Un lien inventé ne permet pas de rejoindre une réunion réelle. Il faut garder cette information en attente."
             },
             {
               "id": "option-3",
-              "text": "Indiquer « lieu à confirmer » et te demander de compléter avant l’envoi.",
-              "feedback": "Oui : le brouillon avance sans donner un faux lieu aux collègues."
+              "text": "Indiquer « lien à communiquer » et rappeler de le compléter avant la réunion.",
+              "feedback": "Oui : tu avances sur le mail sans inventer le lien. Il restera à le communiquer quand il sera disponible."
             }
           ],
           "correctOptionId": "option-3"
@@ -652,8 +652,8 @@
         },
         {
           "id": "ent-useful-request-card-3",
-          "question": "Le lieu de réunion manque. Que dire à l’assistant IA ?",
-          "answer": "Écrire « lieu à confirmer » plutôt que choisir une salle à ma place."
+          "question": "Le lien de visioconférence manque. Que préciser dans ton prompt ?",
+          "answer": "Indiquer « lien à communiquer » et prévoir de le transmettre quand il sera disponible, sans inventer d’adresse."
         }
       ],
       "sources": [
@@ -2233,7 +2233,7 @@
         {
           "id": "ent-assistants-brief-practice-1",
           "type": "message",
-          "text": "Pratique · À toi d’aider Lina : prépare son prompt, prêt à copier, puis deux critères observables pour dire si le courriel convient.\n\nÉcris d’abord ta proposition, puis compare-la à l’exemple. Tout est fictif et fourni ici ; aucune IA externe n’est appelée. Un essai dans un outil autorisé reste facultatif."
+          "text": "Pratique · À toi d’aider Lina : prépare son prompt, prêt à copier, puis deux critères observables pour dire si le courriel convient.\n\nÉcris d’abord ta proposition, puis compare-la à l’exemple. Tout est fictif et fourni ici. Le bouton Vérifier ma réponse permet de demander un retour IA. Un essai dans un outil autorisé reste facultatif."
         },
         {
           "id": "ent-assistants-brief-question-1",
@@ -2337,7 +2337,7 @@
         {
           "id": "ent-assistants-documents-practice-1",
           "type": "message",
-          "text": "Pratique · À toi de rapprocher les trois pièces. Prépare le prompt pour l’assistant IA, puis quatre lignes : quantité, produits, total livré et délai. Cite les pièces utiles et termine par la question qui permettra de préciser le délai.\n\nÉcris d’abord ta proposition, puis compare-la à l’exemple. Tout est fictif et fourni ici ; aucune IA externe n’est appelée. Un essai dans un outil autorisé reste facultatif."
+          "text": "Pratique · À toi de rapprocher les trois pièces. Prépare le prompt pour l’assistant IA, puis quatre lignes : quantité, produits, total livré et délai. Cite les pièces utiles et termine par la question qui permettra de préciser le délai.\n\nÉcris d’abord ta proposition, puis compare-la à l’exemple. Tout est fictif et fourni ici. Le bouton Vérifier ma réponse permet de demander un retour IA. Un essai dans un outil autorisé reste facultatif."
         },
         {
           "id": "ent-assistants-documents-question-1",
@@ -2441,7 +2441,7 @@
         {
           "id": "ent-assistants-meeting-practice-1",
           "type": "message",
-          "text": "Pratique · À toi de préparer le suivi. Écris le prompt pour l’assistant IA en précisant les catégories, les destinataires et le format. Ajoute un relevé de quatre lignes, puis un message de trois phrases maximum pour faire avancer l’attribution du bilan.\n\nÉcris d’abord ta proposition, puis compare-la à l’exemple. Tout est fictif et fourni ici ; aucune IA externe n’est appelée. Un essai dans un outil autorisé reste facultatif."
+          "text": "Pratique · À toi de préparer le suivi. Écris le prompt pour l’assistant IA en précisant les catégories, les destinataires et le format. Ajoute un relevé de quatre lignes, puis un message de trois phrases maximum pour faire avancer l’attribution du bilan.\n\nÉcris d’abord ta proposition, puis compare-la à l’exemple. Tout est fictif et fourni ici. Le bouton Vérifier ma réponse permet de demander un retour IA. Un essai dans un outil autorisé reste facultatif."
         },
         {
           "id": "ent-assistants-meeting-question-1",
@@ -2545,7 +2545,7 @@
         {
           "id": "ent-assistants-options-practice-1",
           "type": "message",
-          "text": "Pratique · À toi de préparer le choix : écris le prompt pour l’assistant IA avec les besoins obligatoires, la préférence et le format de comparaison. Compare les trois salles dans un tableau, puis recommande une salle en deux phrases pour une équipe qui privilégie le trajet court.\n\nÉcris d’abord ta proposition, puis compare-la à l’exemple. Tout est fictif et fourni ici ; aucune IA externe n’est appelée. Un essai dans un outil autorisé reste facultatif."
+          "text": "Pratique · À toi de préparer le choix : écris le prompt pour l’assistant IA avec les besoins obligatoires, la préférence et le format de comparaison. Compare les trois salles dans un tableau, puis recommande une salle en deux phrases pour une équipe qui privilégie le trajet court.\n\nÉcris d’abord ta proposition, puis compare-la à l’exemple. Tout est fictif et fourni ici. Le bouton Vérifier ma réponse permet de demander un retour IA. Un essai dans un outil autorisé reste facultatif."
         },
         {
           "id": "ent-assistants-options-question-1",
@@ -2649,7 +2649,7 @@
         {
           "id": "ent-assistants-iterate-practice-1",
           "type": "message",
-          "text": "Pratique · À toi de préparer le prochain essai. Compare V1 et V2 pour A et B, puis change un seul point du prompt. Propose le résultat attendu pour chaque cas. Termine par un modèle révisé à conserver, avec les champs à remplacer séparés des réponses de cet essai.\n\nÉcris d’abord ta proposition, puis compare-la à l’exemple. Tout est fictif et fourni ici ; aucune IA externe n’est appelée. Un essai dans un outil autorisé reste facultatif."
+          "text": "Pratique · À toi de préparer le prochain essai. Compare V1 et V2 pour A et B, puis change un seul point du prompt. Propose le résultat attendu pour chaque cas. Termine par un modèle révisé à conserver, avec les champs à remplacer séparés des réponses de cet essai.\n\nÉcris d’abord ta proposition, puis compare-la à l’exemple. Tout est fictif et fourni ici. Le bouton Vérifier ma réponse permet de demander un retour IA. Un essai dans un outil autorisé reste facultatif."
         },
         {
           "id": "ent-assistants-iterate-question-1",
@@ -2753,7 +2753,7 @@
         {
           "id": "ent-assistants-team-playbook-practice-1",
           "type": "message",
-          "text": "Pratique · À toi de passer la méthode à un collègue qui la découvre. Prépare une fiche en six rubriques, puis explique comment il pourra l’essayer. Calcule le temps gagné dans le cas fourni et précise ce que cet essai ne permet pas encore de conclure.\n\nÉcris d’abord ta proposition, puis compare-la à l’exemple. Tout est fictif et fourni ici ; aucune IA externe n’est appelée. Un essai dans un outil autorisé reste facultatif."
+          "text": "Pratique · À toi de passer la méthode à un collègue qui la découvre. Prépare une fiche en six rubriques, puis explique comment il pourra l’essayer. Calcule le temps gagné dans le cas fourni et précise ce que cet essai ne permet pas encore de conclure.\n\nÉcris d’abord ta proposition, puis compare-la à l’exemple. Tout est fictif et fourni ici. Le bouton Vérifier ma réponse permet de demander un retour IA. Un essai dans un outil autorisé reste facultatif."
         },
         {
           "id": "ent-assistants-team-playbook-question-1",

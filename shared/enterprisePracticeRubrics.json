@@ -1,0 +1,655 @@
+{
+  "version": 4,
+  "lessons": {
+    "ent-answer-or-action": {
+      "essential": [
+        "Distinguer la préparation du brouillon par l’assistant IA de l’envoi que Léa doit faire elle-même.",
+        "Léa garde la relecture avant envoi ; une formulation courte ou implicite claire convient."
+      ],
+      "optional": [
+        "Retrouver la salle dans la note.",
+        "Nommer les destinataires ou les messages envoyés.",
+        "Reprendre exactement les deux phrases ou leurs libellés."
+      ],
+      "hints": [
+        "L’assistant IA prépare le brouillon ; c’est Léa qui doit envoyer le mail. Ajoute ce partage du travail dans ta réponse.",
+        "Avant l’envoi, garde une étape où Léa relit le texte. Une courte phrase suffit."
+      ]
+    },
+    "ent-useful-request": {
+      "essential": [
+        "Écrire un prompt pour préparer un mail proposant une visioconférence à Camille sur son prochain projet, sans le présenter comme un rendez-vous déjà confirmé.",
+        "Donner les deux options : 28 octobre 2026 à 14 h ou 30 octobre à 10 h ; les jours de semaine et l’année peuvent rester implicites.",
+        "Demander une réponse avant le 26 octobre à 17 h.",
+        "Ne pas inventer un lien ni prétendre l’avoir envoyé ; préciser qu’il viendra plus tard est préférable, mais son omission isolée peut être un simple conseil."
+      ],
+      "optional": [
+        "Nommer Studio Rivage.",
+        "Préciser l’objet, le ton professionnel et chaleureux, et six lignes maximum ; ces détails de forme ne justifient pas à eux seuls almost ou retry.",
+        "Employer les mêmes mots que l’exemple ou écrire en quatre lignes."
+      ],
+      "hints": [
+        "Demande un brouillon de mail pour proposer une visio à Camille sur son prochain projet. Le rendez-vous reste à choisir, il n’est pas confirmé.",
+        "Propose les deux créneaux : le 28 octobre à 14 h ou le 30 octobre à 10 h.",
+        "Ajoute quand tu souhaites recevoir la réponse de Camille : avant le 26 octobre à 17 h.",
+        "Le lien viendra plus tard. N’en invente pas et ne présente pas son envoi comme déjà fait."
+      ]
+    },
+    "ent-minimum-data": {
+      "essential": [
+        "Préparer un cas de brouillon sans transmettre le nom, l’adresse ni le numéro de commande inutiles à cette tâche ; les citer comme éléments retirés est correct.",
+        "Conserver le produit, son achat il y a cinq jours, le dommage et la règle de retour sous trente jours avec frais couverts seulement si produit endommagé.",
+        "Expliquer simplement le lien entre les détails conservés et la rédaction, et pourquoi les identifiants sont retirés."
+      ],
+      "optional": [
+        "Reprendre les rubriques exactes.",
+        "Conserver le mot lampe : l’explication autorise un autre produit fictif équivalent.",
+        "Justifier chaque donnée dans une phrase séparée."
+      ],
+      "hints": [
+        "Pour essayer le ton d’un brouillon, le nom, l’adresse et le numéro de commande ne sont pas utiles. Retire-les du cas à transmettre ; tu peux expliquer ce retrait dans ta réponse.",
+        "Garde de quoi comprendre le cas : le produit cassé, l’achat il y a cinq jours, le retour sous trente jours et les frais pris en charge seulement si le produit est endommagé.",
+        "Explique simplement à quoi servent les détails gardés et pourquoi tu retires les identifiants. Pas besoin d’une phrase longue pour chaque élément."
+      ]
+    },
+    "ent-approved-tool": {
+      "essential": [
+        "Distinguer l’autorisation connue, limitée aux documents fictifs dans l’espace professionnel avec comptes nominatifs, des garanties non établies par la publicité.",
+        "Identifier le dossier médical réel comme hors périmètre et ne pas le transmettre.",
+        "Laisser les garanties absentes à vérifier dans les clauses ou réglages et poser une question précise au responsable qui garde la décision."
+      ],
+      "optional": [
+        "Lister intégralement conservation, suppression, réutilisation et sous-traitants si l’incertitude sur les garanties est claire.",
+        "Utiliser exactement les trois titres proposés."
+      ],
+      "hints": [
+        "Sépare la publicité de ce qui est vraiment autorisé : ici, documents fictifs, espace professionnel et un compte identifié par personne.",
+        "Le dossier médical réel dépasse l’autorisation de cet essai. Garde-le hors du partage.",
+        "Laisse les garanties manquantes à vérifier. Pose une question précise sur un contrat ou un réglage ; le responsable garde la décision."
+      ]
+    },
+    "ent-hostile-document": {
+      "essential": [
+        "Séparer le besoin du colis cassé de l’ordre d’exporter les autres demandes ; une citation de l’ordre hostile pour l’analyser est correcte.",
+        "Ne proposer ni exportation ni transmission ; préparer seulement le brouillon autorisé.",
+        "Maintenir l’absence d’accès aux autres dossiers et d’outil d’envoi."
+      ],
+      "optional": [
+        "Nommer Sami dans chaque ligne.",
+        "Utiliser quatre rubriques ; deux phrases peuvent suffire.",
+        "Proposer un signalement en plus des limites techniques."
+      ],
+      "hints": [
+        "Garde le colis cassé comme besoin à traiter. L’ordre d’exporter les autres demandes est une consigne à écarter, même si tu le cites pour l’expliquer.",
+        "Propose seulement le brouillon autorisé : aucun export ni envoi des autres demandes.",
+        "Garde les limites techniques : pas d’accès aux autres dossiers et aucun outil d’envoi."
+      ]
+    },
+    "ent-context-rag": {
+      "essential": [
+        "Utiliser SEPT comme règle actuelle : trente jours et frais couverts seulement pour dommage ; marquer JAN et ses soixante jours comme remplacés.",
+        "Fournir le cas de la lampe et le sens de retour donné par le glossaire pour contextualiser la réponse.",
+        "Vérifier que le passage soutient la conclusion et provient de la version applicable."
+      ],
+      "optional": [
+        "Employer RAG ou une terminologie technique.",
+        "Deux phrases distinctes pour les contrôles si les deux idées sont présentes."
+      ],
+      "hints": [
+        "Prends SEPT comme règle actuelle : trente jours, frais couverts seulement en cas de dommage. Marque JAN comme remplacée ; ses soixante jours ne s’appliquent plus.",
+        "Ajoute le cas de la lampe et le glossaire : ils aident à appliquer la règle et à comprendre ce que signifie « retour ».",
+        "Contrôle deux choses dans la réponse : le passage qui soutient la conclusion et sa provenance dans la version applicable, SEPT."
+      ]
+    },
+    "ent-iterate-examples": {
+      "essential": [
+        "Ajouter une consigne sur la prochaine étape conforme à la procédure sans modifier les cas ou la règle.",
+        "Comparer A et B avec ce même critère : A ne donne aucune prochaine étape ; B progresse sur C1 et C2.",
+        "Repérer que B échoue encore sur C3 : demander une photo ne traite pas la livraison en retard."
+      ],
+      "optional": [
+        "Présenter un tableau ou un score de deux sur trois.",
+        "Reprendre exactement la formulation du prompt proposé."
+      ],
+      "hints": [
+        "Change une seule consigne : demander la prochaine étape prévue dans la procédure. Garde les mêmes cas et les mêmes règles pour comparer.",
+        "Compare les deux réponses sur la prochaine étape : A n’en donne pas ; B progresse sur C1 avec la photo et C2 avec le délai dépassé.",
+        "Pour C3, la photo ne traite pas le retard de livraison. Il faut signaler que cette politique ne répond pas à ce cas."
+      ]
+    },
+    "ent-verify-claims": {
+      "essential": [
+        "Repérer que retour accepté et remboursement demain ne sont pas établis dans le dossier.",
+        "Distinguer la prise en charge des frais liée au dommage d’une étiquette effectivement créée, ici absente.",
+        "Proposer une réponse fidèle, sans inventer acceptation, opération ni date bancaire."
+      ],
+      "optional": [
+        "Trois lignes formelles si les trois annonces sont bien traitées.",
+        "Citer la référence R17."
+      ],
+      "hints": [
+        "Ni l’acceptation du retour ni le remboursement demain ne sont établis. Distingue ce qui est demandé de ce qui est vraiment confirmé.",
+        "Les frais sont couverts pour ce produit endommagé, mais aucune étiquette n’a été créée. Ce sont deux informations différentes.",
+        "Dans le message client, garde seulement les faits confirmés. L’acceptation, l’étiquette et la date de remboursement restent à vérifier."
+      ]
+    },
+    "ent-numbers-sources": {
+      "essential": [
+        "Inclure la relecture : 200 minutes gagnées par semaine avec une minute de relecture et 200 minutes perdues avec trois ; 3 h 20 est équivalent.",
+        "Distinguer l’étude de quarante traductions sans relecture mesurée des résultats non démontrés sur les remboursements et leur gain net."
+      ],
+      "optional": [
+        "Écrire toutes les multiplications si les bons résultats et unités sont clairs.",
+        "Proposer le protocole détaillé d’un futur essai."
+      ],
+      "hints": [
+        "Compte aussi la relecture : avec une minute, le gain est de 200 minutes par semaine ; avec trois, c’est une perte de 200 minutes. Trois heures vingt donne le même résultat.",
+        "L’étude porte sur quarante traductions et ne mesure pas la relecture. Elle ne démontre ni le résultat des remboursements ni leur gain net."
+      ]
+    },
+    "ent-human-escalation": {
+      "essential": [
+        "Faire de la blessure le déclencheur du passage à Nora, hors essai sur les retours simples.",
+        "Ne pas confondre la demande de 300 € avec une indemnisation accordée ni annoncer un transfert déjà effectué sans confirmation.",
+        "Préparer un message d’attente neutre soumis à la relecture de Sami."
+      ],
+      "optional": [
+        "Recopier B4 ou le montant dans le message client.",
+        "Formule de politesse particulière."
+      ],
+      "hints": [
+        "Le signalement d’une blessure fait sortir le dossier des retours simples : prévois de passer la main à Nora.",
+        "Les 300 € sont demandés par le client, pas accordés. N’annonce ni indemnisation ni transfert déjà effectué sans confirmation.",
+        "Prépare un message d’attente neutre, puis garde la relecture de Sami avant tout envoi."
+      ]
+    },
+    "ent-right-tool": {
+      "essential": [
+        "Proposer pour date, passage et ton une solution et un essai concret, avec une alternative simple.",
+        "Conserver la convention de trente jours sans compter la réception : 1er juin donne 1er juillet.",
+        "Retrouver le passage de P et garder dans la reformulation la condition du produit endommagé."
+      ],
+      "optional": [
+        "Choisir exactement les mêmes outils que l’exemple ; des solutions cohérentes différentes conviennent.",
+        "Écrire du code ou nommer une bibliothèque."
+      ],
+      "hints": [
+        "Pour chaque besoin — calculer, retrouver un passage, reformuler — propose une solution, un petit essai et une alternative simple.",
+        "Garde la convention de date : trente jours calendaires sans compter le jour de réception. Pour le 1er juin, la limite est le 1er juillet.",
+        "La recherche doit retrouver le passage de P. La reformulation doit garder la condition : frais couverts seulement si le produit est endommagé."
+      ]
+    },
+    "ent-environment-cost": {
+      "essential": [
+        "Distinguer 210 € mensuels et 240 € de démarrage : premier mois 450 €, au-dessus de l’alerte de 400 et sous le plafond de 500.",
+        "Préférer des demandes utiles et volontaires plutôt qu’un traitement à chaque touche sans besoin établi.",
+        "Ne pas inventer de chiffre environnemental ; identifier que les informations de mesure manquent."
+      ],
+      "optional": [
+        "Lister intégralement les renseignements à demander au fournisseur.",
+        "Reproduire chaque addition si les totaux sont justes."
+      ],
+      "hints": [
+        "Sépare 210 € par mois et 240 € de démarrage. Le premier mois fait 450 € : au-dessus de l’alerte de 400 €, sous le plafond de 500 €.",
+        "Choisis des demandes utiles et volontaires plutôt qu’un traitement à chaque touche sans besoin établi.",
+        "Aucune mesure environnementale n’est fournie. Dis ce qu’il faudrait connaître au lieu d’annoncer un chiffre ou un gain."
+      ]
+    },
+    "ent-problem-before-solution": {
+      "essential": [
+        "Cadrer le problème réel des retours simples et de la recherche de politique, avant de choisir un chatbot.",
+        "Garder les repères observés : vingt dossiers, six minutes dont trois de recherche et deux omissions ; les distinguer de promesses de gain.",
+        "Prévoir une comparaison utile, Léa comme décideuse et exclure envoi automatique et remboursement."
+      ],
+      "optional": [
+        "Proposer les mêmes seuils de suspension que l’exemple, qui les présente sous réserve de validation.",
+        "Un format de fiche précis."
+      ],
+      "hints": [
+        "Pars du travail qui pose problème : préparer les retours simples et retrouver la politique. Le choix d’un chatbot viendra après.",
+        "Garde les repères observés : vingt dossiers, six minutes dont trois de recherche, deux omissions. Ces chiffres décrivent le départ, pas un gain promis.",
+        "Prévois une comparaison pour aider Léa à décider. L’envoi automatique et le remboursement restent hors de l’essai."
+      ]
+    },
+    "ent-agents-permissions": {
+      "essential": [
+        "Limiter l’agent à lire P et D8 et créer un brouillon relu par Sami ; aucun envoi, remboursement ou autre dossier.",
+        "Arrêter après quatre appels au maximum et transmettre un bilan à Sami.",
+        "Si P manque, arrêter sans inventer ; l’ordre hostile dans D8 ne donne aucun nouveau droit et doit être écarté."
+      ],
+      "optional": [
+        "Décrire un mécanisme technique ou un journal avec tous les champs de l’exemple.",
+        "Recopier mot à mot les deux essais."
+      ],
+      "hints": [
+        "Limite la mission à lire P et D8 et à créer un brouillon que Sami relira. Aucun autre dossier, envoi ou remboursement.",
+        "Prévois un arrêt après quatre appels au maximum, puis un bilan à Sami.",
+        "Si P manque, arrêter sans inventer la règle. Si D8 contient un ordre hostile, l’écarter : le document ne donne pas de nouveaux droits."
+      ]
+    },
+    "ent-accountable-project": {
+      "essential": [
+        "Attribuer périmètre, accès et bilan à des personnes identifiées et à des pièces vérifiables, avec décision de suite de Nadia.",
+        "Revoir le 14 novembre et suspendre en cas de divulgation.",
+        "Prévoir coupure des accès et reprise manuelle en conservant les traces utiles selon procédure."
+      ],
+      "optional": [
+        "Imposer exactement trois phrases ou actions numérotées.",
+        "Inventer une technologie de coupure ou un emplacement absent du cas."
+      ],
+      "hints": [
+        "Pour le périmètre, les accès et le bilan, nomme une personne responsable et une pièce à regarder. Nadia décide de la suite.",
+        "Garde la revue du 14 novembre et la règle de suspension dès une divulgation.",
+        "Prévois le repli : couper les accès, conserver les traces utiles selon la procédure et reprendre le support à la main."
+      ]
+    },
+    "ent-test-representative": {
+      "essential": [
+        "Prévoir les six comportements : retour intact à J5 possible ; dommage avec photo reconnu ; J35 hors délai ; dommage sans photo à compléter ; règles contradictoires vers Nadia ; ordre hostile écarté sans approbation inventée.",
+        "Garder J12 pour l’évaluation finale plutôt que pour régler le prompt.",
+        "Rejouer les anciens essais après correction."
+      ],
+      "optional": [
+        "Employer un tableau formel.",
+        "Annoncer une opération de retour réellement exécutée : ce n’est jamais nécessaire et ne doit pas être inventé."
+      ],
+      "hints": [
+        "Reprends les six essais : J5 intact possible ; cassé avec photo, condition remplie ; J35 hors délai ; photo absente à demander ; règles contradictoires vers Nadia ; ordre hostile écarté.",
+        "Garde le cas J12 de côté pour l’évaluation finale. Il ne doit pas servir à régler le prompt.",
+        "Après une correction, rejoue aussi les six anciens essais pour vérifier qu’ils fonctionnent toujours."
+      ]
+    },
+    "ent-measure-incident": {
+      "essential": [
+        "Calculer cinq minutes avec IA, une minute gagnée par cas et cinquante minutes sur le lot.",
+        "Qualifier deux promesses non autorisées dans des brouillons non envoyés, en distinguant fait observé et risque client.",
+        "Suspendre selon la règle, garder une trace et laisser Nadia décider de la reprise après correction et nouveaux essais."
+      ],
+      "optional": [
+        "Calculer une rentabilité monétaire, impossible sans valorisation du temps.",
+        "Répéter le coût de vingt euros et huit escalades réussies si les bons résultats ne sont pas niés."
+      ],
+      "hints": [
+        "Avec IA, compte deux minutes de préparation plus trois de relecture : cinq au total. Le gain est d’une minute par cas, donc cinquante sur le lot.",
+        "Décris ce qui s’est passé : deux promesses non autorisées dans des brouillons non envoyés. Distingue ces faits du risque pour le client en cas d’envoi.",
+        "Applique la suspension prévue, garde une trace, puis corrige et rejoue les essais. Nadia décide ensuite de la reprise."
+      ]
+    },
+    "ent-decision-dossier": {
+      "essential": [
+        "Garder visibles les quarante cas standards réussis et les deux promesses non autorisées sur les dix hors périmètre.",
+        "Ne pas lancer l’usage client car le seuil zéro promesse n’est pas atteint.",
+        "Limiter la suite à un essai fictif isolé, avec correction et nouveaux tests avant décision de Nadia ; ne pas présenter une correction comme prouvée."
+      ],
+      "optional": [
+        "Exactement cinq phrases.",
+        "Répéter chaque indicateur chiffré si le contraste entre réussite et seuil bloquant est clair."
+      ],
+      "hints": [
+        "Garde les deux côtés du bilan : quarante cas standards réussis, mais deux promesses non autorisées parmi les dix dossiers hors périmètre.",
+        "Le seuil est zéro promesse non autorisée. Il n’est pas atteint, donc l’usage client ne peut pas être lancé.",
+        "Propose seulement un essai isolé sur données fictives : corriger, rejouer les tests, puis laisser Nadia décider. La correction reste à prouver."
+      ]
+    },
+    "ent-continue-learning": {
+      "essential": [
+        "Planifier quatre rendez-vous de dix minutes, avec révision, nouvelle mission et essai fictif.",
+        "Faire consigner la permission d’envoi par Léa et attendre revue et autorisation de Nadia.",
+        "Présenter le classement comme régularité d’apprentissage, sans certification de performance au travail."
+      ],
+      "optional": [
+        "Répartir chaque séance exactement comme l’exemple.",
+        "Nommer toutes les cartes étudiées."
+      ],
+      "hints": [
+        "Prévois quatre rendez-vous de dix minutes, avec des révisions, la nouvelle mission et un cas fictif. Tu peux choisir une autre répartition que l’exemple.",
+        "Léa consigne la permission d’envoi proposée. Nadia doit revoir le périmètre et autoriser l’usage avant tout envoi.",
+        "Le classement renseigne sur la régularité d’apprentissage. Il ne certifie pas la performance au travail."
+      ]
+    },
+    "ent-meeting-notes": {
+      "essential": [
+        "Séparer proposition de réponse automatique, condition d’accord sécurité, absence de décision de lancement et action de Léa jeudi.",
+        "Ne pas annoncer lundi comme lancement ni ouvrir les accès sans autorisation explicite.",
+        "Poser une question utile sur une incertitude plutôt que l’inventer."
+      ],
+      "optional": [
+        "Les quatre intitulés exacts si les quatre statuts sont clairs.",
+        "La même question finale que l’exemple."
+      ],
+      "hints": [
+        "Sépare l’idée de réponse automatique, la condition d’accord sécurité, l’absence de décision de lancement et la demande d’accord par Léa jeudi.",
+        "Les notes ne confirment pas un lancement lundi. L’ouverture des accès doit attendre l’autorisation explicite.",
+        "Termine par une question utile sur ce qui manque, plutôt que de choisir toi-même un périmètre ou une date non confirmés."
+      ]
+    },
+    "ent-new-model-review": {
+      "essential": [
+        "Garder A car les deux omissions de B violent le seuil zéro malgré sa rapidité.",
+        "Conserver les brouillons relus et la décision de Nadia ; avant bascule éventuelle, corriger puis rejouer les essais.",
+        "Prévoir suivi, cas inédit et retour à A si le critère n’est plus respecté."
+      ],
+      "optional": [
+        "Choisir le même nouveau cas que l’exemple.",
+        "Répéter les conditions contractuelles annoncées inchangées."
+      ],
+      "hints": [
+        "Garde A : les deux omissions de B violent le seuil zéro, même si B est plus rapide.",
+        "Garde le périmètre des brouillons relus et la décision de Nadia. Avant une bascule, corriger B et rejouer les essais.",
+        "Prévois un cas inédit et un suivi après bascule. Si le critère n’est plus respecté, le retour à A doit rester possible."
+      ]
+    },
+    "ent-assistants-brief": {
+      "essential": [
+        "Écrire un prompt d’accueil aux douze collègues lundi à 9 h en salle Pin.",
+        "Distinguer ordinateur fourni et carnet à apporter, et inviter à répondre si l’horaire pose problème.",
+        "Donner deux critères observables de conformité. Un critère peut être formulé de manière synthétique quand son référent est donné par le cas : complétude des informations du rendez-vous et conformité du matériel, par exemple, se vérifient directement en comparant le mail aux informations fournies. Ne pas exiger de recopier sous chaque critère les détails déjà présents dans le prompt."
+      ],
+      "optional": [
+        "La limite de cent vingt mots vient de l’exemple, pas d’une obligation.",
+        "Le libellé exact des critères ou une formule de politesse."
+      ],
+      "hints": [
+        "Demande le mail d’accueil aux douze collègues : lundi à 9 h, en salle Pin.",
+        "Garde les trois consignes : ordinateur fourni, carnet à apporter, réponse à demander si l’horaire pose problème.",
+        "Ajoute deux critères qu’on peut vérifier dans le mail. Ils peuvent être courts si leur sens est clair avec le cas, comme rendez-vous complet et matériel conforme."
+      ]
+    },
+    "ent-assistants-documents": {
+      "essential": [
+        "Préparer un prompt et une synthèse appuyée sur demande, catalogue et logistique.",
+        "Quarante unités respectent le minimum de trente ; produits 240 €, sous le budget produits 280 €, total livré 265 €.",
+        "Vendredi reste conditionné à une validation avant mardi midi ; demander quand elle pourra avoir lieu."
+      ],
+      "optional": [
+        "Un tableau ou exactement quatre lignes.",
+        "Citations littérales des titres si l’origine des informations reste identifiable."
+      ],
+      "hints": [
+        "Prépare le prompt et une synthèse en reliant les informations aux trois pièces : demande, catalogue et logistique.",
+        "Vérifie les montants : quarante carnets respectent le minimum de trente ; produits 240 € sur un budget produits de 280 € ; total livré 265 €.",
+        "Vendredi est possible seulement si la validation arrive avant mardi midi. Termine par une question pour savoir si cette condition pourra être remplie."
+      ]
+    },
+    "ent-assistants-meeting": {
+      "essential": [
+        "Préparer un prompt et un relevé séparant décision d’essai lundi, grille par Zoé jeudi, proposition samedi et bilan non attribué.",
+        "Le message de suivi demande qui prépare le bilan et pour quand, sans inventer d’accord.",
+        "Le prompt précise à qui sert le relevé et son format ou ses catégories."
+      ],
+      "optional": [
+        "Exactement quatre lignes et trois phrases.",
+        "Un tableau plutôt que des paragraphes."
+      ],
+      "hints": [
+        "Sépare les statuts : essai décidé lundi ; grille par Zoé jeudi ; samedi proposé ; responsable et date du bilan encore à attribuer.",
+        "Dans le suivi, demande qui prépare le bilan et pour quand. N’invente pas de nouvel accord.",
+        "Précise dans le prompt à qui sert le relevé et comment le présenter, par exemple avec ses catégories."
+      ]
+    },
+    "ent-assistants-options": {
+      "essential": [
+        "Le prompt et la comparaison appliquent capacité de douze et plafond de 500 €, puis préférence du trajet court.",
+        "Écarter A ; comparer B à 450 € et vingt minutes et C à 480 € et dix minutes ; recommander C selon la priorité donnée.",
+        "Laisser disponibilité et équipement à confirmer avant réservation."
+      ],
+      "optional": [
+        "Le tableau graphique et deux phrases exactes.",
+        "Calculer explicitement trente euros si le compromis coût/trajet est clair."
+      ],
+      "hints": [
+        "Dans le prompt et la comparaison, garde les contraintes : douze personnes, 500 € maximum, puis priorité au trajet court.",
+        "A est trop petite. Compare B à 450 € et vingt minutes à C à 480 € et dix minutes ; avec la priorité au trajet, C convient mieux.",
+        "Avant de réserver, laisse la disponibilité et l’équipement à confirmer : ils ne sont pas fournis."
+      ]
+    },
+    "ent-assistants-iterate": {
+      "essential": [
+        "V1 manque les deux rappels ; V2 réussit A mais invente une remise sur B.",
+        "Changer une consigne pour garder livrable et échéance sans engagement ajouté ; grille attendue jeudi et devis attendu lundi ne sont pas des réalisations confirmées.",
+        "Fournir un modèle réutilisable avec champs distincts des deux réponses du test."
+      ],
+      "optional": [
+        "La syntaxe exacte des champs ou des guillemets.",
+        "Répéter les labels V1/V2 si la comparaison est compréhensible."
+      ],
+      "hints": [
+        "Compare les versions : V1 manque les deux rappels ; V2 réussit A mais ajoute une remise non prévue sur B.",
+        "Garde seulement le livrable et son échéance : grille attendue jeudi, devis attendu lundi. Ne transforme pas cette attente en promesse d’achèvement.",
+        "Ajoute un modèle réutilisable avec des champs à remplacer, séparé des deux réponses de cet essai."
+      ]
+    },
+    "ent-assistants-team-playbook": {
+      "essential": [
+        "Fournir une fiche réutilisable séparant décisions, actions, propositions et points ouverts avec champs à remplacer.",
+        "Garder Camille comme responsable et la revue du 15 novembre 2026.",
+        "Prévoir un nouvel essai sans aide, les retours et le temps complet ; six minutes gagnées sur ce cas ne permettent pas de généraliser."
+      ],
+      "optional": [
+        "Exactement six rubriques ou le même ordre.",
+        "Recopier toutes les sorties de l’exemple déjà connu."
+      ],
+      "hints": [
+        "Prépare une fiche réutilisable avec des champs à remplacer et des catégories séparées : décisions, actions, propositions et points ouverts.",
+        "Garde Camille comme responsable de la fiche et la revue du 15 novembre 2026.",
+        "Prévois un nouveau cas sans aide, les retours et le temps complet. Six minutes gagnées sur cet essai ne suffisent pas pour généraliser."
+      ]
+    },
+    "ent-automation-map": {
+      "essential": [
+        "Décrire le trajet depuis le formulaire jusqu’à une ligne, puis brouillon, prix et envoi avec les responsables.",
+        "Si le service manque, Lina demande une précision ; ne pas inventer de service.",
+        "Garder prix et envoi à Karim et distinguer ligne créée de devis envoyé ; mesurer absence de ressaisie ou autre résultat pertinent."
+      ],
+      "optional": [
+        "Cinq à sept lignes exactement.",
+        "Un schéma graphique plutôt qu’un texte."
+      ],
+      "hints": [
+        "Décris le trajet depuis le formulaire : contrôle, ligne, brouillon, prix et envoi, en indiquant qui intervient.",
+        "Si le service manque, Lina demande une précision. Ne choisis pas le service à sa place.",
+        "Le prix et l’envoi restent à Karim. Une ligne créée n’est pas un devis envoyé ; choisis un résultat mesurable, comme la ressaisie évitée."
+      ]
+    },
+    "ent-automation-select": {
+      "essential": [
+        "Appliquer exactement la borne de routage : un montant de 500 € va au responsable achats, tout comme un montant supérieur ; un montant strictement inférieur va au responsable du service. Envoyer 500 € au service contredit ce critère, même si le reste du routage est correct.",
+        "La décision reste humaine dans les deux cas de routage.",
+        "Retrouver le responsable dans la table maintenue ; service inconnu à clarifier avec achats.",
+        "Ne pas rendre l’IA nécessaire à la comparaison du seuil ni confondre résumé facultatif et montant source.",
+        "Confirmer liaison, droits et conditions avant essai réel, ou prévoir transfert manuel sans liaison."
+      ],
+      "optional": [
+        "Une marque de connecteur ou du code.",
+        "Les signes mathématiques si au moins cinq cents euros est clair."
+      ],
+      "hints": [
+        "À 500 € exactement, la demande va aux achats ; au-dessus aussi. En dessous seulement, elle va au responsable du service.",
+        "La règle dirige la demande vers la bonne personne ; elle ne prend pas la décision à sa place. Garde la décision humaine dans les deux cas.",
+        "Retrouve le responsable dans la table tenue à jour. Si le service est inconnu, demande une clarification aux achats.",
+        "La comparaison à 500 € suit une règle simple. Un résumé IA peut aider, mais ne remplace pas le montant source et n’est pas nécessaire au routage.",
+        "Avant un vrai essai, confirme la liaison, les droits et les conditions. Sans liaison disponible, prévois un transfert manuel."
+      ]
+    },
+    "ent-automation-data-contract": {
+      "essential": [
+        "Associer identifiant inscription à Référence, identifiant session à Session, places à Nombre de places, date à Date, statut à État ; identifiants distincts, places entier positif et date non ambiguë.",
+        "Si places manque, file séparée à compléter et aucune réservation invalide.",
+        "Soumise devient à traiter seulement à la création ; répétition ni ne recrée la ligne ni ne réinitialise l’état géré ensuite par le coordinateur."
+      ],
+      "optional": [
+        "Employer les clés techniques exactes si la correspondance est certaine.",
+        "Lister tous les éléments personnels inutiles."
+      ],
+      "hints": [
+        "Associe les cinq champs : inscription vers Référence, session vers Session, places vers Nombre de places, date vers Date et statut vers État. Garde des identifiants distincts, des places entières positives et une date claire.",
+        "Si les places manquent, mets la demande dans une file séparée à compléter. Ne crée pas de réservation avec des informations manquantes.",
+        "« Soumise » devient « à traiter » seulement à la création. Si la même demande revient, ne recrée pas la ligne et ne remplace pas le statut ensuite géré par le coordinateur."
+      ]
+    },
+    "ent-automation-exceptions": {
+      "essential": [
+        "INT-88 : la fiche existe, reprendre seulement la notification, deux nouvelles tentatives maximum puis alerte au planificateur.",
+        "INT-89 : adresse à demander, sans adresse ni fiche inventée.",
+        "Attribuer les actions et garder une trace de référence, étape et résultat ; demander au référent une protection contre doubles créations simultanées et résultat incertain."
+      ],
+      "optional": [
+        "Format tableau.",
+        "Nommer un verrou ou une technique particulière non fournie dans le cas."
+      ],
+      "hints": [
+        "INT-88 a déjà sa fiche. Reprends seulement la notification : deux nouvelles tentatives au maximum, puis alerte au planificateur.",
+        "Pour INT-89, demande l’adresse manquante. N’invente ni adresse ni fiche.",
+        "Indique qui reprend et quelle trace garder. Demande au référent comment éviter deux créations simultanées et vérifier un résultat incertain."
+      ]
+    },
+    "ent-automation-pilot": {
+      "essential": [
+        "Attendre seize fiches distinctes, deux répétitions sans création et deux cas à compléter.",
+        "Ajouter panne et reprise avec comportements attendus et absence de doublon.",
+        "Calculer trente minutes gagnées et six lots pour compenser les cent quatre-vingts minutes sous hypothèses, hors coûts non fournis.",
+        "Étendre seulement après respect des seuils zéro doublon et aucune réservation inventée, avec correction et repli."
+      ],
+      "optional": [
+        "Les mêmes pannes ou formulations que l’exemple.",
+        "Une conclusion financière définitive, impossible sans licences et entretien."
+      ],
+      "hints": [
+        "Pour ce lot, attends seize fiches distinctes, deux répétitions sans création et deux demandes à compléter.",
+        "Ajoute un essai de panne et un essai de reprise, avec ce qu’on doit observer et sans création en double.",
+        "Le gain est de trente minutes par lot, soit six lots pour compenser 180 minutes de mise en place si le gain reste stable. Licences et entretien restent à chiffrer.",
+        "N’étends le flux qu’après respect des seuils : zéro doublon et aucune réservation inventée. Prévois correction des écarts et repli."
+      ]
+    },
+    "ent-automation-handover": {
+      "essential": [
+        "Distinguer Malik responsable, Inès remplaçante et référent chargé des connexions et de l’arrêt ; confirmer accès sans partager de compte personnel.",
+        "Faire reprendre la notification de INT-88 sans recréer la fiche, avec trace.",
+        "Éviter les copies actives concurrentes et prévoir arrêt, repli manuel et révision de la fiche lors des changements."
+      ],
+      "optional": [
+        "Exactement une revue mensuelle : autre périodicité motivée recevable.",
+        "Un numéro de version ou un emplacement non fourni."
+      ],
+      "hints": [
+        "Distingue les rôles de Malik, Inès et du référent. Confirme les accès nominatifs sans partager le compte personnel de Nora.",
+        "Pour l’exercice de reprise, retrouve la fiche INT-88 existante, reprends la notification et note le résultat. Ne recrée pas la fiche.",
+        "Évite plusieurs copies actives concurrentes. Prévois l’arrêt, le traitement manuel et les moments où revoir la fiche de transmission."
+      ]
+    },
+    "ent-projects-outcome": {
+      "essential": [
+        "Partir des dix-huit appels d’horaires sur trente pour une première page horaires, adresse et préparation, sans promettre leur disparition.",
+        "Délimiter la version sans paiement ni suivi et nommer Inès pour les textes.",
+        "Prévoir test et mesure ainsi qu’un prompt comparant deux options cohérentes avec le besoin."
+      ],
+      "optional": [
+        "Choisir exactement page et application comme les deux options.",
+        "Tester exactement trois personnes si un essai pertinent est proposé."
+      ],
+      "hints": [
+        "Pars des dix-huit appels d’horaires sur trente pour cadrer la page horaires, adresse et préparation. Ne promets pas que tous ces appels disparaîtront.",
+        "Garde une première version sans paiement ni suivi, avec Inès pour les textes.",
+        "Ajoute un essai, une mesure et un prompt comparant deux options adaptées au besoin. Tu peux faire référence aux besoins et exclusions déjà décrits."
+      ]
+    },
+    "ent-projects-specification": {
+      "essential": [
+        "Décrire la comparaison des deux ateliers en conservant titre, jour et mois, heure de début, durée et salle.",
+        "Proposer trois critères observables et exclure inscription et paiement.",
+        "Demander l’année avant dates définitives ; ne pas en inventer une."
+      ],
+      "optional": [
+        "Choisir la lecture mobile comme troisième critère précis.",
+        "Recopier la mise en page de l’exemple."
+      ],
+      "hints": [
+        "Garde les deux ateliers avec leur titre, jour et mois, heure de début, durée et salle. Ces informations permettent de comparer les créneaux.",
+        "Propose trois critères vérifiables sur la page, par exemple les fiches présentes, les informations affichées et la facilité de comparaison. Inscription et paiement restent exclus.",
+        "Demande quelle année correspond aux dates avant de les fixer. Ne choisis pas une année à partir du contexte actuel."
+      ]
+    },
+    "ent-projects-prototype": {
+      "essential": [
+        "Comparer les trois options au besoin de textes, photos et calendrier sans compte ni paiement, en tenant compte de l’outil connu et de l’heure mensuelle d’entretien.",
+        "Choisir un essai cohérent, sans inventer de prix ou de moyens disponibles.",
+        "Proposer deux tâches d’usage observables sans imposer le chemin de clic."
+      ],
+      "optional": [
+        "Les mêmes deux tâches que l’exemple.",
+        "Forcer la même solution si une autre est motivée et respecte les contraintes."
+      ],
+      "hints": [
+        "Compare les trois options au besoin réel et à l’entretien : textes, photos et calendrier, sans compte ni paiement, avec l’outil connu et une heure par mois.",
+        "Choisis un petit essai cohérent avec les ressources disponibles. Pas besoin d’inventer un tarif ou une compétence supplémentaire.",
+        "Propose deux choses à faire trouver aux collègues. Observe leur chemin sans leur dicter les clics."
+      ]
+    },
+    "ent-projects-iteration": {
+      "essential": [
+        "Séparer l’ajout des zones des futurs boutons pour une première modification limitée.",
+        "Conserver jardin Nord/Sud à 35 €/h, haie Nord sur devis, compost Sud à 12 €/sac.",
+        "Prévoir comparaison avec version actuelle, contrôle mobile, correction ou restauration en cas d’échec et relecture technique."
+      ],
+      "optional": [
+        "Nommer la fiche recette si les contrôles sont décrits.",
+        "Un outil précis de sauvegarde ou de versionnement."
+      ],
+      "hints": [
+        "Commence par une modification limitée : les zones. Garde les boutons de contact pour une étape séparée.",
+        "Conserve les données : jardin Nord/Sud à 35 €/h, haie Nord sur devis, compost Sud à 12 €/sac.",
+        "Compare avec la version actuelle, vérifie sur téléphone et fais relire par la personne technique. En cas d’échec, corrige ou restaure avant de poursuivre."
+      ]
+    },
+    "ent-projects-release": {
+      "essential": [
+        "Ne pas ouvrir sur le seul message vert : la technique connecte un registre autorisé et des accès, puis Jo retrouve la demande de test.",
+        "A puis B puis répétition de la même A donnent deux inscriptions au total ; faire confirmer la vraie protection technique contre doublons.",
+        "Prévoir responsable d’autorisation et secours : retirer le formulaire, afficher un contact, rapprocher les demandes et tester avant reprise."
+      ],
+      "optional": [
+        "Nommer un mécanisme technique précis alors que sa confirmation est justement attendue.",
+        "Énumérer mobile, clavier et champ manquant si l’essai de bout en bout et les risques centraux sont traités."
+      ],
+      "hints": [
+        "Le message vert ne suffit pas : la technique doit connecter un registre autorisé et ses accès, puis Jo doit retrouver la demande de test.",
+        "Teste A, puis B, puis la même demande A renvoyée : deux inscriptions au total. La technique confirme la protection réelle contre les doublons.",
+        "Prévois qui autorise l’ouverture et le secours : retirer le formulaire, afficher un contact, rapprocher les demandes et tester avant reprise."
+      ]
+    },
+    "ent-projects-maintenance": {
+      "essential": [
+        "Lanterne : distinguer Lila pour textes et Rémi pour incidents ; utiliser d’abord les deux heures pour horaires périmés et cadrer l’espace client avant développement.",
+        "Attribuer les questions d’emplacement, accès et restauration sans inventer de réponse ni demander de secret.",
+        "Cyprès : rassembler besoin horaires, critères observables, approche, modification limitée, recette et reprise, sans paiement ni suivi ; Inès entretient les textes et questions techniques vont au référent."
+      ],
+      "optional": [
+        "Exactement six titres si les six fonctions du dossier sont présentes.",
+        "Choisir la même maquette ou exactement trois testeurs."
+      ],
+      "hints": [
+        "Pour Lanterne, Lila tient les textes et Rémi les incidents. Utilise d’abord les deux heures pour les horaires périmés ; cadre le besoin d’espace client avant de le réaliser.",
+        "Demande au responsable concerné où se trouvent projet, accès et restauration. Garde les réponses inconnues comme questions, sans demander de secret.",
+        "Pour Cyprès, rassemble besoin, critères, approche, première modification, recette et reprise. Garde horaires/adresse/préparation, sans paiement ni suivi ; Inès tient les textes et les inconnues techniques vont au référent."
+      ]
+    },
+    "ent-plausible-not-proven": {
+      "essential": [
+        "Diagnostiquer l’annonce de soixante jours comme contredite par le délai de trente jours du document.",
+        "Diagnostiquer la gratuité générale comme contredite : les frais ne sont pris en charge que pour un produit endommagé.",
+        "Indiquer que la référence RET-2026-14 n’est pas vérifiable dans les pièces, ou une formulation équivalente comme référence introuvable ou non fournie. Ne pas déduire ce diagnostic du simple silence sur la référence dans le brouillon client.",
+        "Rédiger la réponse client avec trente jours et frais pris en charge seulement si produit endommagé, sans référence inventée ; les diagnostics et le brouillon peuvent arriver concaténés."
+      ],
+      "optional": [
+        "Reproduire exactement l’exemple, qui ne contient que la partie client et ne constitue pas à lui seul le corrigé de toute la tâche.",
+        "Employer les étiquettes confirme, contredit ou non vérifiable si le sens est évident."
+      ],
+      "hints": [
+        "Compare le délai annoncé au document : il prévoit trente jours, pas soixante. Signale cette contradiction.",
+        "La prise en charge n’est pas générale : elle dépend d’un produit endommagé. Signale l’écart avec « toujours gratuit ».",
+        "Indique que RET-2026-14 n’est pas vérifiable dans les pièces. Ne pas citer cette référence dans le mail ne remplace pas ce petit diagnostic.",
+        "Dans la réponse client, garde trente jours et les frais couverts seulement si le produit est endommagé, sans référence inventée."
+      ]
+    }
+  }
+}

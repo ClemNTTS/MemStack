@@ -6,7 +6,7 @@ import GuidedEnterprisePractice from './GuidedEnterprisePractice'
 import AutomationFlowPractice from './AutomationFlowPractice'
 import { useLessonScroll } from '../lesson/useLessonScroll'
 import type { EnterpriseLesson } from '../types/enterpriseContent'
-import type { EnterpriseLearningResult } from '../types/enterprise'
+import type { EnterpriseLearningResult, VerifyEnterprisePractice } from '../types/enterprise'
 
 type Props = {
   lesson: EnterpriseLesson
@@ -16,11 +16,12 @@ type Props = {
   onComplete: () => Promise<EnterpriseLearningResult | null>
   returnHref: string
   cardsHref: string
+  onVerify: VerifyEnterprisePractice
   draft: string
   onDraftChange: (draft: string) => void
 }
 
-export default function EnterpriseLessonView({ lesson, completed, available, busy, onComplete, returnHref, cardsHref, draft, onDraftChange }: Props) {
+export default function EnterpriseLessonView({ lesson, completed, available, busy, onComplete, returnHref, cardsHref, draft, onDraftChange, onVerify }: Props) {
   const [index, setIndex] = useState(0)
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [checks, setChecks] = useState<Record<string, boolean>>({})
@@ -53,8 +54,8 @@ export default function EnterpriseLessonView({ lesson, completed, available, bus
       {lesson.steps.slice(0, index + 1).map((item, position) => {
         const current = position === index
         if (item.type === 'message') return <div className="enterprise-conversation-turn" data-current={current} tabIndex={-1} key={item.id}>
-          <ChatBubble>{lesson.documents?.filter(document => document.stepId === item.id).map(document => <aside className="enterprise-lesson-document" key={document.src} aria-label={document.title}><p className="lesson-category">Document de l’exercice · fictif</p><h2>{document.title}</h2><LessonText text={document.text}/><a href={`${import.meta.env.BASE_URL}${document.src.replace(/^\//, '')}`} download>Télécharger ce document (.txt) ↓</a></aside>)}{item.id !== 'ent-answer-or-action-practice-1' && <LessonText glossary glossaryId={lesson.id} text={item.text}/>}
-            {item.id === 'ent-plausible-not-proven-practice-1' ? <ReturnPolicyPractice/> : item.text.startsWith('Pratique ·') && <>{lesson.id === 'ent-automation-exceptions' && <AutomationFlowPractice/>}<GuidedEnterprisePractice lessonId={lesson.id} draft={draft} onDraftChange={onDraftChange}/></>}
+          <ChatBubble>{lesson.documents?.filter(document => document.stepId === item.id).map(document => <aside className="enterprise-lesson-document" key={document.src} aria-label={document.title}><p className="lesson-category">Document de l’exercice · fictif</p><h2>{document.title}</h2><LessonText text={document.text}/><a href={`${import.meta.env.BASE_URL}${document.src.replace(/^\//, '')}`} download>Télécharger ce document (.txt) ↓</a></aside>)}{!item.text.startsWith('Pratique ·') && <LessonText glossary glossaryId={lesson.id} text={item.text}/>}
+            {item.id === 'ent-plausible-not-proven-practice-1' ? <ReturnPolicyPractice lessonId={lesson.id} draft={draft} onDraftChange={onDraftChange} onVerify={onVerify}/> : item.text.startsWith('Pratique ·') && <>{lesson.id === 'ent-automation-exceptions' && <AutomationFlowPractice/>}<GuidedEnterprisePractice lessonId={lesson.id} draft={draft} onDraftChange={onDraftChange} onVerify={onVerify}/></>}
           </ChatBubble>
         </div>
         if (item.type === 'image') return <figure className="enterprise-lesson-visual enterprise-conversation-turn" data-current={current} tabIndex={-1} key={item.id}><img src={`${import.meta.env.BASE_URL}${item.src.replace(/^\//, '')}`} alt={item.alt}/><figcaption>{item.caption}</figcaption><a className="text-link" href={`${import.meta.env.BASE_URL}${item.src.replace(/^\//, '')}`} target="_blank" rel="noopener noreferrer">Voir l’illustration en grand ↗</a></figure>

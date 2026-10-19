@@ -13,6 +13,7 @@
 .enterprise-reference-library > summary { cursor: pointer; font-size: 1.25rem; font-weight: 700; padding: .6rem 0; }
 .enterprise-reference-library > .enterprise-situation-grid { margin-top: 1.5rem; }
 .enterprise-practice-tools { display: flex; flex-wrap: wrap; gap: .75rem; margin: 1rem 0; }
+.enterprise-practice-tools .text-link { width: fit-content; border: 0; padding: .25rem 0; background: transparent; color: inherit; font: inherit; text-decoration: underline; text-underline-offset: .2em; cursor: pointer; }
 .enterprise-guided-practice[data-compact="true"] { margin-top: 0; padding-top: 0; border-top: 0; }
 .enterprise-practice-answer-fields { display: grid; gap: 1.25rem; margin-block: 1.5rem; }
 .enterprise-practice-tools .catalog-button { white-space: normal; text-align: left; }
@@ -35,8 +36,17 @@
 @media (max-width: 900px) { .enterprise-track-grid { grid-template-columns: 1fr; } }
 @media (max-width: 600px) { .enterprise-flow-state { grid-template-columns: 1fr; } .enterprise-practice-tools { flex-direction: column; align-items: stretch; } .enterprise-conversation .enterprise-practice { padding: 12px; } }
 @media (max-width: 600px) {
-  .enterprise-conversation-turn:has(.enterprise-guided-practice) .chat-row { grid-template-columns:minmax(0,1fr); }
-  .enterprise-conversation-turn:has(.enterprise-guided-practice) .chat-avatar { display:none; }
-  .enterprise-conversation-turn:has(.enterprise-guided-practice) .lesson-bubble { padding:12px; }
+  .enterprise-conversation-turn:has(.enterprise-practice) .chat-row { grid-template-columns:minmax(0,1fr); }
+  .enterprise-conversation-turn:has(.enterprise-practice) .chat-avatar { display:none; }
+  .enterprise-conversation-turn:has(.enterprise-practice) .lesson-bubble { padding:12px; }
   .enterprise-guided-practice .enterprise-practice-comparison { padding:14px; }
 }
+
+.enterprise-practice-ai { margin-top: 1.5rem; }
+.enterprise-conversation .enterprise-practice-ai .enterprise-feedback { margin: 1rem 0; }
+.enterprise-practice-ai .catalog-button { white-space: normal; text-align: left; }
+.enterprise-practice-ai-result { overflow-wrap: anywhere; }
+.enterprise-practice-ai-result h3 { margin-top: 0; }
+.enterprise-practice-ai-result p { white-space: pre-line; }
+.enterprise-practice-ai-result ul { padding-left: 1.3rem; }
+.enterprise-practice-ai-result small { display: block; margin-top: 1rem; }

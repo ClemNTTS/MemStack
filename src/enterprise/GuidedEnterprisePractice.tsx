@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import LessonText from '../components/LessonText'
 import practices from '../data/enterprisePractices.json' with { type: 'json' }
+import EnterprisePracticeFeedback from './EnterprisePracticeFeedback'
+import { guidedPracticeAnswer } from './practiceAnswer'
+import type { VerifyEnterprisePractice } from '../types/enterprise'
 
 export type EnterprisePractice = {
   scenario: string
@@ -13,13 +16,12 @@ export type EnterprisePractice = {
 
 export const enterprisePractices = practices as Record<string, EnterprisePractice>
 
-export default function GuidedEnterprisePractice({ lessonId, draft = '', onDraftChange }: { lessonId: string; draft?: string; onDraftChange: (draft: string) => void }) {
+export default function GuidedEnterprisePractice({ lessonId, draft = '', onDraftChange, onVerify }: { lessonId: string; draft?: string; onDraftChange: (draft: string) => void; onVerify: VerifyEnterprisePractice }) {
   const practice = enterprisePractices[lessonId]
   const twoPartAnswer = lessonId === 'ent-answer-or-action'
   const [assistantDraft = '', ...personalParts] = draft.split('\n\n')
   const personalDraft = personalParts.join('\n\n')
   const [compared, setCompared] = useState(false)
-  const [reviewed, setReviewed] = useState<Record<number, boolean>>({})
   const feedback = useRef<HTMLElement>(null)
   useEffect(() => {
     if (compared) {
@@ -31,34 +33,26 @@ export default function GuidedEnterprisePractice({ lessonId, draft = '', onDraft
 
   function updateDraft(value: string) {
     onDraftChange(value)
-    setReviewed({})
   }
 
   return <div className="enterprise-practice enterprise-guided-practice" data-compact={twoPartAnswer}>
     <h2>À toi de jouer</h2>
-    {!twoPartAnswer && <p className="lesson-category">Un petit essai, puis un exemple pour te guider</p>}
     <section className="enterprise-practice-case" aria-label="Situation fictive de l’exercice"><p className="lesson-category">Le cas à explorer</p><LessonText glossary glossaryId={lessonId} text={practice.scenario}/></section>
     {twoPartAnswer ? <div className="enterprise-practice-answer-fields">
-      <label>Ce que Léa peut demander à son assistant IA<input type="text" value={assistantDraft} onChange={event => updateDraft(`${event.target.value}\n\n${personalDraft}`)} maxLength={2500}/></label>
-      <label>Ce qu’elle doit faire elle-même<input type="text" value={personalDraft} onChange={event => updateDraft(`${assistantDraft}\n\n${event.target.value}`)} maxLength={2500}/></label>
+      <label>Ce que Léa peut demander à son assistant IA<input type="text" value={assistantDraft} onChange={event => updateDraft(`${event.target.value}\n\n${personalDraft}`)} maxLength={2400}/></label>
+      <label>Ce qu’elle doit faire elle-même<input type="text" value={personalDraft} onChange={event => updateDraft(`${assistantDraft}\n\n${event.target.value}`)} maxLength={2400}/></label>
     </div> : <>
       <LessonText glossary glossaryId={lessonId} text={practice.task}/>
-      <section aria-label="Critères pour préparer ta proposition"><h3>Quelques repères pour t’aider</h3><ul>{practice.checklist.map(point => <li key={point}><LessonText glossary glossaryId={lessonId} text={point}/></li>)}</ul></section>
-      <label>Ta proposition<textarea value={draft} onChange={event => updateDraft(event.target.value)} maxLength={5000} rows={6} placeholder={practice.starter}/></label>
-      <div className="dashboard-note"><LessonText glossary glossaryId={lessonId} text={`Tu peux t’aider de cette structure : ${practice.starter}`}/></div>
+      <label>Ta proposition<textarea value={draft} onChange={event => updateDraft(event.target.value)} maxLength={5000} rows={6} placeholder="Écris avec tes mots…"/></label>
     </>}
-    <p className="dashboard-note">Tes réponses restent dans cette session, sans envoi à ton équipe ni à une IA.</p>
-    <div className="enterprise-practice-tools"><button type="button" className="catalog-button secondary" disabled={!draft.trim()} onClick={() => setCompared(true)}>Comparer avec un exemple</button></div>
+    <EnterprisePracticeFeedback lessonId={lessonId} practice={practice} answer={guidedPracticeAnswer(lessonId, draft)} onVerify={onVerify}/>
+    <div className="enterprise-practice-tools"><button type="button" className="text-link" onClick={() => setCompared(previous => !previous)} aria-expanded={compared}>{compared ? 'Masquer l’exemple' : 'Voir un exemple'}</button></div>
     {compared && <section className="enterprise-practice-comparison" ref={feedback} tabIndex={-1} aria-label="Exemple commenté et repères de comparaison">
       <h3>Un exemple possible</h3>
       <LessonText glossary glossaryId={lessonId} text={practice.example}/>
       <h3>Pourquoi cet exemple convient</h3>
       <LessonText glossary glossaryId={lessonId} text={practice.explanation}/>
-      <h3>Relis maintenant ton propre texte</h3>
-      <p>Coche les points déjà présents dans ton texte, puis complète ce qui manque. Tu compares toi-même ; il n’y a pas de note automatique.</p>
-      <div className="enterprise-practice-checklist">{practice.checklist.map((point, index) => <label key={point}><input type="checkbox" checked={Boolean(reviewed[index])} onChange={event => setReviewed(previous => ({ ...previous, [index]: event.target.checked }))}/><span><LessonText glossary glossaryId={lessonId} text={point}/></span></label>)}</div>
       <p>Plusieurs formulations peuvent convenir. Compare les idées plutôt que les mots de l’exemple. Tu peux modifier ta proposition ci-dessus.</p>
     </section>}
-    {!twoPartAnswer && <p className="dashboard-note">Tu peux terminer cet atelier sans autre outil.</p>}
   </div>
 }

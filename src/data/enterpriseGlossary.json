@@ -311,19 +311,20 @@
     {
       "id": "ent-start-missing-place",
       "terms": [
-        "lieu à confirmer"
+        "lien à communiquer"
       ],
-      "title": "Lieu à confirmer",
-      "definition": "Une façon de dire que l’endroit de la réunion n’a pas encore été choisi. L’assistant IA peut garder cette indication dans le brouillon au lieu d’inventer une salle. Tu complètes le lieu avant d’envoyer l’invitation définitive."
+      "title": "Lien à communiquer",
+      "definition": "Une information qui reste à compléter : le lien de visioconférence sera transmis quand il sera disponible. Le prompt peut demander de garder cette mention dans le mail au lieu d’inventer une adresse. Par exemple : nous vous communiquerons le lien avant notre rendez-vous."
     },
     {
       "id": "ent-start-short-format",
       "terms": [
         "forme",
-        "longueur"
+        "longueur",
+        "six lignes"
       ],
       "title": "Forme et longueur du message",
-      "definition": "La manière dont tu veux présenter le texte et la place qu’il doit prendre. Par exemple : un objet puis un message de cinq lignes maximum. Cela aide l’assistant IA à proposer un mail facile à reprendre."
+      "definition": "La manière de présenter le texte et la place qu’il doit prendre. Par exemple : un objet puis un mail de six lignes maximum. Donner cette forme à ton prompt aide l’assistant IA à préparer un mail facile à relire."
     }
   ],
   "ent-context-rag": [

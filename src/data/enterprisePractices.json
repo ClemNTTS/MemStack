@@ -49,17 +49,17 @@
     "explanation": "On peut aider le client pour son colis sans lui laisser changer les autorisations d’Aster. Deux phrases peuvent suffire si ta note sépare ces éléments et garde les accès limités. Le signalement est utile, mais il ne garantit pas à lui seul la sécurité."
   },
   "ent-useful-request": {
-    "scenario": "Tu invites ton équipe jeudi à 10 h et tu attends les réponses avant mardi. La salle n’est pas encore choisie.\n\nPour cette invitation fictive, tu souhaites un mail chaleureux, avec un objet et cinq lignes maximum.",
-    "task": "Que dirais-tu à l’assistant IA pour qu’il prépare ce mail ? Écris ton prompt, avec tes mots. Tu n’as pas à écrire le mail lui-même.",
-    "starter": "Pour qui et pour quoi : …\n\nInformations à donner : …\n\nForme du mail : …\n\nDétail manquant : …",
+    "scenario": "Tu travailles chez Studio Rivage. Tu dois proposer un rendez-vous en visioconférence à Camille, une cliente fictive, pour préparer son prochain projet.\n\nDeux créneaux sont possibles : mercredi 28 octobre 2026 à 14 h ou vendredi 30 octobre à 10 h. Tu souhaites sa réponse avant lundi 26 octobre à 17 h. Le lien de visioconférence sera communiqué plus tard.\n\nTu veux un mail professionnel et chaleureux, avec un objet et six lignes maximum.",
+    "task": "Écris le prompt que tu donnerais à ton assistant IA pour préparer ce mail. C’est toi qui lui fournis les informations : tu n’as pas à rédiger le mail final.",
+    "starter": "Écris ton prompt…",
     "checklist": [
-      "Le prompt indique que le mail s’adresse à l’équipe et annonce jeudi à 10 h.",
-      "Il précise qu’une réponse est attendue avant mardi.",
-      "Il prévoit un objet et cinq lignes maximum.",
-      "Le lieu reste à confirmer au lieu d’être inventé."
+      "Le prompt prépare un mail à Camille pour proposer un rendez-vous client.",
+      "Les deux créneaux et la date de réponse souhaitée sont présents.",
+      "Le lien de visioconférence reste à communiquer, sans lien inventé.",
+      "Le ton professionnel et chaleureux, un objet et un mail court sont précisés."
     ],
-    "example": "Prépare un mail chaleureux pour inviter mon équipe à une réunion jeudi à 10 h.\n\nDemande aux collègues de répondre avant mardi.\n\nÉcris un objet, puis un message de cinq lignes maximum.\n\nLa salle n’est pas encore choisie : indique « lieu à confirmer » et rappelle-moi de compléter avant l’envoi.",
-    "explanation": "Avec ces informations, l’assistant IA peut préparer un brouillon utile. Ta phrase n’a pas besoin de ressembler exactement à l’exemple : les détails pratiques et le lieu encore à confirmer sont les repères qui comptent."
+    "example": "Prépare un mail professionnel et chaleureux à Camille, cliente de Studio Rivage, pour organiser une visio sur son prochain projet.\n\nPropose mercredi 28 octobre 2026 à 14 h ou vendredi 30 octobre à 10 h et demande-lui de répondre avant lundi 26 octobre à 17 h.\n\nIndique « lien à communiquer », sans inventer de lien de visioconférence. Ajoute un objet et limite le mail à six lignes.",
+    "explanation": "Tu donnes à l’assistant IA le destinataire, le but, les deux possibilités et l’échéance de réponse. Le lien manquant reste visible. Tes mots peuvent être différents : ce sont ces informations qui permettent de préparer un mail utile."
   },
   "ent-context-rag": {
     "scenario": "Sami dispose de ces pièces fictives :\n\nJAN : ancienne politique, remplacée ; retour sous 60 jours.\n\nSEPT : version applicable, qui remplace JAN ; retour sous 30 jours, frais pris en charge uniquement si le produit est endommagé.\n\nLe cas : une lampe achetée il y a 5 jours est cassée. Le glossaire précise que « retour » désigne un produit renvoyé.\n\nLa recherche n’a rapporté que JAN et l’assistant IA conclut : « vous avez 60 jours ».",
@@ -492,5 +492,17 @@
     "example": "Lila : textes mensuels et correction horaire.\n\nRémi : incidents ; confirmer emplacement, propriétaire, accès nominatifs, sauvegardes et restauration sans secrets dans la fiche.\n\nDeux heures : correction et rappel.\n\nExplorer ensuite le besoin derrière l’espace client avant estimation.\n\nDossier Cyprès : besoin horaires ; critères horaires/adresse/préparation trouvables ; maquette dans outil connu à confirmer avec le référent ; première modification limitée aux horaires ; recette recherche d’information, mobile, clavier et liens ; reprise par Inès pour les textes, avec référent et restauration à confirmer.\n\nTester avec trois personnes puis mesurer les appels sur semaines comparables.",
     "explanation": "Une question laissée ouverte reste utile si l’on sait qui doit y répondre. Cela permet de transmettre le projet sans inventer son fonctionnement.\n\nL’espace client mérite d’être exploré ; pendant ce temps, l’équipe peut déjà corriger l’horaire qu’elle sait faux.",
     "scenario": "Cas fictif : le studio Lanterne publie trois offres sur un outil de site.\n\nLila met les textes à jour mensuellement, Rémi traite les incidents techniques.\n\nDernier mois : 12 demandes d’information, 3 signalements d’horaire périmé, 2 demandes d’espace client.\n\nDeux heures sont disponibles pour une amélioration ; aucun budget ni compétence supplémentaire n’est confirmé."
+  },
+  "ent-plausible-not-proven": {
+    "scenario": "Chez Aster, entreprise fictive, le document applicable indique : retour sous 30 jours ; frais pris en charge uniquement pour un produit endommagé. Un assistant IA a proposé 60 jours, des retours toujours gratuits et une note RET-2026-14 qui n’est pas fournie.",
+    "task": "Compare les trois affirmations au document, puis rédige une courte réponse au client qui respecte les deux règles et n’invente pas de référence.",
+    "starter": "Ta réponse au client…",
+    "checklist": [
+      "Le délai de 60 jours et la gratuité générale sont repérés comme contredits.",
+      "La note RET-2026-14 est non vérifiable dans les pièces.",
+      "La réponse au client conserve 30 jours et la condition du produit endommagé."
+    ],
+    "example": "Vous pouvez retourner votre produit sous 30 jours. Les frais de retour sont pris en charge uniquement si le produit est endommagé.",
+    "explanation": "Tu peux corriger le brouillon en conservant les deux règles fournies. La référence absente ne devient pas une preuve. Plusieurs formulations simples conviennent."
   }
 }

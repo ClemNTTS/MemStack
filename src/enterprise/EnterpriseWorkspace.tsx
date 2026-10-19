@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { FormEvent, MouseEvent, ReactNode } from 'react'
 import { BookOpen, Building2, ChevronRight, Flag, RotateCcw, Trophy, Users } from 'lucide-react'
 import { appHref, currentRoute, usesHashRoutes } from '../navigation/browser'
 import { useProgress } from '../progress/ProgressProvider'
-import { getEnterpriseWorkspace, joinEnterpriseOrganization, commitEnterpriseLearningAction, manageEnterpriseOrganization } from '../firebase/enterprise'
-import type { EnterpriseWorkspace as Workspace, EnterpriseLearningAction, EnterpriseLearningResult } from '../types/enterprise'
+import { getEnterpriseWorkspace, joinEnterpriseOrganization, commitEnterpriseLearningAction, manageEnterpriseOrganization, assessEnterprisePracticeAnswer } from '../firebase/enterprise'
+import type { EnterpriseWorkspace as Workspace, EnterpriseLearningAction, EnterpriseLearningResult, VerifyEnterprisePractice } from '../types/enterprise'
 import type { EnterpriseChallenge } from '../types/enterpriseContent'
 import { enterpriseCurriculum, enterpriseLessons, enterpriseChallenges, enterpriseTracks } from '../data/enterprise'
 import { enterprisePlan, enterpriseScope } from './model'
@@ -43,6 +43,15 @@ export default function EnterpriseWorkspace() {
   const selectedTrack = enterpriseTracks.find(item => item.id === params.get('track')) ?? enterpriseTracks[0]
   const billingView = path === '/enterprise/billing' || path === '/enterprise/subscribe' || (path === '/enterprise' && params.get('setup') === 'subscribe')
   const previousPage = useRef(path)
+  const verifyPractice = useCallback<VerifyEnterprisePractice>(async (lessonId, answer, practiceVersion) => {
+    const organizationId = workspace?.organization?.id
+    const currentScope = organizationId ? enterpriseScope(uid, organizationId) : ''
+    const operation = generation.current
+    if (!organizationId || (orgId && orgId !== organizationId) || scope.current !== currentScope) throw new Error('Le contexte de cet atelier a changé.')
+    const result = await assessEnterprisePracticeAnswer(uid, { organizationId, lessonId, answer, practiceVersion })
+    if (generation.current !== operation || scope.current !== currentScope) throw new Error('Le contexte de cet atelier a changé.')
+    return result
+  }, [uid, workspace?.organization?.id, orgId])
   const link = (suffix = '', trackId = selectedTrack?.id) => {
     const search = new URLSearchParams()
     const organizationId = workspace?.organization?.id ?? orgId
@@ -148,7 +157,7 @@ export default function EnterpriseWorkspace() {
   else if (!workspace) page = <section className="enterprise-empty"><Building2 size={35} /><h1>Ton espace Entreprise</h1><p role="status">{error || 'On retrouve tes organisations…'}</p>{error && <button className="catalog-button" onClick={()=>setRefresh(value=>value+1)}>Réessayer</button>}</section>
   else if (!organization || !plan) page = <section className="enterprise-empty"><p className="lesson-category">Bienvenue dans MemStack Entreprise</p><h1>Un chemin partagé avec ton équipe.</h1><p>Rejoins ton organisation avec le code transmis par ton responsable. Les missions, cartes et situations de cet espace restent séparées de ton apprentissage développeur.</p><form onSubmit={event=>{void join(event)}}><label>Code d’invitation<input value={code} onChange={event=>setCode(event.target.value)} autoComplete="off" required minLength={20} maxLength={100} /></label><button className="catalog-button" disabled={busy}>{busy?'Vérification…':'Rejoindre mon organisation'}</button></form><p className="dashboard-note">Utilise le compte correspondant à l’adresse email invitée.</p><a className="catalog-button secondary" href={appHref('/enterprise?setup=subscribe')}>Créer mon organisation</a><p><a className="text-link" href={appHref('/business')}>Découvrir l’offre et le programme →</a></p></section>
   else if (organization.learningEnabled === false) page = organization.role === 'manager' ? <EnterpriseBillingPage key={enterpriseScope(uid,organization.id)} uid={uid} organizationId={organization.id} onOpen={()=>setRefresh(value=>value+1)} onCreated={()=>{}} /> : <section className="enterprise-empty"><h1>Ton organisation prépare la suite.</h1><p>Son abonnement n’est pas actif pour le moment. Ton responsable peut consulter sa facturation pour rétablir l’accès aux missions et aux cartes.</p><button className="catalog-button secondary" onClick={()=>setRefresh(value=>value+1)}>Vérifier mon accès</button></section>
-  else if (lesson) page = <EnterpriseLessonView key={`${scope.current}:${lesson.id}`} lesson={lesson} completed={plan.complete(lesson.id)} available={plan.available(lesson)} busy={busy} onComplete={()=>commit({type:'lesson',lessonId:lesson.id})} returnHref={link()} cardsHref={link('/reviews')} draft={drafts[draftKey] ?? ''} onDraftChange={draft=>setDrafts(previous=>({...previous,[draftKey]:draft}))} />
+  else if (lesson) page = <EnterpriseLessonView key={`${enterpriseScope(uid, organization.id)}:${lesson.id}`} lesson={lesson} completed={plan.complete(lesson.id)} available={plan.available(lesson)} busy={busy} onComplete={()=>commit({type:'lesson',lessonId:lesson.id})} returnHref={link()} cardsHref={link('/reviews')} onVerify={verifyPractice} draft={drafts[draftKey] ?? ''} onDraftChange={draft=>setDrafts(previous=>({...previous,[draftKey]:draft}))} />
   else if (path === '/enterprise/reviews') page = <EnterpriseReviews key={scope.current} workspace={workspace} busy={busy} onCommit={commit} returnHref={link()} />
   else if (challenge) page = <EnterpriseChallengeView key={`${scope.current}:${challenge.id}`} challenge={challenge} available={plan.available(challenge)} workspace={workspace} busy={busy} onSubmit={answers=>commit({type:'challenge',challengeId:challenge.id,catalogVersion:enterpriseCurriculum.version,answers})} returnHref={link('/challenges')} />
   else if (path === '/enterprise/challenges') page = <>

@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import EnterprisePracticeFeedback from './EnterprisePracticeFeedback'
+import { enterprisePractices } from './GuidedEnterprisePractice'
+import type { VerifyEnterprisePractice } from '../types/enterprise'
 
 const claims = [
   { id: 'delay', text: 'Le client peut retourner son produit pendant 60 jours.', expected: 'contradicted', explanation: 'La politique prévoit 30 jours : le délai de 60 jours contredit le document.' },
@@ -6,10 +9,12 @@ const claims = [
   { id: 'reference', text: 'La note RET-2026-14 confirme ces conditions.', expected: 'unverified', explanation: 'Cette note ne figure dans aucune pièce de l’exercice. Tu ne peux pas vérifier ce qu’elle dit : une référence plausible ne suffit pas.' },
 ]
 
-export default function ReturnPolicyPractice() {
+export default function ReturnPolicyPractice({ lessonId, draft, onDraftChange, onVerify }: { lessonId: string; draft: string; onDraftChange: (draft: string) => void; onVerify: VerifyEnterprisePractice }) {
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [checked, setChecked] = useState(false)
-  const [draft, setDraft] = useState('')
+  const practice = enterprisePractices[lessonId]
+  const labels: Record<string, string> = { supported: 'Confirmé par le document', contradicted: 'Contredit par le document', unverified: 'Non vérifiable ici' }
+  const answer = draft.trim() ? `${claims.map(claim => `${claim.text} — ${labels[answers[claim.id]] ?? 'Pas encore choisi'}`).join('\n')}\n\nMa réponse au client : ${draft}` : ''
   const correct = claims.filter(claim => answers[claim.id] === claim.expected).length
 
   return <div className="enterprise-practice enterprise-claim-practice">
@@ -25,10 +30,11 @@ export default function ReturnPolicyPractice() {
       </select>
       {checked && <p className="enterprise-claim-explanation" data-correct={answers[claim.id] === claim.expected}>{answers[claim.id] === claim.expected ? '✓ Bien repéré. ' : '↻ À reprendre. '}{claim.explanation}</p>}
     </div>)}
-    <button type="button" className="catalog-button secondary" disabled={claims.some(claim => !answers[claim.id])} onClick={() => setChecked(true)}>Comparer avec le document</button>
     {checked && <p role="status">{correct} diagnostic{correct > 1 ? 's' : ''} correct{correct > 1 ? 's' : ''} sur 3. {correct === 3 ? 'Tu peux maintenant préparer une réponse fiable.' : 'Relis les explications, puis ajuste tes choix.'}</p>}
-    <label className="enterprise-response-draft">À toi : propose une réponse au client qui respecte les deux règles.<textarea value={draft} onChange={event => setDraft(event.target.value)} rows={4} maxLength={2000} placeholder="Tu peux commencer par : « Vous pouvez retourner votre produit… »"/></label>
+    <label className="enterprise-response-draft">À toi : propose une réponse au client qui respecte les deux règles.<textarea value={draft} onChange={event => onDraftChange(event.target.value)} rows={4} maxLength={2000} placeholder="Tu peux commencer par : « Vous pouvez retourner votre produit… »"/></label>
+    {practice && <EnterprisePracticeFeedback lessonId={lessonId} practice={practice} answer={answer} onVerify={onVerify}/>}
+    <div className="enterprise-practice-tools"><button type="button" className="text-link" onClick={() => setChecked(previous => !previous)} aria-expanded={checked}>{checked ? 'Masquer les repères' : 'Comparer avec le document'}</button></div>
     {checked && <details className="enterprise-practice-example"><summary>Voir un exemple de réponse corrigée</summary><p>Vous pouvez retourner votre produit sous 30 jours. Les frais de retour sont pris en charge uniquement si le produit est endommagé.</p><p>Cette réponse conserve le délai et sa condition, sans reprendre la référence invérifiable. D’autres formulations conviennent aussi.</p></details>}
-    <p>Tu peux ajuster tes choix autant que tu veux. Copie ton brouillon avant de quitter cette page si tu veux le garder.</p>
+
   </div>
 }

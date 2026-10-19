@@ -20,7 +20,7 @@ export async function enterpriseActor({db,auth,lookup}) {
   return {uid,email:account.email.trim().toLowerCase(),account}
 }
 
-async function membership(tx,db,organizationId,uid,manager = false,allowUnpaid = false,now = Date.now()) {
+export async function membership(tx,db,organizationId,uid,manager = false,allowUnpaid = false,now = Date.now()) {
   if (!id(organizationId)) fail('invalid-argument','Organisation invalide.')
   const [org,member,marker] = await Promise.all([
     tx.get(db.doc(orgPath(organizationId))),tx.get(db.doc(`${orgPath(organizationId)}/members/${uid}`)),tx.get(db.doc(`_accountLifecycle/${uid}`))
@@ -277,7 +277,7 @@ export async function exportEnterpriseData(db,uid) {
   const output = []
   for (const index of indexes.docs) {
     const organizationId = index.id, base = learnerPath(organizationId,uid)
-    const collections = await Promise.all(['lessons','cards','reviews','attempts','receipts','limits'].map(async name=>({name,rows:(await db.collection(`${base}/${name}`).limit(5001).get()).docs.map(row=>({id:row.id,...row.data()}))})))
+    const collections = await Promise.all(['lessons','cards','reviews','attempts','receipts','limits','practiceFeedback'].map(async name=>({name,rows:(await db.collection(`${base}/${name}`).limit(5001).get()).docs.map(row=>({id:row.id,...row.data()}))})))
     if (collections.some(group=>group.rows.length>5000)) fail('resource-exhausted','Export entreprise trop volumineux, contacte l’administration.')
     const [member,ranking] = await Promise.all([db.doc(`${orgPath(organizationId)}/members/${uid}`).get(),db.doc(`${orgPath(organizationId)}/ranking/${uid}`).get()])
     output.push({organizationId,membership:member.data()??null,ranking:ranking.data()??null,collections})

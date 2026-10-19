@@ -1,0 +1,26 @@
+{
+  "checkedAt": "2026-10-19T14:31:50.265Z",
+  "functions": [
+    {
+      "name": "assessEnterprisePracticeAnswer",
+      "state": "ACTIVE",
+      "updateTime": "2026-10-19T14:31:18.749739469Z",
+      "entryPoint": "assessEnterprisePracticeAnswer",
+      "uri": "https://assessenterprisepracticeanswer-rhrbq7yija-od.a.run.app",
+      "enabled": "true",
+      "model": "mistral-medium-2604",
+      "preservedParameters": 14
+    },
+    {
+      "name": "exportAccountData",
+      "state": "ACTIVE",
+      "updateTime": "2026-10-19T14:31:21.020301921Z",
+      "entryPoint": "exportAccountData",
+      "uri": "https://exportaccountdata-rhrbq7yija-od.a.run.app",
+      "enabled": "true",
+      "model": "mistral-medium-2604",
+      "preservedParameters": 14
+    }
+  ],
+  "unauthenticatedStatus": 401
+}

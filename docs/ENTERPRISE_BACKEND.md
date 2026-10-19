@@ -1,6 +1,14 @@
 # Espace Entreprise : accès et isolation
 
-L’offre continue utilise Firebase Auth, App Check, Firestore et les Functions existants en `europe-west9`. Aucun fournisseur IA n’est requis. Les frais techniques restent ceux des lectures/écritures et appels Firebase existants. Les plafonds globaux existants sont conservés. L’abonnement commercial à 10 € TTC par membre actif et par mois, distinct des pilotes, est décrit dans [ENTERPRISE_BILLING.md](ENTERPRISE_BILLING.md).
+L’offre continue utilise Firebase Auth, App Check, Firestore et les Functions en `europe-west9`. Depuis l’ajout du 19 octobre 2026, les retours des ateliers utilisent aussi Mistral via un callable dédié, avec activation indépendante, modèle versionné et plafonds de coût. Les défis finaux restent corrigés en code. L’abonnement commercial à 10 € TTC par membre actif et par mois, distinct des pilotes, est décrit dans [ENTERPRISE_BILLING.md](ENTERPRISE_BILLING.md).
+
+## Retours des ateliers
+
+`assessEnterprisePracticeAnswer` vérifie le compte courant, App Check, l’appartenance active, les droits d’organisation et les prérequis. Il reçoit uniquement l’organisation, la mission, l’empreinte du cas affiché et la réponse. Les cas de confiance sont préparés avec les Functions ; les grilles essentielles/facultatives ne sont pas importées par le frontend. La réponse envoyée à Mistral ne contient pas d’identité ou d’historique ajoutés par MemStack.
+
+Les plafonds initiaux sont de 30 nouvelles vérifications par membre et organisation par jour à Paris, 500 au niveau global et 6 millions de tokens réservés globalement. Chaque appel réserve 32 000 tokens de façon conservatrice : ce dernier plafond borne donc à 187 nouveaux appels par jour, avant les autres limites. Les réponses identiques réutilisent leur reçu, lié au cas, à la grille, au modèle et au prompt serveur ; aucune dépense n’est réservée pour ce cache. Une erreur ne déclenche aucun retry fournisseur automatique. Un nouvel essai explicite après indisponibilité attend une minute et réserve à nouveau le budget.
+
+Les reçus sont sous `organizations/{organizationId}/learners/{uid}/practiceFeedback`, sans réponse brute ; seul le retour et ses métadonnées sont conservés. Les managers n’y ont pas accès. Les règles client restent fermées ; le callable fait les contrôles et retourne le feedback. L’export personnel inclut ces reçus ; la suppression récursive du learner les enlève et le marqueur de suppression bloque les écritures tardives. Le feedback n’accorde aucune progression ni place au classement. Voir [ARCHITECTURE.md](ARCHITECTURE.md) et les qualifications datées dans `docs/content/ENTERPRISE_PRACTICE_AI_*_20261019.md`.
 
 ## Activation commerciale
 

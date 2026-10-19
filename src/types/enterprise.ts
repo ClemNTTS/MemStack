@@ -34,3 +34,11 @@ export type EnterpriseBillingStatus = {
   unitAmount: number; interval: 'month'; taxBehavior: 'inclusive'; activeMembers: number; billedMembers: number
   paidUntil: string | null; cancelAtPeriodEnd: boolean; canManage: boolean; syncPending: boolean
 }
+export type EnterprisePracticeFeedback = {
+  status: 'good' | 'almost' | 'retry'
+  message: string
+  strengths: string[]
+  nextStep: string
+}
+
+export type VerifyEnterprisePractice = (lessonId: string, answer: string, practiceVersion: string) => Promise<EnterprisePracticeFeedback>

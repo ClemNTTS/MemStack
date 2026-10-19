@@ -26,14 +26,13 @@ test('enterprise exercise documents are visible at a real step and match the dow
 })
 
 test('every enterprise practice has its case, task and commented comparison before the lesson questions', () => {
-  const guidedPracticeLessons = curriculum.lessons.filter(lesson => lesson.id !== 'ent-plausible-not-proven')
+  const guidedPracticeLessons = curriculum.lessons
   assert.deepEqual(Object.keys(practices).sort(), guidedPracticeLessons.map(lesson => lesson.id).sort())
   for (const lesson of curriculum.lessons) {
     const practiceSteps = lesson.steps.filter(step => step.type === 'message' && step.text.startsWith('Pratique ·'))
     assert.equal(practiceSteps.length, 1, lesson.id)
     const practiceIndex = lesson.steps.indexOf(practiceSteps[0])
     assert.ok(lesson.steps.slice(practiceIndex + 1).some(step => step.type === 'question'), lesson.id)
-    if (lesson.id === 'ent-plausible-not-proven') continue // Dedicated interactive claim-check exercise.
     const activity = practices[lesson.id]
     for (const field of ['scenario', 'task', 'starter', 'example', 'explanation'] as const) assert.ok(activity[field].trim(), `${lesson.id}: ${field}`)
     assert.ok(activity.checklist.length >= 2 && activity.checklist.length <= 6, lesson.id)

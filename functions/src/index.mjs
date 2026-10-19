@@ -17,6 +17,7 @@ import { createAccountLifecycle } from './accountLifecycle.mjs'
 import { getAccessStatus, requireGoogle, requireMember, updateMemberAccess, validateMemberAccessRequest, currentAdminStatus } from './accessService.mjs'
 import { getEnterpriseWorkspace as enterpriseWorkspace, manageEnterpriseOrganization as enterpriseManage, joinEnterpriseOrganization as enterpriseJoin, commitEnterpriseLearningAction as enterpriseCommit, deleteEnterpriseData } from './enterprise.mjs'
 import { enterpriseCommercialTerms,createEnterpriseOrganization as enterpriseCreate,createEnterpriseCheckout as enterpriseCheckout,getEnterpriseBilling as enterpriseBilling,createEnterprisePortal as enterprisePortal,drainEnterpriseSeatSync,processEnterpriseSubscriptionEvent } from './enterpriseBilling.mjs'
+import { assessEnterprisePractice, callPracticeMistral } from './enterprisePractice.mjs'
 
 initializeApp()
 const db = getFirestore()
@@ -39,7 +40,16 @@ const tokenLimit = defineInt('CHALLENGE_AI_GLOBAL_RESERVED_TOKENS', { default: 4
 const callableOptions = { region: 'europe-west9', enforceAppCheck: true, maxInstances: 2, cors: true }
 const enterpriseCatalog = JSON.parse(readFileSync(new URL('../catalog/enterpriseCurriculum.json', import.meta.url),'utf8'))
 const enterpriseKeys = JSON.parse(readFileSync(new URL('../catalog/enterpriseAssessmentKeys.json', import.meta.url),'utf8'))
+const enterprisePractices = JSON.parse(readFileSync(new URL('../catalog/enterprisePractices.json', import.meta.url),'utf8'))
+const enterprisePracticeRubrics = JSON.parse(readFileSync(new URL('../catalog/enterprisePracticeRubrics.json', import.meta.url),'utf8'))
+const practiceAiEnabled = defineBoolean('ENTERPRISE_PRACTICE_AI_ENABLED', { default: false })
+const practiceAiModel = defineString('ENTERPRISE_PRACTICE_AI_MODEL', { default: '' })
 const enterpriseContext = request => ({db,auth:request.auth,lookup:uid=>getAuth().getUser(uid),data:request.data})
+export const assessEnterprisePracticeAnswer = onCall({ ...callableOptions, secrets: [key], timeoutSeconds: 60 }, request => accessCall(() => assessEnterprisePractice({
+  ...enterpriseContext(request), catalog: enterpriseCatalog, practices: enterprisePractices, rubrics: enterprisePracticeRubrics,
+  config: { enabled: practiceAiEnabled.value(), model: practiceAiModel.value().trim(), hasKey: Boolean(key.value()) },
+  evaluate: ({ practice, answer, model, rubric }) => callPracticeMistral({ apiKey: key.value(), model, practice, answer, rubric }),
+})))
 export const getEnterpriseWorkspace = onCall(callableOptions,request=>accessCall(()=>enterpriseWorkspace(enterpriseContext(request))))
 export const manageEnterpriseOrganization = onCall(callableOptions,request=>accessCall(()=>enterpriseManage(enterpriseContext(request))))
 export const joinEnterpriseOrganization = onCall(callableOptions,request=>accessCall(()=>enterpriseJoin(enterpriseContext(request))))
