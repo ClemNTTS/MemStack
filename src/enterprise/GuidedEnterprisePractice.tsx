@@ -18,11 +18,7 @@ export default function GuidedEnterprisePractice({ lessonId, draft = '', onDraft
   const twoPartAnswer = lessonId === 'ent-answer-or-action'
   const [assistantDraft = '', ...personalParts] = draft.split('\n\n')
   const personalDraft = personalParts.join('\n\n')
-  const exportDraft = twoPartAnswer
-    ? [assistantDraft.trim() && `Ce que Léa peut demander à son assistant IA\n${assistantDraft}`, personalDraft.trim() && `Ce qu’elle doit faire elle-même\n${personalDraft}`].filter(Boolean).join('\n\n')
-    : draft
   const [compared, setCompared] = useState(false)
-  const [exportStatus, setExportStatus] = useState('')
   const [reviewed, setReviewed] = useState<Record<number, boolean>>({})
   const feedback = useRef<HTMLElement>(null)
   useEffect(() => {
@@ -35,20 +31,7 @@ export default function GuidedEnterprisePractice({ lessonId, draft = '', onDraft
 
   function updateDraft(value: string) {
     onDraftChange(value)
-    setExportStatus('')
     setReviewed({})
-  }
-
-  async function copy() {
-    try { await navigator.clipboard.writeText(exportDraft); setExportStatus('Proposition copiée. Tu peux la coller dans ton document.') }
-    catch { setExportStatus('Copie indisponible. Sélectionne ton texte ou télécharge-le.') }
-  }
-  function download() {
-    const url = URL.createObjectURL(new Blob([exportDraft], { type: 'text/plain;charset=utf-8' }))
-    const anchor = document.createElement('a')
-    anchor.href = url; anchor.download = `${lessonId}-proposition.txt`; anchor.click()
-    setTimeout(() => URL.revokeObjectURL(url), 1000)
-    setExportStatus('Téléchargement demandé. Vérifie le fichier dans tes téléchargements.')
   }
 
   return <div className="enterprise-practice enterprise-guided-practice" data-compact={twoPartAnswer}>
@@ -61,13 +44,11 @@ export default function GuidedEnterprisePractice({ lessonId, draft = '', onDraft
     </div> : <>
       <LessonText glossary glossaryId={lessonId} text={practice.task}/>
       <section aria-label="Critères pour préparer ta proposition"><h3>Quelques repères pour t’aider</h3><ul>{practice.checklist.map(point => <li key={point}><LessonText glossary glossaryId={lessonId} text={point}/></li>)}</ul></section>
-      <p className="dashboard-note">Ton texte reste ici, sans envoi à ton équipe ou à une IA. Copie-le ou télécharge-le avant de quitter cet espace.</p>
       <label>Ta proposition<textarea value={draft} onChange={event => updateDraft(event.target.value)} maxLength={5000} rows={6} placeholder={practice.starter}/></label>
       <div className="dashboard-note"><LessonText glossary glossaryId={lessonId} text={`Tu peux t’aider de cette structure : ${practice.starter}`}/></div>
     </>}
-    {twoPartAnswer && <p className="dashboard-note">Ton texte reste ici, sans envoi à ton équipe ou à une IA. Copie-le ou télécharge-le avant de quitter cet espace.</p>}
-    <div className="enterprise-practice-tools"><button type="button" className="catalog-button secondary" disabled={!draft.trim()} onClick={() => setCompared(true)}>Comparer avec un exemple</button><button type="button" className="catalog-button secondary" disabled={!draft.trim()} onClick={() => { void copy() }}>Copier mon texte</button><button type="button" className="catalog-button secondary" disabled={!draft.trim()} onClick={download}>Télécharger (.txt)</button></div>
-    <p role="status" className="dashboard-note">{exportStatus}</p>
+    <p className="dashboard-note">Tes réponses restent dans cette session, sans envoi à ton équipe ni à une IA.</p>
+    <div className="enterprise-practice-tools"><button type="button" className="catalog-button secondary" disabled={!draft.trim()} onClick={() => setCompared(true)}>Comparer avec un exemple</button></div>
     {compared && <section className="enterprise-practice-comparison" ref={feedback} tabIndex={-1} aria-label="Exemple commenté et repères de comparaison">
       <h3>Un exemple possible</h3>
       <LessonText glossary glossaryId={lessonId} text={practice.example}/>

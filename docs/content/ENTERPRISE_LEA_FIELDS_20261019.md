@@ -9,3 +9,9 @@ Les réponses restent dans le brouillon de la mission, isolé par compte et orga
 Recette avec les vrais composants dans une organisation fictive : arrivée à l'étape 6/8, absence des répétitions et de la grande zone de texte, saisie d'abord dans le deuxième champ puis dans le premier sans perte, copie vérifiée avec les deux titres et leurs réponses, ouverture de l'exemple commenté après rédaction. Aucun compte réel modifié. Build réussi, 260 tests réussis. L'avertissement préexistant de taille de bundle reste présent.
 
 ![Atelier simplifié avant rédaction](../screenshots/enterprise-memo/lea-two-fields.png)
+
+## Ajustement suivant : retirer les exports
+
+Le même jour, après le retour du propriétaire sur l'inutilité des exports de réponses, les boutons de copie et de téléchargement sont retirés de tous les ateliers guidés, avec leur code et leurs messages d'état. Seule la comparaison avec un exemple reste proposée. La note précise que les réponses restent dans la session et ne sont pas envoyées à l'équipe ni à une IA. Les brouillons et la comparaison conservent leur fonctionnement. Build réussi et affichage vérifié dans l'organisation fictive.
+
+![Atelier sans exports](../screenshots/enterprise-memo/lea-without-export.png)
