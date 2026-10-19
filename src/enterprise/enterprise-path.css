@@ -13,6 +13,8 @@
 .enterprise-reference-library > summary { cursor: pointer; font-size: 1.25rem; font-weight: 700; padding: .6rem 0; }
 .enterprise-reference-library > .enterprise-situation-grid { margin-top: 1.5rem; }
 .enterprise-practice-tools { display: flex; flex-wrap: wrap; gap: .75rem; margin: 1rem 0; }
+.enterprise-guided-practice[data-compact="true"] { margin-top: 0; padding-top: 0; border-top: 0; }
+.enterprise-practice-answer-fields { display: grid; gap: 1.25rem; margin-block: 1.5rem; }
 .enterprise-practice-tools .catalog-button { white-space: normal; text-align: left; }
 .enterprise-practice-checklist { display: grid; gap: .75rem; }
 .enterprise-practice-comparison .lesson-rich-text > p { margin-block:1rem; line-height:1.8; }

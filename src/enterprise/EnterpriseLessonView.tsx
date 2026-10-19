@@ -53,7 +53,7 @@ export default function EnterpriseLessonView({ lesson, completed, available, bus
       {lesson.steps.slice(0, index + 1).map((item, position) => {
         const current = position === index
         if (item.type === 'message') return <div className="enterprise-conversation-turn" data-current={current} tabIndex={-1} key={item.id}>
-          <ChatBubble>{lesson.documents?.filter(document => document.stepId === item.id).map(document => <aside className="enterprise-lesson-document" key={document.src} aria-label={document.title}><p className="lesson-category">Document de l’exercice · fictif</p><h2>{document.title}</h2><LessonText text={document.text}/><a href={`${import.meta.env.BASE_URL}${document.src.replace(/^\//, '')}`} download>Télécharger ce document (.txt) ↓</a></aside>)}<LessonText glossary glossaryId={lesson.id} text={item.text}/>
+          <ChatBubble>{lesson.documents?.filter(document => document.stepId === item.id).map(document => <aside className="enterprise-lesson-document" key={document.src} aria-label={document.title}><p className="lesson-category">Document de l’exercice · fictif</p><h2>{document.title}</h2><LessonText text={document.text}/><a href={`${import.meta.env.BASE_URL}${document.src.replace(/^\//, '')}`} download>Télécharger ce document (.txt) ↓</a></aside>)}{item.id !== 'ent-answer-or-action-practice-1' && <LessonText glossary glossaryId={lesson.id} text={item.text}/>}
             {item.id === 'ent-plausible-not-proven-practice-1' ? <ReturnPolicyPractice/> : item.text.startsWith('Pratique ·') && <>{lesson.id === 'ent-automation-exceptions' && <AutomationFlowPractice/>}<GuidedEnterprisePractice lessonId={lesson.id} draft={draft} onDraftChange={onDraftChange}/></>}
           </ChatBubble>
         </div>
