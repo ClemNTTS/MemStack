@@ -117,6 +117,21 @@
 .enterprise-main .card-deck .flash-card-face { min-height: 240px; }
 .enterprise-main .card-deck .flash-card-face { padding: 1.25rem; gap: 1rem; border-radius: 18px; }
 .enterprise-main .flash-card-content { font-size: 1rem; line-height: 1.6; }
+@media (min-width: 1001px) {
+  .enterprise-main:has(.card-session-workspace) { padding-bottom: 24px; }
+  .enterprise-main .card-session-workspace {
+    min-height: calc(100dvh - 260px);
+    grid-template-columns: minmax(0, 1fr) 270px;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  .enterprise-main .card-deck { max-width: 820px; }
+  .enterprise-main .card-deck .flash-card,
+  .enterprise-main .card-deck .flash-card-inner,
+  .enterprise-main .card-deck .flash-card-face { min-height: clamp(240px, 36dvh, 360px); }
+  .enterprise-main .card-question { font-size: clamp(1.25rem, 1.4vw, 1.5rem); }
+  .enterprise-main .flash-card-content { font-size: 1.125rem; }
+}
 @media (max-width: 1000px) {
   .enterprise-toolbar { gap: .25rem .75rem; }
   .enterprise-toolbar .enterprise-workspace-tools { margin-left: 0; }
