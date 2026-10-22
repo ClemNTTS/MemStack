@@ -82,13 +82,13 @@ function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel, 
             </li>
           ))}
         </ul>
-        <p>Ta progression est sauvegardée et sa synchronisation est suivie dans le menu Compte.</p>
+        <p>{environment ? 'Tes réponses ont été enregistrées dans cette organisation. Tes cartes reviendront aux dates indiquées ; tu peux t’arrêter ici.' : 'Ta progression est sauvegardée et sa synchronisation est suivie dans le menu Compte.'}</p>
         <p>{nextLessonLabel}</p>
         <nav className="learning-empty-actions" aria-label="Après le lot">
           {onContinueReviews && <button className="catalog-button" type="button" onClick={onContinueReviews}>Réviser encore</button>}
           {onContinueLearningCards && <button className="catalog-button secondary" type="button" onClick={onContinueLearningCards}>Reprendre mes nouvelles cartes</button>}
           {onChooseLesson
-            ? <button className="catalog-button secondary" type="button" onClick={onChooseLesson}>Choisir la prochaine leçon</button>
+            ? <button className="catalog-button secondary" type="button" onClick={onChooseLesson}>{environment ? 'Choisir une mission' : 'Choisir la prochaine leçon'}</button>
             : <a href={appHref('/today')}>Choisir ma session</a>}
           {environment ? <a href={environment.homeHref}>Retrouver {environment.label}</a> : <><a href={appHref('/courses')}>Explorer les parcours</a>
           <a href={appHref('/library')}>Relire mes leçons</a>

@@ -17,15 +17,6 @@
       "definition": "La préparation d’un système d’IA à partir de nombreux exemples de textes ou d’autres contenus. Cela l’aide à produire une réponse. Par exemple, il peut savoir rédiger un courriel professionnel sans connaître les horaires actuels de ton entreprise."
     },
     {
-      "id": "affirmation",
-      "terms": [
-        "affirmation",
-        "affirmations"
-      ],
-      "title": "Affirmation",
-      "definition": "Une phrase qui présente quelque chose comme vrai et que l’on peut chercher à vérifier. Par exemple, « les retours sont gratuits pendant 60 jours » contient deux affirmations : une sur les frais et une sur le délai. Chacune doit être contrôlée séparément."
-    },
-    {
       "id": "reference",
       "terms": [
         "référence"
@@ -60,46 +51,13 @@
   ],
   "ent-answer-or-action": [
     {
-      "id": "ent-start-draft",
-      "terms": [
-        "brouillon",
-        "brouillons"
-      ],
-      "title": "Brouillon",
-      "definition": "Une première version d’un texte que tu peux relire et modifier avant de l’utiliser. Par exemple, l’assistant IA propose une invitation à la réunion de jeudi. Le brouillon n’est pas encore un mail envoyé aux collègues."
-    },
-    {
-      "id": "ent-start-recipients",
-      "terms": [
-        "destinataires"
-      ],
-      "title": "Destinataires",
-      "definition": "Les personnes à qui tu adresses un message. Par exemple, les collègues invités à une réunion. Avant d’envoyer, relis leurs adresses : le bon texte envoyé aux mauvaises personnes ne remplit pas ton objectif."
-    },
-    {
-      "id": "ent-start-sent-mail",
-      "terms": [
-        "messages envoyés"
-      ],
-      "title": "Messages envoyés",
-      "definition": "Le dossier de ta messagerie où tu retrouves les mails que tu as envoyés. Il aide à vérifier l’envoi et les destinataires. Par exemple, cherche l’invitation de jeudi ; un texte présent seulement dans les brouillons n’a pas encore été envoyé."
-    },
-    {
-      "id": "ent-start-mailbox",
-      "terms": [
-        "messagerie"
-      ],
-      "title": "Messagerie",
-      "definition": "L’application qui te permet de lire, écrire et envoyer tes mails. Par exemple, tu y copies l’invitation préparée avec l’assistant IA, tu relis les adresses puis tu l’envoies. L’assistant IA ne peut pas utiliser ta messagerie si cette possibilité n’a pas été prévue."
-    },
-    {
       "id": "ent-start-prompt",
       "terms": [
         "prompt",
         "prompts"
       ],
       "title": "Prompt",
-      "definition": "Le message que tu écris à un assistant IA pour lui expliquer ce que tu veux obtenir. Par exemple : « Prépare un mail pour inviter mon équipe jeudi à 10 h, en cinq lignes maximum. » Tu peux ensuite préciser ou modifier ton prompt selon le résultat."
+      "definition": "La demande adressée à l’assistant IA : objectif, informations utiles et forme de la réponse. Exemple : « Prépare une invitation pour jeudi à 10 h en cinq lignes maximum. » Cette demande prépare un texte ; elle ne donne pas à l’assistant le droit d’envoyer le mail."
     }
   ],
   "ent-minimum-data": [
@@ -110,16 +68,6 @@
       ],
       "title": "Minimisation des données",
       "definition": "Choisir seulement les informations nécessaires pour réaliser une tâche précise. On examine l'utilité de chaque détail avant de le transmettre. Exemple : pour préparer une réponse de retour, conserver le produit et le motif peut être utile ; le nom et l'adresse du client ne servent pas à cet exercice."
-    },
-    {
-      "id": "fictional-case",
-      "terms": [
-        "cas fictif",
-        "cas fictifs",
-        "exemple inventé"
-      ],
-      "title": "Cas fictif",
-      "definition": "Une situation inventée pour apprendre ou tester une réponse, sans reprendre un dossier réel. Elle contient les détails utiles à l'exercice. Exemple : une personne a reçu une lampe endommagée il y a cinq jours. Le cas permet de travailler le ton et la règle de retour."
     },
     {
       "id": "dataset",
@@ -138,28 +86,12 @@
       "definition": "Sortir des informations de leur emplacement habituel pour les utiliser ailleurs, souvent sous forme de fichier. Exemple : exporter la base clients permettrait de la transmettre à un autre outil. Avant ce transfert, la leçon invite à vérifier les règles internes et à chercher si un exemple inventé suffit."
     },
     {
-      "id": "internal-rules",
-      "terms": [
-        "règles internes"
-      ],
-      "title": "Règles internes",
-      "definition": "Les consignes d'une organisation qui encadrent les pratiques professionnelles, notamment les informations et les outils utilisables. Elles sont à vérifier avant un transfert de données. Exemple : avant d'importer des demandes clients dans un assistant IA, consulter les consignes applicables dans son entreprise. Un exercice utile ne constitue pas à lui seul une autorisation."
-    },
-    {
       "id": "authorized-tool",
       "terms": [
         "outil autorisé"
       ],
       "title": "Outil autorisé",
       "definition": "Un service ou logiciel dont l'utilisation est permise dans le cadre de travail concerné. Cette permission doit être vérifiée avec les règles internes. Exemple : avant de transmettre un exemple à un assistant IA, vérifier que cet outil est autorisé pour cet usage et que les informations choisies peuvent y être utilisées."
-    },
-    {
-      "id": "relative-purchase-date",
-      "terms": [
-        "date relative d'achat"
-      ],
-      "title": "Date relative d'achat",
-      "definition": "Une manière de situer un achat par rapport à aujourd'hui, avec une durée plutôt qu'une date précise. Exemple : « acheté il y a cinq jours ». Dans un exercice de retour, cette indication aide à comparer le délai à la règle applicable, tout en évitant un détail de calendrier inutile à la tâche."
     }
   ],
   "ent-approved-tool": [
@@ -203,7 +135,7 @@
         "réutilisation"
       ],
       "title": "Réutilisation des données",
-      "definition": "L'utilisation des contenus transmis pour une autre finalité que la demande immédiate, notamment pour entraîner des modèles. Il faut vérifier si elle est prévue dans le service et les options de l'organisation. Exemple : demander si les documents envoyés servent uniquement à préparer la réponse ou aussi à l'entraînement."
+      "definition": "L’usage de données transmises au service pour entraîner ou améliorer un modèle IA. Il faut vérifier ce que prévoient les conditions et les réglages du service ; utiliser une offre professionnelle ne suffit pas à établir ce qui est autorisé."
     },
     {
       "id": "approved-scope",
@@ -227,8 +159,8 @@
       "terms": [
         "configuration"
       ],
-      "title": "Configuration du service",
-      "definition": "Les réglages réellement choisis dans un logiciel. Par exemple, l’entreprise peut autoriser la lecture de certains documents et interdire leur partage à l’extérieur. Le nom de l’offre ne suffit pas : il faut aussi regarder les réglages activés."
+      "title": "Configuration d’un service IA",
+      "definition": "Les réglages réellement activés pour un service IA : accès aux documents, partage, conservation ou fonctions disponibles. Ils peuvent limiter les usages autorisés. Le nom commercial d’une offre ne prouve pas que les réglages nécessaires sont en place."
     },
     {
       "id": "ent-project-pilot",
@@ -298,33 +230,7 @@
         "prompts"
       ],
       "title": "Prompt",
-      "definition": "Le message que tu écris à un assistant IA pour lui expliquer ce que tu veux obtenir. Par exemple : « Prépare un mail pour inviter mon équipe jeudi à 10 h, en cinq lignes maximum. » Tu peux ensuite préciser ou modifier ton prompt selon le résultat."
-    },
-    {
-      "id": "ent-start-mail-subject",
-      "terms": [
-        "objet"
-      ],
-      "title": "Objet du mail",
-      "definition": "Le titre court qui apparaît dans la liste des mails avant même d’ouvrir le message. Par exemple : Réunion d’équipe jeudi à 10 h. Un objet précis aide les collègues à comprendre de quoi il s’agit."
-    },
-    {
-      "id": "ent-start-missing-place",
-      "terms": [
-        "lien à communiquer"
-      ],
-      "title": "Lien à communiquer",
-      "definition": "Une information qui reste à compléter : le lien de visioconférence sera transmis quand il sera disponible. Le prompt peut demander de garder cette mention dans le mail au lieu d’inventer une adresse. Par exemple : nous vous communiquerons le lien avant notre rendez-vous."
-    },
-    {
-      "id": "ent-start-short-format",
-      "terms": [
-        "forme",
-        "longueur",
-        "six lignes"
-      ],
-      "title": "Forme et longueur du message",
-      "definition": "La manière de présenter le texte et la place qu’il doit prendre. Par exemple : un objet puis un mail de six lignes maximum. Donner cette forme à ton prompt aide l’assistant IA à préparer un mail facile à relire."
+      "definition": "La demande donnée à l’assistant IA pour préciser le travail attendu : objectif, informations disponibles, contraintes et forme de sortie. Exemple : préparer un mail court sans inventer le lieu manquant. Tu peux ajuster la demande après avoir relu le résultat."
     }
   ],
   "ent-context-rag": [
@@ -343,22 +249,6 @@
       ],
       "title": "Version applicable",
       "definition": "L’édition d’un document qui fait référence pour la situation et la date concernées. Un ancien document peut rester utile pour comprendre un changement sans définir la règle actuelle. Exemple : indiquer que la politique de retour de septembre remplace celle de janvier."
-    },
-    {
-      "id": "fictional-case",
-      "terms": [
-        "cas fictif"
-      ],
-      "title": "Cas fictif",
-      "definition": "Une situation inventée pour expliquer une demande ou essayer une méthode sans utiliser un dossier réel. Elle conserve les éléments utiles au raisonnement. Exemple : décrire le retour d’un produit imaginaire avec une date et un motif inventés pour tester l’application d’une politique."
-    },
-    {
-      "id": "glossary",
-      "terms": [
-        "glossaire"
-      ],
-      "title": "Glossaire",
-      "definition": "Une liste de termes accompagnés de leur sens dans un domaine ou une organisation. Elle aide l’assistant IA et le lecteur à comprendre les mêmes mots de la même façon. Exemple : préciser qu’un « retour » désigne ici un produit renvoyé, pas un commentaire client."
     },
     {
       "id": "ai-model",
@@ -420,38 +310,6 @@
       ],
       "title": "Preuve adaptée",
       "definition": "Une information vérifiable qui soutient précisément ce que l'on affirme. Elle doit correspondre au fait annoncé, et pas seulement au même sujet. Exemple : une politique autorisant les remboursements ne prouve pas qu'un remboursement particulier a été effectué ; il faut consulter son opération."
-    },
-    {
-      "id": "internal-rule",
-      "terms": [
-        "règle interne"
-      ],
-      "title": "Règle interne",
-      "definition": "Une consigne de l'entreprise qui définit ce qui est permis, obligatoire ou possible sous certaines conditions. Exemple : une règle peut autoriser un retour si le produit est endommagé. Elle décrit les conditions applicables, mais ne confirme pas qu'une demande précise a été acceptée."
-    },
-    {
-      "id": "order-system",
-      "terms": [
-        "système de commandes"
-      ],
-      "title": "Système de commandes",
-      "definition": "L'outil dans lequel l'entreprise suit ses commandes et les informations associées, comme leur état ou une demande de retour. Exemple : avant d'annoncer qu'un retour est accepté, on vérifie le dossier concerné et son statut. Une règle générale ne remplace pas cette vérification."
-    },
-    {
-      "id": "payment-system",
-      "terms": [
-        "système de paiement"
-      ],
-      "title": "Système de paiement",
-      "definition": "Le service qui enregistre et suit les opérations financières, notamment les paiements et les remboursements. Exemple : sa confirmation peut établir qu'un remboursement a été exécuté. Cela ne suffit pas nécessairement à promettre le jour où l'argent sera visible sur le compte du client."
-    },
-    {
-      "id": "not-established",
-      "terms": [
-        "non établi"
-      ],
-      "title": "Non établi",
-      "definition": "Un statut de vérification indiquant que les éléments disponibles ne suffisent pas à confirmer une affirmation. Cela ne signifie pas qu'elle est fausse. Exemple : sans confirmation du paiement, le remboursement reste non établi ; on demande la pièce manquante avant d'en annoncer l'exécution."
     },
     {
       "id": "decisive-condition",
@@ -565,28 +423,12 @@
       "definition": "Un contrôle effectué par une personne avant que l’action produise ses effets. L’entreprise doit lui donner des informations vérifiables, du temps et le pouvoir de refuser ou de corriger. Exemple : relire les sources et modifier un brouillon avant d’autoriser son envoi au client."
     },
     {
-      "id": "human-escalation-approver",
-      "terms": [
-        "approbateur"
-      ],
-      "title": "Approbateur",
-      "definition": "La personne désignée pour examiner une action proposée et décider si elle peut être réalisée. L’entreprise doit vérifier qu’elle possède les compétences et l’autorité nécessaires. Exemple : le responsable prévu par la procédure examine les éléments d’un dossier et peut bloquer une réponse avant son envoi."
-    },
-    {
       "id": "human-escalation-paused-action",
       "terms": [
         "action suspendue"
       ],
       "title": "Action suspendue",
       "definition": "Une opération mise en attente jusqu’à la décision de la personne compétente. La suspension doit empêcher concrètement son exécution, selon les règles définies par l’entreprise. Exemple : le brouillon reste consultable, mais l’envoi d’une promesse au client est bloqué pendant l’examen du dossier."
-    },
-    {
-      "id": "human-escalation-holding-message",
-      "terms": [
-        "message d'attente"
-      ],
-      "title": "Message d’attente",
-      "definition": "Une réponse provisoire qui explique que le dossier suit la procédure prévue, sans annoncer une décision encore inconnue. L’entreprise précise ce que ce message peut promettre. Exemple : confirmer la réception et la transmission du signalement à la personne compétente, sans garantir une indemnisation."
     },
     {
       "id": "ent-project-pilot",
@@ -833,8 +675,8 @@
         "outil",
         "outils"
       ],
-      "title": "Outil d’un agent",
-      "definition": "Une fonction de logiciel qu’un assistant IA peut utiliser. Par exemple, rechercher un document, créer un brouillon ou envoyer un message. Ces fonctions n’ont pas toutes les mêmes conséquences : l’entreprise choisit celles qui sont utiles et les droits associés."
+      "title": "Outils accessibles à un agent IA",
+      "definition": "Les fonctions logicielles qu’un agent IA est autorisé à appeler : rechercher un document, créer un brouillon ou envoyer un message. Chacune a ses propres effets et permissions. Autoriser la lecture ne donne pas automatiquement le droit de modifier ou d’envoyer."
     },
     {
       "id": "agent-loop",
@@ -928,14 +770,6 @@
       ],
       "title": "Seuils d'arrêt",
       "definition": "Des limites fixées à l'avance qui déclenchent la suspension ou l'arrêt d'un essai lorsqu'elles sont atteintes. Elles évitent de continuer malgré un problème jugé inacceptable. Par exemple, une divulgation de document confidentiel peut imposer de couper les accès et d'examiner l'incident."
-    },
-    {
-      "id": "decision-review-date",
-      "terms": [
-        "date de revue"
-      ],
-      "title": "Date de revue",
-      "definition": "Un rendez-vous prévu pour réexaminer une décision à partir des résultats et des problèmes constatés. La personne responsable vérifie alors s'il faut continuer, modifier ou arrêter. Par exemple, deux semaines après le début de l'essai, Nadia examine les erreurs relevées pendant les relectures."
     },
     {
       "id": "expected-evidence",
@@ -1150,8 +984,8 @@
       "terms": [
         "lot"
       ],
-      "title": "Lot de test",
-      "definition": "Un ensemble de situations préparées pour vérifier le fonctionnement d’un outil. Rejouer tout le lot signifie refaire ces essais après une correction, y compris ceux qui réussissaient déjà. Cela permet de vérifier que la correction ne provoque pas de nouvelles erreurs ailleurs."
+      "title": "Lot de cas de test",
+      "definition": "Un ensemble de situations utilisé pour vérifier un outil, avec un résultat attendu pour chacune. Après une correction, rejouer les mêmes cas aide à repérer une régression : un problème résolu ne doit pas masquer une nouvelle erreur sur un cas auparavant réussi."
     },
     {
       "id": "decision-critical-threshold",
@@ -1161,14 +995,6 @@
       ],
       "title": "Seuil de décision",
       "definition": "Une limite définie avant les essais pour décider si un usage peut être accepté. Elle peut être différente selon la gravité des erreurs. Par exemple, fixer zéro promesse non autorisée signifie qu’une seule de ces promesses empêche de lancer l’usage client."
-    },
-    {
-      "id": "decision-note",
-      "terms": [
-        "note de décision"
-      ],
-      "title": "Note de décision",
-      "definition": "Un document court qui explique le choix proposé et les éléments qui le justifient. Il distingue les résultats observés, ce qui reste incertain, les options et les limites de l’autorisation. Par exemple, il peut recommander de poursuivre uniquement un essai sur des données fictives."
     },
     {
       "id": "decision-assumption",
@@ -1198,14 +1024,6 @@
       "definition": "Un dispositif qui réalise certaines étapes sans qu'une personne les déclenche une par une. Par exemple, un outil peut préparer un message après chaque demande client. Si ses droits changent, il faut vérifier quelles actions il peut désormais accomplir et lesquelles nécessitent une validation humaine."
     },
     {
-      "id": "review-cards",
-      "terms": [
-        "cartes de révision"
-      ],
-      "title": "Cartes de révision",
-      "definition": "De courtes questions qui invitent à retrouver une connaissance avant de lire la réponse. Revenir régulièrement sur ces questions aide à entretenir les acquis et à repérer les hésitations. Par exemple, expliquer quand vérifier une source exerce un réflexe, sans prouver qu'on saura gérer toutes les situations réelles."
-    },
-    {
       "id": "sensitive-information",
       "terms": [
         "données sensibles"
@@ -1228,35 +1046,9 @@
       ],
       "title": "Périmètre d'un usage",
       "definition": "Les limites précises d'un usage autorisé : tâches, personnes concernées, documents accessibles et actions possibles. Par exemple, préparer un brouillon de réponse entre dans un périmètre différent de l'envoi automatique au client. De nouvelles permissions peuvent élargir ces limites et demander une nouvelle vérification."
-    },
-    {
-      "id": "learning-ranking",
-      "terms": [
-        "classement",
-        "classement de régularité"
-      ],
-      "title": "Classement d'apprentissage",
-      "definition": "Une comparaison entre participants fondée sur l'activité d'apprentissage mesurée par l'outil. Ici, elle reflète une régularité, sans établir une maîtrise complète du sujet. Par exemple, réviser souvent ne démontre pas à lui seul qu'une personne saura détecter une erreur d'IA dans un dossier professionnel inédit."
     }
   ],
   "ent-meeting-notes": [
-    {
-      "id": "meeting-minutes",
-      "terms": [
-        "compte rendu"
-      ],
-      "title": "Compte rendu de réunion",
-      "definition": "Une trace écrite de ce qui a été discuté pendant une réunion. Elle distingue les idées proposées, les accords obtenus et les suites à vérifier. Exemple : écrire « test envisagé, accord sécurité attendu » conserve une information qu'un résumé trop court pourrait faire disparaître."
-    },
-    {
-      "id": "approved-decision",
-      "terms": [
-        "décisions approuvées",
-        "décision confirmée"
-      ],
-      "title": "Décision approuvée",
-      "definition": "Un choix pour lequel la personne habilitée a donné un accord explicite. Une idée évoquée ou une phrase au conditionnel ne suffit pas à prouver cet accord. Exemple : « nous pourrions tester » reste une proposition tant que la personne responsable n'a pas confirmé le lancement."
-    },
     {
       "id": "security-approval",
       "terms": [
@@ -1366,19 +1158,11 @@
       "terms": [
         "livrable"
       ],
-      "title": "Livrable",
-      "definition": "Le résultat concret que tu veux pouvoir utiliser ou transmettre. Par exemple, un courriel prêt à relire, un tableau comparatif ou un plan de réunion. Dire le résultat attendu aide l’assistant IA à produire quelque chose d’utile."
+      "title": "Livrable attendu d’un assistant IA",
+      "definition": "Le résultat concret demandé à l’assistant IA : brouillon à relire, tableau comparatif ou plan de réunion, par exemple. Préciser le format et l’usage prévu permet de comparer la sortie à ton besoin. Un livrable généré doit encore être contrôlé avant d’être utilisé."
     }
   ],
   "ent-assistants-documents": [
-    {
-      "id": "dossier-source",
-      "terms": [
-        "dossier"
-      ],
-      "title": "Dossier source",
-      "definition": "Les documents ou extraits que tu fournis pour préparer une réponse. Par exemple, une demande de client, un catalogue de prix et les conditions de livraison. Donne un nom à chaque pièce et précise laquelle contient les informations à jour."
-    },
     {
       "id": "tracabilite-metier",
       "terms": [
@@ -1397,14 +1181,6 @@
       ],
       "title": "Relevé de décisions",
       "definition": "Une note courte qui dit ce qui a été décidé en réunion et ce qu’il reste à faire. Par exemple : « Zoé prépare la grille jeudi ; la date du bilan reste à choisir ». Elle ne recopie pas toutes les paroles."
-    },
-    {
-      "id": "question-ouverte",
-      "terms": [
-        "question ouverte"
-      ],
-      "title": "Question ouverte",
-      "definition": "Une question qui n’a pas encore de réponse ou de décision. Par exemple : « Qui réservera la salle, et pour quelle date ? » La noter permet de choisir une personne pour la résoudre plutôt que d’inventer une réponse."
     }
   ],
   "ent-assistants-options": [
@@ -1415,14 +1191,6 @@
       ],
       "title": "Contrainte éliminatoire",
       "definition": "Une condition indispensable pour que le choix convienne. Par exemple, une salle doit accueillir les douze participants : une salle de dix places est écartée, même si elle coûte moins cher."
-    },
-    {
-      "id": "compromis",
-      "terms": [
-        "compromis"
-      ],
-      "title": "Compromis",
-      "definition": "Un choix qui apporte un avantage en échange d’un autre effort ou d’une limite. Par exemple, payer 30 € de plus pour une salle dix minutes plus proche. On explique cet échange au lieu de présenter une option comme meilleure dans tous les cas."
     }
   ],
   "ent-assistants-iterate": [
@@ -1545,8 +1313,8 @@
       "terms": [
         "Journal"
       ],
-      "title": "Journal",
-      "definition": "Un historique des étapes et de leurs résultats. Par exemple : « INT-88, 9 h : fiche créée ; 9 h 01 : notification en échec ». Il permet de reprendre la notification sans créer à nouveau la fiche."
+      "title": "Journal d’une automatisation",
+      "definition": "La trace des étapes effectuées et de leur résultat dans une automatisation. Exemple : fiche créée, puis notification en échec. La consulter aide à savoir quelle étape reprendre, sans répéter inutilement une action déjà réussie."
     }
   ],
   "ent-automation-pilot": [

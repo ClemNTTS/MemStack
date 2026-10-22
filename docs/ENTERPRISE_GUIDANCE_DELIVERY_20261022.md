@@ -93,7 +93,7 @@ Seuils proposés par le plan : tous les scénarios techniques de restauration/is
 | --- | --- | --- |
 | A | Critères et scénarios définis dans ce document. | Panel humain indisponible ; aucune observation humaine nouvelle. |
 | B | Implémenté et qualifié localement avant commit du lot. | Builds réussis ; 278 tests natifs, 90 tests backend et 9 tests d'intégration sur émulateurs rapportés réussis par les exécutants. Revue PO des correctifs et simulation navigateur décrites ci-dessous. Validation humaine à réaliser ; aucun déploiement. |
-| C | À qualifier. | Inventaire, captures et vérifications à renseigner. |
+| C | Implémenté et inspecté localement avant commit du lot. | Navigation et transitions relues ; registre des 190 décisions de glossaire ; 282 tests natifs et build réussis rapportés. Simulation navigateur et limites détaillées ci-dessous. |
 | D | À qualifier. | Registre par ID et verdict de relecture à relier. |
 | E | Contrat à finaliser avant code. | Schéma, conservation, tests et recette à renseigner. |
 
@@ -125,3 +125,25 @@ Le catalogue courant déclare les fondations dans cet ordre : `ent-answer-or-act
 ### Limites et suite
 
 Aucun panel humain nouveau n'a été observé ; validation humaine à réaliser. La qualification navigateur repose sur des données fictives et un runtime simulé, tandis que les contrôles backend sont locaux sur émulateurs. Aucun appel Mistral réel ni environnement de production n'est qualifié par cette simulation. Le lot C doit poursuivre la hiérarchie de navigation, le glossaire et les transitions ; D reste la revue exhaustive des cartes/consignes ; E reste la reprise à l'intérieur d'une mission, sans promesse anticipée de restauration exacte.
+
+## Clôture du lot C — 22 octobre 2026
+
+Référence : modifications relues après le commit B `b492774`, avant commit C. Le PO a inspecté indépendamment les diffs de navigation, transitions, moteur de glossaire, tests et un échantillon des décisions éditoriales. Aucun blocant nouveau relevé dans ce périmètre. Les manipulations navigateur et les suites ci-dessous sont rapportées par l'agent exécutant ; elles ne sont pas des observations humaines.
+
+La navigation principale comporte Mon parcours, Mes cartes et Mises en situation. Les accès secondaires sont repliés ; équipe et abonnement restent réservés au rôle responsable dans l'interface et conservent les contrôles serveur existants. Le programme complet, les ressources, le classement et les badges passent après l'action principale. La fin de mission distingue enregistrement confirmé et relecture, rappelle l'objectif travaillé et permet de retrouver cartes ou parcours ; la fin de lot rappelle les échéances et la possibilité de s'arrêter. L'inspection a aussi vérifié le maintien d'un accès au classement et à l'édition du pseudo via sa page dédiée.
+
+Le [registre de glossaire](content/ENTERPRISE_GLOSSARY_GUIDANCE_20261022.md) couvre les 190 entrées locales originales : 154 conservées, 8 contextualisées, 28 retirées des infobulles, soit 162 entrées locales finales. Les mots usuels comme messagerie, destinataires, brouillon et messages envoyés ne sont plus soulignés. Les notions IA, permissions, minimisation, injection de prompt et concepts de décision utiles restent disponibles. La revue ciblée n'a pas relevé de consigne indispensable supprimée : ce lot retire les infobulles, pas le texte des cas.
+
+Le dédoublonnage utilise un Set neuf par rendu de LessonText, partagé entre paragraphes et segments de prose ; il exclut le code. Il ne persiste pas entre composants ou utilisateurs. Cette portée réduit les répétitions dans un bloc, sans prétendre supprimer toute répétition dans une conversation composée de plusieurs blocs. Huit tests de glossaire couvrent notamment correspondances, variantes d'apostrophe, maintien du texte, retraits, concepts utiles, portée et inventaire ; ils sont ajoutés au périmètre de compilation des tests.
+
+### Preuves d'exécution rapportées
+
+- `npm test` : 282 tests réussis ; build frontend réussi. Compilation des sources de tests après ajout du glossaire au `tsconfig.test.json` également rapportée réussie avant le commit.
+- Bureau 1366 × 768 : bord inférieur de l'action principale à 629,47 px. Mobile 390 × 844 : bord inférieur à 698,59 px, sans débordement horizontal dans l'état observé. Captures rapportées : `lot-c-desktop.png` et `lot-c-mobile.png`, dans le dossier de captures de la réalisation. Ces mesures ponctuelles ne qualifient pas tous les contenus, zooms ou tailles d'écran.
+- Menu responsable : ouverture de Gestion et autres accès, visite de Mon équipe puis retour au parcours exercés dans le runtime fictif.
+- Programme complet : ouverture du summary avec Entrée, puis accès à une relecture exercés. Les dates de cartes ne sont pas présentées comme modifiées par cette relecture.
+- Glossaire : ouverture d'une définition de prompt avec Entrée, fermeture par Échap, focus conservé sur le déclencheur ; brouillon observé sans soulignement.
+
+### Limites
+
+La compréhension réelle, le temps nécessaire à un novice et la rétention restent à mesurer avec le panel humain. Le navigateur utilise un runtime simulé et des données fictives ; ni droits de production, ni appels Mistral réels, ni facturation ne sont qualifiés par ces manipulations. Le contrôle indépendant du glossaire est ciblé ; le registre exhaustif est le livrable éditorial de son auteur. Aucun déploiement effectué pour ce lot. Le lot D doit encore inspecter toutes les cartes et consignes ; E doit définir puis implémenter la reprise intra-mission.

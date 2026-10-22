@@ -22,6 +22,7 @@ type Props = {
 }
 
 export default function EnterpriseLessonView({ lesson, completed, available, busy, onComplete, returnHref, cardsHref, draft, onDraftChange, onVerify }: Props) {
+  const [replaying] = useState(completed)
   const [index, setIndex] = useState(0)
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [checks, setChecks] = useState<Record<string, boolean>>({})
@@ -35,7 +36,7 @@ export default function EnterpriseLessonView({ lesson, completed, available, bus
   }, [index, contentRef])
 
   if (!completed && !available) return <section className="enterprise-panel"><h1>Une mission à la fois.</h1><p>Retrouve ton prochain petit pas sur le chemin avant de découvrir cette mission.</p><a href={returnHref}>Revenir à mon chemin →</a></section>
-  if (finished) return <section className="enterprise-completion"><img src={`${import.meta.env.BASE_URL}memo/journey-celebrate.webp`} width="160" height="140" alt="Mémo célèbre ta mission"/><h1>{completed ? 'Relecture terminée.' : 'Une nouvelle connexion.'}</h1><p>{completed ? 'Tu as revu cette mission. Ses cartes restent disponibles dans cette organisation.' : 'Ta mission est enregistrée dans cette organisation. Retrouve ses cartes pour garder les bons réflexes.'}</p><a className="catalog-button" href={cardsHref}>Découvrir mes cartes →</a><a className="text-link" href={returnHref}>Revenir à mon chemin →</a></section>
+  if (finished) return <section className="enterprise-completion"><img src={`${import.meta.env.BASE_URL}memo/journey-celebrate.webp`} width="160" height="140" alt="Mémo célèbre ta mission"/><h1>{replaying ? 'Relecture terminée.' : 'Mission enregistrée.'}</h1><p role="status">{replaying ? 'Tu as relu cette mission. Ta progression et les dates de tes cartes sont conservées.' : 'Le serveur a confirmé la fin de ta mission dans cette organisation.'}</p><p><strong>Ce que tu as travaillé : </strong>{lesson.objective}</p><p>Tu peux maintenant retrouver ces idées avec les cartes, continuer ton parcours ou t’arrêter ici. Les cartes resteront accessibles dans cet espace.</p><a className="catalog-button" href={cardsHref}>{replaying ? 'Voir mes cartes →' : 'Découvrir mes cartes →'}</a><a className="text-link" href={returnHref}>Revenir à mon parcours →</a></section>
 
   async function advance() {
     if (busy) return
@@ -46,7 +47,7 @@ export default function EnterpriseLessonView({ lesson, completed, available, bus
   return <section className="enterprise-lesson">
     <a className="text-link" href={returnHref}>← Mon chemin Entreprise</a>
     <header className="enterprise-lesson-intro">
-      <div><p className="lesson-category">{completed ? 'Relecture' : 'Ta mission du jour'} · {lesson.estimatedMinutes} min</p><h1>{lesson.title}</h1><p>{lesson.objective}</p></div>
+      <div><p className="lesson-category">{replaying ? 'Relecture' : 'Ta mission'} · environ {lesson.estimatedMinutes} min</p><h1>{lesson.title}</h1><p><strong>Ton objectif : </strong>{lesson.objective}</p><p>Explore le cas fictif, propose ta réponse dans l’activité, puis vérifie ton raisonnement. Avance à ton rythme avec « Continuer ».</p></div>
       <img className="enterprise-memo" src={`${import.meta.env.BASE_URL}memo/learning.webp`} alt="Mémo t’accompagne dans cette mission" width="120" height="110"/>
     </header>
     <div className="enterprise-lesson-progress"><span role="status">Étape {index + 1} sur {lesson.steps.length}</span><progress value={index + 1} max={lesson.steps.length} aria-label="Avancement dans la mission"/><span>Un mot souligné ? Survole-le ou touche-le pour lire sa définition.</span></div>
@@ -68,7 +69,7 @@ export default function EnterpriseLessonView({ lesson, completed, available, bus
       })}
       <div className="lesson-end" ref={endRef} aria-hidden="true"/>
     </div>
-    <div className="enterprise-lesson-actions"><span>Un petit pas à la fois.</span>{step.type === 'question' && !checked ? <button className="catalog-button" disabled={!answer || busy} onClick={() => setChecks(previous => ({ ...previous, [step.id]: true }))}>Vérifier mon raisonnement</button> : <button className="catalog-button" disabled={busy || (step.type === 'question' && answer !== step.correctOptionId)} onClick={() => { void advance() }}>{busy ? 'Enregistrement…' : index < lesson.steps.length - 1 ? 'Continuer →' : completed ? 'Terminer la relecture' : 'Enregistrer ma mission'}</button>}</div>
+    <div className="enterprise-lesson-actions"><span>{replaying ? 'Relire ne change pas tes dates de révision.' : 'La mission sera validée après confirmation de son enregistrement.'}</span>{step.type === 'question' && !checked ? <button className="catalog-button" disabled={!answer || busy} onClick={() => setChecks(previous => ({ ...previous, [step.id]: true }))}>Vérifier mon raisonnement</button> : <button className="catalog-button" disabled={busy || (step.type === 'question' && answer !== step.correctOptionId)} onClick={() => { void advance() }}>{busy ? 'Enregistrement…' : index < lesson.steps.length - 1 ? 'Continuer →' : replaying ? 'Terminer la relecture' : 'Enregistrer ma mission'}</button>}</div>
     <details className="enterprise-sources"><summary>Sources de cette mission</summary><ul>{lesson.sources.map(source => <li key={source}><a href={source} target="_blank" rel="noopener noreferrer">{new URL(source).hostname} ↗</a></li>)}</ul></details>
   </section>
 }

@@ -18,25 +18,19 @@ export const lessonGlossary: readonly GlossaryEntry[] = [
 
 export const enterpriseLessonGlossaries = enterpriseGlossaries as Record<string, GlossaryEntry[]>
 const normalizeTerm = (term: string) => term.toLocaleLowerCase('fr').replace(/[’‘]/g, "'").normalize('NFC')
-const matchers = new Map<string, { entriesByTerm: Map<string, GlossaryEntry>; pattern: RegExp }>()
 
 function glossaryMatcher(lessonId: string) {
-  const cached = matchers.get(lessonId)
-  if (cached) return cached
   const entries = [...lessonGlossary, ...enterpriseLessonGlossaries[lessonId] ?? []]
   const entriesByTerm = new Map(entries.flatMap(entry => entry.terms.map(term => [normalizeTerm(term), entry] as const)))
   const terms = [...entriesByTerm.keys()].sort((a, b) => b.length - a.length)
     .map(term => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/'/g, "['’‘]"))
   const pattern = new RegExp(`(?<![\\p{L}\\p{N}_])(${terms.join('|')})(?![\\p{L}\\p{N}_])`, 'giu')
-  const matcher = { entriesByTerm, pattern }
-  matchers.set(lessonId, matcher)
-  return matcher
+  return { entriesByTerm, pattern }
 }
 
-export function splitGlossaryText(text: string, lessonId = '') {
+export function splitGlossaryText(text: string, lessonId = '', seen = new Set<string>()) {
   const { entriesByTerm, pattern } = glossaryMatcher(lessonId)
   const parts: { text: string; entry?: GlossaryEntry }[] = []
-  const seen = new Set<string>()
   let offset = 0
   for (const match of text.matchAll(pattern)) {
     const entry = entriesByTerm.get(normalizeTerm(match[0]))!
