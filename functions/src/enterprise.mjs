@@ -4,6 +4,7 @@ import { requireMember, currentAdminStatus } from './accessService.mjs'
 import { scheduleServerReview } from './learningAccess.mjs'
 import { defaultAlias, nextRankingActivity, activeStreak, validateAlias, rankingDay } from './worldRanking.mjs'
 import { organizationHasAccess,queueEnterpriseSeatSync } from './enterpriseBilling.mjs'
+import { ENTERPRISE_DRAFT_LIFETIME, enterpriseDraftContentVersion, enterpriseDraftMutationHash, enterpriseDraftRevision, enterpriseDraftTombstone, resolveEnterpriseDraft, validateEnterpriseDraftRequest } from './enterpriseDraft.mjs'
 
 const fail = (code, message) => { throw new AnalysisError(code, message) }
 const id = value => typeof value === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(value)
@@ -197,7 +198,8 @@ export async function commitEnterpriseLearningAction({db,auth,lookup,data,catalo
     let result, activity = true
     const summary = {lessons:member.summary?.lessons ?? 0,cards:member.summary?.cards ?? 0,attempts:member.summary?.attempts ?? 0}
     if (data.type === 'lesson') {
-      const current = await tx.get(db.doc(`${base}/lessons/${entry.id}`))
+      const draftRef = db.doc(`${base}/lessonDrafts/${entry.id}`)
+      const [current,draft] = await Promise.all([tx.get(db.doc(`${base}/lessons/${entry.id}`)),tx.get(draftRef)])
       if (!current.exists) {
         const required = enterprisePrerequisites(entry, catalog)
         const previous = await Promise.all(required.map(requiredId => tx.get(db.doc(`${base}/lessons/${requiredId}`))))
@@ -211,6 +213,7 @@ export async function commitEnterpriseLearningAction({db,auth,lookup,data,catalo
         tx.create(db.doc(`${base}/lessons/${entry.id}`),{completedAt:result.completedAt})
         summary.lessons++
       }
+      if (draft.exists) tx.set(draftRef,enterpriseDraftTombstone(draft.data(),draft.data().contentVersion,now,'completed'))
     } else if (data.type === 'card') {
       const [lesson,previous] = await Promise.all([tx.get(db.doc(`${base}/lessons/${entry.id}`)),tx.get(db.doc(`${base}/cards/${data.cardId}`))])
       if (!lesson.exists) fail('failed-precondition','Termine la mission avant ses cartes.')
@@ -257,7 +260,62 @@ export async function setEnterpriseLearningPreferences({db,auth,lookup,data,cata
   })
 }
 
-export async function getEnterpriseWorkspace({db,auth,lookup,data,catalog,now = Date.now()}) {
+export async function getEnterpriseLessonDraft({db,auth,lookup,data,catalog,practices,now = Date.now()}) {
+  const {uid} = await enterpriseActor({db,auth,lookup})
+  const {lesson,contentVersion} = validateEnterpriseDraftRequest(data,catalog,practices)
+  const base = learnerPath(data.organizationId,uid)
+  return db.runTransaction(async tx => {
+    await membership(tx,db,data.organizationId,uid,false,false,now)
+    const ref = db.doc(`${base}/lessonDrafts/${lesson.id}`)
+    const [draft,completion] = await Promise.all([tx.get(ref),tx.get(db.doc(`${base}/lessons/${lesson.id}`))])
+    const {snapshot,purge} = resolveEnterpriseDraft(draft.data(),{organizationId:data.organizationId,lesson,contentVersion,completed:completion.exists,now})
+    if (purge) tx.set(ref,purge)
+    return snapshot
+  })
+}
+
+export async function saveEnterpriseLessonDraft({db,auth,lookup,data,catalog,practices,now = Date.now()}) {
+  const {uid} = await enterpriseActor({db,auth,lookup})
+  const {lesson,contentVersion} = validateEnterpriseDraftRequest(data,catalog,practices,true)
+  const base = learnerPath(data.organizationId,uid)
+  const result = await db.runTransaction(async tx => {
+    await membership(tx,db,data.organizationId,uid,false,false,now)
+    const ref = db.doc(`${base}/lessonDrafts/${lesson.id}`), budgetRef = db.doc(`${base}/limits/lessonDrafts`)
+    const required = enterprisePrerequisites(lesson,catalog)
+    const [draft,completion,budget,...prerequisites] = await Promise.all([
+      tx.get(ref),tx.get(db.doc(`${base}/lessons/${lesson.id}`)),tx.get(budgetRef),
+      ...required.map(id=>tx.get(db.doc(`${base}/lessons/${id}`)))
+    ])
+    if (completion.exists) fail('failed-precondition','Cette mission est terminée. Sa reprise ne peut plus être enregistrée.')
+    if (prerequisites.some(row=>!row.exists || !Number.isFinite(Date.parse(row.data().completedAt)) || Date.parse(row.data().completedAt)>now)) fail('failed-precondition','Termine les missions prérequises avant de sauvegarder celle-ci.')
+    const saved = draft.data()
+    const {purge} = resolveEnterpriseDraft(saved,{organizationId:data.organizationId,lesson,contentVersion,now})
+    if (purge) {
+      tx.set(ref,purge)
+      return {conflict:true}
+    }
+    const payloadHash = enterpriseDraftMutationHash(data)
+    if (saved?.lastMutationId===data.mutationId) {
+      if (saved.lastMutationHash!==payloadHash) fail('already-exists','Cet identifiant correspond à une autre sauvegarde.')
+      return resolveEnterpriseDraft(saved,{organizationId:data.organizationId,lesson,contentVersion,now}).snapshot
+    }
+    if (data.expectedRevision!==enterpriseDraftRevision(saved)) fail('failed-precondition','La reprise a changé sur un autre onglet ou appareil. Recharge la version enregistrée avant de choisir quoi conserver.')
+    const count = budget.data()?.window>now-3600000 ? budget.data().count : 0
+    if (count>=120) fail('resource-exhausted','Limite de sauvegardes atteinte. Réessaie plus tard.')
+    const next = {
+      revision:enterpriseDraftRevision(saved)+1,contentVersion,state:data.state,updatedAt:new Date(now).toISOString(),
+      ...(data.state?{expiresAt:new Date(now+ENTERPRISE_DRAFT_LIFETIME).toISOString()}:{}),
+      lastMutationId:data.mutationId,lastMutationHash:payloadHash,
+    }
+    tx.set(ref,next)
+    tx.set(budgetRef,{count:count+1,window:count?budget.data().window:now})
+    return resolveEnterpriseDraft(next,{organizationId:data.organizationId,lesson,contentVersion,now}).snapshot
+  })
+  if (result.conflict) fail('failed-precondition','Cette reprise a expiré ou son contenu a changé. Recharge la mission avant de choisir une nouvelle sauvegarde.')
+  return result
+}
+
+export async function getEnterpriseWorkspace({db,auth,lookup,data,catalog,practices,now = Date.now()}) {
   const {uid} = await enterpriseActor({db,auth,lookup})
   if (!data || typeof data !== 'object' || Array.isArray(data) || Object.keys(data).some(key=>key!=='organizationId') || (data.organizationId !== undefined && !id(data.organizationId))) fail('invalid-argument','Paramètres invalides.')
   return db.runTransaction(async tx => {
@@ -268,23 +326,37 @@ export async function getEnterpriseWorkspace({db,auth,lookup,data,catalog,now = 
       if (org.data()?.enabled && member.data()?.active) organizations.push({id:index.id,name:org.data().name,role:member.data().role,learningEnabled:organizationHasAccess(org.data(),now)})
     }
     const organizationId = data.organizationId ?? organizations[0]?.id
-    if (!organizationId) return {organizations,organization:null,settings:null,progress:{lessons:{},cards:{},reviews:[],attempts:[]},ranking:[],members:[]}
+    if (!organizationId) return {organizations,organization:null,settings:null,lessonDrafts:[],progress:{lessons:{},cards:{},reviews:[],attempts:[]},ranking:[],members:[]}
     const {organization,member} = await membership(tx,db,organizationId,uid,false,true,now)
-    if(!organizationHasAccess(organization,now)) return {organizations,organization:{id:organizationId,name:organization.name,role:member.role,learningEnabled:false},settings:null,progress:{lessons:{},cards:{},reviews:[],attempts:[]},ranking:[],members:[]}
+    if(!organizationHasAccess(organization,now)) return {organizations,organization:{id:organizationId,name:organization.name,role:member.role,learningEnabled:false},settings:null,lessonDrafts:[],progress:{lessons:{},cards:{},reviews:[],attempts:[]},ranking:[],members:[]}
     const base = learnerPath(organizationId,uid)
-    const [lessons,cards,reviews,attempts,ranks,members,preferences] = await Promise.all([
+    const [lessons,cards,reviews,attempts,ranks,members,preferences,drafts] = await Promise.all([
       tx.get(db.collection(`${base}/lessons`).limit(200)),tx.get(db.collection(`${base}/cards`).limit(2000)),
       tx.get(db.collection(`${base}/reviews`).orderBy('reviewedAt','desc').limit(500)),tx.get(db.collection(`${base}/attempts`).orderBy('submittedAt','desc').limit(100)),
       tx.get(db.collection(`${orgPath(organizationId)}/ranking`).limit(200)),member.role==='manager'?tx.get(db.collection(`${orgPath(organizationId)}/members`).where('active','==',true).limit(200)):Promise.resolve(null),
-      tx.get(db.doc(`${base}/settings/learning`))
+      tx.get(db.doc(`${base}/settings/learning`)),tx.get(db.collection(`${base}/lessonDrafts`).limit(200))
     ])
+    const lessonDrafts = []
+    const completedIds = new Set(lessons.docs.map(row=>row.id))
+    for (const row of drafts.docs) {
+      const lesson = catalog?.lessons?.find(lesson=>lesson.id===row.id)
+      if (!lesson) {
+        if (catalog && row.data().state) tx.set(row.ref,enterpriseDraftTombstone(row.data(),row.data().contentVersion,now,'content-changed'))
+        continue
+      }
+      const contentVersion = enterpriseDraftContentVersion(lesson,practices?.[lesson.id])
+      const {snapshot,purge} = resolveEnterpriseDraft(row.data(),{organizationId,lesson,contentVersion,completed:completedIds.has(lesson.id),now})
+      if (purge) tx.set(row.ref,purge)
+      if (snapshot.state) lessonDrafts.push({lessonId:lesson.id,revision:snapshot.revision,stepId:snapshot.state.stepId,updatedAt:snapshot.updatedAt,expiresAt:snapshot.expiresAt})
+    }
+    lessonDrafts.sort((a,b)=>Date.parse(b.updatedAt)-Date.parse(a.updatedAt)||a.lessonId.localeCompare(b.lessonId))
     const saved = preferences.data()
     const settings = catalog?.tracks?.some(track => track.id === saved?.activeTrackId) && typeof saved.updatedAt === 'string' && Number.isFinite(Date.parse(saved.updatedAt))
       ? {activeTrackId:saved.activeTrackId,updatedAt:saved.updatedAt} : null
     const rows = ranks.docs.map(row=>({uid:row.id,...row.data(),streak:activeStreak(row.data(),now)})).sort((a,b)=>b.streak-a.streak||a.uid.localeCompare(b.uid))
     let rank = 0, last = -1
     const ranking = rows.map((row,index)=>{if(row.streak!==last){rank=index+1;last=row.streak} return {alias:row.alias,streak:row.streak,rank,self:row.uid===uid}})
-    return {organizations,organization:{id:organizationId,name:organization.name,role:member.role,learningEnabled:true},settings,progress:{lessons:Object.fromEntries(lessons.docs.map(row=>[row.id,row.data()])),cards:Object.fromEntries(cards.docs.map(row=>[row.id,row.data()])),reviews:reviews.docs.map(row=>row.data()),attempts:attempts.docs.map(row=>row.data())},ranking,members:members?.docs.map(row=>({uid:row.id,alias:row.data().alias,role:row.data().role,active:row.data().active,summary:row.data().summary??{lessons:0,cards:0,attempts:0},lastActivityAt:row.data().lastActivityAt??null}))??[]}
+    return {organizations,organization:{id:organizationId,name:organization.name,role:member.role,learningEnabled:true},settings,lessonDrafts,progress:{lessons:Object.fromEntries(lessons.docs.map(row=>[row.id,row.data()])),cards:Object.fromEntries(cards.docs.map(row=>[row.id,row.data()])),reviews:reviews.docs.map(row=>row.data()),attempts:attempts.docs.map(row=>row.data())},ranking,members:members?.docs.map(row=>({uid:row.id,alias:row.data().alias,role:row.data().role,active:row.data().active,summary:row.data().summary??{lessons:0,cards:0,attempts:0},lastActivityAt:row.data().lastActivityAt??null}))??[]}
   })
 }
 
@@ -293,7 +365,7 @@ export async function exportEnterpriseData(db,uid) {
   const output = []
   for (const index of indexes.docs) {
     const organizationId = index.id, base = learnerPath(organizationId,uid)
-    const collections = await Promise.all(['lessons','cards','reviews','attempts','receipts','limits','practiceFeedback','settings'].map(async name=>({name,rows:(await db.collection(`${base}/${name}`).limit(5001).get()).docs.map(row=>({id:row.id,...row.data()}))})))
+    const collections = await Promise.all(['lessons','cards','reviews','attempts','receipts','limits','practiceFeedback','settings','lessonDrafts'].map(async name=>({name,rows:(await db.collection(`${base}/${name}`).limit(5001).get()).docs.map(row=>({id:row.id,...row.data()}))})))
     if (collections.some(group=>group.rows.length>5000)) fail('resource-exhausted','Export entreprise trop volumineux, contacte l’administration.')
     const [member,ranking] = await Promise.all([db.doc(`${orgPath(organizationId)}/members/${uid}`).get(),db.doc(`${orgPath(organizationId)}/ranking/${uid}`).get()])
     output.push({organizationId,membership:member.data()??null,ranking:ranking.data()??null,collections})

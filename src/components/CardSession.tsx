@@ -34,7 +34,7 @@ function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel, 
   const [saving, setSaving] = useState(false)
   const [pendingRating, setPendingRating] = useState<CardRating | null>(null)
   const [saveFailed, setSaveFailed] = useState(false)
-  const [guideOpen, setGuideOpen] = useState(true)
+  const [guideOpen, setGuideOpen] = useState(() => Object.keys(progress).length === 0)
   const savingRef = useRef(false)
   const currentItem = cards[results.length]
   const currentCard = currentItem?.card

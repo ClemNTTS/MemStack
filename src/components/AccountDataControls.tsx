@@ -54,7 +54,7 @@ export default function AccountDataControls() {
   }
   return <section className="overview-panel" aria-labelledby="account-data-title">
     <h2 id="account-data-title">Tes données et ton compte</h2>
-    <p>Télécharge ta progression, tes préférences, tes tentatives et leurs retours, tes signalements et les brouillons de cet appareil. Les brouillons d’autres appareils restent sur ces appareils.</p>
+    <p>Télécharge ta progression, tes préférences, tes tentatives et leurs retours, tes signalements, tes reprises Entreprise enregistrées dans le cloud et les brouillons de cet appareil. Les autres brouillons conservés localement sur un autre appareil restent sur cet appareil.</p>
     <button className="catalog-button secondary" type="button" disabled={Boolean(busy) || !online} onClick={() => { void exportData() }}>{busy === 'export' ? 'Export en cours…' : 'Exporter mes données'}</button>
     <details><summary>Supprimer mon compte</summary>
       <p>Cette suppression est définitive : progression, préférences, tentatives, analyses et signalements seront effacés, ainsi que ton compte MemStack. Ton compte Google reste intact. Exporte tes données avant de continuer.</p>

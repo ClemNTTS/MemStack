@@ -12,8 +12,9 @@ const claims = [
   { id: 'reference', text: 'La note RET-2026-14 confirme ces conditions.', expected: 'unverified', explanation: 'Cette note ne figure dans aucune pièce de l’exercice. Tu ne peux pas vérifier ce qu’elle dit : une référence plausible ne suffit pas.' },
 ]
 
-export default function ReturnPolicyPractice({ lessonId, draft, onDraftChange, onVerify }: { lessonId: string; draft: string; onDraftChange: (draft: string) => void; onVerify: VerifyEnterprisePractice }) {
-  const [answers, setAnswers] = useState<Record<string, string>>({})
+export default function ReturnPolicyPractice({ lessonId, draft, onDraftChange, onVerify, answers: restoredAnswers, onAnswersChange }: { lessonId: string; draft: string; onDraftChange: (draft: string) => void; onVerify: VerifyEnterprisePractice; answers?: Record<string, string>; onAnswersChange?: (answers: Record<string, string>) => void }) {
+  const [localAnswers, setLocalAnswers] = useState<Record<string, string>>({})
+  const answers = restoredAnswers ?? localAnswers
   const [checked, setChecked] = useState(false)
   const practice = enterprisePractices[lessonId]
   const documents = enterpriseLessonById.get(lessonId)?.documents ?? []
@@ -29,7 +30,7 @@ export default function ReturnPolicyPractice({ lessonId, draft, onDraftChange, o
     <p>Pour chaque affirmation, choisis si elle est confirmée, contredite ou impossible à vérifier avec ces pièces. Une information absente n’est pas forcément fausse.</p>
     {claims.map((claim, index) => <div className="enterprise-claim" key={claim.id}>
       <label htmlFor={`claim-${claim.id}`}>{index + 1}. {claim.text}</label>
-      <select id={`claim-${claim.id}`} value={answers[claim.id] ?? ''} onChange={event => { setAnswers(previous => ({ ...previous, [claim.id]: event.target.value })); setChecked(false) }}>
+      <select id={`claim-${claim.id}`} value={answers[claim.id] ?? ''} onChange={event => { const next = Object.fromEntries(Object.entries({ ...answers, [claim.id]: event.target.value }).filter(([, value]) => value)); (onAnswersChange ?? setLocalAnswers)(next); setChecked(false) }}>
         <option value="">Choisis ton diagnostic…</option>
         <option value="supported">Confirmé par le document</option>
         <option value="contradicted">Contredit par le document</option>

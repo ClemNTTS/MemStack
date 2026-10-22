@@ -95,7 +95,7 @@ Seuils proposés par le plan : tous les scénarios techniques de restauration/is
 | B | Implémenté et qualifié localement avant commit du lot. | Builds réussis ; 278 tests natifs, 90 tests backend et 9 tests d'intégration sur émulateurs rapportés réussis par les exécutants. Revue PO des correctifs et simulation navigateur décrites ci-dessous. Validation humaine à réaliser ; aucun déploiement. |
 | C | Implémenté et inspecté localement avant commit du lot. | Navigation et transitions relues ; registre des 190 décisions de glossaire ; 282 tests natifs et build réussis rapportés. Simulation navigateur et limites détaillées ci-dessous. |
 | D | Implémenté, inspecté indépendamment et testé localement. | 120 cartes et 40 consignes inspectées ; cinq réponses de cartes, quatre tâches et un scénario clarifiés. Tests natifs 282/282, Functions 90/90, builds réussis ; validation humaine à réaliser. |
-| E | Contrat à finaliser avant code. | Schéma, conservation, tests et recette à renseigner. |
+| E | Implémenté et vérifié localement, avec limite de recette interactive. | Sauvegarde explicite privée, versions, concurrence, export et suppression ; 293 tests natifs, Functions 95/95, Firestore 55/55 et reprise enrichie 4/4. Rechargement et conflit entre onglets exercés ; recette finale du dialogue de sortie à reprendre. |
 
 Le livrable final doit distinguer : implémenté et testé localement ; inspecté par agents ; validé par des humains ; non testé ; non déployé. Les preuves sont datées et rattachées au commit pertinent.
 
@@ -157,3 +157,23 @@ Cinq réponses ont été clarifiées : injection de prompt visible ou cachée ; 
 Les identifiants, questions, options, corrections déterministes, sources, prérequis, versions de catalogue et grilles sont inchangés après comparaison profonde des JSON. Les copies de contenu empaquetées avec les Functions ont été régénérées et comparées aux sources finales. `npm test` : 282 réussites ; `npm run functions:test` : 90 réussites ; builds frontend et Functions réussis. Aucune nouvelle logique d’accès ou de transaction dans ce lot : pas de répétition de l’émulateur uniquement pour des formulations.
 
 Les verdicts pédagogiques sont ceux d’agents ; ils ne mesurent pas la compréhension ni la rétention de collaborateurs réels. Le push final se fera sur `codex/enterprise-guidance`, sans déclencher le déploiement Pages de `main` avant coordination avec les Functions.
+
+## Lot E — qualification du 22 octobre 2026
+
+Le [contrat de reprise](ENTERPRISE_RESUME_CONTRACT_20261022.md) et la [relecture indépendante](ENTERPRISE_RESUME_QA_20261022.md) décrivent la sauvegarde volontaire, les limites et les contrôles. Les nouvelles données restent dans le périmètre apprenant/organisation existant ; aucun service ni appel IA supplémentaire. Le workspace ne charge que des résumés ; le texte est lu à l’ouverture de sa mission. La prochaine action privilégie une reprise valable du parcours courant, puis les cartes et missions, sans démarrage automatique.
+
+La version couvre la mission et sa pratique. Les écritures sont conditionnées par une révision et un identifiant de mutation, avec rejeu identique sans double écriture. Effacement et complétion retirent le texte et empêchent sa résurrection par une écriture ancienne. Les diagnostics de politique de retour sont restaurés, mais ni appréciations IA, ni exemples ouverts, ni laboratoire. L’aide des cartes se présente automatiquement seulement lorsqu’aucune carte de cet espace n’a encore été pratiquée ; elle reste réouvrable.
+
+### Preuves
+
+- `npm test` : 293 tests réussis sur le contenu et le code final, incluant les nouveaux contrats de reprise ; build frontend réussi. Avertissement préexistant de taille de bundle conservé.
+- Functions : build réussi et 95 tests réussis. Suite Firestore CI isolée : 55/55, puis suite reprise enrichie : 4/4. Les derniers cas renforcent comptes désactivés/non vérifiés, droit d’organisation inactif, deux UID dans deux organisations, accès manager/anonyme, export et suppression. Aucune connexion à une base de production.
+- `npx tsc -p tests/enterprise-ui/tsconfig.json` : harnais navigateur typé et vérifié séparément ; aucun alias de qualification dans la configuration Vite de production.
+- Navigateur sur vrais composants avec adaptateur fictif : étape 2 enregistrée puis restaurée ; étape 6 et ses deux champs enregistrés puis restaurés avec texte exact ; ancienne session refusée après écriture d’un autre onglet, puis rechargement explicite de la bonne version. Une mauvaise réponse vérifiée a été restaurée à l’étape 7, et Continuer est resté désactivé.
+- La QA a découvert la perte possible de modifications sur navigation SPA. Un événement annulable protège désormais liens internes, changement d’organisation et historique ; un dialogue HTML propose rester ou quitter sans enregistrer. Le navigateur de cette session a été bloqué par un ancien dialogue natif pendant la recette initiale. Le dialogue natif a été retiré du code et remplacé par le dialogue HTML ; l’audit du correctif et le build sont concluants, mais sa dernière recette interactive et le scénario final de complétion restent à reprendre dans un navigateur débloqué. La complétion concurrente et la purge sont couvertes par les tests serveur.
+
+### Livraison et réserves
+
+Les cinq lots correspondent à des commits distincts. Le push final cible uniquement la branche `codex/enterprise-guidance`. La CI de `main` publie le frontend : intégrer et publier seulement après préparation autorisée des Functions compatibles, avec les callables de préférences et de reprise ainsi que les dernières empreintes d’activités. Aucun déploiement Firebase ni changement de facturation exécuté.
+
+Le panel humain reste à organiser : aucune mesure nouvelle de compréhension, de retour réel le lendemain ou de rétention n’est revendiquée. La disponibilité de reprise expire logiquement après trente jours ; sans nouvel accès, aucun effacement physique à date fixe n’est garanti.

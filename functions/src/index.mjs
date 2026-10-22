@@ -15,7 +15,7 @@ import { claimAnalysis } from './claim.mjs'
 import { submitCheckedChallenge } from './challengeChecks.mjs'
 import { createAccountLifecycle } from './accountLifecycle.mjs'
 import { getAccessStatus, requireGoogle, requireMember, updateMemberAccess, validateMemberAccessRequest, currentAdminStatus } from './accessService.mjs'
-import { getEnterpriseWorkspace as enterpriseWorkspace, setEnterpriseLearningPreferences as enterprisePreferences, manageEnterpriseOrganization as enterpriseManage, joinEnterpriseOrganization as enterpriseJoin, commitEnterpriseLearningAction as enterpriseCommit, deleteEnterpriseData } from './enterprise.mjs'
+import { getEnterpriseWorkspace as enterpriseWorkspace, getEnterpriseLessonDraft as enterpriseDraft, saveEnterpriseLessonDraft as enterpriseSaveDraft, setEnterpriseLearningPreferences as enterprisePreferences, manageEnterpriseOrganization as enterpriseManage, joinEnterpriseOrganization as enterpriseJoin, commitEnterpriseLearningAction as enterpriseCommit, deleteEnterpriseData } from './enterprise.mjs'
 import { enterpriseCommercialTerms,createEnterpriseOrganization as enterpriseCreate,createEnterpriseCheckout as enterpriseCheckout,getEnterpriseBilling as enterpriseBilling,createEnterprisePortal as enterprisePortal,drainEnterpriseSeatSync,processEnterpriseSubscriptionEvent } from './enterpriseBilling.mjs'
 import { assessEnterprisePractice, callPracticeMistral } from './enterprisePractice.mjs'
 
@@ -50,7 +50,9 @@ export const assessEnterprisePracticeAnswer = onCall({ ...callableOptions, secre
   config: { enabled: practiceAiEnabled.value(), model: practiceAiModel.value().trim(), hasKey: Boolean(key.value()) },
   evaluate: ({ practice, answer, model, rubric }) => callPracticeMistral({ apiKey: key.value(), model, practice, answer, rubric }),
 })))
-export const getEnterpriseWorkspace = onCall(callableOptions,request=>accessCall(()=>enterpriseWorkspace({...enterpriseContext(request),catalog:enterpriseCatalog})))
+export const getEnterpriseWorkspace = onCall(callableOptions,request=>accessCall(()=>enterpriseWorkspace({...enterpriseContext(request),catalog:enterpriseCatalog,practices:enterprisePractices})))
+export const getEnterpriseLessonDraft = onCall(callableOptions,request=>accessCall(()=>enterpriseDraft({...enterpriseContext(request),catalog:enterpriseCatalog,practices:enterprisePractices})))
+export const saveEnterpriseLessonDraft = onCall(callableOptions,request=>accessCall(()=>enterpriseSaveDraft({...enterpriseContext(request),catalog:enterpriseCatalog,practices:enterprisePractices})))
 export const setEnterpriseLearningPreferences = onCall(callableOptions,request=>accessCall(()=>enterprisePreferences({...enterpriseContext(request),catalog:enterpriseCatalog})))
 export const manageEnterpriseOrganization = onCall(callableOptions,request=>accessCall(()=>enterpriseManage(enterpriseContext(request))))
 export const joinEnterpriseOrganization = onCall(callableOptions,request=>accessCall(()=>enterpriseJoin(enterpriseContext(request))))

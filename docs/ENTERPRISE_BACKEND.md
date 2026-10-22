@@ -49,6 +49,14 @@ Les règles refusent toute lecture/écriture directe des organisations aux clien
 
 Les cartes, leçons, défis et streaks développeur ne sont ni importés ni consultés par ces callables. Deux organisations du même utilisateur sont également indépendantes. Les identifiants de contenu sont ceux du catalogue Entreprise exclusivement.
 
+### Reprise explicite d’une mission — ajout local du 22 octobre 2026
+
+`getEnterpriseLessonDraft` et `saveEnterpriseLessonDraft` utilisent les contrôles d’accès et App Check des callables Entreprise. La sauvegarde est une action volontaire, privée par UID authentifié et organisation. Elle ne valide aucune mission, ne modifie aucun classement et n’envoie rien à un fournisseur IA. Le workspace retourne uniquement des résumés de reprise du propriétaire ; le détail est chargé à l’ouverture de la mission. Les responsables n’accèdent pas aux productions de leurs membres.
+
+Les documents `lessonDrafts/{lessonId}` sous le learner conservent l’état borné de la mission, une empreinte SHA-256 de la leçon et de sa pratique, une révision et les dates serveur. Les écritures exigent `expectedRevision` et un `mutationId` stable : une répétition de la dernière mutation identique retourne son accusé, une révision concurrente est refusée. L’effacement et la complétion effacent le texte en gardant une révision supérieure ; une écriture tardive ne peut le ressusciter. La complétion et la sauvegarde lisent les mêmes documents dans leurs transactions.
+
+Une limite distincte de 120 nouvelles mutations par heure et par membre/organisation protège les sauvegardes, sans compter les répétitions identiques. La reprise est disponible 30 jours après la sauvegarde explicite. Expiration, contenu modifié et état invalide provoquent une purge opportuniste lors d’une lecture ou écriture ; aucun TTL ni nettoyage physique automatique au trentième jour n’est configuré. `lessonDrafts` est inclus dans l’export propriétaire et dans la suppression récursive du learner. Le laboratoire d’automatisation, les retours IA et les exemples révélés ne sont pas repris. Le [contrat détaillé](ENTERPRISE_RESUME_CONTRACT_20261022.md) fixe les champs, limites, notices et recettes. Cette implémentation locale exige un déploiement autorisé avant toute disponibilité en production.
+
 ## Progression continue
 
 Le serveur impose l’ordre des missions, les prérequis du chapitre avant une mise en situation, et les échéances des cartes. Il produit les dates et les intervalles. Les cartes futures ne peuvent pas être avancées. Il n’y a pas de quota quotidien de leçons/révisions pour les membres autorisés ; une limite de sécurité de 120 mutations par heure et par apprenant reste en place. Les invitations sont limitées à 30 par heure et par organisation. Un compte peut rejoindre 20 organisations actives.

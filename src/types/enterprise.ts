@@ -3,6 +3,25 @@ import type { ReviewEvent } from './progress'
 
 export type EnterpriseOrganization = { id: string; name: string; role: 'manager' | 'learner'; learningEnabled?: boolean }
 export type EnterpriseLearningPreferences = { activeTrackId: string; updatedAt: string }
+export type EnterpriseLessonDraftState = {
+  stepId: string
+  answers: Record<string,string>
+  checkedIds: string[]
+  draft: string
+  practiceAnswers: Record<string,string>
+}
+export type EnterpriseLessonDraftSummary = { lessonId: string; revision: number; stepId: string; updatedAt: string; expiresAt: string }
+export type EnterpriseLessonDraftSnapshot = {
+  organizationId: string
+  lessonId: string
+  revision: number
+  contentVersion: string
+  state: EnterpriseLessonDraftState | null
+  updatedAt?: string
+  expiresAt?: string
+  notice?: 'expired' | 'content-changed' | 'completed' | 'invalid-state'
+}
+export type EnterpriseLessonDraftMutation = { organizationId: string; lessonId: string; contentVersion: string; expectedRevision: number; mutationId: string; state: EnterpriseLessonDraftState | null }
 export type EnterpriseChallengeAttempt = {
   type: 'challenge'; id: string; challengeId: string; submittedAt: string
   catalogVersion: number; assessmentVersion: number; challengeTitle: string
@@ -13,6 +32,7 @@ export type EnterpriseWorkspace = {
   organizations: EnterpriseOrganization[]
   organization: EnterpriseOrganization | null
   settings?: EnterpriseLearningPreferences | null
+  lessonDrafts?: EnterpriseLessonDraftSummary[]
   progress: { lessons: Record<string,{completedAt:string}>; cards: Record<string,CardProgress>; reviews: ReviewEvent[]; attempts: EnterpriseChallengeAttempt[] }
   ranking: { alias: string; streak: number; rank: number; self: boolean }[]
   members: { uid: string; alias: string; role: 'manager' | 'learner'; active: boolean; summary: { lessons: number; cards: number; attempts: number }; lastActivityAt: string | null }[]
