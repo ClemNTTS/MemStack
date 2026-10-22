@@ -94,7 +94,7 @@ Seuils proposés par le plan : tous les scénarios techniques de restauration/is
 | A | Critères et scénarios définis dans ce document. | Panel humain indisponible ; aucune observation humaine nouvelle. |
 | B | Implémenté et qualifié localement avant commit du lot. | Builds réussis ; 278 tests natifs, 90 tests backend et 9 tests d'intégration sur émulateurs rapportés réussis par les exécutants. Revue PO des correctifs et simulation navigateur décrites ci-dessous. Validation humaine à réaliser ; aucun déploiement. |
 | C | Implémenté et inspecté localement avant commit du lot. | Navigation et transitions relues ; registre des 190 décisions de glossaire ; 282 tests natifs et build réussis rapportés. Simulation navigateur et limites détaillées ci-dessous. |
-| D | À qualifier. | Registre par ID et verdict de relecture à relier. |
+| D | Implémenté, inspecté indépendamment et testé localement. | 120 cartes et 40 consignes inspectées ; cinq réponses de cartes, quatre tâches et un scénario clarifiés. Tests natifs 282/282, Functions 90/90, builds réussis ; validation humaine à réaliser. |
 | E | Contrat à finaliser avant code. | Schéma, conservation, tests et recette à renseigner. |
 
 Le livrable final doit distinguer : implémenté et testé localement ; inspecté par agents ; validé par des humains ; non testé ; non déployé. Les preuves sont datées et rattachées au commit pertinent.
@@ -147,3 +147,13 @@ Le dédoublonnage utilise un Set neuf par rendu de LessonText, partagé entre pa
 ### Limites
 
 La compréhension réelle, le temps nécessaire à un novice et la rétention restent à mesurer avec le panel humain. Le navigateur utilise un runtime simulé et des données fictives ; ni droits de production, ni appels Mistral réels, ni facturation ne sont qualifiés par ces manipulations. Le contrôle indépendant du glossaire est ciblé ; le registre exhaustif est le livrable éditorial de son auteur. Aucun déploiement effectué pour ce lot. Le lot D doit encore inspecter toutes les cartes et consignes ; E doit définir puis implémenter la reprise intra-mission.
+
+## Lot D — qualification du 22 octobre 2026
+
+Le [registre des cartes et activités](content/ENTERPRISE_CARDS_GUIDANCE_20261022.md) couvre les 120 cartes et les consignes des 40 missions. La [relecture pédagogique indépendante](content/ENTERPRISE_CARDS_QA_20261022.md) rapporte les demandes transmises à l’auteur puis les corrections acceptées. La [qualification technique](content/ENTERPRISE_GUIDANCE_TECHNICAL_QA_20261022.md) distingue les changements de formulation des invariants de progression.
+
+Cinq réponses ont été clarifiées : injection de prompt visible ou cachée ; itération comme essai à comparer ; pièce étayant une information sans garantir toute sa fiabilité ; gain net avec signe explicite ; prototype comme version d’essai. Quatre tâches distinguent mieux les productions attendues ; le scénario du gain brut sépare le temps économisé du coût de relecture. Les objectifs restent identiques.
+
+Les identifiants, questions, options, corrections déterministes, sources, prérequis, versions de catalogue et grilles sont inchangés après comparaison profonde des JSON. Les copies de contenu empaquetées avec les Functions ont été régénérées et comparées aux sources finales. `npm test` : 282 réussites ; `npm run functions:test` : 90 réussites ; builds frontend et Functions réussis. Aucune nouvelle logique d’accès ou de transaction dans ce lot : pas de répétition de l’émulateur uniquement pour des formulations.
+
+Les verdicts pédagogiques sont ceux d’agents ; ils ne mesurent pas la compréhension ni la rétention de collaborateurs réels. Le push final se fera sur `codex/enterprise-guidance`, sans déclencher le déploiement Pages de `main` avant coordination avec les Functions.
