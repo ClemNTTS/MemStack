@@ -1,4 +1,11 @@
 .enterprise-track-picker { margin: 2.5rem 0; }
+.enterprise-learning-heading h1 { margin: .4rem 0; font-size: clamp(1.5rem, 3vw, 2rem); }
+.enterprise-learning-heading > p { margin: .4rem 0; }
+.enterprise-learning-heading + .enterprise-dashboard-grid { margin-top: 1rem; }
+.enterprise-next h2 { font-size: clamp(1.25rem, 2.5vw, 1.6rem); }
+.enterprise-track-current { margin: .75rem 0; }
+.enterprise-next-alternative { display: block; margin-top: 1rem; }
+.enterprise-track-status { padding: .7rem; border: 1px solid #d8cdea; border-radius: .5rem; }
 .enterprise-track-picker > p { max-width: 70ch; }
 .enterprise-track-current { margin: 1.5rem 0; }
 .enterprise-track-current > h2 { margin: .4rem 0 .75rem; }

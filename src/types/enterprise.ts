@@ -2,6 +2,7 @@ import type { CardProgress } from './card'
 import type { ReviewEvent } from './progress'
 
 export type EnterpriseOrganization = { id: string; name: string; role: 'manager' | 'learner'; learningEnabled?: boolean }
+export type EnterpriseLearningPreferences = { activeTrackId: string; updatedAt: string }
 export type EnterpriseChallengeAttempt = {
   type: 'challenge'; id: string; challengeId: string; submittedAt: string
   catalogVersion: number; assessmentVersion: number; challengeTitle: string
@@ -11,6 +12,7 @@ export type EnterpriseChallengeAttempt = {
 export type EnterpriseWorkspace = {
   organizations: EnterpriseOrganization[]
   organization: EnterpriseOrganization | null
+  settings?: EnterpriseLearningPreferences | null
   progress: { lessons: Record<string,{completedAt:string}>; cards: Record<string,CardProgress>; reviews: ReviewEvent[]; attempts: EnterpriseChallengeAttempt[] }
   ranking: { alias: string; streak: number; rank: number; self: boolean }[]
   members: { uid: string; alias: string; role: 'manager' | 'learner'; active: boolean; summary: { lessons: number; cards: number; attempts: number }; lastActivityAt: string | null }[]

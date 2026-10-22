@@ -4,6 +4,7 @@ import practices from '../data/enterprisePractices.json' with { type: 'json' }
 import EnterprisePracticeFeedback from './EnterprisePracticeFeedback'
 import { guidedPracticeAnswer } from './practiceAnswer'
 import type { VerifyEnterprisePractice } from '../types/enterprise'
+import './enterprise-practice-guidance.css'
 
 export type EnterprisePractice = {
   scenario: string
@@ -37,14 +38,17 @@ export default function GuidedEnterprisePractice({ lessonId, draft = '', onDraft
 
   return <div className="enterprise-practice enterprise-guided-practice" data-compact={twoPartAnswer}>
     <h2>À toi de jouer</h2>
-    <section className="enterprise-practice-case" aria-label="Situation fictive de l’exercice"><p className="lesson-category">Le cas à explorer</p><LessonText glossary glossaryId={lessonId} text={practice.scenario}/></section>
+    <p>Tu aides les personnages de ce cas fictif. Prépare ta proposition ici : aucune action n’est effectuée dans un outil réel.</p>
+    <section className="enterprise-practice-case" aria-label="Situation fictive de l’exercice"><h3>1. Lis le cas</h3><LessonText glossary glossaryId={lessonId} text={practice.scenario}/></section>
+    <section className="enterprise-practice-instructions" aria-label="Consigne de l’activité"><h3>2. Prépare ta proposition</h3><LessonText glossary glossaryId={lessonId} text={practice.task}/><p>Appuie-toi sur les informations du cas et respecte le format demandé. Si une information manque, indique-le plutôt que de l’inventer.</p></section>
     {twoPartAnswer ? <div className="enterprise-practice-answer-fields">
-      <label>Ce que Léa peut demander à son assistant IA<input type="text" value={assistantDraft} onChange={event => updateDraft(`${event.target.value}\n\n${personalDraft}`)} maxLength={2400}/></label>
-      <label>Ce qu’elle doit faire elle-même<input type="text" value={personalDraft} onChange={event => updateDraft(`${assistantDraft}\n\n${event.target.value}`)} maxLength={2400}/></label>
+      <label>Ce que Léa peut demander à son assistant IA<input type="text" value={assistantDraft} onChange={event => updateDraft(`${event.target.value}\n\n${personalDraft}`)} maxLength={2400} placeholder="L’assistant IA peut…"/></label>
+      <label>Ce qu’elle doit faire elle-même<input type="text" value={personalDraft} onChange={event => updateDraft(`${assistantDraft}\n\n${event.target.value}`)} maxLength={2400} placeholder="Léa doit…"/></label>
     </div> : <>
-      <LessonText glossary glossaryId={lessonId} text={practice.task}/>
-      <label>Ta proposition<textarea value={draft} onChange={event => updateDraft(event.target.value)} maxLength={5000} rows={6} placeholder="Écris avec tes mots…"/></label>
+      <label>Ta proposition<textarea value={draft} onChange={event => updateDraft(event.target.value)} maxLength={5000} rows={6} placeholder={practice.starter}/></label>
     </>}
+    <h3>3. Compare et ajuste</h3>
+    <p>Relis ta proposition, puis compare avec l’exemple commenté ou demande un retour IA. Plusieurs formulations peuvent convenir.</p>
     <EnterprisePracticeFeedback lessonId={lessonId} practice={practice} answer={guidedPracticeAnswer(lessonId, draft)} onVerify={onVerify}/>
     <div className="enterprise-practice-tools"><button type="button" className="text-link" onClick={() => setCompared(previous => !previous)} aria-expanded={compared}>{compared ? 'Masquer l’exemple' : 'Voir un exemple'}</button></div>
     {compared && <section className="enterprise-practice-comparison" ref={feedback} tabIndex={-1} aria-label="Exemple commenté et repères de comparaison">

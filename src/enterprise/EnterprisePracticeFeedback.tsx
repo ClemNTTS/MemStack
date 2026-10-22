@@ -38,8 +38,8 @@ export default function EnterprisePracticeFeedback({ lessonId, practice, answer,
   }
 
   return <div className="enterprise-practice-ai">
-    <p className="dashboard-note">En cliquant, tu envoies ta réponse et ce cas fictif à Mistral pour un retour IA. Utilise uniquement les informations de l’exercice.</p>
-    <button type="button" className="catalog-button" disabled={!answer.trim() || pending} onClick={() => { void verify() }}>{pending ? 'Mémo regarde ta réponse…' : 'Vérifier ma réponse'}</button>
+    <p className="dashboard-note">Facultatif : en cliquant, tu envoies ta réponse et ce cas fictif à Mistral pour un retour IA. Utilise uniquement les informations de l’exercice. Tu peux aussi consulter l’exemple sans demander de retour IA.</p>
+    <button type="button" className="catalog-button" disabled={!answer.trim() || pending} onClick={() => { void verify() }}>{pending ? 'Mémo regarde ta réponse…' : 'Obtenir un retour IA'}</button>
     {pending && <p role="status">Le retour arrive dans quelques instants.</p>}
     {error && <p role="alert" className="enterprise-feedback">{error}</p>}
     {feedback && <section className="enterprise-feedback enterprise-practice-ai-result" data-correct={feedback.status === 'good'} role="status" aria-live="polite">
@@ -47,7 +47,7 @@ export default function EnterprisePracticeFeedback({ lessonId, practice, answer,
       <p>{feedback.message}</p>
       {feedback.strengths.length > 0 && <ul>{feedback.strengths.map(point => <li key={point}>{point}</li>)}</ul>}
       {feedback.nextStep && <p><strong>Pour avancer : </strong>{feedback.nextStep}</p>}
-      <small>Retour proposé par IA · tu peux ajuster ta réponse et réessayer.</small>
+      <small>Ce retour IA peut se tromper. Compare avec les informations du cas et l’exemple ; tu peux ajuster ta réponse et réessayer.</small>
     </section>}
   </div>
 }

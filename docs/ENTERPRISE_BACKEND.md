@@ -28,6 +28,16 @@ L’invitation administrative de responsable peut aussi promouvoir un apprenant 
 
 ## Données et droits
 
+### Parcours habituel — ajout local du 22 octobre 2026
+
+`setEnterpriseLearningPreferences` reçoit exactement `{ organizationId, activeTrackId }` et retourne `{ organizationId, settings: { activeTrackId, updatedAt } }` après écriture. Le serveur déduit le compte de Firebase Auth, valide le parcours contre le catalogue préparé et relit l’adhésion, les droits d’organisation et le marqueur de suppression dans la transaction. Le callable conserve App Check et la région des opérations Entreprise existantes.
+
+Le document `organizations/{organizationId}/learners/{uid}/settings/learning` contient ce choix et sa date serveur. L’écriture fusionne uniquement ces champs pour permettre des réglages futurs dans le même document. `getEnterpriseWorkspace` retourne `settings: null` en l’absence de préférence valide, de parcours encore présent dans le catalogue ou d’accès pédagogique actif. Une préférence devenue invalide n’est pas supprimée implicitement. Les lectures n’enregistrent jamais un choix ; visiter un lien explicite ne modifie le parcours habituel que par une action de choix côté interface.
+
+Les préférences sont privées par compte et organisation ; elles ne créent ni complétion, ni XP, ni révision, ni activité au classement. Elles ne sauvegardent pas les productions ou l’étape d’une mission. La collection `settings` figure dans l’export du compte et la suppression récursive du learner la retire. Les règles client demeurent fermées. Les tests d’intégration couvrent deux organisations, deux membres, catalogue retiré, rejeu, retrait d’accès, désactivation, suppression de compte, export et refus des accès clients directs. Ce contrat local nécessite un déploiement autorisé avant utilisation en production.
+
+Qualification locale du 22 octobre : `npm run functions:build` réussi, `npm run functions:test` 90/90 et suite `enterprise.integration.test.mjs` 9/9 sur l’émulateur Firestore avec Firebase CLI 15.32.1, Java 21 et projet `demo-memstack-challenge-ai`. Les refus attendus d’accès client produisent des messages `PERMISSION_DENIED` pendant les tests. Ces résultats ne qualifient ni l’interface ni le déploiement réel ; aucun déploiement n’a été effectué.
+
 - Les comptes conservent le même UID Firebase dans les deux environnements.
 - `users/{uid}/enterpriseMemberships/{organizationId}` est un index serveur, lisible par son propriétaire. Il ne donne jamais un droit à lui seul.
 - `organizations/{organizationId}/members/{uid}` contient le rôle, l’accès actif, un pseudo neutre propre à cette organisation et des compteurs d’avancement.

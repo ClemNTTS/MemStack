@@ -1,0 +1,6 @@
+.enterprise-practice-instructions { margin: 1.25rem 0; }
+.enterprise-practice h3 { font-size: 1rem; line-height: 1.5; }
+.enterprise-practice-instructions > p { font-size: .9rem; color: #625470; line-height: 1.6; }
+.enterprise-practice-source { margin: 1rem 0; padding: 1rem; border: 1px solid #d6c1e6; border-radius: 12px; background: #fffcf7; }
+.enterprise-practice-source h4 { margin: 0 0 .75rem; font-size: .95rem; }
+.enterprise-practice-source .lesson-rich-text p:last-child { margin-bottom: 0; }

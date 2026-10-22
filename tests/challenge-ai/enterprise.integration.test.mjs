@@ -4,7 +4,7 @@ import { createRequire } from 'node:module'
 import { readFileSync } from 'node:fs'
 import { initializeTestEnvironment,assertFails } from '@firebase/rules-unit-testing'
 import { doc,getDoc,setDoc } from 'firebase/firestore'
-import { manageEnterpriseOrganization,joinEnterpriseOrganization,commitEnterpriseLearningAction,getEnterpriseWorkspace,exportEnterpriseData,deleteEnterpriseData } from '../../functions/src/enterprise.mjs'
+import { manageEnterpriseOrganization,joinEnterpriseOrganization,commitEnterpriseLearningAction,getEnterpriseWorkspace,exportEnterpriseData,deleteEnterpriseData,setEnterpriseLearningPreferences } from '../../functions/src/enterprise.mjs'
 import { createEnterpriseOrganization,createEnterpriseCheckout,getEnterpriseBilling,processEnterpriseSubscriptionEvent,drainEnterpriseSeatSync } from '../../functions/src/enterpriseBilling.mjs'
 const require = createRequire(new URL('../../functions/package.json',import.meta.url))
 const {initializeApp,deleteApp} = require('firebase-admin/app')
@@ -19,6 +19,7 @@ after(async()=>{if(environment) await environment.cleanup();if(app) await delete
 const now = Date.parse('2026-10-15T10:00:00Z')
 const catalog = {version:1,lessons:[{id:'ent-first',chapterId:'chapter-one',cards:[{id:'ent-card'}]},{id:'ent-second',chapterId:'chapter-two',cards:[]}],challenges:[{id:'ent-case',title:'Une décision à vérifier',chapterId:'chapter-one',questions:Array.from({length:5},(_,index)=>({id:`q${index}`,prompt:`Quelle décision pour la situation ${index} ?`,options:[{id:'a',text:'Vérifier les informations'},{id:'b',text:'Publier sans relire'}]}))}]}
 const keys = {version:1,challenges:{'ent-case':Object.fromEntries(catalog.challenges[0].questions.map(q=>[q.id,'a']))},explanations:{'ent-case':Object.fromEntries(catalog.challenges[0].questions.map(q=>[q.id,'Il faut vérifier les informations avant de les utiliser.']))}}
+const preferenceCatalog = {...catalog,tracks:[{id:'ent-assistants'},{id:'ent-automation'}]}
 const identity = (uid,admin=false) => ({uid,token:{firebase:{sign_in_provider:'google.com'},...(admin?{memstackAdmin:true}:{})}})
 const lookup = async uid => ({email:`${uid}@example.com`,emailVerified:true,disabled:false,customClaims:{memstackAdmin:uid==='admin'}})
 const context = (uid,data,admin=false) => ({db,auth:identity(uid,admin),lookup,data,now})
@@ -29,6 +30,52 @@ async function create(name,manager) {
   await joinEnterpriseOrganization(context(manager,{code:created.code}))
   return created.organizationId
 }
+
+test('cloud track preferences stay private per learner and organization, survive retries and respect access revocation', async () => {
+  const uid = 'preferences-user'
+  const first = await create('Preferences first',uid), second = await create('Preferences second',uid)
+  const save = (organizationId,activeTrackId,actor=uid) => setEnterpriseLearningPreferences({...context(actor,{organizationId,activeTrackId}),catalog:preferenceCatalog})
+  const read = (organizationId,actor=uid,activeCatalog=preferenceCatalog) => getEnterpriseWorkspace({...context(actor,{organizationId}),catalog:activeCatalog})
+  assert.equal((await read(first)).settings,null)
+  const settingsRef = db.doc(`organizations/${first}/learners/${uid}/settings/learning`)
+  await settingsRef.set({futureSetting:'retained'})
+  const firstResult = await save(first,'ent-assistants')
+  assert.deepEqual(firstResult,{organizationId:first,settings:{activeTrackId:'ent-assistants',updatedAt:new Date(now).toISOString()}})
+  assert.deepEqual(await save(first,'ent-assistants'),firstResult)
+  await save(second,'ent-automation')
+  assert.deepEqual((await read(first)).settings,firstResult.settings)
+  assert.equal((await read(second)).settings.activeTrackId,'ent-automation')
+  assert.equal((await settingsRef.get()).data().futureSetting,'retained')
+  assert.equal((await db.collection(`organizations/${first}/learners/${uid}/lessons`).get()).size,0)
+  assert.equal((await db.collection(`organizations/${first}/ranking`).get()).size,0)
+  assert.equal((await db.doc(`users/${uid}/settings/learning`).get()).exists,false)
+  await assert.rejects(save(first,'missing'),{code:'invalid-argument'})
+  assert.equal((await read(first,uid,{...preferenceCatalog,tracks:[{id:'ent-automation'}]})).settings,null)
+  assert.equal((await settingsRef.get()).data().activeTrackId,'ent-assistants')
+  await assert.rejects(save(first,'ent-assistants','preferences-stranger'),{code:'permission-denied'})
+  const invitation = await manageEnterpriseOrganization(context(uid,{action:'invite',organizationId:first,email:'preferences-colleague@example.com'}))
+  await joinEnterpriseOrganization(context('preferences-colleague',{code:invitation.code}))
+  assert.equal((await read(first,'preferences-colleague')).settings,null)
+  await save(first,'ent-automation','preferences-colleague')
+  assert.equal((await read(first)).settings.activeTrackId,'ent-assistants')
+  await manageEnterpriseOrganization(context(uid,{action:'revoke',organizationId:first,uid:'preferences-colleague'}))
+  await assert.rejects(save(first,'ent-assistants','preferences-colleague'),{code:'permission-denied'})
+  await assert.rejects(read(first,'preferences-colleague'),{code:'permission-denied'})
+  const browser = environment.authenticatedContext(uid).firestore()
+  await assertFails(getDoc(doc(browser,settingsRef.path)))
+  await assertFails(setDoc(doc(browser,settingsRef.path),{activeTrackId:'ent-automation'}))
+  const exported = await exportEnterpriseData(db,uid)
+  assert.equal(exported.find(row=>row.organizationId===first).collections.find(row=>row.name==='settings').rows[0].activeTrackId,'ent-assistants')
+  await db.doc(`organizations/${first}`).update({enabled:false})
+  await assert.rejects(save(first,'ent-assistants'),{code:'permission-denied'})
+  await db.doc(`organizations/${first}`).update({enabled:true})
+  await db.doc(`_accountLifecycle/${uid}`).set({status:'deleting'})
+  await assert.rejects(save(first,'ent-assistants'),{code:'permission-denied'})
+  await deleteEnterpriseData(db,uid)
+  assert.equal((await settingsRef.get()).exists,false)
+  assert.equal((await db.doc(`organizations/${second}/learners/${uid}/settings/learning`).get()).exists,false)
+  assert.equal((await db.doc(`organizations/${first}/learners/preferences-colleague/settings/learning`).get()).exists,true)
+})
 
 test('independent learning paths enforce real foundation and branch prerequisites in server transactions', async () => {
   const organizationId = await create('Paths organization', 'paths-member')

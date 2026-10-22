@@ -2,6 +2,7 @@ import { getFunctions, httpsCallable } from 'firebase/functions'
 import { getFirebaseServices } from './client'
 import type { EnterpriseWorkspace, EnterpriseLearningAction, EnterpriseLearningResult, EnterpriseManagementAction, EnterpriseBillingStatus } from '../types/enterprise'
 import type { EnterprisePracticeFeedback } from '../types/enterprise'
+import type { EnterpriseLearningPreferences } from '../types/enterprise'
 
 async function invoke<Input,Output>(uid: string, name: string, data: Input, timeout = 70000): Promise<Output> {
   const { auth } = getFirebaseServices()
@@ -11,6 +12,7 @@ async function invoke<Input,Output>(uid: string, name: string, data: Input, time
   return result.data
 }
 export const getEnterpriseWorkspace = (uid: string, organizationId?: string) => invoke<{organizationId?:string},EnterpriseWorkspace>(uid,'getEnterpriseWorkspace',organizationId ? {organizationId} : {})
+export const setEnterpriseLearningPreferences = (uid: string, organizationId: string, activeTrackId: string) => invoke<{organizationId:string;activeTrackId:string},{organizationId:string;settings:EnterpriseLearningPreferences}>(uid,'setEnterpriseLearningPreferences',{organizationId,activeTrackId})
 export const joinEnterpriseOrganization = (uid: string, code: string) => invoke<{code:string},{organizationId:string}>(uid,'joinEnterpriseOrganization',{code})
 export const manageEnterpriseOrganization = (uid: string, data: EnterpriseManagementAction) => invoke<EnterpriseManagementAction,{organizationId:string;code?:string;revoked?:boolean;enabled?:boolean;alias?:string}>(uid,'manageEnterpriseOrganization',data)
 export const commitEnterpriseLearningAction = (uid: string, data: EnterpriseLearningAction) => invoke<EnterpriseLearningAction,EnterpriseLearningResult>(uid,'commitEnterpriseLearningAction',data)

@@ -45,8 +45,8 @@ Les lignes suivantes sont des tests à exécuter, pas des observations déjà ob
 | --- | --- | --- | --- |
 | N01 | Novice, première entrée Entreprise sans préférence. | Comprend qu'il doit choisir un parcours ; aucun premier parcours imposé ; progression existante conservée. | Simulation agent puis panel humain. |
 | N02 | Novice choisit un parcours, attend confirmation, recharge puis revient par l'entrée générique. | Même parcours et prochaine action ; pas de sélecteur initial affiché pendant la lecture cloud. | Intégration et navigateur ; retour J+1 réel à qualifier séparément. |
-| N03 | Novice ouvre sa première activité de politique de retour. | Peut retrouver la pièce, qualifier trois affirmations puis rédiger ; comprend où comparer et ce qui permet de continuer. | Simulation avec capture ; compréhension réelle au panel. |
-| N04 | Novice ouvre l'atelier à deux champs. | Consigne « une phrase par champ » et tâche complète visibles ; aucune réponse préremplie présentée comme son travail. | Inspection et navigateur. |
+| N03 | Apprenant ouvre la ressource historique de politique de retour (`ent-plausible-not-proven`). | Peut retrouver la pièce, qualifier trois affirmations puis rédiger ; comprend où comparer et ce qui permet de continuer. | Simulation avec capture ; compréhension réelle au panel. |
+| N04 | Novice ouvre sa première fondation, l'atelier à deux champs (`ent-answer-or-action`). | Tâche complète et format d'une phrase par champ compréhensibles ; aucune réponse préremplie présentée comme son travail. | Inspection et navigateur. |
 | N05 | Novice utilise une première carte sans connaître Anki. | Révélation explicite ; choix compréhensibles ; explique la différence entre rappel avant révélation et lecture de la correction. | Navigateur pour mécanique ; panel pour compréhension. |
 | N06 | Apprenant révèle une carte, choisit une réponse pendant une panne. | Carte conservée, erreur utile, reprise sans double pratique et sans faux succès. | Test de comportement et navigateur si panne contrôlable. |
 | N07 | Apprenant demande un retour IA indisponible ou hors quota. | Réponse conservée ; exemple/repères disponibles ; progression non conditionnée à un retour positif. | Test contrôlé, sans provoquer de consommation fournisseur réelle inutile. |
@@ -92,9 +92,36 @@ Seuils proposés par le plan : tous les scénarios techniques de restauration/is
 | Lot | État initial du registre | Preuves / reste à faire |
 | --- | --- | --- |
 | A | Critères et scénarios définis dans ce document. | Panel humain indisponible ; aucune observation humaine nouvelle. |
-| B | À qualifier. | Résultats et commandes à renseigner après exécution. |
+| B | Implémenté et qualifié localement avant commit du lot. | Builds réussis ; 278 tests natifs, 90 tests backend et 9 tests d'intégration sur émulateurs rapportés réussis par les exécutants. Revue PO des correctifs et simulation navigateur décrites ci-dessous. Validation humaine à réaliser ; aucun déploiement. |
 | C | À qualifier. | Inventaire, captures et vérifications à renseigner. |
 | D | À qualifier. | Registre par ID et verdict de relecture à relier. |
 | E | Contrat à finaliser avant code. | Schéma, conservation, tests et recette à renseigner. |
 
 Le livrable final doit distinguer : implémenté et testé localement ; inspecté par agents ; validé par des humains ; non testé ; non déployé. Les preuves sont datées et rattachées au commit pertinent.
+
+## Clôture du lot B — 22 octobre 2026
+
+Référence : modifications du lot B relues après le commit du lot A `e68f5c6`, avant création du commit B. Les résultats d'exécution ci-dessous sont transmis par les agents exécutants ; le PO a inspecté le code et n'a pas lui-même exécuté ces suites ni manipulé ce navigateur.
+
+La préférence de parcours est enregistrée par callable dans le périmètre du compte et de l'organisation, puis restaurée par le workspace. L'URL explicite reste prioritaire sans changer silencieusement la préférence. La bascule d'organisation ne transporte plus le parcours précédent. Les nouveaux réglages participent à l'export et à la suppression du compte. Les tests backend/émulateurs rapportés couvrent notamment deux organisations, les refus d'accès, les règles client fermées et le cycle de vie.
+
+Deux anomalies de la revue indépendante ont été corrigées avant clôture : signature de l'adaptateur de sauvegarde harmonisée avec son appel ; navigation protégée contre une réponse de choix tardive lorsque l'utilisateur a déjà changé de page dans la même organisation. La mention contradictoire « sans appel à une IA » a également été retirée du chemin. La préférence confirmée ne devient pas une complétion pédagogique.
+
+Les premières cartes proposent un mode d'emploi visible et repliable, une consigne avant/après révélation et des boutons textuels Non/Oui. Le choix signifie un rappel avant révélation, même si la réponse devient reconnaissable après lecture. L'aide se replie après une carte réussie dans le lot ; aucun état d'initiation persistant intersessions n'est revendiqué. Les activités rendent leur consigne et leurs amorces explicites, et le retour IA est nommé facultatif avec exemple de secours.
+
+### Preuves d'exécution rapportées
+
+- Builds frontend et Functions réussis ; suite native : 278 tests réussis ; backend : 90 tests réussis ; intégration sur émulateurs : 9 tests réussis. Consulter les sorties conservées dans la conversation de réalisation pour les commandes et détails ; ces nombres ne constituent pas une preuve de déploiement.
+- Comptage initial rapporté par l'exécutant : 40 missions, 120 cartes et 190 entrées de glossaire. Les lots C et D doivent rattacher leur inventaire et leurs verdicts à ces contenus.
+- Navigateur avec environnement fictif et runtime simulé : choix du parcours, restauration et bascule entre deux organisations exercés. Cette simulation contrôle le comportement de l'interface ; elle ne prouve pas une synchronisation Firebase de production ni un retour humain réel le lendemain.
+- Mobile 390 × 844 : action principale entièrement dans le viewport, bord inférieur mesuré à 794 px, sans débordement horizontal dans l'état observé. Les autres contenus restent explorables par défilement.
+- Première fondation à deux champs : consigne visible, saisie et aide de comparaison ; indisponibilité IA simulée par `failed-precondition`, recours à l'exemple puis poursuite sans retour IA positif obligatoire. Mission enregistrée dans le runtime fictif.
+- Cartes : révélation au clavier par Espace puis choix Non ; progression observée à la carte 2 sur 3. Cette preuve concerne les interactions, pas une mesure de compréhension d'un novice humain.
+
+### Rectification du protocole initial
+
+Le catalogue courant déclare les fondations dans cet ordre : `ent-answer-or-action`, puis `ent-useful-request` (`shared/enterpriseCurriculum.json`, `foundationLessonIds`). `ent-plausible-not-proven` et son composant `ReturnPolicyPractice` sont une ressource historique, pas la première activité du socle actuel. Les mentions contraires dans le diagnostic initial du plan sont à lire comme une hypothèse historique rectifiée ici ; leur valeur est la description des problèmes de cet atelier, et non sa position dans le parcours actuel. Les scénarios N03/N04 sont corrigés en conséquence. La preuve navigateur du lot B sur la première fondation concerne bien `ent-answer-or-action`.
+
+### Limites et suite
+
+Aucun panel humain nouveau n'a été observé ; validation humaine à réaliser. La qualification navigateur repose sur des données fictives et un runtime simulé, tandis que les contrôles backend sont locaux sur émulateurs. Aucun appel Mistral réel ni environnement de production n'est qualifié par cette simulation. Le lot C doit poursuivre la hiérarchie de navigation, le glossaire et les transitions ; D reste la revue exhaustive des cartes/consignes ; E reste la reprise à l'intérieur d'une mission, sans promesse anticipée de restauration exacte.
