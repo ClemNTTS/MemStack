@@ -100,37 +100,41 @@ function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel, 
 
   return (
     <section className="card-session" aria-label="Cartes de mémorisation">
-      <h1>{currentItem.kind === 'new' ? 'Nouvelles cartes' : 'Révisions du jour'}</h1>
-      <p className="course-progress">{progressLabel}</p>
-      <p>Carte {results.length + 1} sur {cards.length}</p>
-      <details className="card-session-guide" open={guideOpen} onToggle={event => setGuideOpen(event.currentTarget.open)}>
-        <summary>Comment utiliser les cartes ?</summary>
-        <ol>
-          <li>Lis la question et cherche la réponse de tête, sans l’écrire.</li>
-          <li>Révèle la réponse, puis compare avec ce que tu avais en tête.</li>
-          <li>Choisis <strong>Oui</strong> si tu avais retrouvé l’idée essentielle, sinon <strong>Non</strong>, même si tu la reconnais en la lisant.</li>
-        </ol>
-        <p>Ce choix programme ton prochain rappel. Oublier fait partie de l’apprentissage ; tu peux rouvrir cette aide à tout moment.</p>
-      </details>
-      <article className="card-stage" key={currentCard.id}>
-        <h2 className="card-question">{currentCard.question}</h2>
-        <p id="card-instructions" className="card-session-instruction">{isRevealed ? 'Avais-tu retrouvé l’idée essentielle avant de lire la réponse ? Choisis Non ou Oui.' : 'Cherche la réponse de tête, puis clique sur la carte pour la révéler.'}</p>
-        <div className="card-deck">
-          <button className="memo-rating" type="button" data-selected={pendingRating === 'forgotten'} disabled={!isRevealed || saving} aria-label={ratingLabels.forgotten} title={ratingLabels.forgotten} onClick={() => { void rateCard('forgotten') }}>
-            <Memo expression="forgotten" />
-            <span aria-hidden="true" className="rating-symbol">← ×</span>
-            <span className="card-rating-label" aria-hidden="true">Non</span>
-          </button>
-          <FlashCard card={currentCard} isRevealed={isRevealed} isSaving={saving} pendingRating={pendingRating} onFlip={() => setIsRevealed((previous) => !previous)} onRate={rateCard} />
-          <button className="memo-rating" type="button" data-selected={pendingRating === 'recalled'} disabled={!isRevealed || saving} aria-label={ratingLabels.recalled} title={ratingLabels.recalled} onClick={() => { void rateCard('recalled') }}>
-            <Memo expression="recalled" />
-            <span aria-hidden="true" className="rating-symbol">✓ →</span>
-            <span className="card-rating-label" aria-hidden="true">Oui</span>
-          </button>
-        </div>
-        <p className="card-save-status" role="status">{saving ? 'Enregistrement de ta réponse…' : saveFailed ? 'Enregistrement impossible. Ta carte reste ici ; tu peux réessayer.' : '\u00a0'}</p>
-        {!environment && <ContentReportButton context={cardReportContext(currentCard, catalogLessons)} />}
-      </article>
+      <header className="card-session-heading">
+        <h1>{currentItem.kind === 'new' ? 'Nouvelles cartes' : 'Révisions du jour'}</h1>
+        <p className="course-progress">{progressLabel}</p>
+        <p className="card-session-count">Carte {results.length + 1} sur {cards.length}</p>
+      </header>
+      <div className="card-session-workspace">
+        <details className="card-session-guide" open={guideOpen} onToggle={event => setGuideOpen(event.currentTarget.open)}>
+          <summary>Comment utiliser les cartes ?</summary>
+          <ol>
+            <li>Cherche la réponse de tête, sans l’écrire.</li>
+            <li>Révèle, puis compare avec ta réponse de tête.</li>
+            <li>Choisis <strong>Oui</strong> si tu avais retrouvé l’essentiel, sinon <strong>Non</strong>, même si tu reconnais la réponse.</li>
+          </ol>
+          <p>Ton choix programme ton prochain rappel.</p>
+        </details>
+        <article className="card-stage" key={currentCard.id}>
+          <h2 className="card-question">{currentCard.question}</h2>
+          <p id="card-instructions" className="card-session-instruction">{isRevealed ? 'Avais-tu retrouvé l’idée essentielle avant de lire la réponse ? Choisis Non ou Oui.' : 'Cherche la réponse de tête, puis clique sur la carte pour la révéler.'}</p>
+          <div className="card-deck">
+            <button className="memo-rating" type="button" data-selected={pendingRating === 'forgotten'} disabled={!isRevealed || saving} aria-label={ratingLabels.forgotten} title={ratingLabels.forgotten} onClick={() => { void rateCard('forgotten') }}>
+              <Memo expression="forgotten" />
+              <span aria-hidden="true" className="rating-symbol">← ×</span>
+              <span className="card-rating-label" aria-hidden="true">Non</span>
+            </button>
+            <FlashCard card={currentCard} isRevealed={isRevealed} isSaving={saving} pendingRating={pendingRating} onFlip={() => setIsRevealed((previous) => !previous)} onRate={rateCard} />
+            <button className="memo-rating" type="button" data-selected={pendingRating === 'recalled'} disabled={!isRevealed || saving} aria-label={ratingLabels.recalled} title={ratingLabels.recalled} onClick={() => { void rateCard('recalled') }}>
+              <Memo expression="recalled" />
+              <span aria-hidden="true" className="rating-symbol">✓ →</span>
+              <span className="card-rating-label" aria-hidden="true">Oui</span>
+            </button>
+          </div>
+          <p className="card-save-status" role="status">{saving ? 'Enregistrement de ta réponse…' : saveFailed ? 'Enregistrement impossible. Ta carte reste ici ; tu peux réessayer.' : '\u00a0'}</p>
+          {!environment && <ContentReportButton context={cardReportContext(currentCard, catalogLessons)} />}
+        </article>
+      </div>
     </section>
   )
 }

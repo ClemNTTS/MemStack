@@ -74,3 +74,80 @@
 .enterprise-practice-ai-result p { white-space: pre-line; }
 .enterprise-practice-ai-result ul { padding-left: 1.3rem; }
 .enterprise-practice-ai-result small { display: block; margin-top: 1rem; }
+
+/* Keep navigation on one row and give the exercise the main reading space. */
+.enterprise-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .5rem 1rem;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: .65rem 28px;
+}
+.enterprise-toolbar .enterprise-context,
+.enterprise-toolbar .enterprise-navigation,
+.enterprise-toolbar .enterprise-workspace-tools { margin: 0; padding: 0; }
+.enterprise-toolbar .enterprise-context { flex-shrink: 0; }
+.enterprise-toolbar .enterprise-workspace-tools { margin-left: auto; }
+.enterprise-toolbar .enterprise-workspace-tools > summary { min-height: 44px; display: flex; align-items: center; }
+.enterprise-toolbar .enterprise-workspace-tools > summary::before { content: '▸'; margin-right: .4rem; }
+.enterprise-toolbar .enterprise-workspace-tools[open] > summary::before { content: '▾'; }
+.enterprise-toolbar .enterprise-workspace-tools[open] { flex-basis: 100%; }
+.enterprise-main:has(.card-session-workspace) { padding-top: 12px; }
+.enterprise-main:has(.card-session-workspace) > .text-link { font-size: .8rem; }
+.enterprise-main .card-session:has(.card-session-workspace) { margin: 0; }
+.enterprise-main .card-session-heading { display: flex; align-items: baseline; gap: 1rem; margin: .65rem 0 1.25rem; }
+.enterprise-main .card-session-heading h1 { font-size: 1.6rem; margin: 0; }
+.enterprise-main .card-session-heading .course-progress { display: none; }
+.enterprise-main .card-session-count { margin: 0 0 0 auto; color: #6c557f; font-size: .85rem; }
+.enterprise-main .card-session-workspace { display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 2rem; align-items: start; }
+.enterprise-main .card-session-guide { grid-column: 2; grid-row: 1; margin: 0; padding: .85rem 1rem; font-size: .85rem; background: #fbf8f3; }
+.enterprise-main .card-session-guide summary { min-height: 44px; align-content: center; }
+.enterprise-main .card-session-guide p { font-size: .8rem; line-height: 1.5; }
+.enterprise-main .card-stage { grid-column: 1; grid-row: 1; margin: 0; min-width: 0; }
+.enterprise-main .card-question { font-size: 1.25rem; line-height: 1.35; margin: 0 auto .6rem; }
+.enterprise-main .card-session-instruction { margin: 0 0 1rem; font-size: .85rem; line-height: 1.5; }
+.enterprise-main .card-deck { max-width: 760px; margin: 0 auto; grid-template-columns: 64px minmax(0, 1fr) 64px; gap: .75rem; }
+.enterprise-main .card-deck .memo-rating { padding: .5rem; }
+.enterprise-main .card-deck .memo { width: 42px; height: 42px; }
+.enterprise-main .card-rating-label { font-size: .85rem; }
+.enterprise-main .card-deck .flash-card,
+.enterprise-main .card-deck .flash-card-inner,
+.enterprise-main .card-deck .flash-card-face { min-height: 240px; }
+.enterprise-main .card-deck .flash-card-face { padding: 1.25rem; gap: 1rem; border-radius: 18px; }
+.enterprise-main .flash-card-content { font-size: 1rem; line-height: 1.6; }
+@media (max-width: 1000px) {
+  .enterprise-toolbar { gap: .25rem .75rem; }
+  .enterprise-toolbar .enterprise-workspace-tools { margin-left: 0; }
+  .enterprise-main .card-session-workspace { grid-template-columns: minmax(0, 1fr); gap: .8rem; }
+  .enterprise-main .card-session-guide { grid-column: 1; grid-row: 1; }
+  .enterprise-main .card-session-guide ol { display: flex; gap: 1.5rem; margin: .5rem 0; padding-left: 1rem; }
+  .enterprise-main .card-session-guide li { flex: 1; margin: 0; }
+  .enterprise-main .card-stage { grid-row: 2; }
+}
+@media (max-width: 650px) {
+  .enterprise-toolbar { padding: .5rem 16px; }
+  .enterprise-toolbar .enterprise-context { flex: 1; }
+  .enterprise-toolbar .enterprise-context select { max-width: 190px; }
+  .enterprise-toolbar .enterprise-navigation { order: 3; flex-basis: 100%; }
+  .enterprise-toolbar .enterprise-workspace-tools { font-size: .75rem; }
+  .enterprise-toolbar .enterprise-workspace-tools > summary { font-size: .75rem; }
+  .enterprise-toolbar .enterprise-workspace-tools[open] { order: 4; }
+  .enterprise-main:has(.card-session-workspace) { padding: 8px 16px 24px; }
+  .enterprise-main .card-session-heading { margin: .5rem 0 .75rem; gap: .5rem; }
+  .enterprise-main .card-session-heading h1 { font-size: 1.3rem; }
+  .enterprise-main .card-session-count { font-size: .75rem; white-space: nowrap; }
+  .enterprise-main .card-session-guide { padding: .5rem .75rem; font-size: .8rem; }
+  .enterprise-main .card-session-guide ol { display: block; margin: .35rem 0; }
+  .enterprise-main .card-session-guide li + li { margin-top: .2rem; }
+  .enterprise-main .card-question { font-size: 1.1rem; }
+  .enterprise-main .card-session-instruction { font-size: .8rem; margin-bottom: .6rem; }
+  .enterprise-main .card-deck { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+  .enterprise-main .card-deck .memo-rating { min-height: 44px; grid-template-columns: auto 1fr; padding: .3rem .75rem; }
+  .enterprise-main .card-deck .memo { width: 32px; height: 32px; }
+  .enterprise-main .card-deck .flash-card-face { padding: 1rem; gap: .75rem; }
+  .enterprise-main .card-deck .flash-card,
+  .enterprise-main .card-deck .flash-card-inner,
+  .enterprise-main .card-deck .flash-card-face { min-height: 180px; }
+}

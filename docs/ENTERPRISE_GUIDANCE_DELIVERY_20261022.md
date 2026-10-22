@@ -177,3 +177,11 @@ La version couvre la mission et sa pratique. Les écritures sont conditionnées 
 Les cinq lots correspondent à des commits distincts. Le push final cible uniquement la branche `codex/enterprise-guidance`. La CI de `main` publie le frontend : intégrer et publier seulement après préparation autorisée des Functions compatibles, avec les callables de préférences et de reprise ainsi que les dernières empreintes d’activités. Aucun déploiement Firebase ni changement de facturation exécuté.
 
 Le panel humain reste à organiser : aucune mesure nouvelle de compréhension, de retour réel le lendemain ou de rétention n’est revendiquée. La disponibilité de reprise expire logiquement après trente jours ; sans nouvel accès, aucun effacement physique à date fixe n’est garanti.
+
+## Correction de densité de l’écran cartes — 22 octobre 2026
+
+Après retour sur capture, le bandeau organisation/navigation est regroupé ; le titre et le compteur partagent une ligne et le contexte d’organisation répété est retiré visuellement de la session Entreprise. L’aide initiale reste ouverte pour les novices, mais devient latérale sur bureau et compacte sur mobile. La carte et ses boutons occupent une largeur limitée ; les réponses restent extensibles, sans hauteur fixe ni défilement interne imposé. Les règles de présentation des cartes restent limitées au workspace Entreprise.
+
+Relecture indépendante QA/PO du diff sans défaut bloquant. `npm test` : 293/293 ; `npm run build` réussi (avertissement préexistant de bundle). Recette sur composants réels et services fictifs : révélation par Espace, notation et passage à la deuxième carte, aide repliée après notation puis réouverte. À 1366 × 768, carte de 608 px de large, bas à 538 px environ, aide ouverte et boutons visibles. À 390 × 844, première carte et deuxième réponse plus longue exercées avec aide ouverte ; pour cette dernière, bas des boutons à 837 px environ, sans débordement horizontal. Ces observations ponctuelles ne garantissent pas l’absence de défilement pour toute réponse ou tout zoom.
+
+Captures inspectées : [bureau](screenshots/enterprise-guidance/cards-compact-desktop.png) et [mobile](screenshots/enterprise-guidance/cards-compact-mobile.png). Aucun changement de données de progression, de calendrier ou d’accès serveur.
