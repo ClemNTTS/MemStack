@@ -40,4 +40,15 @@ La reprise reste disponible trente jours ; sans nouvel accès, la suppression ph
 
 Le parent a également enregistré puis restauré une réponse courante erronée vérifiée à l’étape 7 : la correction restait visible et Continuer restait désactivé. Les tests globaux finaux passent : 293 tests, build frontend et vérification TypeScript du harnais séparé.
 
-Un dialogue natif de l’essai initial a bloqué les interactions du navigateur. Le correctif utilise désormais un dialogue HTML accessible, relu et compilé, avec interception annulable des liens, organisations et historique. Les parcours interactifs finaux Rester/Quitter, retour navigateur et écran de complétion restent explicitement à rejouer après déblocage ; ils ne sont pas présentés comme passés. Les transactions de complétion et de purge sont, elles, testées sur émulateur.
+Un dialogue natif de l’essai initial a bloqué les interactions du navigateur. Le correctif utilise désormais un dialogue HTML accessible, relu et compilé, avec interception annulable des liens, organisations et historique. Les transactions de complétion et de purge sont testées sur émulateur. La recette interactive initialement suspendue a été achevée après déblocage, comme décrit ci-dessous.
+
+## Complément navigateur après déblocage — 22 octobre 2026
+
+Recette exécutée par le parent sur le code du commit `7895d06`, avec les composants réels et l’adaptateur fictif du harnais `tests/enterprise-ui`, sur `127.0.0.1:3003`. Aucun service Firebase ou IA de production utilisé.
+
+- Après modification à l’étape 7, un lien vers Mon parcours ouvre le dialogue HTML. « Rester dans la mission » conserve l’étape et les modifications, puis restitue le focus au lien.
+- Le retour arrière ouvre également le dialogue ; Échap le ferme et conserve l’URL de mission, l’étape et le focus. Une tentative de changement d’organisation annulée conserve Boréal et son état, sans bascule vers Aster.
+- « Quitter sans enregistrer » retourne au parcours. La réouverture retrouve la dernière réponse erronée vérifiée et sauvegardée, et non les modifications abandonnées ; Continuer reste désactivé. Cette observation confirme l’absence de sauvegarde automatique dans ce scénario.
+- Après correction des questions 7 et 8, « Enregistrer ma mission » affiche « Mission enregistrée. » et la confirmation de fin. Le retour au parcours, suivi d’un rechargement, conserve 1/8 missions et propose les trois nouvelles cartes. Aucune reprise de la mission terminée n’est proposée.
+
+Captures inspectées : [dialogue de sortie](screenshots/enterprise-guidance/lot-e-unsaved-dialog.png) et [accueil après complétion et rechargement](screenshots/enterprise-guidance/lot-e-after-completion.png). Aucun changement de code nécessaire à cette recette complémentaire ; les suites précédemment réussies restent la référence technique. La compréhension humaine et la qualification de production restent hors de cette recette.
