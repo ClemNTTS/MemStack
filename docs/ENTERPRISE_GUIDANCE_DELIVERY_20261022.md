@@ -1,0 +1,100 @@
+# Livraison du guidage Entreprise
+
+Date : 22 octobre 2026. Contrat de référence : [plan de guidage](ENTERPRISE_GUIDANCE_PLAN_20261022.md), établi sur `main` au commit `0dd478f`.
+
+## Périmètre et responsabilités
+
+La réalisation autorisée couvre les lots A à E. Les commits sont séparés par lot ; le push n'intervient qu'à la fin. Ce document définit la recette et son niveau de preuve. Il ne constitue ni un résultat de tests ni une autorisation de déploiement Firebase.
+
+- Développement : implémentation, tests adaptés et documentation des contrats.
+- PO/manager : cohérence des parcours, critères de fin, priorités et langage pédagogique.
+- QA : scénarios adverses, isolation, erreurs, contrôles de non-régression et preuves reproductibles.
+- Testeurs agents : simulations de profils et inspection des écrans réellement accessibles ; leurs observations sont identifiées comme simulations.
+- Panel humain : validation de compréhension et d'autonomie auprès de personnes réelles. Aucun panel n'est actuellement disponible dans cette réalisation ; ses résultats restent à recueillir.
+
+Un test automatisé réussi ne prouve pas la compréhension humaine. Une inspection de code ne devient pas une observation navigateur. Une simulation agent ne devient pas un témoignage utilisateur.
+
+## Matrice de livraison
+
+| Lot | Résultat attendu | Critères de sortie | Preuves attendues |
+| --- | --- | --- | --- |
+| A — qualification | Transformer les retours en critères contrôlables, établir les scénarios et inventorier les limites d'observation. | Les sept retours sont couverts ; les causes confirmées sont séparées des hypothèses ; le manque de panel humain est explicite. | Ce registre et liens vers le plan ; état initial issu du code, puis captures si un environnement authentifié utilisable est disponible. |
+| B — premiers usages | Restaurer le parcours choisi par compte/organisation, rendre la prochaine action visible, guider les premières cartes et activités. | Choix cloud confirmé seulement après accusé ; aucun parcours arbitraire ; première carte utilisable avec boutons texte ; consigne complète pour les deux premiers ateliers ; action principale avant exploration du programme. | Tests frontend/Functions applicables, règles et transactions sur émulateur pour la persistance et l'accès ; recette navigateur et revue PO. |
+| C — hiérarchie et vocabulaire | Alléger navigation, distinguer apprendre/gérer, trier glossaire et clarifier retour IA/transitions. | Accès parcours/cartes/situations lisibles ; gestion responsable distincte ; mots ordinaires retirés du soulignement ; notions utiles conservées ; retour IA facultatif et nommé honnêtement. | Inventaire du glossaire, revue des transitions, contrôle des rôles, mobile et clavier. |
+| D — qualité pédagogique | Inspecter toutes les cartes et consignes, corriger les défauts établis. | Chaque ID possède un verdict ; aucun problème pédagogique majeur laissé sans traitement ; formulation et objectif restent alignés ; historique protégé. | Registre pédagogique par ID, tests de catalogue, inspection indépendante et échantillon relu hors contexte de leçon. |
+| E — reprise intra-mission | Restaurer l'état minimal d'une mission interrompue dans le bon périmètre. | Contrat défini avant code ; version et conflits traités ; aucun brouillon assimilé à une complétion ; cycle de vie couvert ; aucune nouvelle collecte IA. | Contrat final de données, tests d'isolation et concurrence, recette interruption/reprise, export et suppression. |
+
+## Critères produit transversaux
+
+1. Une première visite sans préférence propose un choix. Une visite suivante retrouve la préférence du bon compte et de la bonne organisation après lecture serveur.
+2. Un lien explicite valide peut ouvrir un autre parcours sans modifier silencieusement le parcours habituel. Un paramètre invalide ne remplace pas une préférence valide.
+3. Une organisation ne récupère pas implicitement le parcours, le brouillon, les cartes ou les résultats de l'organisation quittée. Les réponses réseau tardives sont ignorées après changement de contexte.
+4. L'accueil présente l'organisation, le parcours, l'avancement et une action principale. Les autres actions restent disponibles sans être obligatoires.
+5. Avant le lot E, « Continuer mon parcours » n'annonce pas une reprise à l'étape exacte. Après E, « Reprendre ma mission » n'est proposé que pour une reprise effectivement disponible.
+6. Priorité initiale : cartes inédites, cartes dues, prochaine mission. Une reprise intra-mission fiable pourra passer en premier. Les révisions restent par lots explicites de cinq cartes dues au maximum, sans avancer les échéances futures.
+7. Première carte : lire, répondre de tête sans saisir, révéler, comparer, choisir « Pas encore » ou « Oui ». Les gestes sont facultatifs ; les valeurs métier et le calendrier ne changent pas.
+8. Activité : rôle, production attendue, étapes et critères sont visibles avant saisie. Les documents nécessaires restent consultables au contact de la tâche ; la narration demeure.
+9. Correction déterministe, exemple et retour IA sont distingués. Le retour IA conserve l'information d'envoi à Mistral et n'est pas requis pour terminer. Une indisponibilité laisse un recours utile.
+10. Ni XP, ni série, ni complétion, ni appréciation IA ne sont présentés comme preuve de maîtrise, conformité ou certification.
+
+## Scénarios de recette
+
+Les lignes suivantes sont des tests à exécuter, pas des observations déjà obtenues. Pour chaque exécution, consigner résultat, environnement, version, exécutant, preuve et limite.
+
+| ID | Profil et action | Résultat attendu | Mode de validation |
+| --- | --- | --- | --- |
+| N01 | Novice, première entrée Entreprise sans préférence. | Comprend qu'il doit choisir un parcours ; aucun premier parcours imposé ; progression existante conservée. | Simulation agent puis panel humain. |
+| N02 | Novice choisit un parcours, attend confirmation, recharge puis revient par l'entrée générique. | Même parcours et prochaine action ; pas de sélecteur initial affiché pendant la lecture cloud. | Intégration et navigateur ; retour J+1 réel à qualifier séparément. |
+| N03 | Novice ouvre sa première activité de politique de retour. | Peut retrouver la pièce, qualifier trois affirmations puis rédiger ; comprend où comparer et ce qui permet de continuer. | Simulation avec capture ; compréhension réelle au panel. |
+| N04 | Novice ouvre l'atelier à deux champs. | Consigne « une phrase par champ » et tâche complète visibles ; aucune réponse préremplie présentée comme son travail. | Inspection et navigateur. |
+| N05 | Novice utilise une première carte sans connaître Anki. | Révélation explicite ; choix compréhensibles ; explique la différence entre rappel avant révélation et lecture de la correction. | Navigateur pour mécanique ; panel pour compréhension. |
+| N06 | Apprenant révèle une carte, choisit une réponse pendant une panne. | Carte conservée, erreur utile, reprise sans double pratique et sans faux succès. | Test de comportement et navigateur si panne contrôlable. |
+| N07 | Apprenant demande un retour IA indisponible ou hors quota. | Réponse conservée ; exemple/repères disponibles ; progression non conditionnée à un retour positif. | Test contrôlé, sans provoquer de consommation fournisseur réelle inutile. |
+| N08 | Apprenant consulte un mot courant puis une notion IA. | Pas d'infobulle parasite sur « messagerie » ; définition utile et accessible sur une notion retenue. | Tests moteur + clavier/tactile. |
+| N09 | Apprenant termine un lot ou un parcours. | Peut s'arrêter ; prochaines révisions expliquées ; aucune autre mission ou carte future ne démarre seule. | Tests et navigateur. |
+| R01 | Responsable ouvre son espace. | Prochaine action d'apprentissage visible ; équipe et abonnement regroupés dans une gestion identifiable. | Navigateur bureau/mobile, rôle contrôlé. |
+| R02 | Responsable consulte l'équipe. | Synthèses autorisées uniquement ; aucune nouvelle exposition des brouillons, productions, diagnostics ou retours individuels. | Contrat serveur, tests d'accès et inspection. |
+| R03 | Apprenant modifie URL/payload pour ouvrir la gestion. | Aucun privilège nouveau ; refus serveur conservé. | Émulateur et tests Functions applicables. |
+| O01 | Même compte dans A et B choisit deux parcours différents. | Chaque organisation restaure son propre choix ; la bascule ne transporte pas automatiquement le parcours de A. | Intégration + navigateur. |
+| O02 | Requête de A lente, bascule vers B puis arrivée de la réponse A. | Aucun état ni message de sauvegarde de A affiché dans B. | Test de concurrence contrôlé. |
+| O03 | Même appareil, déconnexion puis compte différent. | Aucun choix, brouillon ou résultat du premier compte visible au second. | Intégration et navigateur. |
+| O04 | Révocation d'adhésion pendant une session. | Prochaine lecture/écriture refusée ; aucun état local ne maintient un apprentissage autorisé ou un accès à l'organisation. | Émulateur et comportement client. |
+| E01 | Apprenant interrompt une mission après sauvegarde confirmée puis recharge. | Étape et état minimal restaurés ; mission toujours inachevée ; parcours et organisation corrects. | Contrat E + intégration + navigateur. |
+| E02 | Deux onglets modifient une reprise ou le contenu change de version. | Pas d'écrasement silencieux ; conflit/version incompatible traité selon le contrat E ; reprise compréhensible. | Tests de concurrence/version. |
+| E03 | Export puis suppression d'un compte avec préférences et reprises. | Données nouvelles incluses dans l'export puis retirées ; une réponse tardive ne recrée pas le contenu supprimé. | Tests de cycle de vie sur émulateur. |
+| X01 | Retour dans l'espace Développement après les changements partagés de cartes. | Historique, évaluations, échéances et navigation Développement restent cohérents ; aucune progression Entreprise copiée. | Non-régression des composants partagés et navigateur. |
+
+## Contrat préalable du lot E
+
+Le chemin Firestore, le schéma exact et les durées de conservation restent à fixer avec le développeur backend avant implémentation. Le périmètre convenu est une sauvegarde cloud minimale, organisationnelle et versionnée, sans nouvelle collecte IA ni ajout d'un service externe.
+
+Le contrat doit préciser : identité du propriétaire et de l'organisation ; mission/version ; position restaurable ; état strictement nécessaire de la tâche ; révision de concurrence ; date serveur ; limites de taille/fréquence ; traitement des anciennes versions ; effacement à la fin ou à la demande ; conservation ; export et suppression du compte. Ne stocker une production libre que si elle est nécessaire à la reprise et couverte explicitement par ce contrat. Aucun accès manager implicite. Passer par les contrôles serveur existants, sans ouvrir les règles client des organisations.
+
+Une interruption sans accusé serveur ne doit pas être annoncée comme sauvegardée. Sauvegarder une reprise ne crée aucune XP, aucun résultat d'exercice, aucune échéance de carte et aucune complétion. La suppression ou révocation et les réponses tardives doivent rester sûres.
+
+## Validation pédagogique et panel humain
+
+Le registre du lot D doit couvrir l'intégralité du catalogue réellement compté à l'exécution. Les 120 cartes annoncées dans le plan sont une référence à rapprocher de l'inventaire, pas un résultat de comptage acquis. Par carte : ID, objectif, autonomie, clarté, idée essentielle attendue, utilité professionnelle, source, décision et justification. Une correction de formulation garde l'ID ; une nouvelle compétence exige une décision explicite sur version et historique.
+
+Le panel à organiser comprend des collaborateurs débutants, des utilisateurs autonomes et des responsables, dont des non-développeurs. Protocole : ne pas expliquer l'interface avant les tâches ; observer première action, demandes d'aide, erreurs et abandon ; demander de reformuler la tâche et l'autoévaluation ; tester un retour réel ultérieur puis un rappel différé ou une situation nouvelle.
+
+Seuils proposés par le plan : tous les scénarios techniques de restauration/isolation doivent passer ; au moins quatre personnes sur cinq identifient seules la prochaine action, comprennent la carte et reformulent l'activité. Le seuil humain ne peut pas être validé par cinq simulations agents. Tant que le panel manque, écrire « validation humaine à réaliser » ; ne publier aucun taux de compréhension, gain de rétention ou temps utilisateur inventé.
+
+## Vérifications et registre des preuves
+
+- Build pour chaque lot de code ; suite native pour les contenus et comportements partagés.
+- Build et tests Functions pour les changements serveur ; commandes CI d'émulateurs applicables aux accès, transactions et cycle de vie.
+- Navigateur : bureau 1366 × 768, mobile 390 × 844, clavier, focus, zoom et absence de débordement ; une capture non authentifiée ne qualifie pas le parcours authentifié.
+- Revue PO avant clôture de chaque lot ; corrections bloquantes traitées avant commit du lot.
+- Contrôler IDs et historique, séparation des organisations et de Développement, dates/échéances et absence de nouveaux droits sur les réponses.
+- Décrire les tests non exécutés et leur cause. Aucun déploiement ou état de production ne se déduit d'un build local.
+
+| Lot | État initial du registre | Preuves / reste à faire |
+| --- | --- | --- |
+| A | Critères et scénarios définis dans ce document. | Panel humain indisponible ; aucune observation humaine nouvelle. |
+| B | À qualifier. | Résultats et commandes à renseigner après exécution. |
+| C | À qualifier. | Inventaire, captures et vérifications à renseigner. |
+| D | À qualifier. | Registre par ID et verdict de relecture à relier. |
+| E | Contrat à finaliser avant code. | Schéma, conservation, tests et recette à renseigner. |
+
+Le livrable final doit distinguer : implémenté et testé localement ; inspecté par agents ; validé par des humains ; non testé ; non déployé. Les preuves sont datées et rattachées au commit pertinent.
