@@ -257,7 +257,6 @@ export default function EnterpriseLessonView({ lesson, completed, available, bus
       <img className="enterprise-memo" src={`${import.meta.env.BASE_URL}memo/learning.webp`} alt="Mémo t’accompagne dans cette mission" width="120" height="110"/>
     </header>
     <div className="enterprise-lesson-progress"><span role="status">Étape {index + 1} sur {lesson.steps.length}</span><progress value={index + 1} max={lesson.steps.length} aria-label="Avancement dans la mission"/>{!pilot && <span>Un mot souligné ? Survole-le ou touche-le pour lire sa définition.</span>}</div>
-    {pilot && <EnterpriseFictionalConversation stepId={step.id} checkedIds={Object.keys(checks).filter(id => checks[id])} disabled={busy || interactionDisabled || answerSaving} />}
     <div className="enterprise-conversation" ref={contentRef} role="region" tabIndex={0} aria-label="Discussion de la mission avec Mémo" inert={interactionDisabled || undefined}>
       {pilot ? <>
         {index > 0 && <details className="pilot-history" key={index}><summary>Revoir les échanges précédents · {index}</summary>{lesson.steps.slice(0, index).map(renderStep)}</details>}
@@ -267,7 +266,13 @@ export default function EnterpriseLessonView({ lesson, completed, available, bus
     </div>
     {<div className="pilot-answer-status"><p role={answerError ? 'alert' : 'status'}>{answerError || (answerSaving ? 'Enregistrement de ta réponse…' : step.type === 'question' ? replaying ? 'Entraînement : une réponse par question, puis ton résultat.' : 'Une réponse par question. Réussis les deux pour débloquer la suite. En cas d’erreur, nouvelle tentative demain.' : '')}</p>{answerError && (answerNeedsRefresh ? <button className="catalog-button secondary" onClick={() => window.location.reload()}>Actualiser la leçon</button> : pendingAnswer && <button className="catalog-button secondary" disabled={answerSaving} onClick={() => { void submitQuestion(pendingAnswer.questionId, pendingAnswer.optionId) }}>Réessayer l’enregistrement</button>)}</div>}
     {!replaying && (pilot ? <details className="pilot-session-tools"><summary>Enregistrer pour reprendre plus tard</summary>{sessionControls}</details> : sessionControls)}
-    {step.type !== 'question' && <div className="enterprise-lesson-actions"><span>{pilot ? step.type === 'message' && step.choices?.length && !checked ? 'Choisis ta réponse pour avancer.' : 'À ton rythme, une idée à la fois.' : replaying ? 'Relire ne change pas tes dates de révision.' : 'La leçon sera validée après toutes les bonnes réponses et son enregistrement.'}</span><button className="catalog-button" disabled={busy || (step.type === 'message' && Boolean(step.choices?.length) && !checked)} onClick={() => { void advance() }}>{busy ? 'Enregistrement…' : 'Continuer →'}</button></div>}
+    {(pilot || step.type !== 'question') && <div className="enterprise-lesson-actions">
+      <span>{pilot ? step.type === 'message' && step.choices?.length && !checked ? 'Choisis ta réponse pour avancer.' : 'À ton rythme, une idée à la fois.' : replaying ? 'Relire ne change pas tes dates de révision.' : 'La leçon sera validée après toutes les bonnes réponses et son enregistrement.'}</span>
+      <div className="enterprise-lesson-action-buttons">
+        {pilot && <EnterpriseFictionalConversation stepId={step.id} checkedIds={Object.keys(checks).filter(id => checks[id])} disabled={busy || interactionDisabled || answerSaving} />}
+        {step.type !== 'question' && <button className="catalog-button" disabled={busy || (step.type === 'message' && Boolean(step.choices?.length) && !checked)} onClick={() => { void advance() }}>{busy ? 'Enregistrement…' : 'Continuer →'}</button>}
+      </div>
+    </div>}
     <details className="enterprise-sources"><summary>Sources de cette mission</summary><ul>{lesson.sources.map(source => <li key={source}><a href={source} target="_blank" rel="noopener noreferrer">{new URL(source).hostname} ↗</a></li>)}</ul></details>
   </section>
 }

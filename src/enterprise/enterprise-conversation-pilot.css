@@ -82,7 +82,16 @@
 .enterprise-lesson[data-conversation-pilot] .enterprise-lesson-actions { margin-bottom: 12px; border-top: 0; background: #f6f2ebeb; border-radius: 20px; padding: 12px 16px; gap: 12px; }
 .enterprise-lesson[data-conversation-pilot] .enterprise-lesson-actions > span { font-size: .75rem; }
 .enterprise-lesson[data-conversation-pilot] .enterprise-lesson-actions .catalog-button { border-radius: 24px; padding: 14px 24px; }
+.enterprise-lesson-action-buttons { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 12px; }
+.enterprise-lesson-actions .enterprise-fictional-conversation { margin: 0; }
+.enterprise-lesson[data-conversation-pilot] .enterprise-lesson-actions > span { flex: 1; min-width: 120px; }
 @media (max-width: 600px) {
+  .enterprise-lesson[data-conversation-pilot] .enterprise-lesson-actions { flex-wrap: wrap; }
+  .enterprise-lesson-action-buttons { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; width: 100%; }
+  .enterprise-lesson-action-buttons .fictional-conversation-trigger { width: 100%; padding: 12px 10px; gap: 6px; }
+  .enterprise-lesson-action-buttons .fictional-conversation-trigger > span { font-size: .78rem; }
+  .enterprise-lesson-action-buttons .fictional-conversation-trigger small { display: none; }
+  .enterprise-lesson[data-conversation-pilot] .enterprise-lesson-action-buttons .catalog-button { padding: 14px 16px; font-size: .8rem; }
   .enterprise-lesson[data-conversation-pilot] .enterprise-lesson-intro { grid-template-columns: minmax(0, 1fr) 56px; gap: 12px; }
   .enterprise-lesson[data-conversation-pilot] .lesson-bubble { padding: 14px 16px; }
   .enterprise-lesson[data-conversation-pilot] .chat-avatar { width: 28px; min-width: 28px; }
