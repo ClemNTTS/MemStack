@@ -21,8 +21,9 @@ function Dashboard() {
   const allowance = learningAllowance(progress, premium)
   const plan = planLearning(course, progress)
   const stats = learningStats(progress)
-  const consolidateFirst = plan.pendingCardIds.length > 0
-  const reviewFirst = !consolidateFirst && stats.due > 0
+  const lessonFirst = Boolean(plan.lesson) && allowance.lessonsRemaining > 0
+  const consolidateFirst = !lessonFirst && plan.pendingCardIds.length > 0
+  const reviewFirst = !lessonFirst && !consolidateFirst && stats.due > 0 && allowance.reviewsRemaining > 0
   const today = localDay(new Date())
   const discoveredToday = Object.values(progress.completedLessons).filter(at => localDay(new Date(at)) === today).length
   const suggestions = getRelearningSuggestions(progress)
@@ -38,7 +39,8 @@ function Dashboard() {
     </section>
     <section className="dashboard-session" aria-labelledby="today-title">
       <div><p className="lesson-category">{consolidateFirst ? 'Tes nouvelles cartes · tous les parcours' : reviewFirst ? 'Tes révisions · tous les parcours' : `Prochaine leçon conseillée · ${course.theme}`}</p><h2 id="today-title">{consolidateFirst ? 'Consolide ta dernière découverte.' : reviewFirst ? 'Un petit rappel avant de continuer.' : plan.lesson?.title ?? 'Un chemin parcouru.'}</h2><p>{consolidateFirst ? `${plan.pendingCardIds.length} cartes de leçons terminées à découvrir, puis les révisions dues.` : reviewFirst ? `${stats.due} cartes dues, par lots de cinq. Tu choisis quand t’arrêter.` : plan.lesson ? `${plan.lesson.estimatedMinutes} min · ${plan.lesson.cardIds.length} nouvelles cartes · ${course.title}` : 'Ton parcours est terminé. Tes cartes continuent de revenir aux bonnes échéances.'}</p>
-        {(consolidateFirst || reviewFirst) && <p className="dashboard-note">Mémo te conseille tes cartes d’abord. {plan.lesson ? <a className="text-link" href={appHref('/today?start=lesson')}>Découvrir plutôt « {plan.lesson.title} » →</a> : <a className="text-link" href={appHref('/courses')}>Explorer un autre parcours →</a>}</p>}
+        {lessonFirst && (stats.due > 0 || plan.pendingCardIds.length > 0) && <p className="dashboard-note"><a className="text-link" href={appHref(plan.pendingCardIds.length ? '/today?start=cards' : '/reviews')}>{plan.pendingCardIds.length ? 'Ou consolider mes nouvelles cartes' : 'Ou réviser mes cartes dues'} →</a></p>}
+        {(consolidateFirst || reviewFirst) && <p className="dashboard-note">Tes cartes restent disponibles à ton rythme. {plan.lesson ? <a className="text-link" href={appHref('/today?start=lesson')}>Découvrir plutôt « {plan.lesson.title} » →</a> : <a className="text-link" href={appHref('/courses')}>Explorer un autre parcours →</a>}</p>}
       </div><a className="dashboard-cta" href={appHref(consolidateFirst ? '/today?start=cards' : reviewFirst ? '/reviews' : plan.lesson ? '/today?start=lesson' : '/courses')}>{consolidateFirst ? 'Consolider mes cartes' : reviewFirst ? 'Réviser mes cartes' : plan.lesson ? 'Découvrir cette leçon' : 'Explorer les parcours'} <span aria-hidden="true">↗</span></a>
     </section>
     {!premium && (!allowance.reviewsRemaining || !allowance.lessonsRemaining) && <PremiumReminder reason={!allowance.reviewsRemaining ? 'reviews' : 'lesson'} />}

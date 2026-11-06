@@ -17,6 +17,9 @@ export default function EnterpriseLearningPath({ workspace, trackId, link, ranki
     title: resumeLesson.title,
     description: `Ta reprise enregistrée est disponible à l’étape ${resumeLesson.steps.findIndex(step => step.id === resume?.stepId) + 1} sur ${resumeLesson.steps.length}.`,
     label: 'Reprendre ma mission', href: link(`/lessons/${resumeLesson.id}`),
+  } : plan.next ? {
+    title: plan.next.title, description: plan.next.objective,
+    label: `Commencer · ${plan.next.estimatedMinutes} min`, href: link(`/lessons/${plan.next.id}`),
   } : plan.pending.length ? {
     title: 'Ancre tes découvertes avec les cartes.',
     description: `${plan.pending.length} nouvelles cartes reprennent les idées de tes missions, tous parcours de cette organisation.`,
@@ -25,9 +28,6 @@ export default function EnterpriseLearningPath({ workspace, trackId, link, ranki
     title: 'Entretiens tes réflexes avec les cartes dues.',
     description: `${Math.min(5, plan.due.length)} cartes dues pour rappeler les idées de tes missions, sans avancer tes prochaines révisions.`,
     label: `Réviser ${Math.min(5, plan.due.length)} cartes`, href: link('/reviews'),
-  } : plan.next ? {
-    title: plan.next.title, description: plan.next.objective,
-    label: `Commencer · ${plan.next.estimatedMinutes} min`, href: link(`/lessons/${plan.next.id}`),
   } : {
     title: 'Les missions de ce parcours sont terminées.',
     description: 'Applique la méthode au dossier final. Tes cartes restent disponibles quand elles sont dues.',
@@ -57,7 +57,7 @@ export default function EnterpriseLearningPath({ workspace, trackId, link, ranki
           <h2>{action.title}</h2>
           <p>{action.description}</p>
           <a className="catalog-button" href={action.href}>{action.label} <ChevronRight size={19} aria-hidden="true" /></a>
-          {resumeLesson && (plan.pending.length > 0 || plan.due.length > 0) ? <a className="text-link enterprise-next-alternative" href={link('/reviews')}>Choisir plutôt mes cartes →</a> : !resumeLesson && (plan.pending.length > 0 || plan.due.length > 0) && plan.next && <a className="text-link enterprise-next-alternative" href={link(`/lessons/${plan.next.id}`)}>Choisir plutôt la prochaine mission →</a>}
+          {(resumeLesson || plan.next) && (plan.pending.length > 0 || plan.due.length > 0) && <a className="text-link enterprise-next-alternative" href={link('/reviews')}>{plan.pending.length ? `Ou découvrir mes ${plan.pending.length} nouvelles cartes` : `Ou réviser ${Math.min(5, plan.due.length)} cartes dues`} →</a>}
         </div>
         <aside className="enterprise-focus-progress" aria-label="Ta progression dans ce parcours">
           <img src={`${import.meta.env.BASE_URL}memo/journey-guide.webp`} width="180" height="160" alt="" />
