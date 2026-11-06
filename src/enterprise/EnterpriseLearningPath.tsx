@@ -13,7 +13,14 @@ export default function EnterpriseLearningPath({ workspace, trackId, link, ranki
   const candidate = enterpriseResumeCandidate(plan.guided.filter(lesson => !plan.complete(lesson.id) && plan.available(lesson)), workspace.lessonDrafts ?? [])
   const resume = candidate?.summary
   const resumeLesson = candidate?.lesson
-  const action = resumeLesson ? {
+  const assessment = plan.next ? workspace.lessonAssessments?.[plan.next.id] : undefined
+  const failedAssessment = assessment?.finished && !assessment.passed
+  const retryReady = Boolean(assessment?.retryAt && Date.parse(assessment.retryAt) <= Date.now())
+  const action = failedAssessment && plan.next ? {
+    title: retryReady ? 'Une nouvelle tentative t’attend.' : 'Un peu de recul avant de réessayer.',
+    description: retryReady ? 'Reprends la leçon, puis retrouve les bons réflexes aux deux questions pour débloquer la suite.' : 'Ta note est enregistrée. Tu pourras recommencer la leçon demain, à l’heure de Paris.',
+    label: retryReady ? 'Recommencer ma leçon' : 'Voir mon résultat', href: link(`/lessons/${plan.next.id}`),
+  } : resumeLesson ? {
     title: resumeLesson.title,
     description: `Ta reprise enregistrée est disponible à l’étape ${resumeLesson.steps.findIndex(step => step.id === resume?.stepId) + 1} sur ${resumeLesson.steps.length}.`,
     label: 'Reprendre ma mission', href: link(`/lessons/${resumeLesson.id}`),

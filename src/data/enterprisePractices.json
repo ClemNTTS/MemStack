@@ -1,14 +1,14 @@
 {
   "ent-answer-or-action": {
-    "scenario": "Léa prépare une réunion jeudi à 10 h. Dans ce cas fictif, son assistant IA peut écrire un texte et lire la note qu’elle lui donne : « salle Bleue ». Il ne peut pas envoyer de mail.",
+    "scenario": "Léa prépare une réunion jeudi à 10 h. Dans ce cas fictif, son assistant IA peut écrire un texte et lire le document qu’elle lui donne : « salle Bleue ». Il ne peut pas envoyer de mail.",
     "task": "Comment l’aiderais-tu ? Écris deux phrases : ce qu’elle peut demander à l’assistant IA, puis ce qu’elle doit faire elle-même pour que les collègues reçoivent l’invitation.",
     "starter": "L’assistant IA peut…\n\nLéa doit…",
     "checklist": [
-      "L’assistant IA prépare le texte et peut retrouver la salle dans la note.",
-      "Léa relit puis envoie depuis sa messagerie.",
+      "L’assistant IA prépare le texte et peut retrouver la salle dans le document.",
+      "Léa relit puis envoie depuis sa boîte mail.",
       "L’envoi est retrouvé dans les messages envoyés, pas seulement annoncé par l’assistant IA."
     ],
-    "example": "L’assistant IA peut préparer le mail et retrouver « salle Bleue » dans la note.\n\nLéa relit le texte et les destinataires, puis envoie le mail depuis sa messagerie.\n\nElle peut ensuite le retrouver dans les messages envoyés.",
+    "example": "L’assistant IA peut préparer le mail et retrouver « salle Bleue » dans le document.\n\nLéa relit le texte et les destinataires, puis envoie le mail depuis sa boîte mail.\n\nElle peut ensuite le retrouver dans les messages envoyés.",
     "explanation": "Tu vois comment se partage le travail ? L’assistant IA épargne à Léa une première rédaction. Elle choisit le texte et les destinataires, puis elle l’envoie. Ici, on prépare seulement la réponse à l’exercice : aucun mail réel n’est envoyé."
   },
   "ent-minimum-data": {

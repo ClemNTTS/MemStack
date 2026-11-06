@@ -23,7 +23,7 @@ export function validateEnterpriseDraftState(state,lesson) {
     || new Set(state.checkedIds).size!==state.checkedIds.length
     || state.checkedIds.some(key=>typeof key!=='string' || !questions.has(key) || !Object.hasOwn(state.answers,key))) fail('invalid-argument','Réponses de reprise invalides.')
   for (const step of lesson.steps.slice(0,index)) {
-    if (step.type==='question' && (state.answers[step.id]!==step.correctOptionId || !state.checkedIds.includes(step.id))) fail('invalid-argument','La reprise ne peut pas sauter une question non résolue.')
+    if (step.type==='question' && (!state.answers[step.id] || !state.checkedIds.includes(step.id))) fail('invalid-argument','La reprise ne peut pas sauter une question non résolue.')
     if (step.type==='message' && step.choices?.length && (!state.answers[step.id] || !state.checkedIds.includes(step.id))) fail('invalid-argument','La reprise ne peut pas sauter un échange sans réponse.')
   }
   const diagnoses = lesson.id==='ent-plausible-not-proven' ? ['delay','fees','reference'] : []

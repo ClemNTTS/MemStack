@@ -22,7 +22,7 @@ export function isValidLessonDraft(lesson: EnterpriseLesson, value: unknown): va
   if (Object.entries(state.answers).some(([id, answer]) => !choices.some(choice => choice.id === id && choice.options.some(option => option.id === answer)))) return false
   if (state.checkedIds.some(id => !Object.hasOwn(state.answers, id))) return false
   for (const step of lesson.steps.slice(0, index)) {
-    if (step.type === 'question' && (state.answers[step.id] !== step.correctOptionId || !state.checkedIds.includes(step.id))) return false
+    if (step.type === 'question' && (!state.answers[step.id] || !state.checkedIds.includes(step.id))) return false
     if (step.type === 'message' && step.choices?.length && (!state.answers[step.id] || !state.checkedIds.includes(step.id))) return false
   }
   if (lesson.id !== 'ent-plausible-not-proven' && Object.keys(state.practiceAnswers).length) return false

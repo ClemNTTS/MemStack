@@ -14,7 +14,7 @@ function openedPractice() {
   return { ...emptyLessonDraft(lesson), stepId: lesson.steps[index].id, answers: Object.fromEntries(questions.map(step => [step.id, step.correctOptionId])), checkedIds: questions.map(step => step.id) }
 }
 
-test('resume restores wrong current answers for feedback but rejects skipped prerequisite questions', () => {
+test('resume restores wrong checked answers while rejecting skipped prerequisite questions', () => {
   const questionIndex = lesson.steps.findIndex(step => step.type === 'question')
   const question = lesson.steps[questionIndex]
   assert.equal(question.type, 'question')
@@ -22,7 +22,7 @@ test('resume restores wrong current answers for feedback but rejects skipped pre
   const state = { ...emptyLessonDraft(lesson), stepId: question.id, answers: { [question.id]: question.options.find(option => option.id !== question.correctOptionId)!.id }, checkedIds: [question.id] }
   assert.equal(isValidLessonDraft(lesson, state), true)
   const advanced = { ...state, stepId: lesson.steps[questionIndex + 1].id }
-  assert.equal(isValidLessonDraft(lesson, advanced), false)
+  assert.equal(isValidLessonDraft(lesson, advanced), true)
   assert.equal(isValidLessonDraft(lesson, { ...advanced, answers: { [question.id]: question.correctOptionId } }), true)
   assert.equal(isValidLessonDraft(lesson, { ...advanced, answers: { [question.id]: question.correctOptionId }, checkedIds: [] }), false)
 })
@@ -79,4 +79,18 @@ test('first mission restores either conversational choice but cannot skip an una
   }
   assert.equal(isValidLessonDraft(pilot, { ...empty, answers: { [first.id]: 'invented' } }), false)
   assert.equal(isValidLessonDraft(pilot, { ...empty, answers: { [pilot.steps[1].id]: 'choice-1' } }), false)
+})
+
+test('pilot draft can advance after a checked wrong assessment answer without rewriting it', () => {
+  const pilot = curriculum.lessons.find((item: EnterpriseLesson) => item.id === 'ent-answer-or-action') as EnterpriseLesson
+  const questions = pilot.steps.filter(step => step.type === 'question')
+  const previous = pilot.steps.slice(0, pilot.steps.indexOf(questions[1]))
+  const answers: Record<string,string> = {}
+  for (const step of previous) {
+    if (step.type === 'message' && step.choices) answers[step.id] = step.choices[0].id
+    if (step.type === 'question') answers[step.id] = step.options.find(option => option.id !== step.correctOptionId)!.id
+  }
+  const state: EnterpriseLessonDraftState = { ...emptyLessonDraft(pilot), stepId: questions[1].id, answers, checkedIds: Object.keys(answers) }
+  assert.equal(isValidLessonDraft(pilot, state), true)
+  assert.equal(isValidLessonDraft(pilot, { ...state, checkedIds: state.checkedIds.filter(id => id !== questions[0].id) }), false)
 })

@@ -59,6 +59,16 @@ Une limite distincte de 120 nouvelles mutations par heure et par membre/organisa
 
 ## Progression continue
 
+### Évaluation des leçons Entreprise — 6 novembre 2026
+
+Chaque leçon du catalogue Entreprise utilise `submitEnterpriseLessonAnswer` pour ses questions finales. Chaque première réponse est enregistrée sur le serveur, corrigée puis conservée ; l'interface passe à la question suivante sans permettre de changer ce choix. Le résultat final exige toutes les bonnes réponses. `commitEnterpriseLearningAction` refuse toute nouvelle complétion d’une leçon sans évaluation réussie correspondant à l'empreinte courante du contenu.
+
+Un résultat avec erreur ne crée ni complétion, ni XP, ni activité de classement. Les prérequis existants maintiennent la suite verrouillée. Une nouvelle tentative est autorisée à partir du prochain minuit `Europe/Paris`, calculé sur le serveur lors de l'échec, y compris si la tentative a commencé la veille. Les leçons déjà acquises restent acquises ; leur relecture affiche un résultat d'entraînement local.
+
+Les résumés privés vivent sous `learners/{uid}/lessonAssessments/{lessonId}`, l'historique sous `lessonAssessmentAttempts/{lessonId}_{jour}_{empreinte}` et les accusés idempotents sous `lessonAssessmentReceipts/{requestId}`. Ces collections restent interdites aux lectures/écritures clientes directes ; elles sont incluses dans l'export propriétaire et dans la suppression récursive. Le responsable ne reçoit pas ces réponses individuelles. Une limite de sécurité distincte borne les appels.
+
+Une évolution du contenu peut relancer une tentative active ou réussie mais non encore validée, depuis la première question, sans réécrire l'ancien historique. Un échec reste bloqué jusqu'à son échéance même si le contenu change. Les callables de lecture, sauvegarde, évaluation et complétion doivent recevoir le même catalogue avant la publication du frontend.
+
 Le serveur impose l’ordre des missions, les prérequis du chapitre avant une mise en situation, et les échéances des cartes. Il produit les dates et les intervalles. Les cartes futures ne peuvent pas être avancées. Il n’y a pas de quota quotidien de leçons/révisions pour les membres autorisés ; une limite de sécurité de 120 mutations par heure et par apprenant reste en place. Les invitations sont limitées à 30 par heure et par organisation. Un compte peut rejoindre 20 organisations actives.
 
 Une action possède un `requestId` stable, réutilisé après une panne réseau. Un même identifiant et une même action retournent le résultat initial ; modifier l’action avec cet identifiant est refusé. Les tentatives sont immuables. Les défis sont corrigés en code avec `enterpriseAssessmentKeys.json`, copié seulement dans le catalogue Functions. La réussite requiert strictement plus de 70 % de bonnes réponses. La correction est révélée seulement après l’écriture serveur. Aucun code d’apprenant n’est exécuté.

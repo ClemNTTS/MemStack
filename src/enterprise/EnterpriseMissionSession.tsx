@@ -4,6 +4,7 @@ import type { EnterpriseLessonDraftSnapshot, EnterpriseLessonDraftState } from '
 import EnterpriseLessonView from './EnterpriseLessonView'
 import type { EnterpriseLessonViewProps } from './EnterpriseLessonView'
 import { emptyLessonDraft, isValidLessonDraft, lessonContentVersion, lessonDraftKey } from './lessonResume'
+import { assessmentForDraft, confirmedAssessmentDraft } from './assessmentResume'
 import './enterprise-resume.css'
 
 type Props = EnterpriseLessonViewProps & {
@@ -58,7 +59,7 @@ export default function EnterpriseMissionSession(props: Props) {
           return
         }
         if (snapshot.state && !isValidLessonDraft(lesson, snapshot.state)) throw new Error('Reprise invalide.')
-        const initial = snapshot.state ?? emptyLessonDraft(lesson)
+        const initial = confirmedAssessmentDraft(lesson, snapshot.state ?? emptyLessonDraft(lesson), assessmentForDraft(callbacks.current.lessonAssessment, snapshot))
         setLoaded({ identity, snapshot, initial }); setCurrent(initial); setBaseline(lessonDraftKey(initial)); setReset(value => value + 1)
         callbacks.current.onDraftChange(initial.draft)
         callbacks.current.onDraftSaved(snapshot)
@@ -115,6 +116,7 @@ export default function EnterpriseMissionSession(props: Props) {
   if (!loaded || loaded.identity !== identity || !current) return <section className="enterprise-panel" aria-busy={!loadingError}><h1>{lesson.title}</h1><p role="status">{loadingError || 'On retrouve ton étape et tes réponses enregistrées…'}</p>{loadingError && <button type="button" className="catalog-button" onClick={() => { if (needsAppRefresh) window.location.reload(); else setRefresh(value => value + 1) }}>{needsAppRefresh ? 'Actualiser l’application' : 'Réessayer de charger ma reprise'}</button>}<a className="text-link" href={props.returnHref}>Revenir à mon parcours</a></section>
   if (loaded.snapshot.notice === 'completed') return <EnterpriseLessonView {...props} completed />
   const dirty = lessonDraftKey(current) !== baseline
+  const relevantAssessment = assessmentForDraft(props.lessonAssessment, loaded.snapshot)
   const controls = <aside className="enterprise-resume" aria-label="Reprise de la mission">
     <p>Enregistrer envoie ton étape et tes réponses fictives dans ton compte, pour cette organisation. Ton responsable ne les voit pas.</p>
     <details><summary>Ce qui est enregistré</summary><p>Ton étape, tes choix et ton texte sont accessibles sur tes autres appareils. La reprise reste disponible 30 jours après sa sauvegarde. À expiration, elle sera retirée lors d’un prochain accès.</p><p>Le retour IA, les exemples ouverts et le laboratoire ne sont pas enregistrés. Le laboratoire redémarre à la reprise. Enregistrer une reprise ne valide pas la mission et ne rapporte pas d’XP.</p></details>
@@ -127,7 +129,7 @@ export default function EnterpriseMissionSession(props: Props) {
     {message && <p role="status">{message}</p>}
     {conflict && <><p>Recharger remplacera les modifications affichées par la reprise du serveur. Garde une copie de ton texte si tu veux le conserver.</p><button className="catalog-button secondary" type="button" onClick={() => setRefresh(value => value + 1)}>Recharger la reprise du serveur</button></>}
   </aside>
-  return <EnterpriseLessonView {...props} key={`${identity}:${reset}`} initialState={loaded.initial} busy={props.busy || saving} interactionDisabled={clearing} draft={current.draft} onDraftChange={draft => { setCurrent(previous => previous ? { ...previous, draft } : previous); props.onDraftChange(draft) }} onSessionChange={onSessionChange} sessionControls={controls} hasUnsavedChanges={dirty} onComplete={async () => {
+  return <EnterpriseLessonView {...props} lessonAssessment={relevantAssessment} key={`${identity}:${reset}`} initialState={loaded.initial} busy={props.busy || saving} interactionDisabled={clearing} draft={current.draft} onDraftChange={draft => { setCurrent(previous => previous ? { ...previous, draft } : previous); props.onDraftChange(draft) }} onSessionChange={onSessionChange} sessionControls={controls} hasUnsavedChanges={dirty} onComplete={async () => {
     if (inFlight.current) return null
     const operation = generation.current
     const result = await props.onComplete()
