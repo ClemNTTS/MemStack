@@ -47,16 +47,18 @@ export default function GuidedEnterprisePractice({ lessonId, draft = '', onDraft
     </div> : <>
       <label>Ta proposition<textarea value={draft} onChange={event => updateDraft(event.target.value)} maxLength={5000} rows={6} placeholder={practice.starter}/></label>
     </>}
-    <h3>3. Compare et ajuste</h3>
-    <p>Relis ta proposition, puis compare avec l’exemple commenté ou demande un retour IA. Plusieurs formulations peuvent convenir.</p>
-    <EnterprisePracticeFeedback lessonId={lessonId} practice={practice} answer={guidedPracticeAnswer(lessonId, draft)} onVerify={onVerify}/>
-    <div className="enterprise-practice-tools"><button type="button" className="text-link" onClick={() => setCompared(previous => !previous)} aria-expanded={compared}>{compared ? 'Masquer l’exemple' : 'Voir un exemple'}</button></div>
-    {compared && <section className="enterprise-practice-comparison" ref={feedback} tabIndex={-1} aria-label="Exemple commenté et repères de comparaison">
-      <h3>Un exemple possible</h3>
-      <LessonText glossary glossaryId={lessonId} text={practice.example}/>
-      <h3>Pourquoi cet exemple convient</h3>
-      <LessonText glossary glossaryId={lessonId} text={practice.explanation}/>
-      <p>Plusieurs formulations peuvent convenir. Compare les idées plutôt que les mots de l’exemple. Tu peux modifier ta proposition ci-dessus.</p>
-    </section>}
+    {!twoPartAnswer && <>
+      <h3>3. Compare et ajuste</h3>
+      <p>Relis ta proposition, puis compare avec l’exemple commenté ou demande un retour IA. Plusieurs formulations peuvent convenir.</p>
+      <EnterprisePracticeFeedback lessonId={lessonId} practice={practice} answer={guidedPracticeAnswer(lessonId, draft)} onVerify={onVerify}/>
+      <div className="enterprise-practice-tools"><button type="button" className="text-link" onClick={() => setCompared(previous => !previous)} aria-expanded={compared}>{compared ? 'Masquer l’exemple' : 'Voir un exemple'}</button></div>
+      {compared && <section className="enterprise-practice-comparison" ref={feedback} tabIndex={-1} aria-label="Exemple commenté et repères de comparaison">
+        <h3>Un exemple possible</h3>
+        <LessonText glossary glossaryId={lessonId} text={practice.example}/>
+        <h3>Pourquoi cet exemple convient</h3>
+        <LessonText glossary glossaryId={lessonId} text={practice.explanation}/>
+        <p>Plusieurs formulations peuvent convenir. Compare les idées plutôt que les mots de l’exemple. Tu peux modifier ta proposition ci-dessus.</p>
+      </section>}
+    </>}
   </div>
 }

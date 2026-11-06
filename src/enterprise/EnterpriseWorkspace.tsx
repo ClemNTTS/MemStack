@@ -8,6 +8,8 @@ import type { EnterpriseWorkspace as Workspace, EnterpriseLearningAction, Enterp
 import type { EnterpriseChallenge } from '../types/enterpriseContent'
 import { enterpriseCurriculum, enterpriseLessons, enterpriseChallenges, enterpriseTracks } from '../data/enterprise'
 import { enterprisePlan, enterpriseScope } from './model'
+import { lessonContentVersion } from './lessonResume'
+import { submitEnterpriseLessonAnswer } from '../firebase/enterpriseLessonAssessment'
 import { resolveEnterpriseTrack } from './learningContext'
 import CardSession from '../components/CardSession'
 import { reviewEventId } from '../progress/merge'
@@ -188,6 +190,38 @@ export default function EnterpriseWorkspace() {
       return null
     } finally { if (generation.current === operation) {inFlight.current = false;setBusy(false)} }
   }
+  async function submitLessonAnswer(lessonId: string, questionId: string, optionId: string) {
+    const organizationId = workspace?.organization?.id
+    const currentScope = organizationId ? enterpriseScope(uid, organizationId) : ''
+    const operation = generation.current
+    const lesson = enterpriseLessons.find(item => item.id === lessonId)
+    if (!organizationId || !lesson || scope.current !== currentScope) throw new Error('Le contexte de cette leçon a changé.')
+    const key = `lesson-answer:${currentScope}:${lessonId}:${questionId}:${optionId}`
+    const requestId = receipts.current.get(key) ?? crypto.randomUUID()
+    receipts.current.set(key, requestId)
+    const result = await submitEnterpriseLessonAnswer(uid, { organizationId, lessonId, questionId, optionId, requestId, contentVersion: await lessonContentVersion(lesson) })
+    if (generation.current !== operation || scope.current !== currentScope) throw new Error('Le contexte de cette leçon a changé.')
+    setWorkspace(previous => previous?.organization?.id === organizationId ? { ...previous, lessonAssessments: { ...previous.lessonAssessments, [lessonId]: result }, lessonDrafts: result.finished ? previous.lessonDrafts?.filter(item => item.lessonId !== lessonId) : previous.lessonDrafts } : previous)
+    receipts.current.delete(key)
+    return result
+  }
+  function resetLessonAnswerRequests(lessonId: string) {
+    const organizationId = workspace?.organization?.id
+    if (!organizationId) return
+    const prefix = `lesson-answer:${enterpriseScope(uid, organizationId)}:${lessonId}:`
+    for (const key of receipts.current.keys()) if (key.startsWith(prefix)) receipts.current.delete(key)
+  }
+  async function reloadLessonAssessment(lessonId: string) {
+    const organizationId = workspace?.organization?.id
+    const currentScope = organizationId ? enterpriseScope(uid, organizationId) : ''
+    const operation = generation.current
+    if (!organizationId || scope.current !== currentScope) throw new Error('Le contexte de cette leçon a changé.')
+    const confirmed = await getEnterpriseWorkspace(uid, organizationId)
+    if (generation.current !== operation || scope.current !== currentScope || confirmed.organization?.id !== organizationId) throw new Error('Le contexte de cette leçon a changé.')
+    setWorkspace(confirmed)
+    for (const key of receipts.current.keys()) if (key.startsWith(`lesson-answer:${currentScope}:${lessonId}:`)) receipts.current.delete(key)
+    return confirmed.lessonAssessments?.[lessonId] ?? null
+  }
   function rememberLessonDraft(snapshot: EnterpriseLessonDraftSnapshot) {
     if (scope.current !== enterpriseScope(uid, snapshot.organizationId)) return
     setWorkspace(previous => {
@@ -221,7 +255,7 @@ export default function EnterpriseWorkspace() {
   else if (!workspace) page = <section className="enterprise-empty"><Building2 size={35} /><h1>Ton espace Entreprise</h1><p role="status">{error || 'On retrouve tes organisations…'}</p>{error && <button className="catalog-button" onClick={()=>setRefresh(value=>value+1)}>Réessayer</button>}</section>
   else if (!organization || !plan) page = <section className="enterprise-empty"><p className="lesson-category">Bienvenue dans MemStack Entreprise</p><h1>Un chemin partagé avec ton équipe.</h1><p>Rejoins ton organisation avec le code transmis par ton responsable. Les missions, cartes et situations de cet espace restent séparées de ton apprentissage développeur.</p><form onSubmit={event=>{void join(event)}}><label>Code d’invitation<input value={code} onChange={event=>setCode(event.target.value)} autoComplete="off" required minLength={20} maxLength={100} /></label><button className="catalog-button" disabled={busy}>{busy?'Vérification…':'Rejoindre mon organisation'}</button></form><p className="dashboard-note">Utilise le compte correspondant à l’adresse email invitée.</p><a className="catalog-button secondary" href={appHref('/enterprise?setup=subscribe')}>Créer mon organisation</a><p><a className="text-link" href={appHref('/business')}>Découvrir l’offre et le programme →</a></p></section>
   else if (organization.learningEnabled === false) page = organization.role === 'manager' ? <EnterpriseBillingPage key={enterpriseScope(uid,organization.id)} uid={uid} organizationId={organization.id} onOpen={()=>setRefresh(value=>value+1)} onCreated={()=>{}} /> : <section className="enterprise-empty"><h1>Ton organisation prépare la suite.</h1><p>Son abonnement n’est pas actif pour le moment. Ton responsable peut consulter sa facturation pour rétablir l’accès aux missions et aux cartes.</p><button className="catalog-button secondary" onClick={()=>setRefresh(value=>value+1)}>Vérifier mon accès</button></section>
-  else if (lesson) page = <EnterpriseMissionSession uid={uid} organizationId={organization.id} onAccessChanged={() => setRefresh(value => value + 1)} onDraftSaved={rememberLessonDraft} key={`${enterpriseScope(uid, organization.id)}:${lesson.id}`} lesson={lesson} completed={plan.complete(lesson.id)} available={plan.available(lesson)} busy={busy} onComplete={()=>commit({type:'lesson',lessonId:lesson.id})} returnHref={link()} cardsHref={link('/reviews')} onVerify={verifyPractice} draft={drafts[draftKey] ?? ''} onDraftChange={draft=>setDrafts(previous=>({...previous,[draftKey]:draft}))} />
+  else if (lesson) page = <EnterpriseMissionSession uid={uid} organizationId={organization.id} onAccessChanged={() => setRefresh(value => value + 1)} onDraftSaved={rememberLessonDraft} key={`${enterpriseScope(uid, organization.id)}:${lesson.id}`} lesson={lesson} lessonAssessment={workspace.lessonAssessments?.[lesson.id]} onSubmitAnswer={(questionId, optionId) => submitLessonAnswer(lesson.id, questionId, optionId)} onReloadAssessment={() => reloadLessonAssessment(lesson.id)} onRestartAssessment={() => resetLessonAnswerRequests(lesson.id)} completed={plan.complete(lesson.id)} available={plan.available(lesson)} busy={busy} onComplete={()=>commit({type:'lesson',lessonId:lesson.id})} returnHref={link()} cardsHref={link('/reviews')} onVerify={verifyPractice} draft={drafts[draftKey] ?? ''} onDraftChange={draft=>setDrafts(previous=>({...previous,[draftKey]:draft}))} />
   else if (path === '/enterprise/reviews') page = <EnterpriseReviews key={scope.current} workspace={workspace} busy={busy} onCommit={commit} returnHref={link()} />
   else if (challenge) page = <EnterpriseChallengeView key={`${scope.current}:${challenge.id}`} challenge={challenge} available={plan.available(challenge)} workspace={workspace} busy={busy} onSubmit={answers=>commit({type:'challenge',challengeId:challenge.id,catalogVersion:enterpriseCurriculum.version,answers})} returnHref={link('/challenges')} />
   else if (path === '/enterprise/challenges') page = <>

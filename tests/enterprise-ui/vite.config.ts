@@ -8,6 +8,7 @@ export default defineConfig({
   publicDir: fileURLToPath(new URL('../../public', import.meta.url)),
   plugins: [react()],
   resolve: { alias: [
+    { find: /.*\/firebase\/enterpriseLessonAssessment$/, replacement: fileURLToPath(new URL('adapter.ts', import.meta.url)) },
     { find: /.*\/firebase\/enterprise$/, replacement: fileURLToPath(new URL('adapter.ts', import.meta.url)) },
     { find: /.*\/components\/AccountBar$/, replacement: fileURLToPath(new URL('AccountBar.tsx', import.meta.url)) },
   ] },

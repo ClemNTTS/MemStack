@@ -28,11 +28,27 @@ export type EnterpriseChallengeAttempt = {
   answers: Record<string,string>; checks: { questionId: string; correct: boolean; correctOptionId: string; explanation: string; questionText: string; correctAnswerText: string; selectedAnswerText: string }[]
   correct: number; total: number; passed: boolean
 }
+export type EnterpriseLessonAssessment = {
+  lessonId: string
+  attemptDay: string
+  contentVersion: string
+  answers: Record<string,string>
+  checks: { questionId: string; selectedOptionId: string; correctOptionId: string; correct: boolean; explanation: string; questionText: string; correctAnswerText: string; selectedAnswerText: string }[]
+  correct: number
+  total: number
+  finished: boolean
+  passed: boolean
+  retryAt: string | null
+  updatedAt: string
+}
+export type EnterpriseLessonAnswer = { organizationId: string; lessonId: string; questionId: string; optionId: string; contentVersion: string; requestId: string }
 export type EnterpriseWorkspace = {
   organizations: EnterpriseOrganization[]
   organization: EnterpriseOrganization | null
   settings?: EnterpriseLearningPreferences | null
   lessonDrafts?: EnterpriseLessonDraftSummary[]
+  lessonAssessments?: Record<string,EnterpriseLessonAssessment>
+  assessmentDay?: string
   progress: { lessons: Record<string,{completedAt:string}>; cards: Record<string,CardProgress>; reviews: ReviewEvent[]; attempts: EnterpriseChallengeAttempt[] }
   ranking: { alias: string; streak: number; rank: number; self: boolean }[]
   members: { uid: string; alias: string; role: 'manager' | 'learner'; active: boolean; summary: { lessons: number; cards: number; attempts: number }; lastActivityAt: string | null }[]

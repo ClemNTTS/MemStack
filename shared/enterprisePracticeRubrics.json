@@ -3,16 +3,16 @@
   "lessons": {
     "ent-answer-or-action": {
       "essential": [
-        "Respecter le partage des capacités : l’assistant IA peut préparer le mail et lire la note fournie ; Léa doit envoyer elle-même le mail. Mentionner la lecture de la note reste facultatif, mais la nier contredit le cas. Une réponse qui dit brouillon par l’assistant IA puis envoi par Léa est suffisante sans parler de la note.",
-        "Léa garde la relecture avant envoi. Évaluer uniquement cette relecture : si elle est présente, ce critère est acquis même si la réponse se trompe sur l’envoi ou la lecture de la note."
+        "Respecter le partage des capacités : l’assistant IA peut préparer le mail et lire le document fourni ; Léa doit envoyer elle-même le mail. Mentionner la lecture du document reste facultatif, mais la nier contredit le cas. Une réponse qui dit brouillon par l’assistant IA puis envoi par Léa est suffisante sans parler du document.",
+        "Léa garde la relecture avant envoi. Évaluer uniquement cette relecture : si elle est présente, ce critère est acquis même si la réponse se trompe sur l’envoi ou la lecture du document."
       ],
       "optional": [
-        "Mentionner explicitement la salle ou la lecture de la note : son omission n’est pas une erreur.",
+        "Mentionner explicitement la salle ou la lecture du document : son omission n’est pas une erreur.",
         "Nommer les destinataires ou les messages envoyés.",
         "Reprendre exactement les deux phrases ou leurs libellés."
       ],
       "hints": [
-        "L’assistant IA peut retrouver « salle Bleue » dans la note fournie.\nEn revanche, il ne peut pas envoyer le mail : après relecture, Léa doit l’envoyer elle-même.",
+        "L’assistant IA peut retrouver « salle Bleue » dans le document fourni.\nEn revanche, il ne peut pas envoyer le mail : après relecture, Léa doit l’envoyer elle-même.",
         "Avant l’envoi, Léa doit relire le brouillon. Ajoute cette étape si elle manque dans ta réponse."
       ]
     },

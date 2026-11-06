@@ -1,0 +1,38 @@
+.enterprise-fictional-conversation { margin: 0 0 18px; }
+.fictional-conversation-trigger { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 12px 18px; border: 1px solid #cbb8dd; border-radius: 22px; background: #fffcf7d9; color: #593c74; font: inherit; text-align: left; cursor: pointer; box-shadow: inset 0 1px 0 #fff, 0 5px 20px #48345c08; }
+.fictional-conversation-trigger > span { display: grid; gap: 3px; font-size: .88rem; font-weight: 650; }
+.fictional-conversation-trigger small { color: #7c698a; font-size: .72rem; font-weight: 400; }
+.fictional-conversation-trigger:hover:not(:disabled) { background: #f0e7f8; border-color: #a987c6; }
+.fictional-conversation-trigger:disabled { opacity: .6; cursor: default; }
+.fictional-conversation-dialog { box-sizing: border-box; width: min(680px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); padding: 0; overflow: hidden; color: #30263e; border: 1px solid #ffffffd9; border-radius: 28px; background: #f7f3eef5; box-shadow: 0 24px 100px #24123340, inset 0 1px 0 #fff; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+.fictional-conversation-dialog[open] { display: flex; flex-direction: column; }
+.fictional-conversation-dialog::backdrop { background: #30263e66; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+.fictional-conversation-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 24px 24px 0; }
+.fictional-conversation-heading > div > p { margin: 0 0 6px; color: #7a628d; font-size: .72rem; letter-spacing: .07em; text-transform: uppercase; font-weight: 700; }
+.fictional-conversation-heading h2 { margin: 0; font-size: 1.35rem; letter-spacing: -.025em; }
+.fictional-conversation-close { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; padding: 0; border: 1px solid #d5c6e1; border-radius: 50%; background: #fffaf5; color: #694e7c; cursor: pointer; }
+.fictional-conversation-description { margin: 12px 24px 0; padding-bottom: 18px; color: #766381; font-size: .78rem; line-height: 1.6; border-bottom: 1px solid #e1d5e8; }
+.fictional-conversation-scroll { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 22px 24px; }
+.fictional-conversation-messages { list-style: none; display: flex; flex-direction: column; gap: 18px; padding: 0; margin: 0; }
+.fictional-conversation-messages > li { max-width: 88%; padding: 16px 20px; border: 1px solid #fff; border-radius: 24px 24px 24px 7px; background: #fffdf9; box-shadow: 0 4px 16px #48345c06; }
+.fictional-conversation-messages > li[data-speaker='learner'] { align-self: flex-end; border-color: #e1d3ed; border-radius: 24px 24px 7px 24px; background: #ece0f6; }
+.fictional-conversation-speaker { display: block; font-size: .72rem; color: #77558c; font-weight: 750; margin-bottom: 8px; }
+.fictional-conversation-messages > li > p { margin: 0; white-space: pre-wrap; font-size: .92rem; line-height: 1.65; }
+.fictional-conversation-document { margin-top: 14px; padding: 14px; border: 1px solid #cdb9de; border-radius: 14px; background: #faf6fd; }
+.fictional-conversation-document strong { display: flex; align-items: center; gap: 8px; font-size: .78rem; }
+.fictional-conversation-document p { white-space: pre-wrap; margin: 8px 0 0; font-size: .8rem; line-height: 1.5; }
+.fictional-conversation-empty { margin: 0; padding: 18px 0; font-size: .95rem; color: #766381; line-height: 1.7; }
+.fictional-conversation-handoff { margin-top: 20px; padding: 18px; border: 1px solid #c2d4c7; border-radius: 20px; background: #eaf2e9; font-size: .88rem; line-height: 1.6; }
+.fictional-conversation-handoff p { margin: 8px 0 0; }
+.fictional-conversation-footer { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 18px 24px; border-top: 1px solid #e1d5e8; background: #fffcf7; }
+.fictional-conversation-footer > span { font-size: .72rem; line-height: 1.5; color: #7b6888; }
+.fictional-conversation-footer .catalog-button { min-height: 44px; padding: 12px 18px; border-radius: 22px; font-size: .8rem; white-space: nowrap; }
+.fictional-conversation-dialog button:focus-visible, .fictional-conversation-trigger:focus-visible { outline: 3px solid #a97fc8; outline-offset: 3px; }
+@media (max-width: 600px) {
+  .fictional-conversation-heading { padding: 20px 18px 0; }
+  .fictional-conversation-heading h2 { font-size: 1.15rem; }
+  .fictional-conversation-description { margin-inline: 18px; }
+  .fictional-conversation-scroll { padding: 18px; }
+  .fictional-conversation-messages > li { max-width: 94%; padding: 14px 16px; }
+  .fictional-conversation-footer { padding: 14px 18px; flex-wrap: wrap; }
+}

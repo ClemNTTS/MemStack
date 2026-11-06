@@ -35,13 +35,21 @@ test('conversational choices preserve both branches and reject skipped, forged o
   }
 })
 
+test('enterprise drafts preserve checked wrong assessment answers before the next question', () => {
+  const pilot = {...lesson,id:'ent-answer-or-action'}
+  const advanced = {stepId:'q2',answers:{q1:'b'},checkedIds:['q1'],draft:'',practiceAnswers:{}}
+  assert.deepEqual(validateEnterpriseDraftState(advanced,pilot),advanced)
+  assert.throws(()=>validateEnterpriseDraftState({...advanced,checkedIds:[]},pilot),{code:'invalid-argument'})
+  assert.deepEqual(validateEnterpriseDraftState(advanced,lesson),advanced)
+})
+
 test('draft state restores current errors but rejects skipped, future and invented question history', () => {
   assert.deepEqual(validateEnterpriseDraftState(state(),lesson),state())
   const end = {...state(),stepId:'end',answers:{q1:'a',q2:'b'},checkedIds:['q1','q2']}
   assert.deepEqual(validateEnterpriseDraftState(end,lesson),end)
   for (const patch of [
     {stepId:'unknown'}, {answers:{q1:'missing'}}, {answers:{q2:'b'}}, {checkedIds:['q2']},
-    {checkedIds:['q1','q1']}, {stepId:'q2'}, {stepId:'q2',answers:{q1:'a'},checkedIds:[]},
+    {checkedIds:['q1','q1']}, {stepId:'q2',answers:{}}, {stepId:'q2',answers:{q1:'a'},checkedIds:[]},
     {stepId:'intro'}, {practiceAnswers:{delay:'guessed'}}, {practiceAnswers:{secret:'supported'}},
     {draft:'a'.repeat(5001)}, {draft:'🧠'.repeat(2500),extra:'ignored'}, {answers:[]}, {checkedIds:['q1'],note:'unexpected'},
   ]) assert.throws(()=>validateEnterpriseDraftState({...state(),...patch},lesson),{code:'invalid-argument'})

@@ -58,6 +58,19 @@
 .pilot-session-tools > summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; }
 .pilot-session-tools > summary::before { content: '▸'; margin-right: 8px; }
 .pilot-session-tools[open] > summary::before { content: '▾'; }
+.pilot-answer-status { color: #6b537e; font-size: .85rem; line-height: 1.6; }
+.pilot-answer-status:has(p:empty) { display: none; }
+.pilot-assessment-feedback { margin-bottom: 20px; border-radius: 24px; }
+.pilot-assessment-feedback:focus { outline: 2px solid #a97fc8; outline-offset: 4px; }
+.pilot-assessment-result { max-width: 680px; margin: 24px auto; background: #fffdf9e8; }
+.pilot-assessment-result h1 { font-size: clamp(1.8rem, 3vw, 2.4rem); }
+.pilot-assessment-result .pilot-assessment-score { font-size: 1.5rem; color: #73518d; margin: 24px 0; }
+.pilot-assessment-score strong { font-size: 3.5rem; color: #48315f; }
+.pilot-assessment-checks { list-style: none; padding: 0; margin: 24px 0; }
+.pilot-assessment-checks li { padding: 16px; margin: 12px 0; border: 1px solid #e2d4ec; border-radius: 18px; background: #f8f3fc; line-height: 1.6; font-size: .9rem; }
+.pilot-assessment-checks li[data-correct='true'] { background: #edf4ec; border-color: #c8dac9; }
+.pilot-assessment-checks li > p { margin: 8px 0 0; }
+.pilot-assessment-result-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
 .enterprise-lesson[data-conversation-pilot] .enterprise-lesson-visual { margin: 0; padding: 18px; border-radius: 24px; background: var(--pilot-glass); }
 .enterprise-lesson[data-conversation-pilot] .enterprise-lesson-visual img { max-height: 330px; }
 .enterprise-lesson[data-conversation-pilot] .enterprise-lesson-visual figcaption { font-size: .8rem; }

@@ -181,7 +181,7 @@
         {
           "id": "ent-answer-or-action-message-1",
           "type": "message",
-          "text": "Salut, moi c’est Mémo. On aide Léa à préparer une invitation ?\n\nSa réunion est jeudi à 10 h. D’habitude, pour écrire ce genre de mail, tu fais comment ?",
+          "text": "Salut, moi c’est Mémo. On aide ta collègue Léa à préparer une invitation ?\n\nSa réunion est jeudi à 10 h. D’habitude, pour écrire ce genre de mail, comment fais-tu ?",
           "choices": [
             {
               "id": "choice-1",
@@ -215,29 +215,29 @@
         {
           "id": "ent-answer-or-action-message-3",
           "type": "message",
-          "text": "Il manque la salle dans le brouillon.\n\nLéa a une note qui précise « salle Bleue ». Tu lui conseilles quoi ?",
+          "text": "Il manque la salle dans le brouillon.\n\nLéa a un document qui précise « salle Bleue ». Que lui conseilles-tu ?",
           "choices": [
             {
               "id": "choice-1",
-              "text": "Donner la note à l’assistant IA",
-              "feedback": "Oui. Il peut y retrouver la salle et compléter le brouillon. Lire la note ne lui donne pas pour autant le droit de la modifier."
+              "text": "Donner le document à l’assistant IA",
+              "feedback": "Oui. Il peut y retrouver la salle et compléter le brouillon. Lire le document ne lui donne pas pour autant le droit de le modifier."
             },
             {
               "id": "choice-2",
               "text": "Laisser l’assistant IA deviner",
-              "feedback": "Il risquerait d’inventer le lieu. Mieux vaut lui donner la note : il peut y retrouver la salle, sans avoir le droit de modifier la note."
+              "feedback": "Il risquerait d’inventer le lieu. Mieux vaut lui donner le document : il peut y retrouver la salle, sans avoir le droit de modifier le document."
             }
           ]
         },
         {
           "id": "ent-answer-or-action-message-4",
           "type": "message",
-          "text": "Le brouillon est prêt. Cet assistant IA n’est pas relié à la messagerie de Léa.\n\nPour que l’équipe reçoive l’invitation, quelle est la suite ?",
+          "text": "Le brouillon est prêt. Cet assistant IA n’est pas relié à la boîte mail de Léa.\n\nPour que l’équipe reçoive l’invitation, quelle est la suite ?",
           "choices": [
             {
               "id": "choice-1",
               "text": "Léa relit et envoie le mail",
-              "feedback": "Voilà. Elle vérifie le texte et les destinataires, puis envoie depuis sa messagerie. Elle peut ensuite retrouver le mail dans les messages envoyés."
+              "feedback": "Voilà. Elle vérifie le texte et les destinataires, puis envoie depuis sa boîte mail. Elle peut ensuite retrouver le mail dans les messages envoyés."
             },
             {
               "id": "choice-2",
@@ -247,21 +247,14 @@
           ]
         },
         {
-          "id": "ent-answer-or-action-visual-1",
-          "type": "image",
-          "src": "/enterprise/prepare-find-send.svg",
-          "alt": "Trois gestes : préparer un brouillon à relire, retrouver une information dans une note, envoyer le message aux collègues.",
-          "caption": "Un brouillon n’est pas encore un message envoyé. Dans cet exercice, l’assistant IA prépare et retrouve ; Léa garde l’envoi dans sa messagerie."
-        },
-        {
           "id": "ent-answer-or-action-practice-1",
           "type": "message",
-          "text": "Pratique · À ton tour d’aider Léa. En deux phrases, explique ce que son assistant IA peut préparer, puis ce qu’elle doit faire elle-même.\n\nLa note et les détails sont dans le cas ci-dessous. Aucun mail réel ne sera envoyé."
+          "text": "Pratique · À ton tour d’aider Léa. En deux phrases, explique ce que son assistant IA peut préparer, puis ce qu’elle doit faire elle-même.\n\nLe document et les détails sont dans le cas ci-dessous. Aucun mail réel ne sera envoyé."
         },
         {
           "id": "ent-answer-or-action-question-1",
           "type": "question",
-          "prompt": "L’assistant IA dit « invitation envoyée », mais il n’a pas accès à la messagerie. Tu fais quoi ?",
+          "prompt": "L’assistant IA dit « invitation envoyée », mais il n’a pas accès à la boîte mail. Que fais-tu ?",
           "options": [
             {
               "id": "option-1",
@@ -275,8 +268,8 @@
             },
             {
               "id": "option-3",
-              "text": "Je vérifie la messagerie et j’envoie si nécessaire.",
-              "feedback": "Oui : cet assistant IA aide à écrire ; l’envoi reste à faire dans ta messagerie."
+              "text": "Je vérifie la boîte mail et j’envoie si nécessaire.",
+              "feedback": "Oui : cet assistant IA aide à écrire ; l’envoi reste à faire dans ta boîte mail."
             }
           ],
           "correctOptionId": "option-3"
@@ -284,7 +277,7 @@
         {
           "id": "ent-answer-or-action-question-2",
           "type": "question",
-          "prompt": "Pour garder la main sur ce qui part, tu choisis quelle méthode ?",
+          "prompt": "Pour garder la main sur ce qui part, quelle méthode choisis-tu ?",
           "options": [
             {
               "id": "option-1",
@@ -314,7 +307,7 @@
         {
           "id": "ent-answer-or-action-card-2",
           "question": "Les assistants IA peuvent-ils envoyer un mail ?",
-          "answer": "Certains le peuvent, si un outil de messagerie est connecté et si les droits nécessaires sont accordés. Savoir rédiger un mail ne donne pas automatiquement le droit de l’envoyer."
+          "answer": "Certains le peuvent, si un outil relié à la boîte mail est connecté et si les droits nécessaires sont accordés. Savoir rédiger un mail ne donne pas automatiquement le droit de l’envoyer."
         },
         {
           "id": "ent-answer-or-action-card-3",

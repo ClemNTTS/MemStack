@@ -15,7 +15,7 @@ import { claimAnalysis } from './claim.mjs'
 import { submitCheckedChallenge } from './challengeChecks.mjs'
 import { createAccountLifecycle } from './accountLifecycle.mjs'
 import { getAccessStatus, requireGoogle, requireMember, updateMemberAccess, validateMemberAccessRequest, currentAdminStatus } from './accessService.mjs'
-import { getEnterpriseWorkspace as enterpriseWorkspace, getEnterpriseLessonDraft as enterpriseDraft, saveEnterpriseLessonDraft as enterpriseSaveDraft, setEnterpriseLearningPreferences as enterprisePreferences, manageEnterpriseOrganization as enterpriseManage, joinEnterpriseOrganization as enterpriseJoin, commitEnterpriseLearningAction as enterpriseCommit, deleteEnterpriseData } from './enterprise.mjs'
+import { getEnterpriseWorkspace as enterpriseWorkspace, getEnterpriseLessonDraft as enterpriseDraft, saveEnterpriseLessonDraft as enterpriseSaveDraft, setEnterpriseLearningPreferences as enterprisePreferences, manageEnterpriseOrganization as enterpriseManage, joinEnterpriseOrganization as enterpriseJoin, commitEnterpriseLearningAction as enterpriseCommit, submitEnterpriseLessonAnswer as enterpriseLessonAnswer, deleteEnterpriseData } from './enterprise.mjs'
 import { enterpriseCommercialTerms,createEnterpriseOrganization as enterpriseCreate,createEnterpriseCheckout as enterpriseCheckout,getEnterpriseBilling as enterpriseBilling,createEnterprisePortal as enterprisePortal,drainEnterpriseSeatSync,processEnterpriseSubscriptionEvent } from './enterpriseBilling.mjs'
 import { assessEnterprisePractice, callPracticeMistral } from './enterprisePractice.mjs'
 
@@ -56,7 +56,8 @@ export const saveEnterpriseLessonDraft = onCall(callableOptions,request=>accessC
 export const setEnterpriseLearningPreferences = onCall(callableOptions,request=>accessCall(()=>enterprisePreferences({...enterpriseContext(request),catalog:enterpriseCatalog})))
 export const manageEnterpriseOrganization = onCall(callableOptions,request=>accessCall(()=>enterpriseManage(enterpriseContext(request))))
 export const joinEnterpriseOrganization = onCall(callableOptions,request=>accessCall(()=>enterpriseJoin(enterpriseContext(request))))
-export const commitEnterpriseLearningAction = onCall(callableOptions,request=>accessCall(()=>enterpriseCommit({...enterpriseContext(request),catalog:enterpriseCatalog,keys:enterpriseKeys})))
+export const submitEnterpriseLessonAnswer = onCall(callableOptions,request=>accessCall(()=>enterpriseLessonAnswer({...enterpriseContext(request),catalog:enterpriseCatalog,practices:enterprisePractices})))
+export const commitEnterpriseLearningAction = onCall(callableOptions,request=>accessCall(()=>enterpriseCommit({...enterpriseContext(request),catalog:enterpriseCatalog,keys:enterpriseKeys,practices:enterprisePractices})))
 export const getAdminStatus = onCall(callableOptions, request => accessCall(async () => {
   if (!request.data || typeof request.data !== 'object' || Array.isArray(request.data) || Object.keys(request.data).length) throw new HttpsError('invalid-argument','Paramètres invalides.')
   return currentAdminStatus({db,auth:request.auth,lookup:uid=>getAuth().getUser(uid)})

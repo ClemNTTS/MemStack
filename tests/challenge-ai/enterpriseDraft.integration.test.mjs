@@ -4,7 +4,7 @@ import { createRequire } from 'node:module'
 import { readFileSync } from 'node:fs'
 import { initializeTestEnvironment,assertFails } from '@firebase/rules-unit-testing'
 import { doc,getDoc,setDoc,deleteDoc } from 'firebase/firestore'
-import { getEnterpriseLessonDraft,saveEnterpriseLessonDraft,getEnterpriseWorkspace,commitEnterpriseLearningAction,exportEnterpriseData,deleteEnterpriseData } from '../../functions/src/enterprise.mjs'
+import { getEnterpriseLessonDraft,saveEnterpriseLessonDraft,getEnterpriseWorkspace,commitEnterpriseLearningAction,submitEnterpriseLessonAnswer,exportEnterpriseData,deleteEnterpriseData } from '../../functions/src/enterprise.mjs'
 import { enterpriseDraftContentVersion,ENTERPRISE_DRAFT_LIFETIME } from '../../functions/src/enterpriseDraft.mjs'
 
 const require = createRequire(new URL('../../functions/package.json',import.meta.url))
@@ -22,8 +22,8 @@ const now = Date.parse('2026-10-22T10:00:00Z')
 const lesson = {id:'ent-plausible-not-proven',title:'Cas fictif',prerequisiteLessonIds:[],cards:[],steps:[
   {id:'intro',type:'message',text:'Le cas fictif'},
   {id:'practice',type:'message',text:'Pratique · Prépare ta réponse.'},
-  {id:'q1',type:'question',correctOptionId:'a',options:[{id:'a'},{id:'b'}]},
-  {id:'q2',type:'question',correctOptionId:'b',options:[{id:'a'},{id:'b'}]},
+  {id:'q1',type:'question',prompt:'Premier choix',correctOptionId:'a',options:[{id:'a',text:'Oui',feedback:'Le bon réflexe.'},{id:'b',text:'Non',feedback:'Un autre réflexe.'}]},
+  {id:'q2',type:'question',prompt:'Second choix',correctOptionId:'b',options:[{id:'a',text:'Oui',feedback:'Un autre réflexe.'},{id:'b',text:'Non',feedback:'Le bon réflexe.'}]},
   {id:'end',type:'message',text:'Bilan'},
 ]}
 const practice = {scenario:'Pièces fictives',task:'Prépare une réponse au client.'}
@@ -134,6 +134,7 @@ test('lesson completion and draft writes serialize, then completed missions reje
   await seed(org)
   await save(org,mutation())
   const late = mutation(1,'draft-concurrent-completion',state('Texte concurrent'))
+  for (const [questionId,optionId] of [['q1','a'],['q2','b']]) await submitEnterpriseLessonAnswer(context(org,owner,{lessonId:lesson.id,questionId,optionId,contentVersion:enterpriseDraftContentVersion(lesson,practice),requestId:`draft-completion-assessment-${questionId}`}))
   const completion = commitEnterpriseLearningAction({...context(org,owner,{type:'lesson',lessonId:lesson.id,requestId:'draft-complete-request'}),keys:{version:2}})
   const outcomes = await Promise.allSettled([completion,save(org,late)])
   assert.equal(outcomes[0].status,'fulfilled')
