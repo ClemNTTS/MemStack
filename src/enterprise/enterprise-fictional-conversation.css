@@ -5,8 +5,20 @@
 .fictional-conversation-trigger:hover:not(:disabled) { background: #f0e7f8; border-color: #a987c6; }
 .fictional-conversation-trigger:disabled { opacity: .6; cursor: default; }
 .fictional-conversation-dialog { box-sizing: border-box; width: min(680px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); padding: 0; overflow: hidden; color: #30263e; border: 1px solid #ffffffd9; border-radius: 28px; background: #f7f3eef5; box-shadow: 0 24px 100px #24123340, inset 0 1px 0 #fff; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
-.fictional-conversation-dialog[open] { display: flex; flex-direction: column; }
+.fictional-conversation-dialog[open] { display: flex; flex-direction: column; animation: fictional-conversation-enter 260ms cubic-bezier(.16, 1, .3, 1) both; }
+.fictional-conversation-dialog[open]::backdrop { animation: fictional-conversation-backdrop-enter 200ms ease-out both; }
 .fictional-conversation-dialog::backdrop { background: #30263e66; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+@keyframes fictional-conversation-enter {
+  from { opacity: 0; transform: translateY(14px) scale(.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes fictional-conversation-backdrop-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fictional-conversation-dialog[open], .fictional-conversation-dialog[open]::backdrop { animation: none; }
+}
 .fictional-conversation-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 24px 24px 0; }
 .fictional-conversation-heading > div > p { margin: 0 0 6px; color: #7a628d; font-size: .72rem; letter-spacing: .07em; text-transform: uppercase; font-weight: 700; }
 .fictional-conversation-heading h2 { margin: 0; font-size: 1.35rem; letter-spacing: -.025em; }
