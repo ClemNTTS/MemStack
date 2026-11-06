@@ -1,7 +1,7 @@
 export type EnterpriseOption = { id: string; text: string; feedback: string }
 
 export type EnterpriseStep =
-  | { id: string; type: 'message'; text: string }
+  | { id: string; type: 'message'; text: string; choices?: EnterpriseOption[] }
   | { id: string; type: 'image'; src: string; alt: string; caption: string }
   | { id: string; type: 'question'; prompt: string; options: EnterpriseOption[]; correctOptionId: string }
 

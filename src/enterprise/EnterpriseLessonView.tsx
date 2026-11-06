@@ -6,7 +6,8 @@ import ReturnPolicyPractice from './ReturnPolicyPractice'
 import GuidedEnterprisePractice from './GuidedEnterprisePractice'
 import AutomationFlowPractice from './AutomationFlowPractice'
 import { useLessonScroll } from '../lesson/useLessonScroll'
-import type { EnterpriseLesson } from '../types/enterpriseContent'
+import type { EnterpriseLesson, EnterpriseStep } from '../types/enterpriseContent'
+import './enterprise-conversation-pilot.css'
 import type { EnterpriseLearningResult, EnterpriseLessonDraftState, VerifyEnterprisePractice } from '../types/enterprise'
 
 export type EnterpriseLessonViewProps = {
@@ -28,6 +29,7 @@ export type EnterpriseLessonViewProps = {
 }
 
 export default function EnterpriseLessonView({ lesson, completed, available, busy, onComplete, returnHref, cardsHref, draft, onDraftChange, onVerify, initialState, onSessionChange, sessionControls, hasUnsavedChanges = false, interactionDisabled = false }: EnterpriseLessonViewProps) {
+  const pilot = lesson.id === 'ent-answer-or-action'
   const [replaying] = useState(completed)
   const [index, setIndex] = useState(() => initialState ? Math.max(0, lesson.steps.findIndex(step => step.id === initialState.stepId)) : 0)
   const [answers, setAnswers] = useState<Record<string, string>>(initialState?.answers ?? {})
@@ -74,12 +76,38 @@ export default function EnterpriseLessonView({ lesson, completed, available, bus
   if (finished) return <section className="enterprise-completion"><img src={`${import.meta.env.BASE_URL}memo/journey-celebrate.webp`} width="160" height="140" alt="Mémo célèbre ta mission"/><h1>{replaying ? 'Relecture terminée.' : 'Mission enregistrée.'}</h1><p role="status">{replaying ? 'Tu as relu cette mission. Ta progression et les dates de tes cartes sont conservées.' : 'Le serveur a confirmé la fin de ta mission dans cette organisation.'}</p><p><strong>Ce que tu as travaillé : </strong>{lesson.objective}</p><p>Tu peux maintenant retrouver ces idées avec les cartes, continuer ton parcours ou t’arrêter ici. Les cartes resteront accessibles dans cet espace.</p><a className="catalog-button" href={cardsHref}>{replaying ? 'Voir mes cartes →' : 'Découvrir mes cartes →'}</a><a className="text-link" href={returnHref}>Revenir à mon parcours →</a></section>
 
   async function advance() {
-    if (busy) return
+    if (busy || (step.type === 'message' && step.choices?.length && !checked)) return
     if (index < lesson.steps.length - 1) setIndex(value => value + 1)
     else if (completed || await onComplete()) setFinished(true)
   }
 
-  return <section className="enterprise-lesson">
+  function renderStep(item: EnterpriseStep, position: number) {
+    const current = position === index
+    if (pilot && item.type === 'message' && item.choices?.length) {
+      const selected = item.choices.find(option => option.id === answers[item.id])
+      return <section className="enterprise-conversation-turn pilot-turn" data-current={current} tabIndex={-1} key={item.id} aria-label="Échange avec Mémo">
+        {item.text.split('\n\n').map((text, part) => <ChatBubble key={part} avatar={part === 0}><LessonText glossary glossaryId={lesson.id} text={text}/></ChatBubble>)}
+        {selected && checks[item.id] ? <>
+          <div className="pilot-user-reply"><span className="sr-only">Toi : </span>{selected.text}</div>
+          <div className="pilot-reaction" role={current ? 'status' : undefined}><ChatBubble feedback><LessonText glossary glossaryId={lesson.id} text={selected.feedback}/></ChatBubble></div>
+        </> : <div className="pilot-choices" role="group" aria-label="Ta réponse à Mémo">{item.choices.map(option => <button type="button" key={option.id} disabled={!current || busy || interactionDisabled} onClick={() => { setAnswers(previous => ({ ...previous, [item.id]: option.id })); setChecks(previous => ({ ...previous, [item.id]: true })) }}>{option.text}</button>)}</div>}
+      </section>
+    }
+    if (item.type === 'message') return <div className="enterprise-conversation-turn" data-current={current} tabIndex={-1} key={item.id}>
+      <ChatBubble>{lesson.documents?.filter(document => document.stepId === item.id).map(document => <aside className="enterprise-lesson-document" key={document.src} aria-label={document.title}><p className="lesson-category">Document de l’exercice · fictif</p><h2>{document.title}</h2><LessonText text={document.text}/><a href={`${import.meta.env.BASE_URL}${document.src.replace(/^\//, '')}`} download>Télécharger ce document (.txt) ↓</a></aside>)}{!item.text.startsWith('Pratique ·') && <LessonText glossary glossaryId={lesson.id} text={item.text}/>}
+        {item.id === 'ent-plausible-not-proven-practice-1' ? <ReturnPolicyPractice lessonId={lesson.id} draft={draft} onDraftChange={onDraftChange} onVerify={onVerify} answers={practiceAnswers} onAnswersChange={setPracticeAnswers}/> : item.text.startsWith('Pratique ·') && <>{lesson.id === 'ent-automation-exceptions' && <AutomationFlowPractice/>}<GuidedEnterprisePractice lessonId={lesson.id} draft={draft} onDraftChange={onDraftChange} onVerify={onVerify}/></>}
+      </ChatBubble>
+    </div>
+    if (item.type === 'image') return <figure className="enterprise-lesson-visual enterprise-conversation-turn" data-current={current} tabIndex={-1} key={item.id}><img src={`${import.meta.env.BASE_URL}${item.src.replace(/^\//, '')}`} alt={item.alt}/><figcaption>{item.caption}</figcaption><a className="text-link" href={`${import.meta.env.BASE_URL}${item.src.replace(/^\//, '')}`} target="_blank" rel="noopener noreferrer">Voir l’illustration en grand ↗</a></figure>
+    const chosen = item.options.find(option => option.id === answers[item.id])
+    return <section className="enterprise-conversation-turn" data-current={current} tabIndex={-1} key={item.id}>
+      <ChatBubble question><LessonText glossary glossaryId={lesson.id} text={item.prompt}/></ChatBubble>
+      <fieldset disabled={!current || busy || checks[item.id]}><legend className="sr-only">Choisis ta réponse</legend>{item.options.map(option => <label className="enterprise-option" key={option.id}><input type="radio" name={item.id} value={option.id} checked={answers[item.id] === option.id} onChange={() => { setAnswers(previous => ({ ...previous, [item.id]: option.id })); if (pilot) setChecks(previous => ({ ...previous, [item.id]: true })) }}/><span>{option.text}</span></label>)}</fieldset>
+      {checks[item.id] && chosen && <div className="enterprise-feedback" data-correct={chosen.id === item.correctOptionId} role={current ? 'status' : undefined}><strong>{chosen.id === item.correctOptionId ? 'Tu as retrouvé le bon réflexe.' : 'Reprenons ce point.'}</strong><LessonText glossary glossaryId={lesson.id} text={chosen.feedback}/>{current && chosen.id !== item.correctOptionId && <button className="catalog-button secondary" onClick={() => { setChecks(previous => ({ ...previous, [item.id]: false })); setAnswers(previous => Object.fromEntries(Object.entries(previous).filter(([id]) => id !== item.id))) }}>Réessayer avec cette explication</button>}</div>}
+    </section>
+  }
+
+  return <section className="enterprise-lesson" data-conversation-pilot={pilot || undefined}>
     <dialog ref={navigationDialog} className="enterprise-navigation-dialog" aria-labelledby="enterprise-navigation-title" aria-describedby="enterprise-navigation-description" onCancel={event => { event.preventDefault(); setPendingNavigation(null) }} onClose={() => setPendingNavigation(null)}>
       <h2 id="enterprise-navigation-title">Quitter cette mission ?</h2>
       <p id="enterprise-navigation-description">Des modifications de cette mission ne sont pas enregistrées. Si tu quittes maintenant, elles seront perdues. Ta dernière reprise confirmée reste disponible.</p>
@@ -87,30 +115,19 @@ export default function EnterpriseLessonView({ lesson, completed, available, bus
     </dialog>
     <a className="text-link" href={returnHref}>← Mon chemin Entreprise</a>
     <header className="enterprise-lesson-intro">
-      <div><p className="lesson-category">{replaying ? 'Relecture' : 'Ta mission'} · environ {lesson.estimatedMinutes} min</p><h1>{lesson.title}</h1><p><strong>Ton objectif : </strong>{lesson.objective}</p><p>Explore le cas fictif, propose ta réponse dans l’activité, puis vérifie ton raisonnement. Avance à ton rythme avec « Continuer ».</p></div>
+      <div><p className="lesson-category">{replaying ? 'Relecture' : 'Ta mission'} · environ {lesson.estimatedMinutes} min</p><h1>{lesson.title}</h1><p><strong>Ton objectif : </strong>{lesson.objective}</p><p>{pilot ? 'Une invitation à préparer. Quelques choix à faire. Mémo t’accompagne.' : 'Explore le cas fictif, propose ta réponse dans l’activité, puis vérifie ton raisonnement. Avance à ton rythme avec « Continuer ».'}</p></div>
       <img className="enterprise-memo" src={`${import.meta.env.BASE_URL}memo/learning.webp`} alt="Mémo t’accompagne dans cette mission" width="120" height="110"/>
     </header>
-    <div className="enterprise-lesson-progress"><span role="status">Étape {index + 1} sur {lesson.steps.length}</span><progress value={index + 1} max={lesson.steps.length} aria-label="Avancement dans la mission"/><span>Un mot souligné ? Survole-le ou touche-le pour lire sa définition.</span></div>
+    <div className="enterprise-lesson-progress"><span role="status">Étape {index + 1} sur {lesson.steps.length}</span><progress value={index + 1} max={lesson.steps.length} aria-label="Avancement dans la mission"/>{!pilot && <span>Un mot souligné ? Survole-le ou touche-le pour lire sa définition.</span>}</div>
     <div className="enterprise-conversation" ref={contentRef} role="region" tabIndex={0} aria-label="Discussion de la mission avec Mémo" inert={interactionDisabled || undefined}>
-      {lesson.steps.slice(0, index + 1).map((item, position) => {
-        const current = position === index
-        if (item.type === 'message') return <div className="enterprise-conversation-turn" data-current={current} tabIndex={-1} key={item.id}>
-          <ChatBubble>{lesson.documents?.filter(document => document.stepId === item.id).map(document => <aside className="enterprise-lesson-document" key={document.src} aria-label={document.title}><p className="lesson-category">Document de l’exercice · fictif</p><h2>{document.title}</h2><LessonText text={document.text}/><a href={`${import.meta.env.BASE_URL}${document.src.replace(/^\//, '')}`} download>Télécharger ce document (.txt) ↓</a></aside>)}{!item.text.startsWith('Pratique ·') && <LessonText glossary glossaryId={lesson.id} text={item.text}/>}
-            {item.id === 'ent-plausible-not-proven-practice-1' ? <ReturnPolicyPractice lessonId={lesson.id} draft={draft} onDraftChange={onDraftChange} onVerify={onVerify} answers={practiceAnswers} onAnswersChange={setPracticeAnswers}/> : item.text.startsWith('Pratique ·') && <>{lesson.id === 'ent-automation-exceptions' && <AutomationFlowPractice/>}<GuidedEnterprisePractice lessonId={lesson.id} draft={draft} onDraftChange={onDraftChange} onVerify={onVerify}/></>}
-          </ChatBubble>
-        </div>
-        if (item.type === 'image') return <figure className="enterprise-lesson-visual enterprise-conversation-turn" data-current={current} tabIndex={-1} key={item.id}><img src={`${import.meta.env.BASE_URL}${item.src.replace(/^\//, '')}`} alt={item.alt}/><figcaption>{item.caption}</figcaption><a className="text-link" href={`${import.meta.env.BASE_URL}${item.src.replace(/^\//, '')}`} target="_blank" rel="noopener noreferrer">Voir l’illustration en grand ↗</a></figure>
-        const chosen = item.options.find(option => option.id === answers[item.id])
-        return <section className="enterprise-conversation-turn" data-current={current} tabIndex={-1} key={item.id}>
-          <ChatBubble question><LessonText glossary glossaryId={lesson.id} text={item.prompt}/></ChatBubble>
-          <fieldset disabled={!current || busy || checks[item.id]}><legend className="sr-only">Choisis ta réponse</legend>{item.options.map(option => <label className="enterprise-option" key={option.id}><input type="radio" name={item.id} value={option.id} checked={answers[item.id] === option.id} onChange={() => setAnswers(previous => ({ ...previous, [item.id]: option.id }))}/><span>{option.text}</span></label>)}</fieldset>
-          {checks[item.id] && chosen && <div className="enterprise-feedback" data-correct={chosen.id === item.correctOptionId} role={current ? 'status' : undefined}><strong>{chosen.id === item.correctOptionId ? 'Tu as retrouvé le bon réflexe.' : 'Reprenons ce point.'}</strong><LessonText glossary glossaryId={lesson.id} text={chosen.feedback}/>{current && chosen.id !== item.correctOptionId && <button className="catalog-button secondary" onClick={() => { setChecks(previous => ({ ...previous, [item.id]: false })); setAnswers(previous => Object.fromEntries(Object.entries(previous).filter(([id]) => id !== item.id))) }}>Réessayer avec cette explication</button>}</div>}
-        </section>
-      })}
+      {pilot ? <>
+        {index > 0 && <details className="pilot-history" key={index}><summary>Revoir les échanges précédents · {index}</summary>{lesson.steps.slice(0, index).map(renderStep)}</details>}
+        {renderStep(step, index)}
+      </> : lesson.steps.slice(0, index + 1).map(renderStep)}
       <div className="lesson-end" ref={endRef} aria-hidden="true"/>
     </div>
-    {!replaying && sessionControls}
-    <div className="enterprise-lesson-actions"><span>{replaying ? 'Relire ne change pas tes dates de révision.' : 'La mission sera validée après confirmation de son enregistrement.'}</span>{step.type === 'question' && !checked ? <button className="catalog-button" disabled={!answer || busy} onClick={() => setChecks(previous => ({ ...previous, [step.id]: true }))}>Vérifier mon raisonnement</button> : <button className="catalog-button" disabled={busy || (step.type === 'question' && answer !== step.correctOptionId)} onClick={() => { void advance() }}>{busy ? 'Enregistrement…' : index < lesson.steps.length - 1 ? 'Continuer →' : replaying ? 'Terminer la relecture' : 'Enregistrer ma mission'}</button>}</div>
+    {!replaying && (pilot ? <details className="pilot-session-tools"><summary>Enregistrer pour reprendre plus tard</summary>{sessionControls}</details> : sessionControls)}
+    <div className="enterprise-lesson-actions"><span>{pilot ? step.type === 'message' && step.choices?.length && !checked ? 'Choisis ta réponse pour avancer.' : 'À ton rythme, une idée à la fois.' : replaying ? 'Relire ne change pas tes dates de révision.' : 'La mission sera validée après confirmation de son enregistrement.'}</span>{step.type === 'question' && !checked ? <button className="catalog-button" disabled={!answer || busy || pilot} onClick={() => setChecks(previous => ({ ...previous, [step.id]: true }))}>{pilot ? 'Continuer →' : 'Vérifier mon raisonnement'}</button> : <button className="catalog-button" disabled={busy || (step.type === 'question' && answer !== step.correctOptionId) || (step.type === 'message' && Boolean(step.choices?.length) && !checked)} onClick={() => { void advance() }}>{busy ? 'Enregistrement…' : index < lesson.steps.length - 1 ? 'Continuer →' : replaying ? 'Terminer la relecture' : 'Enregistrer ma mission'}</button>}</div>
     <details className="enterprise-sources"><summary>Sources de cette mission</summary><ul>{lesson.sources.map(source => <li key={source}><a href={source} target="_blank" rel="noopener noreferrer">{new URL(source).hostname} ↗</a></li>)}</ul></details>
   </section>
 }

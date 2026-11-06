@@ -181,22 +181,70 @@
         {
           "id": "ent-answer-or-action-message-1",
           "type": "message",
-          "text": "Une réunion à organiser, et encore un mail à écrire… Ça te parle ? Je te propose de préparer l’invitation avec un assistant IA, comme ChatGPT ou Claude.\n\nOn va voir ce qu’il peut rédiger, comment lui faire retrouver le lieu, puis ce qu’il reste à faire pour que le message parte. Moi, Mémo, je te guide ; l’assistant IA est le logiciel qu’on essaie. Toute la situation est fictive."
+          "text": "Salut, moi c’est Mémo. On aide Léa à préparer une invitation ?\n\nSa réunion est jeudi à 10 h. D’habitude, pour écrire ce genre de mail, tu fais comment ?",
+          "choices": [
+            {
+              "id": "choice-1",
+              "text": "Je pars de zéro",
+              "feedback": "Alors on va gagner une première rédaction : Léa va essayer un assistant IA, comme ChatGPT ou Claude. Ici, toute la situation est fictive."
+            },
+            {
+              "id": "choice-2",
+              "text": "Je reprends un ancien mail",
+              "feedback": "Tu as déjà un point de départ ! Léa va en essayer un autre : un assistant IA, comme ChatGPT ou Claude. Ici, toute la situation est fictive."
+            }
+          ]
         },
         {
           "id": "ent-answer-or-action-message-2",
           "type": "message",
-          "text": "Le message que tu écris à l’assistant IA s’appelle un prompt. Par exemple : « Prépare un mail pour inviter l’équipe à une réunion jeudi à 10 h. »\n\nIl répond : « Voici une proposition : Bonjour à tous, retrouvons-nous jeudi à 10 h… »\n\nVoilà une première rédaction ! Tu peux la relire et changer les mots qui ne te ressemblent pas. Ce brouillon reste un texte à préparer : tes collègues ne l’ont pas encore reçu."
+          "text": "Léa écrit : « Prépare un mail pour inviter l’équipe jeudi à 10 h. » Ce message, c’est son prompt.\n\nL’assistant IA propose un texte. À ton avis, Léa a maintenant…",
+          "choices": [
+            {
+              "id": "choice-1",
+              "text": "Un brouillon à relire",
+              "feedback": "Exactement. Elle peut ajuster le ton et vérifier les informations. Ses collègues n’ont encore rien reçu."
+            },
+            {
+              "id": "choice-2",
+              "text": "Une invitation déjà envoyée",
+              "feedback": "Pas encore : rédiger ne veut pas dire envoyer. Elle a un brouillon à relire, pas un mail arrivé chez ses collègues."
+            }
+          ]
         },
         {
           "id": "ent-answer-or-action-message-3",
           "type": "message",
-          "text": "Tiens, il manque le lieu. Tu as une note qui le précise ? Tu peux la donner à l’assistant IA et demander : « Dans quelle salle a lieu la réunion ? »\n\nIl peut y retrouver l’information, comme toi quand tu ouvres une note pour chercher un détail. Pouvoir la lire ne lui donne pas forcément le droit de la modifier."
+          "text": "Il manque la salle dans le brouillon.\n\nLéa a une note qui précise « salle Bleue ». Tu lui conseilles quoi ?",
+          "choices": [
+            {
+              "id": "choice-1",
+              "text": "Donner la note à l’assistant IA",
+              "feedback": "Oui. Il peut y retrouver la salle et compléter le brouillon. Lire la note ne lui donne pas pour autant le droit de la modifier."
+            },
+            {
+              "id": "choice-2",
+              "text": "Laisser l’assistant IA deviner",
+              "feedback": "Il risquerait d’inventer le lieu. Mieux vaut lui donner la note : il peut y retrouver la salle, sans avoir le droit de modifier la note."
+            }
+          ]
         },
         {
           "id": "ent-answer-or-action-message-4",
           "type": "message",
-          "text": "Le texte est prêt. Dans cet exemple, tu le copies dans ta messagerie, tu relis aussi les destinataires, puis tu cliques sur Envoyer. Tu pourras retrouver le mail dans les messages envoyés.\n\nCertains assistants IA peuvent envoyer des mails quand l’entreprise les a reliés à sa messagerie. Celui de notre exercice ne le peut pas : il t’aide à préparer, et tu gardes l’envoi."
+          "text": "Le brouillon est prêt. Cet assistant IA n’est pas relié à la messagerie de Léa.\n\nPour que l’équipe reçoive l’invitation, quelle est la suite ?",
+          "choices": [
+            {
+              "id": "choice-1",
+              "text": "Léa relit et envoie le mail",
+              "feedback": "Voilà. Elle vérifie le texte et les destinataires, puis envoie depuis sa messagerie. Elle peut ensuite retrouver le mail dans les messages envoyés."
+            },
+            {
+              "id": "choice-2",
+              "text": "L’assistant IA s’occupe de tout",
+              "feedback": "Il ne peut pas envoyer ici. Certains assistants IA le peuvent avec un outil connecté et les droits adaptés. Dans ce cas, Léa relit et envoie elle-même."
+            }
+          ]
         },
         {
           "id": "ent-answer-or-action-visual-1",
@@ -208,26 +256,26 @@
         {
           "id": "ent-answer-or-action-practice-1",
           "type": "message",
-          "text": "Pratique · On essaie avec Léa, qui prépare son invitation ? Deux phrases courtes suffisent : ce que l’assistant IA peut faire pour elle, puis ce qu’elle doit faire pour envoyer.\n\nL’atelier te donne la note et tous les détails. Prends-les comme un petit aide-mémoire."
+          "text": "Pratique · À ton tour d’aider Léa. En deux phrases, explique ce que son assistant IA peut préparer, puis ce qu’elle doit faire elle-même.\n\nLa note et les détails sont dans le cas ci-dessous. Aucun mail réel ne sera envoyé."
         },
         {
           "id": "ent-answer-or-action-question-1",
           "type": "question",
-          "prompt": "L’assistant IA de cet exemple peut écrire, mais il n’est pas relié à ta messagerie. Il dit « invitation envoyée ». Que faire ?",
+          "prompt": "L’assistant IA dit « invitation envoyée », mais il n’a pas accès à la messagerie. Tu fais quoi ?",
           "options": [
             {
               "id": "option-1",
-              "text": "Chercher le mail dans le dossier des brouillons et considérer qu’il est parti.",
+              "text": "Je me fie au brouillon.",
               "feedback": "Un brouillon reste un message à préparer ; sa présence ne signifie pas un envoi."
             },
             {
               "id": "option-2",
-              "text": "Prévenir les collègues que le message est forcément arrivé.",
+              "text": "Je préviens l’équipe que c’est envoyé.",
               "feedback": "L’assistant IA ne peut pas envoyer ici. Sa phrase ne fait pas arriver le mail."
             },
             {
               "id": "option-3",
-              "text": "Ouvrir la messagerie : si rien n’a été envoyé, relire le brouillon et envoyer soi-même.",
+              "text": "Je vérifie la messagerie et j’envoie si nécessaire.",
               "feedback": "Oui : cet assistant IA aide à écrire ; l’envoi reste à faire dans ta messagerie."
             }
           ],
@@ -236,21 +284,21 @@
         {
           "id": "ent-answer-or-action-question-2",
           "type": "question",
-          "prompt": "Tu veux que l’assistant IA prépare uniquement le texte. Quelle organisation choisir ?",
+          "prompt": "Pour garder la main sur ce qui part, tu choisis quelle méthode ?",
           "options": [
             {
               "id": "option-1",
-              "text": "Lui demander aussi d’envoyer, puis relire plus tard.",
+              "text": "Faire envoyer, puis relire.",
               "feedback": "Relire après l’envoi ne permet plus de corriger le message avant sa réception."
             },
             {
               "id": "option-2",
-              "text": "Lui faire rédiger le brouillon, puis garder toi-même la relecture et l’envoi.",
+              "text": "Faire rédiger, puis relire et envoyer moi-même.",
               "feedback": "Oui : tu profites de son aide pour écrire, puis tu choisis ce qui part et à qui."
             },
             {
               "id": "option-3",
-              "text": "Copier son texte sans regarder les destinataires.",
+              "text": "Copier le texte sans vérifier les destinataires.",
               "feedback": "La relecture sert aussi à vérifier que le message ira aux bonnes personnes."
             }
           ],

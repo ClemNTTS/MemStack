@@ -138,6 +138,23 @@ test('each enterprise mission teaches, diagnoses twice with feedback and include
   }
 })
 
+test('only the first guided lesson pilots short conversational choices before its unchanged assessment', () => {
+  const pilot = curriculum.lessons.find(lesson => lesson.id === 'ent-answer-or-action')!
+  const interactive = pilot.steps.filter(step => step.type === 'message' && step.choices)
+  assert.equal(interactive.length, 4)
+  for (const step of interactive) {
+    if (step.type !== 'message' || !step.choices) continue
+    assert.ok(step.text.length <= 260, step.id)
+    assert.equal(step.choices.length, 2)
+    assert.equal(new Set(step.choices.map(choice => choice.id)).size, step.choices.length)
+    assert.ok(step.choices.every(choice => choice.text.length <= 65 && choice.feedback.length > 25 && choice.feedback.length <= 220), step.id)
+  }
+  assert.ok(curriculum.lessons.filter(lesson => lesson.id !== pilot.id).every(lesson => lesson.steps.every(step => step.type !== 'message' || !step.choices)))
+  assert.deepEqual(pilot.steps.filter(step => step.type === 'question').map(step => [step.id, step.correctOptionId]), [
+    ['ent-answer-or-action-question-1', 'option-3'], ['ent-answer-or-action-question-2', 'option-2'],
+  ])
+})
+
 test('every enterprise challenge has a self-contained dossier and five private keyed questions', () => {
   assert.deepEqual(Object.keys(assessmentKeys.challenges).sort(), curriculum.challenges.map((challenge) => challenge.id).sort())
   for (const challenge of curriculum.challenges) {

@@ -45,6 +45,22 @@ async function seed(org) {
   }
 }
 
+test('pilot replies survive a server save and reload without allowing unanswered exchanges to be skipped',async()=>{
+  const org = 'draft-conversation-pilot'
+  await seed(org)
+  const pilot = JSON.parse(readFileSync(new URL('../../shared/enterpriseCurriculum.json',import.meta.url),'utf8')).lessons.find(item=>item.id==='ent-answer-or-action')
+  const activeCatalog = {...catalog,lessons:[pilot]}
+  const first = pilot.steps[0]
+  const value = {stepId:pilot.steps[1].id,answers:{[first.id]:first.choices[1].id},checkedIds:[first.id],draft:'',practiceAnswers:{}}
+  const data = {lessonId:pilot.id,contentVersion:enterpriseDraftContentVersion(pilot),expectedRevision:0,mutationId:'pilot-conversation-save',state:value}
+  const saved = await saveEnterpriseLessonDraft(context(org,owner,data,now,activeCatalog,{}))
+  assert.deepEqual(saved.state,value)
+  const restored = await getEnterpriseLessonDraft(context(org,owner,{lessonId:pilot.id},now,activeCatalog,{}))
+  assert.deepEqual(restored.state,value)
+  await assert.rejects(saveEnterpriseLessonDraft(context(org,owner,{...data,expectedRevision:1,mutationId:'pilot-skip-conversation',state:{...value,stepId:pilot.steps[2].id}},now,activeCatalog,{})),{code:'invalid-argument'})
+  assert.deepEqual((await getEnterpriseLessonDraft(context(org,owner,{lessonId:pilot.id},now,activeCatalog,{}))).state,value)
+})
+
 test('draft CAS, duplicate acknowledgements and clear tombstones never overwrite a newer production',async()=>{
   const org = 'draft-cas'
   await seed(org)

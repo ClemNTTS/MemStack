@@ -38,9 +38,9 @@ export default function GuidedEnterprisePractice({ lessonId, draft = '', onDraft
 
   return <div className="enterprise-practice enterprise-guided-practice" data-compact={twoPartAnswer}>
     <h2>À toi de jouer</h2>
-    <p>Tu aides les personnages de ce cas fictif. Prépare ta proposition ici : aucune action n’est effectuée dans un outil réel.</p>
+    <p>{twoPartAnswer ? 'À toi de répartir le travail avec Léa. Aucun mail réel ne sera envoyé.' : 'Tu aides les personnages de ce cas fictif. Prépare ta proposition ici : aucune action n’est effectuée dans un outil réel.'}</p>
     <section className="enterprise-practice-case" aria-label="Situation fictive de l’exercice"><h3>1. Lis le cas</h3><LessonText glossary glossaryId={lessonId} text={practice.scenario}/></section>
-    <section className="enterprise-practice-instructions" aria-label="Consigne de l’activité"><h3>2. Prépare ta proposition</h3><LessonText glossary glossaryId={lessonId} text={practice.task}/><p>Appuie-toi sur les informations du cas et respecte le format demandé. Si une information manque, indique-le plutôt que de l’inventer.</p></section>
+    <section className="enterprise-practice-instructions" aria-label="Consigne de l’activité"><h3>2. Prépare ta proposition</h3><LessonText glossary glossaryId={lessonId} text={practice.task}/>{!twoPartAnswer && <p>Appuie-toi sur les informations du cas et respecte le format demandé. Si une information manque, indique-le plutôt que de l’inventer.</p>}</section>
     {twoPartAnswer ? <div className="enterprise-practice-answer-fields">
       <label>Ce que Léa peut demander à son assistant IA<input type="text" value={assistantDraft} onChange={event => updateDraft(`${event.target.value}\n\n${personalDraft}`)} maxLength={2400} placeholder="L’assistant IA peut…"/></label>
       <label>Ce qu’elle doit faire elle-même<input type="text" value={personalDraft} onChange={event => updateDraft(`${assistantDraft}\n\n${event.target.value}`)} maxLength={2400} placeholder="Léa doit…"/></label>
