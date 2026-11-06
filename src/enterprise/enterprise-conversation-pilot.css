@@ -10,7 +10,8 @@
 .enterprise-lesson[data-conversation-pilot] progress { accent-color: #9670bf; height: 5px; }
 .enterprise-lesson[data-conversation-pilot] .enterprise-conversation { gap: 20px; }
 .enterprise-lesson[data-conversation-pilot] .pilot-turn { display: flex; flex-direction: column; gap: 12px; }
-.enterprise-lesson[data-conversation-pilot] .chat-row { gap: 10px; align-items: flex-end; }
+.enterprise-lesson[data-conversation-pilot] .chat-row { grid-template-columns: 38px minmax(0, 1fr); gap: 10px; align-items: flex-end; }
+.enterprise-lesson[data-conversation-pilot] .chat-avatar::after { display: none; }
 .enterprise-lesson[data-conversation-pilot] .chat-avatar { width: 38px; min-width: 38px; }
 .enterprise-lesson[data-conversation-pilot] .chat-avatar .memo { width: 38px; height: 42px; }
 .enterprise-lesson[data-conversation-pilot] .chat-message { flex: 0 1 620px; min-width: 0; }
@@ -72,6 +73,7 @@
   .enterprise-lesson[data-conversation-pilot] .enterprise-lesson-intro { grid-template-columns: minmax(0, 1fr) 56px; gap: 12px; }
   .enterprise-lesson[data-conversation-pilot] .lesson-bubble { padding: 14px 16px; }
   .enterprise-lesson[data-conversation-pilot] .chat-avatar { width: 28px; min-width: 28px; }
+  .enterprise-lesson[data-conversation-pilot] .chat-row { grid-template-columns: 28px minmax(0, 1fr); }
   .enterprise-lesson[data-conversation-pilot] .chat-avatar .memo { width: 28px; height: 32px; }
   .enterprise-lesson[data-conversation-pilot] .pilot-choices { max-width: calc(100% - 38px); }
   .enterprise-lesson[data-conversation-pilot] .enterprise-conversation fieldset,
