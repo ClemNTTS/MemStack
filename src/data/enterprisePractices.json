@@ -75,7 +75,7 @@
   },
   "ent-iterate-examples": {
     "scenario": "Voici notre essai fictif. La politique prévoit un retour sous 30 jours, avec frais pris en charge seulement si le produit est endommagé. La procédure dit : dommage dans le délai → photo ; délai dépassé → le signaler ; livraison en retard → signaler que cette politique ne répond pas au cas.\n\nC1 : produit cassé à 5 jours. C2 : produit cassé à 45 jours. C3 : livraison en retard.\n\nA répond aux trois : « Nous traitons votre demande ». B demande une photo en C1, signale le dépassement en C2 et demande une photo en C3.",
-    "task": "Quelle consigne unique ajouterais-tu au prompt A pour préciser la prochaine étape ? Puis compare les réponses A et B fournies avec le même critère : note le progrès et l’erreur qui reste.",
+    "task": "Prépare deux éléments.\n\n1. Écris une seule consigne à ajouter au prompt qui a produit les réponses A pour préciser la prochaine étape. Tu n’as pas à reconstituer tout le prompt.\n\n2. Compare les réponses A et B fournies pour C1, C2 et C3 avec le même critère : note le progrès et l’erreur qui reste.",
     "starter": "Modification unique : …\n\nCritère commun : …\n\nC1 : A… / B…\n\nC2 : A… / B…\n\nC3 : A… / B…\n\nDécision : …",
     "checklist": [
       "Une seule consigne change ; les cas et pièces restent identiques.",
@@ -98,8 +98,8 @@
     "explanation": "Les frais peuvent être prévus par la règle sans qu’une étiquette ait été créée. C’est cette différence entre ce qui est possible et ce qui est fait qu’on rend visible. Une réponse plus courte convient aussi si elle garde les trois distinctions."
   },
   "ent-numbers-sources": {
-    "scenario": "Aster reçoit 200 demandes par semaine. Dans ce cas fictif, le gain avant vérification est de 2 minutes par demande, auquel s’ajoute 1 minute de relecture. Essaie aussi la variante où la relecture prend 3 minutes.\n\nLa fiche fournisseur indique : « Étude T, traduction de 40 textes ; temps de relecture non mesuré. » Aucun test de remboursement n’y figure.",
-    "task": "Prépare une note pour Léa : calcule le résultat hebdomadaire dans les deux cas, puis explique ce que la fiche fournisseur montre et ce qu’elle ne montre pas.",
+    "scenario": "Aster reçoit 200 demandes par semaine. Dans ce cas fictif, le traitement avec l’IA économise 2 minutes par demande avant vérification. Chaque demande exige ensuite 1 minute de relecture. Essaie aussi la variante où la relecture prend 3 minutes.\n\nLa fiche fournisseur indique : « Étude T, traduction de 40 textes ; temps de relecture non mesuré. » Aucun test de remboursement n’y figure.",
+    "task": "Prépare une note pour Léa en deux parties.\n\n1. Calcule le temps net gagné ou perdu par semaine : retire le temps de relecture du gain avant vérification, d’abord avec 1 minute de relecture par demande, puis avec 3 minutes. Indique les unités et tiens compte des 200 demandes.\n\n2. Explique ce que la fiche fournisseur montre, ce qu’elle ne montre pas et ce qu’il reste à mesurer.",
     "starter": "Avec 1 minute de relecture, le calcul et les unités : …\n\nAvec 3 minutes de relecture : …\n\nCe que l’étude porte sur : …\n\nCe qu’elle ne démontre pas : …\n\nCe qu’il reste à mesurer : …",
     "checklist": [
       "Les 200 demandes sont prises en compte dans les deux calculs.",
@@ -281,7 +281,7 @@
   },
   "ent-assistants-meeting": {
     "scenario": "On reprend ces notes fictives de Nova.\n\nL’essai de deux créneaux est décidé pour lundi. Zoé prépare la grille jeudi.\n\nMalik propose une ouverture samedi ; aucun accord n’est pris. Le responsable et la date du bilan restent à définir.",
-    "task": "À toi de préparer le suivi. Écris le prompt pour l’assistant IA en précisant les catégories, les destinataires et le format. Ajoute un relevé de quatre lignes, puis un message de trois phrases maximum pour faire avancer l’attribution du bilan.",
+    "task": "À toi de préparer le suivi avec trois éléments distincts.\n\n1. Écris le prompt pour l’assistant IA en précisant les catégories, les destinataires et le format.\n\n2. Ajoute un relevé de quatre lignes : décision, action avec responsable et date, proposition, puis ce qui reste à attribuer.\n\n3. Rédige un message de trois phrases maximum pour faire avancer l’attribution du bilan.",
     "starter": "Prompt : …\n\nDécision : …\n\nAction / responsable / date : …\n\nProposition : …\n\nÀ attribuer : …\n\nMessage : …",
     "checklist": [
       "L’essai lundi est la seule décision.",
@@ -309,7 +309,7 @@
   },
   "ent-assistants-iterate": {
     "scenario": "Pour ces cas fictifs, le message doit rappeler le résultat attendu et son échéance, sans engagement ajouté.\n\nCas A : grille jeudi. Cas B : devis lundi. Aucune remise n’est prévue.\n\nV1-A et V1-B : « Merci pour l’échange ».\n\nV2-A : « Grille jeudi ». V2-B : « Devis lundi et remise de 10 % ».",
-    "task": "À toi de préparer le prochain essai. Compare V1 et V2 pour A et B, puis change un seul point du prompt. Propose le résultat attendu pour chaque cas. Termine par un modèle révisé à conserver, avec les champs à remplacer séparés des réponses de cet essai.",
+    "task": "À toi de préparer le prochain essai avec trois éléments distincts.\n\n1. Compare V1 et V2 pour les cas A et B avec le même critère.\n\n2. Écris une seule modification du prompt, puis le résultat attendu pour chaque cas.\n\n3. Prépare le modèle révisé à conserver : distingue ses champs à remplacer des réponses propres à cet essai.",
     "starter": "Critère : …\n\nA : V1… / V2…\n\nB : V1… / V2…\n\nModification : …\n\nSorties attendues : …\n\nModèle révisé à conserver : …",
     "checklist": [
       "V1 échoue aux deux rappels.",

@@ -3,23 +3,26 @@ import type { FormEvent, MouseEvent, ReactNode } from 'react'
 import { BookOpen, Building2, ChevronRight, Flag, RotateCcw, Trophy, Users } from 'lucide-react'
 import { appHref, currentRoute, usesHashRoutes } from '../navigation/browser'
 import { useProgress } from '../progress/ProgressProvider'
-import { getEnterpriseWorkspace, joinEnterpriseOrganization, commitEnterpriseLearningAction, manageEnterpriseOrganization, assessEnterprisePracticeAnswer } from '../firebase/enterprise'
-import type { EnterpriseWorkspace as Workspace, EnterpriseLearningAction, EnterpriseLearningResult, VerifyEnterprisePractice } from '../types/enterprise'
+import { getEnterpriseWorkspace, joinEnterpriseOrganization, commitEnterpriseLearningAction, manageEnterpriseOrganization, assessEnterprisePracticeAnswer, setEnterpriseLearningPreferences } from '../firebase/enterprise'
+import type { EnterpriseWorkspace as Workspace, EnterpriseLearningAction, EnterpriseLearningResult, VerifyEnterprisePractice, EnterpriseLessonDraftSnapshot } from '../types/enterprise'
 import type { EnterpriseChallenge } from '../types/enterpriseContent'
 import { enterpriseCurriculum, enterpriseLessons, enterpriseChallenges, enterpriseTracks } from '../data/enterprise'
 import { enterprisePlan, enterpriseScope } from './model'
+import { resolveEnterpriseTrack } from './learningContext'
 import CardSession from '../components/CardSession'
 import { reviewEventId } from '../progress/merge'
 import LessonText from '../components/LessonText'
 import AccountBar from '../components/AccountBar'
 import EnterpriseBillingPage from './EnterpriseBillingPage'
-import EnterpriseLessonView from './EnterpriseLessonView'
+import EnterpriseMissionSession from './EnterpriseMissionSession'
 import EnterpriseLearningPath from './EnterpriseLearningPath'
+import EnterpriseBackground from './EnterpriseBackground'
 import '../catalog.css'
 import '../navigation.css'
 import './enterprise.css'
 import './enterprise-refinements.css'
 import './enterprise-path.css'
+import './enterprise-home.css'
 
 type Action = Omit<Extract<EnterpriseLearningAction,{type:'lesson'}>,'organizationId'|'requestId'> | Omit<Extract<EnterpriseLearningAction,{type:'card'}>,'organizationId'|'requestId'> | Omit<Extract<EnterpriseLearningAction,{type:'challenge'}>,'organizationId'|'requestId'>
 
@@ -27,12 +30,17 @@ export default function EnterpriseWorkspace() {
   const account = useProgress()
   const uid = account.user!.uid
   const [route,setRoute] = useState(currentRoute)
+  const routeRef = useRef(route)
+  routeRef.current = route
   const [workspace,setWorkspace] = useState<Workspace | null>(null)
   const [error,setError] = useState('')
   const [refresh,setRefresh] = useState(0)
   const [busy,setBusy] = useState(false)
   const [drafts,setDrafts] = useState<Record<string,string>>({})
   const [code,setCode] = useState('')
+  const [trackSaving, setTrackSaving] = useState(false)
+  const [trackMessage, setTrackMessage] = useState('')
+  const trackRequest = useRef(0)
   const generation = useRef(0)
   const scope = useRef('')
   const inFlight = useRef(false)
@@ -40,7 +48,7 @@ export default function EnterpriseWorkspace() {
   const params = new URLSearchParams(route.split('?')[1] ?? '')
   const orgId = params.get('org') ?? undefined
   const path = route.split('?')[0]
-  const selectedTrack = enterpriseTracks.find(item => item.id === params.get('track')) ?? enterpriseTracks[0]
+  const selectedTrack = resolveEnterpriseTrack(params.get('track'), workspace?.settings?.activeTrackId)
   const billingView = path === '/enterprise/billing' || path === '/enterprise/subscribe' || (path === '/enterprise' && params.get('setup') === 'subscribe')
   const previousPage = useRef(path)
   const verifyPractice = useCallback<VerifyEnterprisePractice>(async (lessonId, answer, practiceVersion) => {
@@ -64,20 +72,29 @@ export default function EnterpriseWorkspace() {
     if (organizationId) setDrafts(previous => Object.fromEntries(Object.entries(previous).filter(([key]) => key.startsWith(`${uid}:${organizationId}:`))))
   }, [uid, workspace?.organization?.id])
   useEffect(() => {
-    const warn = (event: BeforeUnloadEvent) => { if (Object.values(drafts).some(value => value.trim())) { event.preventDefault(); event.returnValue = '' } }
-    window.addEventListener('beforeunload', warn)
-    return () => window.removeEventListener('beforeunload', warn)
-  }, [drafts])
-  useEffect(() => {
-    const update = () => { setRoute(currentRoute()); window.scrollTo(0,0) }
-    window.addEventListener('hashchange',update); window.addEventListener('popstate',update)
-    return () => { window.removeEventListener('hashchange',update); window.removeEventListener('popstate',update) }
+    const update = (event: Event) => {
+      const destination = currentRoute()
+      const proceed = () => {
+        history.pushState(null, '', appHref(destination))
+        setRoute(destination); window.scrollTo(0,0)
+        window.dispatchEvent(new Event('memstack:navigate'))
+      }
+      if (destination !== routeRef.current && !window.dispatchEvent(new CustomEvent('enterprise-before-navigate', { cancelable: true, detail: { proceed } }))) {
+        event.stopImmediatePropagation()
+        history.pushState(null, '', appHref(routeRef.current))
+        return
+      }
+      setRoute(currentRoute()); window.scrollTo(0,0)
+    }
+    window.addEventListener('hashchange',update,true); window.addEventListener('popstate',update,true)
+    return () => { window.removeEventListener('hashchange',update,true); window.removeEventListener('popstate',update,true) }
   },[])
   useEffect(() => {
     document.title = 'Mon organisation · MemStack Entreprise'
     const operation = ++generation.current
     scope.current = ''
     setWorkspace(null); setError(''); setBusy(false); inFlight.current = false
+    trackRequest.current++; setTrackSaving(false); setTrackMessage('')
     if (!account.online || billingView) return
     void getEnterpriseWorkspace(uid,orgId).then(value => {
       if (generation.current !== operation) return
@@ -103,7 +120,44 @@ export default function EnterpriseWorkspace() {
     if (next !== '/enterprise' && !next.startsWith('/enterprise/') && !next.startsWith('/enterprise?')) return
     event.preventDefault()
     if (next === route) return
-    history.pushState(null,'',appHref(next)); setRoute(next); window.scrollTo(0,0)
+    requestNavigation(() => { history.pushState(null,'',appHref(next)); setRoute(next); window.scrollTo(0,0) })
+  }
+  function requestNavigation(proceed: () => void) {
+    if (window.dispatchEvent(new CustomEvent('enterprise-before-navigate', { cancelable: true, detail: { proceed } }))) proceed()
+  }
+  function changeOrganization(select: HTMLSelectElement) {
+    const destination = select.value
+    select.value = workspace?.organization?.id ?? ''
+    requestNavigation(() => {
+      history.pushState(null,'',appHref(`/enterprise?org=${encodeURIComponent(destination)}`))
+      setRoute(currentRoute()); window.scrollTo(0,0)
+    })
+  }
+  async function chooseTrack(activeTrackId: string) {
+    const organizationId = workspace?.organization?.id
+    if (!organizationId || trackSaving || !account.online || !navigator.onLine) return
+    const operation = generation.current
+    const currentScope = enterpriseScope(uid, organizationId)
+    const request = ++trackRequest.current
+    const startingRoute = currentRoute()
+    setTrackSaving(true); setTrackMessage(''); setError('')
+    try {
+      const result = await setEnterpriseLearningPreferences(uid, organizationId, activeTrackId)
+      if (generation.current !== operation || scope.current !== currentScope || trackRequest.current !== request) return
+      if (result.organizationId !== organizationId || result.settings.activeTrackId !== activeTrackId) throw new Error('Préférence incompatible.')
+      setWorkspace(previous => previous?.organization?.id === organizationId ? { ...previous, settings: result.settings } : previous)
+      if (currentRoute() !== startingRoute) return
+      history.pushState(null, '', appHref(`/enterprise?org=${encodeURIComponent(organizationId)}&track=${encodeURIComponent(activeTrackId)}`))
+      setRoute(currentRoute()); setTrackMessage('Ton parcours est enregistré pour cette organisation.')
+      window.scrollTo(0, 0)
+    } catch (failure) {
+      if (generation.current !== operation || scope.current !== currentScope || trackRequest.current !== request) return
+      if (String((failure as { code?: string })?.code).includes('permission-denied')) {
+        setRefresh(value => value + 1)
+      } else setTrackMessage('Le choix n’a pas été enregistré. Vérifie ta connexion et choisis à nouveau le parcours.')
+    } finally {
+      if (generation.current === operation && trackRequest.current === request) setTrackSaving(false)
+    }
   }
   async function commit(action: Action): Promise<EnterpriseLearningResult | null> {
     if (!workspace?.organization || inFlight.current || !account.online || !navigator.onLine) return null
@@ -120,7 +174,7 @@ export default function EnterpriseWorkspace() {
       setWorkspace(previous => {
         if (!previous || previous.organization?.id !== organizationId) return previous
         const progress = previous.progress
-        return {...previous,progress: result.type === 'lesson' ? {...progress,lessons:{...progress.lessons,[result.lessonId]:{completedAt:result.completedAt}}} : result.type === 'card' ? {...progress,cards:{...progress.cards,[result.card.cardId]:result.card},reviews:[...progress.reviews.filter(event => reviewEventId(event) !== reviewEventId(result.event)),result.event]} : {...progress,attempts:[result,...progress.attempts.filter(attempt => attempt.id !== result.id)]}}
+        return {...previous,lessonDrafts: result.type === 'lesson' ? previous.lessonDrafts?.filter(item => item.lessonId !== result.lessonId) : previous.lessonDrafts,progress: result.type === 'lesson' ? {...progress,lessons:{...progress.lessons,[result.lessonId]:{completedAt:result.completedAt}}} : result.type === 'card' ? {...progress,cards:{...progress.cards,[result.card.cardId]:result.card},reviews:[...progress.reviews.filter(event => reviewEventId(event) !== reviewEventId(result.event)),result.event]} : {...progress,attempts:[result,...progress.attempts.filter(attempt => attempt.id !== result.id)]}}
       })
       receipts.current.delete(key)
       return result
@@ -133,6 +187,16 @@ export default function EnterpriseWorkspace() {
       }
       return null
     } finally { if (generation.current === operation) {inFlight.current = false;setBusy(false)} }
+  }
+  function rememberLessonDraft(snapshot: EnterpriseLessonDraftSnapshot) {
+    if (scope.current !== enterpriseScope(uid, snapshot.organizationId)) return
+    setWorkspace(previous => {
+      if (!previous || previous.organization?.id !== snapshot.organizationId) return previous
+      const remaining = previous.lessonDrafts?.filter(item => item.lessonId !== snapshot.lessonId) ?? []
+      return { ...previous, lessonDrafts: snapshot.state && snapshot.updatedAt && snapshot.expiresAt
+        ? [...remaining, { lessonId: snapshot.lessonId, revision: snapshot.revision, stepId: snapshot.state.stepId, updatedAt: snapshot.updatedAt, expiresAt: snapshot.expiresAt }]
+        : remaining }
+    })
   }
   async function join(event: FormEvent) {
     event.preventDefault()
@@ -151,13 +215,13 @@ export default function EnterpriseWorkspace() {
   const lesson = enterpriseLessons.find(item => path === `/enterprise/lessons/${item.id}`)
   const challenge = enterpriseChallenges.find(item => path === `/enterprise/challenges/${item.id}`)
   const draftKey = lesson && organization ? `${uid}:${organization.id}:${lesson.id}` : ''
-  const navigation = [{path:'',label:'Mon chemin',icon:BookOpen},{path:'/reviews',label:'Révisions',icon:RotateCcw},{path:'/challenges',label:'Situations',icon:Flag},{path:'/ranking',label:'Classement',icon:Trophy},...(organization?.role==='manager'?[{path:'/team',label:'Mon équipe',icon:Users},{path:'/billing',label:'Abonnement',icon:Building2}]:[])]
+  const navigation = [{path:'',label:'Mon parcours',icon:BookOpen},{path:'/reviews',label:'Mes cartes',icon:RotateCcw},{path:'/challenges',label:'Mises en situation',icon:Flag}]
   let page: ReactNode
   if (billingView) page = <EnterpriseBillingPage key={enterpriseScope(uid,orgId??'create')} uid={uid} organizationId={orgId} onOpen={()=>setRefresh(value=>value+1)} onCreated={id=>{history.pushState(null,'',appHref('/enterprise/billing?org='+encodeURIComponent(id)));setRoute(currentRoute())}} />
   else if (!workspace) page = <section className="enterprise-empty"><Building2 size={35} /><h1>Ton espace Entreprise</h1><p role="status">{error || 'On retrouve tes organisations…'}</p>{error && <button className="catalog-button" onClick={()=>setRefresh(value=>value+1)}>Réessayer</button>}</section>
   else if (!organization || !plan) page = <section className="enterprise-empty"><p className="lesson-category">Bienvenue dans MemStack Entreprise</p><h1>Un chemin partagé avec ton équipe.</h1><p>Rejoins ton organisation avec le code transmis par ton responsable. Les missions, cartes et situations de cet espace restent séparées de ton apprentissage développeur.</p><form onSubmit={event=>{void join(event)}}><label>Code d’invitation<input value={code} onChange={event=>setCode(event.target.value)} autoComplete="off" required minLength={20} maxLength={100} /></label><button className="catalog-button" disabled={busy}>{busy?'Vérification…':'Rejoindre mon organisation'}</button></form><p className="dashboard-note">Utilise le compte correspondant à l’adresse email invitée.</p><a className="catalog-button secondary" href={appHref('/enterprise?setup=subscribe')}>Créer mon organisation</a><p><a className="text-link" href={appHref('/business')}>Découvrir l’offre et le programme →</a></p></section>
   else if (organization.learningEnabled === false) page = organization.role === 'manager' ? <EnterpriseBillingPage key={enterpriseScope(uid,organization.id)} uid={uid} organizationId={organization.id} onOpen={()=>setRefresh(value=>value+1)} onCreated={()=>{}} /> : <section className="enterprise-empty"><h1>Ton organisation prépare la suite.</h1><p>Son abonnement n’est pas actif pour le moment. Ton responsable peut consulter sa facturation pour rétablir l’accès aux missions et aux cartes.</p><button className="catalog-button secondary" onClick={()=>setRefresh(value=>value+1)}>Vérifier mon accès</button></section>
-  else if (lesson) page = <EnterpriseLessonView key={`${enterpriseScope(uid, organization.id)}:${lesson.id}`} lesson={lesson} completed={plan.complete(lesson.id)} available={plan.available(lesson)} busy={busy} onComplete={()=>commit({type:'lesson',lessonId:lesson.id})} returnHref={link()} cardsHref={link('/reviews')} onVerify={verifyPractice} draft={drafts[draftKey] ?? ''} onDraftChange={draft=>setDrafts(previous=>({...previous,[draftKey]:draft}))} />
+  else if (lesson) page = <EnterpriseMissionSession uid={uid} organizationId={organization.id} onAccessChanged={() => setRefresh(value => value + 1)} onDraftSaved={rememberLessonDraft} key={`${enterpriseScope(uid, organization.id)}:${lesson.id}`} lesson={lesson} completed={plan.complete(lesson.id)} available={plan.available(lesson)} busy={busy} onComplete={()=>commit({type:'lesson',lessonId:lesson.id})} returnHref={link()} cardsHref={link('/reviews')} onVerify={verifyPractice} draft={drafts[draftKey] ?? ''} onDraftChange={draft=>setDrafts(previous=>({...previous,[draftKey]:draft}))} />
   else if (path === '/enterprise/reviews') page = <EnterpriseReviews key={scope.current} workspace={workspace} busy={busy} onCommit={commit} returnHref={link()} />
   else if (challenge) page = <EnterpriseChallengeView key={`${scope.current}:${challenge.id}`} challenge={challenge} available={plan.available(challenge)} workspace={workspace} busy={busy} onSubmit={answers=>commit({type:'challenge',challengeId:challenge.id,catalogVersion:enterpriseCurriculum.version,answers})} returnHref={link('/challenges')} />
   else if (path === '/enterprise/challenges') page = <>
@@ -167,8 +231,8 @@ export default function EnterpriseWorkspace() {
   else if (path === '/enterprise/ranking') page = <EnterpriseRanking workspace={workspace} onRefresh={()=>setRefresh(value=>value+1)} />
   else if (path === '/enterprise/team') page = organization.role==='manager' ? <EnterpriseTeam key={scope.current} workspace={workspace} uid={uid} onReload={()=>setRefresh(value=>value+1)} /> : <section className="enterprise-panel"><h1>Un accès responsable d’équipe est nécessaire.</h1><a href={link()}>Retour à mon chemin</a></section>
   else if (path !== '/enterprise') page = <section className="enterprise-panel"><h1>Cette étape n’existe pas dans ton organisation.</h1><a href={link()}>Revenir à mon chemin</a></section>
-  else page = <EnterpriseLearningPath workspace={workspace} trackId={enterpriseTracks.find(item=>item.id===params.get('track'))?.id} link={link} ranking={<EnterpriseRanking workspace={workspace} compact onRefresh={()=>setRefresh(value=>value+1)} />} />
-  return <div className="enterprise-app" onClick={navigate}><a className="skip-link" href="#enterprise-content">Aller au contenu</a><header className="site-header enterprise-header"><a className="brand" href={link()}>memstack<span> / entreprise</span></a><a className="enterprise-switch" href={appHref('/courses')}>Espace Développement ↗</a><AccountBar enterprise enterpriseOrganizationId={organization?.id ?? orgId} /></header><div className="enterprise-context"><Building2 size={17} aria-hidden="true"/>{organization?<><strong>{organization.name}</strong><label className="sr-only" htmlFor="enterprise-org">Changer d’organisation</label><select id="enterprise-org" value={organization.id} disabled={busy} onChange={event=>{history.pushState(null,'',appHref(`/enterprise?org=${encodeURIComponent(event.target.value)}${selectedTrack?`&track=${encodeURIComponent(selectedTrack.id)}`:''}`));setRoute(currentRoute())}}>{workspace.organizations.map(org=><option value={org.id} key={org.id}>{org.name}</option>)}</select></>:<span>Ton environnement professionnel</span>}<a href={appHref('/business')}>L’offre Entreprise</a></div>{organization&&<nav className="enterprise-navigation" aria-label="Navigation Entreprise">{navigation.map(item=><a key={item.path} href={link(item.path)} aria-current={path===`/enterprise${item.path}`?'page':undefined}><item.icon size={18} aria-hidden="true"/><span>{item.label}</span></a>)}</nav>}<main id="enterprise-content" tabIndex={-1} className="enterprise-main">{error&&workspace&&<p className="inline-error" role="alert">{error}</p>}{page}</main></div>
+  else page = <EnterpriseLearningPath workspace={workspace} trackId={selectedTrack?.id} link={link} onChooseTrack={chooseTrack} trackSaving={trackSaving} trackMessage={trackMessage} ranking={<EnterpriseRanking workspace={workspace} compact onRefresh={()=>setRefresh(value=>value+1)} />} />
+  return <div className="enterprise-app" onClick={navigate}><EnterpriseBackground /><a className="skip-link" href="#enterprise-content">Aller au contenu</a><header className="site-header enterprise-header"><a className="brand" href={link()}>memstack<span> / entreprise</span></a><a className="enterprise-switch" href={appHref('/courses')}>Espace Développement ↗</a><AccountBar enterprise enterpriseOrganizationId={organization?.id ?? orgId} /></header><div className="enterprise-toolbar"><div className="enterprise-context"><Building2 size={17} aria-hidden="true"/>{organization?<><label className="sr-only" htmlFor="enterprise-org">Changer d’organisation</label><select id="enterprise-org" value={organization.id} disabled={busy} onChange={event => changeOrganization(event.currentTarget)}>{workspace.organizations.map(org=><option value={org.id} key={org.id}>{org.name}</option>)}</select></>:<span>Ton environnement professionnel</span>}</div>{organization&&<nav className="enterprise-navigation" aria-label="Navigation Entreprise">{navigation.map(item=><a key={item.path} href={link(item.path)} aria-current={path===`/enterprise${item.path}`?'page':undefined}><item.icon size={18} aria-hidden="true"/><span>{item.label}</span></a>)}</nav>}{organization && <details className="enterprise-workspace-tools" key={`${organization.id}:${path}`}><summary>{organization.role === 'manager' ? 'Gestion et autres accès' : 'Autres accès'}</summary><nav aria-label="Autres accès Entreprise"><a href={link('/ranking')} aria-current={path === '/enterprise/ranking' ? 'page' : undefined}><Trophy size={17} aria-hidden="true"/>Classement</a>{organization.role === 'manager' && <><a href={link('/team')} aria-current={path === '/enterprise/team' ? 'page' : undefined}><Users size={17} aria-hidden="true"/>Mon équipe</a><a href={link('/billing')}><Building2 size={17} aria-hidden="true"/>Abonnement</a></>}<a href={appHref('/business')}>L’offre Entreprise</a></nav></details>}</div><main id="enterprise-content" tabIndex={-1} className="enterprise-main">{error&&workspace&&<p className="inline-error" role="alert">{error}</p>}{page}</main></div>
 }
 
 function EnterpriseHeading({eyebrow,title,description,secondary=false}:{eyebrow:string;title:string;description:string;secondary?:boolean}) {return <header className="enterprise-heading"><p className="lesson-category">{eyebrow}</p>{secondary?<h2>{title}</h2>:<h1>{title}</h1>}<p>{description}</p></header>}
@@ -179,7 +243,7 @@ function EnterpriseReviews({workspace,onCommit,returnHref}:{workspace:Workspace;
   const [revision,setRevision]=useState(0)
   if(!batch.length)return <section className="enterprise-empty"><img src={`${import.meta.env.BASE_URL}memo/learning.webp`} width="130" height="120" alt="Mémo et son livre"/><h1>{plan.pending.length?'De nouvelles cartes sont prêtes.':'Tes cartes gardent leur rythme.'}</h1><p>Aucune carte n’est due dans cette organisation pour le moment. Les cartes de l’espace Développement restent dans leur propre environnement.</p><a className="catalog-button" href={returnHref}>Reprendre mon chemin →</a></section>
   const next=()=>{const current=enterprisePlan(workspace.progress);setBatch(current.pending.length?current.pending:current.due.slice(0,5));setRevision(value=>value+1)}
-  return <><a className="text-link" href={returnHref}>← Mon chemin Entreprise</a><CardSession environment={{homeHref:returnHref,label:'mon chemin Entreprise'}} key={revision} cards={batch} progress={workspace.progress.cards} onRate={async result=>Boolean(await onCommit({type:'card',cardId:result.cardId,rating:result.rating}))} progressLabel={`${workspace.organization!.name} · cartes Entreprise uniquement`} nextLessonLabel="Tes révisions continuent après la fin du parcours. Les nouvelles missions enrichissent cet espace." onContinueReviews={plan.due.length?next:undefined} onContinueLearningCards={plan.pending.length?next:undefined} onChooseLesson={()=>{location.href=returnHref}} /></>
+  return <><a className="text-link" href={returnHref}>← Mon chemin Entreprise</a><CardSession environment={{homeHref:returnHref,label:'mon chemin Entreprise'}} key={revision} cards={batch} progress={workspace.progress.cards} onRate={async result=>Boolean(await onCommit({type:'card',cardId:result.cardId,rating:result.rating}))} progressLabel={`${workspace.organization!.name} · cartes Entreprise uniquement`} nextLessonLabel="Tu peux t’arrêter ici. Tes prochaines cartes reviendront à leur échéance, même après la fin du parcours." onContinueReviews={plan.due.length?next:undefined} onContinueLearningCards={plan.pending.length?next:undefined} onChooseLesson={()=>{location.href=returnHref}} /></>
 }
 
 function EnterpriseRanking({workspace,compact=false,onRefresh}:{workspace:Workspace;compact?:boolean;onRefresh?:()=>void}) {

@@ -103,8 +103,8 @@ function FlashCard({ card, isRevealed, onFlip, onRate, isSaving = false, pending
       <span className="flash-card-inner">
         <span className="flash-card-face flash-card-front" aria-hidden={isRevealed}>
           <span className="flash-card-side">À toi de trouver</span>
-          <span className="flash-card-content">Retrouve la réponse, puis retourne la carte.</span>
-          <span className="flash-card-action">Retourner la carte</span>
+          <span className="flash-card-content">Cherche la réponse de tête, sans l’écrire.</span>
+          <span className="flash-card-action">Révéler la réponse</span>
         </span>
         <span className="flash-card-face flash-card-back" aria-hidden={!isRevealed}>
           <span className="flash-card-side">Réponse</span>

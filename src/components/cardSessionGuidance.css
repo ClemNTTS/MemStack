@@ -1,0 +1,16 @@
+.card-session-guide {
+  margin: 1rem 0;
+  padding: .85rem 1rem;
+  border: 1px solid #d6c1e6;
+  border-radius: 12px;
+  background: #f2ecf8;
+  text-align: left;
+  line-height: 1.5;
+}
+
+.card-session-guide summary { cursor: pointer; font-weight: 650; }
+.card-session-guide ol { padding-left: 1.3rem; margin: .75rem 0; }
+.card-session-guide li + li { margin-top: .4rem; }
+.card-session-guide p { font-size: .85rem; margin: .6rem 0 0; }
+.card-session-instruction { font-size: .95rem; line-height: 1.5; color: #4b3c59; margin: 0 0 1rem; }
+.card-rating-label { display: block; font-size: 1rem; font-weight: 700; }

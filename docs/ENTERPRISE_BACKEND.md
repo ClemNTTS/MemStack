@@ -28,6 +28,16 @@ L’invitation administrative de responsable peut aussi promouvoir un apprenant 
 
 ## Données et droits
 
+### Parcours habituel — ajout local du 22 octobre 2026
+
+`setEnterpriseLearningPreferences` reçoit exactement `{ organizationId, activeTrackId }` et retourne `{ organizationId, settings: { activeTrackId, updatedAt } }` après écriture. Le serveur déduit le compte de Firebase Auth, valide le parcours contre le catalogue préparé et relit l’adhésion, les droits d’organisation et le marqueur de suppression dans la transaction. Le callable conserve App Check et la région des opérations Entreprise existantes.
+
+Le document `organizations/{organizationId}/learners/{uid}/settings/learning` contient ce choix et sa date serveur. L’écriture fusionne uniquement ces champs pour permettre des réglages futurs dans le même document. `getEnterpriseWorkspace` retourne `settings: null` en l’absence de préférence valide, de parcours encore présent dans le catalogue ou d’accès pédagogique actif. Une préférence devenue invalide n’est pas supprimée implicitement. Les lectures n’enregistrent jamais un choix ; visiter un lien explicite ne modifie le parcours habituel que par une action de choix côté interface.
+
+Les préférences sont privées par compte et organisation ; elles ne créent ni complétion, ni XP, ni révision, ni activité au classement. Elles ne sauvegardent pas les productions ou l’étape d’une mission. La collection `settings` figure dans l’export du compte et la suppression récursive du learner la retire. Les règles client demeurent fermées. Les tests d’intégration couvrent deux organisations, deux membres, catalogue retiré, rejeu, retrait d’accès, désactivation, suppression de compte, export et refus des accès clients directs. Ce contrat local nécessite un déploiement autorisé avant utilisation en production.
+
+Qualification locale du 22 octobre : `npm run functions:build` réussi, `npm run functions:test` 90/90 et suite `enterprise.integration.test.mjs` 9/9 sur l’émulateur Firestore avec Firebase CLI 15.32.1, Java 21 et projet `demo-memstack-challenge-ai`. Les refus attendus d’accès client produisent des messages `PERMISSION_DENIED` pendant les tests. Ces résultats ne qualifient ni l’interface ni le déploiement réel ; aucun déploiement n’a été effectué.
+
 - Les comptes conservent le même UID Firebase dans les deux environnements.
 - `users/{uid}/enterpriseMemberships/{organizationId}` est un index serveur, lisible par son propriétaire. Il ne donne jamais un droit à lui seul.
 - `organizations/{organizationId}/members/{uid}` contient le rôle, l’accès actif, un pseudo neutre propre à cette organisation et des compteurs d’avancement.
@@ -38,6 +48,14 @@ L’invitation administrative de responsable peut aussi promouvoir un apprenant 
 Les règles refusent toute lecture/écriture directe des organisations aux clients, y compris un client portant une claim de responsable. Les callables vérifient l’authentification, le compte Auth actuel, son adresse vérifiée, sa désactivation et le marqueur de suppression. Chaque transaction relit l’organisation et l’adhésion : un retrait ou une désactivation bloque aussi les répétitions d’actions déjà enregistrées.
 
 Les cartes, leçons, défis et streaks développeur ne sont ni importés ni consultés par ces callables. Deux organisations du même utilisateur sont également indépendantes. Les identifiants de contenu sont ceux du catalogue Entreprise exclusivement.
+
+### Reprise explicite d’une mission — ajout local du 22 octobre 2026
+
+`getEnterpriseLessonDraft` et `saveEnterpriseLessonDraft` utilisent les contrôles d’accès et App Check des callables Entreprise. La sauvegarde est une action volontaire, privée par UID authentifié et organisation. Elle ne valide aucune mission, ne modifie aucun classement et n’envoie rien à un fournisseur IA. Le workspace retourne uniquement des résumés de reprise du propriétaire ; le détail est chargé à l’ouverture de la mission. Les responsables n’accèdent pas aux productions de leurs membres.
+
+Les documents `lessonDrafts/{lessonId}` sous le learner conservent l’état borné de la mission, une empreinte SHA-256 de la leçon et de sa pratique, une révision et les dates serveur. Les écritures exigent `expectedRevision` et un `mutationId` stable : une répétition de la dernière mutation identique retourne son accusé, une révision concurrente est refusée. L’effacement et la complétion effacent le texte en gardant une révision supérieure ; une écriture tardive ne peut le ressusciter. La complétion et la sauvegarde lisent les mêmes documents dans leurs transactions.
+
+Une limite distincte de 120 nouvelles mutations par heure et par membre/organisation protège les sauvegardes, sans compter les répétitions identiques. La reprise est disponible 30 jours après la sauvegarde explicite. Expiration, contenu modifié et état invalide provoquent une purge opportuniste lors d’une lecture ou écriture ; aucun TTL ni nettoyage physique automatique au trentième jour n’est configuré. `lessonDrafts` est inclus dans l’export propriétaire et dans la suppression récursive du learner. Le laboratoire d’automatisation, les retours IA et les exemples révélés ne sont pas repris. Le [contrat détaillé](ENTERPRISE_RESUME_CONTRACT_20261022.md) fixe les champs, limites, notices et recettes. Cette implémentation locale exige un déploiement autorisé avant toute disponibilité en production.
 
 ## Progression continue
 

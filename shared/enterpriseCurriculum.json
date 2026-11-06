@@ -547,7 +547,7 @@
         {
           "id": "ent-hostile-document-card-1",
           "question": "Qu’est-ce qu’une injection de prompt ?",
-          "answer": "Une tentative de détourner un assistant IA par des consignes cachées dans un contenu qu’il lit, par exemple un document ou une page web."
+          "answer": "Une tentative de détourner un assistant IA par des consignes introduites dans un contenu qu’il lit, par exemple un document ou une page web. Ces consignes peuvent être visibles ou cachées."
         },
         {
           "id": "ent-hostile-document-card-2",
@@ -833,7 +833,7 @@
         {
           "id": "ent-iterate-examples-card-1",
           "question": "Qu’est-ce qu’une itération avec un assistant IA ?",
-          "answer": "Un nouvel essai qui améliore le résultat précédent à partir d’un retour précis."
+          "answer": "Un nouvel essai après une modification ciblée, à partir d’un retour précis. On compare les résultats pour vérifier si le changement améliore la réponse."
         },
         {
           "id": "ent-iterate-examples-card-2",
@@ -2400,7 +2400,7 @@
         {
           "id": "ent-assistants-documents-card-3",
           "question": "Comment distinguer un fait d’une hypothèse dans une synthèse ?",
-          "answer": "Un fait est confirmé par les documents disponibles. Une hypothèse reste une supposition et doit être présentée comme telle."
+          "answer": "Un fait présenté dans la synthèse doit être appuyé par une pièce que l’on peut vérifier. Une hypothèse reste une supposition et doit être signalée. La fiabilité et la version de la pièce restent à contrôler."
         }
       ],
       "sources": [
@@ -3336,7 +3336,7 @@
         {
           "id": "ent-automation-pilot-card-3",
           "question": "Comment calculer le gain net d’une automatisation ?",
-          "answer": "Retirer du temps économisé le nouveau temps de contrôle, de correction et de suivi, pour un travail comparable."
+          "answer": "Gain net = temps à la main − temps total avec l’automatisation, pour un même lot. Inclure contrôle, corrections et suivi ; un résultat négatif indique une perte de temps."
         }
       ],
       "sources": [
@@ -3741,7 +3741,7 @@
         {
           "id": "ent-projects-prototype-card-1",
           "question": "Qu’est-ce qu’un prototype de site ou d’application ?",
-          "answer": "Une première maquette qui permet d’essayer le parcours et de repérer les incompréhensions avant de construire toute la solution."
+          "answer": "Une version d’essai limitée, par exemple une maquette, qui permet de tester une idée ou un parcours et de repérer les incompréhensions avant de construire toute la solution."
         },
         {
           "id": "ent-projects-prototype-card-2",

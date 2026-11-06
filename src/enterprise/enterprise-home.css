@@ -1,0 +1,71 @@
+.enterprise-path-home {
+  position: relative;
+  border: 1px solid #ded2e6;
+  border-radius: 28px;
+  padding: clamp(22px, 3vw, 36px);
+  background: linear-gradient(120deg, #fffdf8f5 35%, #f1e7f7e8 100%);
+  box-shadow: 0 18px 60px #51326709;
+}
+
+.enterprise-path-home .enterprise-learning-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 26px;
+}
+.enterprise-learning-heading .lesson-category { margin-top: 0; }
+.enterprise-path-home .enterprise-learning-heading h1 { max-width: 24ch; font-size: clamp(1.65rem, 2.8vw, 2.5rem); }
+.enterprise-learning-heading > div > p:last-child { margin-bottom: 0; color: #75617e; font-size: .9rem; }
+.enterprise-path-home .enterprise-level { flex-shrink: 0; margin-top: 0; background: #fffafc; }
+
+.enterprise-focus {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(220px, 1fr);
+  border: 1px solid #d3c0e4;
+  border-radius: 22px;
+  background: #fffdf9;
+  overflow: hidden;
+}
+.enterprise-focus-action { padding: clamp(24px, 3vw, 36px); align-self: center; }
+.enterprise-focus-action > .lesson-category { margin-top: 0; color: #775394; }
+.enterprise-focus-action h2 { font-size: clamp(1.5rem, 2.5vw, 2rem); max-width: 28ch; margin: 12px 0; }
+.enterprise-focus-action > p:not(.lesson-category) { max-width: 54ch; color: #705f7b; margin: 0 0 24px; font-size: .95rem; }
+.enterprise-focus-action .catalog-button { background: #48315f; color: #fffaf6; padding: 15px 22px; border-radius: 14px; }
+.enterprise-focus-action .catalog-button:hover { background: #62407f; }
+.enterprise-focus-action .text-link { font-size: .85rem; }
+.enterprise-focus-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 28px;
+  background: radial-gradient(ellipse at 50% 25%, #e6d2fa, transparent 65%), linear-gradient(155deg, #f1e8f9, #e4eee5);
+  border-left: 1px solid #e0d2e9;
+}
+.enterprise-focus-progress img { width: 160px; height: 140px; object-fit: contain; }
+.enterprise-focus-progress > div { width: 100%; max-width: 240px; }
+.enterprise-focus-progress .lesson-category { margin: 12px 0 0; }
+.enterprise-focus-progress .enterprise-focus-count { margin: 0 0 8px; color: #654b78; font-size: .85rem; }
+.enterprise-focus-count strong { color: #48315f; font-size: 2.2rem; letter-spacing: -.05em; }
+.enterprise-focus-progress > div > p:last-child { font-size: .8rem; color: #665873; margin: 10px 0 0; }
+.enterprise-path-home .enterprise-track-current { margin: 12px 0 -8px; }
+.enterprise-track-current > details > summary { width: fit-content; min-height: 44px; box-sizing: border-box; font-size: .85rem; }
+.enterprise-main:has(.enterprise-path-home) > details { margin: 12px 0; padding: 8px 18px; border: 1px solid #ddd0e6; border-radius: 16px; background: #fffcf7e8; }
+.enterprise-main:has(.enterprise-path-home) > details > summary { min-height: 44px; box-sizing: border-box; padding: 12px 0; font-size: .9rem; color: #614975; }
+.enterprise-main:has(.enterprise-path-home) > details[open] { padding-bottom: 20px; }
+.enterprise-app summary:focus-visible { outline: 3px solid #a97fc8; outline-offset: 4px; border-radius: 6px; }
+
+@media (max-width: 760px) {
+  .enterprise-main:has(.enterprise-path-home) { padding: 12px 16px 32px; }
+  .enterprise-path-home { padding: 20px; border-radius: 22px; }
+  .enterprise-path-home .enterprise-learning-heading { flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+  .enterprise-focus { grid-template-columns: minmax(0, 1fr); }
+  .enterprise-focus-action { padding: 22px; }
+  .enterprise-focus-progress { flex-direction: row; gap: 14px; padding: 16px 22px; border-left: 0; border-top: 1px solid #e0d2e9; }
+  .enterprise-focus-progress img { width: 76px; height: 90px; }
+  .enterprise-focus-progress > div { flex: 1; max-width: none; }
+  .enterprise-focus-progress .lesson-category { margin-top: 0; }
+  .enterprise-focus-count strong { font-size: 1.6rem; }
+  .enterprise-track-grid { grid-template-columns: minmax(0, 1fr); }
+}

@@ -121,3 +121,37 @@
   .enterprise-memo, .enterprise-welcome img, .enterprise-completion > img,
   .enterprise-conversation .chat-avatar .memo, .enterprise-conversation-turn { animation: none; }
 }
+.enterprise-app {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 0 42%, #cde6df88, transparent 36%),
+    radial-gradient(ellipse at 100% 18%, #e0d0f099, transparent 38%),
+    radial-gradient(ellipse at 95% 100%, #e9dcc577, transparent 32%),
+    #f6f2eb;
+}
+.enterprise-backdrop { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; color: #7c6a92; }
+.enterprise-backdrop-caption { font: 9px ui-monospace, monospace; letter-spacing: .12em; line-height: 1.5; }
+.enterprise-backdrop-axis { position: absolute; top: 150px; bottom: 50px; left: 36px; border-left: 1px solid #a6bfb45c; }
+.enterprise-backdrop-axis span { position: absolute; top: 0; left: -12px; writing-mode: vertical-rl; font: 9px ui-monospace, monospace; letter-spacing: .2em; color: #6e9287; }
+.enterprise-backdrop-flow { position: absolute; top: 32%; left: -30px; width: 225px; box-sizing: border-box; padding: 24px; border: 1px solid #97b6ac; border-radius: 12px 36px 12px 12px; background: #e1eee580; color: #638f80; transform: rotate(-10deg); }
+.enterprise-backdrop-flow > div { display: flex; align-items: center; justify-content: space-between; margin: 28px 0; }
+.enterprise-backdrop-flow i { flex: 1; margin: 0 12px; border-top: 1px dashed currentColor; }
+.enterprise-backdrop-sheet { position: absolute; top: 19%; right: -35px; width: 220px; padding: 24px; box-sizing: border-box; border: 1px solid #b6a0cd; border-radius: 12px 12px 32px 12px; background: #eee5f580; transform: rotate(11deg); }
+.enterprise-backdrop-sheet > div { display: flex; align-items: center; gap: 12px; margin-top: 22px; }
+.enterprise-backdrop-sheet i { display: block; width: 100%; height: 5px; border-block: 1px solid #b7a4c7; }
+.enterprise-backdrop-sheet > div > span { width: 14px; height: 14px; border: 1px solid #b7a4c7; border-radius: 4px; flex-shrink: 0; }
+.enterprise-backdrop-network { position: absolute; bottom: 9%; right: 50px; display: grid; justify-items: center; gap: 18px; color: #9a8c73; transform: rotate(-7deg); }
+.enterprise-backdrop-registration { position: absolute; bottom: 35px; left: 36px; right: 36px; color: #a79cb3; font: 20px ui-monospace, monospace; }
+.enterprise-backdrop-registration span { float: right; }
+@media (max-width: 1500px) {
+  .enterprise-backdrop-flow { left: -120px; opacity: .45; }
+  .enterprise-backdrop-sheet { right: -130px; opacity: .45; }
+  .enterprise-backdrop-network { right: -30px; opacity: .35; }
+  .enterprise-backdrop-axis { display: none; }
+}
+@media (max-width: 650px) {
+  .enterprise-backdrop-flow { left: -170px; }
+  .enterprise-backdrop-sheet { right: -190px; }
+  .enterprise-backdrop-network, .enterprise-backdrop-registration { display: none; }
+}
