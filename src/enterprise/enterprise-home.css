@@ -34,6 +34,7 @@
 .enterprise-focus-action .catalog-button { background: #48315f; color: #fffaf6; padding: 15px 22px; border-radius: 14px; }
 .enterprise-focus-action .catalog-button:hover { background: #62407f; }
 .enterprise-focus-action .text-link { font-size: .85rem; }
+.enterprise-focus-action .enterprise-next-alternative { display: block; margin-top: 16px; }
 .enterprise-focus-progress {
   display: flex;
   flex-direction: column;
