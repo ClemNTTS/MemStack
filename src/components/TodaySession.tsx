@@ -45,9 +45,7 @@ function LearningSession({ course, lessons, cards, mode = 'today', initialAction
   const currentPlan = planLearning(course, progress)
   const allowance = learningAllowance(progress, premium)
   const progressLabel = `${currentPlan.completedCount} leçon${currentPlan.completedCount > 1 ? 's' : ''} sur ${course.lessonIds.length} terminée${currentPlan.completedCount > 1 ? 's' : ''}`
-  const nextLessonLabel = currentPlan.nextLesson
-    ? `Prochaine leçon : ${currentPlan.nextLesson.title}`
-    : `Parcours « ${course.title} » terminé. Les révisions continuent.`
+
   const now = Date.now()
   const knownCards = cards.map((card) => progress.cards[card.id]).filter((state) => Boolean(state))
   const dueRemaining = knownCards.filter((state) => Date.parse(state.dueAt) <= now).length
@@ -159,13 +157,11 @@ function LearningSession({ course, lessons, cards, mode = 'today', initialAction
         <CardSession
           key={batch}
           progressLabel={`Tous les parcours · ${knownCards.length} cartes découvertes`}
-          nextLessonLabel={nextLessonLabel}
           cards={queue}
           progress={progress.cards}
           onRate={rateCard}
           onContinueReviews={dueRemaining && allowance.reviewsRemaining ? () => openCards('reviews') : undefined}
           onContinueLearningCards={mode === 'today' && currentPlan.pendingCardIds.length ? () => openCards('today') : undefined}
-          onChooseLesson={mode === 'today' ? returnToChoice : undefined}
         />
       ) : (
         <section className="learning-empty">

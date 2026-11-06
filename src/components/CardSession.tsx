@@ -1,5 +1,5 @@
 import { appHref } from '../navigation/browser'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { CardProgress, CardRating, CardResult } from '../types/card'
 import type { ReviewKind } from '../types/progress'
 import type { SessionCard } from '../review/dailyQueue'
@@ -15,10 +15,8 @@ type CardSessionProps = {
   progress: Record<string, CardProgress>
   onRate: (result: CardResult, kind: ReviewKind) => boolean | Promise<boolean>
   progressLabel: string
-  nextLessonLabel: string
   onContinueReviews?: () => void
   onContinueLearningCards?: () => void
-  onChooseLesson?: () => void
   environment?: { homeHref: string; label: string }
 }
 
@@ -27,7 +25,7 @@ const ratingLabels: Record<CardRating, string> = {
   recalled: 'Oui, je l’avais retrouvée',
 }
 
-function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel, onContinueReviews, onContinueLearningCards, onChooseLesson, environment }: CardSessionProps) {
+function CardSession({ cards, progress, onRate, progressLabel, onContinueReviews, onContinueLearningCards, environment }: CardSessionProps) {
   const [results, setResults] = useState<CardResult[]>([])
   const ratedIds = useRef(new Set<string>())
   const [isRevealed, setIsRevealed] = useState(false)
@@ -38,6 +36,11 @@ function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel, 
   const savingRef = useRef(false)
   const currentItem = cards[results.length]
   const currentCard = currentItem?.card
+  const completeTitle = useRef<HTMLHeadingElement>(null)
+
+  useEffect(() => {
+    if (!currentCard && results.length > 0) completeTitle.current?.focus()
+  }, [currentCard, results.length])
 
   async function rateCard(rating: CardRating) {
     if (!currentCard || !isRevealed || savingRef.current || ratedIds.current.has(currentCard.id)) return false
@@ -68,31 +71,17 @@ function CardSession({ cards, progress, onRate, progressLabel, nextLessonLabel, 
 
   if (!currentCard) {
     return (
-      <section className="card-session">
+      <section className="card-session card-session-complete" aria-labelledby="card-complete-title">
         <Memo />
-        <p className="course-progress">{progressLabel}</p>
-        <h1>Lot terminé</h1>
-        <p role="status">Tu as travaillé {results.length} cartes. Tu peux t’arrêter ici ou continuer à ton rythme.</p>
-        <ul className="card-summary">
-          {results.map((result, index) => (
-            <li key={result.cardId}>
-              <span>{cards[index].card.question}</span>
-              <strong>{ratingLabels[result.rating]}</strong>
-              <span>Prochaine révision : {new Date(progress[result.cardId].dueAt).toLocaleDateString('fr-FR')}</span>
-            </li>
-          ))}
-        </ul>
-        <p>{environment ? 'Tes réponses ont été enregistrées dans cette organisation. Tes cartes reviendront aux dates indiquées ; tu peux t’arrêter ici.' : 'Ta progression est sauvegardée et sa synchronisation est suivie dans le menu Compte.'}</p>
-        <p>{nextLessonLabel}</p>
-        <nav className="learning-empty-actions" aria-label="Après le lot">
-          {onContinueReviews && <button className="catalog-button" type="button" onClick={onContinueReviews}>Réviser encore</button>}
-          {onContinueLearningCards && <button className="catalog-button secondary" type="button" onClick={onContinueLearningCards}>Reprendre mes nouvelles cartes</button>}
-          {onChooseLesson
-            ? <button className="catalog-button secondary" type="button" onClick={onChooseLesson}>{environment ? 'Choisir une mission' : 'Choisir la prochaine leçon'}</button>
-            : <a href={appHref('/today')}>Choisir ma session</a>}
-          {environment ? <a href={environment.homeHref}>Retrouver {environment.label}</a> : <><a href={appHref('/courses')}>Explorer les parcours</a>
-          <a href={appHref('/library')}>Relire mes leçons</a>
-          <a href={appHref('/')}>Retour à l’accueil</a></>}
+        <p className="lesson-category">{environment ? 'Dans ton organisation' : 'Ton apprentissage'}</p>
+        <h1 id="card-complete-title" ref={completeTitle} tabIndex={-1}>Une pause bien méritée.</h1>
+        <p role="status">{results.length} carte{results.length > 1 ? 's' : ''} travaillée{results.length > 1 ? 's' : ''}, c’est enregistré.</p>
+        <p className="card-complete-note">Tes prochains rappels sont programmés. À ton rythme pour la suite.</p>
+        <nav className="card-complete-actions" aria-label="Après les cartes">
+          <a className="catalog-button" href={environment?.homeHref ?? appHref('/')}>{environment ? 'Retrouver mon parcours' : 'Retour à l’accueil'}</a>
+          {onContinueReviews
+            ? <button className="catalog-button secondary" type="button" onClick={onContinueReviews}>Réviser encore</button>
+            : onContinueLearningCards && <button className="catalog-button secondary" type="button" onClick={onContinueLearningCards}>Continuer mes cartes</button>}
         </nav>
       </section>
     )
