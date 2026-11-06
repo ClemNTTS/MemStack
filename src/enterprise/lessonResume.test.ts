@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { emptyLessonDraft, isValidLessonDraft, lessonContentVersion, lessonDraftKey } from './lessonResume.ts'
 import type { EnterpriseLesson } from '../types/enterpriseContent'
+import type { EnterpriseLessonDraftState } from '../types/enterprise'
 
 const curriculum = JSON.parse(readFileSync(new URL('../../shared/enterpriseCurriculum.json', import.meta.url), 'utf8'))
 const lesson = curriculum.lessons.find((item: EnterpriseLesson) => item.id === 'ent-plausible-not-proven') as EnterpriseLesson
@@ -60,4 +61,22 @@ test('resume fingerprint includes the exact public activity as well as the lesso
   assert.equal(await lessonContentVersion(lesson), expected)
   assert.notEqual(expected, createHash('sha256').update(JSON.stringify(lesson)).digest('hex'))
   assert.notEqual(expected, createHash('sha256').update(JSON.stringify({ lesson, practice: { ...practices[lesson.id], task: 'Consigne changée' } })).digest('hex'))
+})
+
+test('first mission restores either conversational choice but cannot skip an unanswered exchange', () => {
+  const pilot = curriculum.lessons.find((item: EnterpriseLesson) => item.id === 'ent-answer-or-action') as EnterpriseLesson
+  const first = pilot.steps[0]
+  assert.equal(first.type, 'message')
+  if (first.type !== 'message' || !first.choices) return assert.fail('The pilot needs conversational choices')
+  const empty = emptyLessonDraft(pilot)
+  assert.equal(isValidLessonDraft(pilot, empty), true)
+  assert.equal(isValidLessonDraft(pilot, { ...empty, stepId: pilot.steps[1].id }), false)
+  for (const choice of first.choices) {
+    const answered: EnterpriseLessonDraftState = { ...empty, answers: { [first.id]: choice.id }, checkedIds: [first.id] }
+    assert.equal(isValidLessonDraft(pilot, answered), true)
+    assert.equal(isValidLessonDraft(pilot, { ...answered, stepId: pilot.steps[1].id }), true)
+    assert.equal(isValidLessonDraft(pilot, { ...answered, checkedIds: [], stepId: pilot.steps[1].id }), false)
+  }
+  assert.equal(isValidLessonDraft(pilot, { ...empty, answers: { [first.id]: 'invented' } }), false)
+  assert.equal(isValidLessonDraft(pilot, { ...empty, answers: { [pilot.steps[1].id]: 'choice-1' } }), false)
 })

@@ -18,6 +18,23 @@ const now = Date.parse('2026-10-22T10:00:00Z')
 const context = {organizationId:'org-one',lesson,contentVersion,now}
 const saved = () => ({revision:4,contentVersion,state:state(),updatedAt:new Date(now).toISOString(),expiresAt:new Date(now+ENTERPRISE_DRAFT_LIFETIME).toISOString(),lastMutationId:'mutation-123456789'})
 
+test('conversational choices preserve both branches and reject skipped, forged or future replies', () => {
+  const pilot = {id:'ent-answer-or-action',steps:[
+    {id:'intro',type:'message',text:'Le cas fictif',choices:[{id:'a'},{id:'b'}]},
+    {id:'next',type:'message',text:'La suite',choices:[{id:'c'},{id:'d'}]},
+  ]}
+  const empty = {stepId:'intro',answers:{},checkedIds:[],draft:'',practiceAnswers:{}}
+  assert.deepEqual(validateEnterpriseDraftState(empty,pilot),empty)
+  for (const answer of ['a','b']) {
+    const answered = {...empty,stepId:'next',answers:{intro:answer},checkedIds:['intro']}
+    assert.deepEqual(validateEnterpriseDraftState(answered,pilot),answered)
+    assert.throws(()=>validateEnterpriseDraftState({...answered,checkedIds:[]},pilot),{code:'invalid-argument'})
+  }
+  for (const patch of [{stepId:'next'},{answers:{intro:'forged'}},{answers:{next:'c'}}]) {
+    assert.throws(()=>validateEnterpriseDraftState({...empty,...patch},pilot),{code:'invalid-argument'})
+  }
+})
+
 test('draft state restores current errors but rejects skipped, future and invented question history', () => {
   assert.deepEqual(validateEnterpriseDraftState(state(),lesson),state())
   const end = {...state(),stepId:'end',answers:{q1:'a',q2:'b'},checkedIds:['q1','q2']}

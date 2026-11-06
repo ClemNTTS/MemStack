@@ -18,12 +18,13 @@ export function validateEnterpriseDraftState(state,lesson) {
     || Buffer.byteLength(JSON.stringify(state),'utf8')>24000) fail('invalid-argument','Reprise de mission invalide ou trop volumineuse.')
   const index = lesson.steps.findIndex(step=>step.id===state.stepId)
   if (index<0) fail('invalid-argument','Étape de reprise inconnue.')
-  const questions = new Map(lesson.steps.slice(0,index+1).filter(step=>step.type==='question').map(step=>[step.id,step]))
+  const questions = new Map(lesson.steps.slice(0,index+1).flatMap(step=>step.type==='question' ? [[step.id,step]] : step.type==='message' && step.choices ? [[step.id,{options:step.choices}]] : []))
   if (Object.entries(state.answers).some(([key,value])=>!questions.get(key)?.options.some(option=>option.id===value))
     || new Set(state.checkedIds).size!==state.checkedIds.length
     || state.checkedIds.some(key=>typeof key!=='string' || !questions.has(key) || !Object.hasOwn(state.answers,key))) fail('invalid-argument','Réponses de reprise invalides.')
   for (const step of lesson.steps.slice(0,index)) {
     if (step.type==='question' && (state.answers[step.id]!==step.correctOptionId || !state.checkedIds.includes(step.id))) fail('invalid-argument','La reprise ne peut pas sauter une question non résolue.')
+    if (step.type==='message' && step.choices?.length && (!state.answers[step.id] || !state.checkedIds.includes(step.id))) fail('invalid-argument','La reprise ne peut pas sauter un échange sans réponse.')
   }
   const diagnoses = lesson.id==='ent-plausible-not-proven' ? ['delay','fees','reference'] : []
   if (Object.entries(state.practiceAnswers).some(([key,value])=>!diagnoses.includes(key) || !['supported','contradicted','unverified'].includes(value))) fail('invalid-argument','Diagnostics de reprise invalides.')
