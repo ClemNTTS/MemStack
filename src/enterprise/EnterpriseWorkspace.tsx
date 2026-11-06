@@ -22,6 +22,7 @@ import '../navigation.css'
 import './enterprise.css'
 import './enterprise-refinements.css'
 import './enterprise-path.css'
+import './enterprise-home.css'
 
 type Action = Omit<Extract<EnterpriseLearningAction,{type:'lesson'}>,'organizationId'|'requestId'> | Omit<Extract<EnterpriseLearningAction,{type:'card'}>,'organizationId'|'requestId'> | Omit<Extract<EnterpriseLearningAction,{type:'challenge'}>,'organizationId'|'requestId'>
 
